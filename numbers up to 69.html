@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numbers Up to 69 - Interactive Learning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 20px;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 20px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .teacher-info {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .student-input {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .student-input input {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid #fff;
+            border-radius: 10px;
+            font-size: 1.1em;
+            margin-top: 10px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .student-input input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .welcome-message {
+            text-align: center;
+            font-size: 1.3em;
+            color: #fff;
+            margin: 15px 0;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .number-selector {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .number-selector h2 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 15px;
+            border-radius: 10px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .number-display {
+            text-align: center;
+            font-size: 4em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .representation-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .rep-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .rep-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .rep-card h3 {
+            color: #f5576c;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .rep-card .content {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .dots-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .tens-ones-visual {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .tens-group, .ones-group {
+            text-align: center;
+        }
+
+        .tens-group h4, .ones-group h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .ten-block {
+            display: inline-block;
+            width: 100px;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            padding: 10px;
+            margin: 5px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            font-weight: bold;
+            color: white;
+        }
+
+        .one-block {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            margin: 3px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .quiz-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .quiz-section h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .quiz-btn {
+            padding: 15px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+
+        .quiz-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .quiz-btn.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            animation: celebrate 0.5s;
+        }
+
+        .quiz-btn.incorrect {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            animation: shake 0.5s;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            75% { transform: scale(1.1) rotate(-5deg); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            text-align: center;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .feedback.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .feedback.error {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .summary h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .summary ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .summary li {
+            padding: 10px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .summary li::before {
+            content: "✨ ";
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .emoji {
+            font-size: 2em;
+            display: inline-block;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .number-display {
+                font-size: 3em;
+            }
+
+            .rep-card .content {
+                font-size: 1.2em;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+
+        .start-button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .start-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌟 Numbers Up to 69 🌟</h1>
+            <div class="teacher-info">
+                👩‍🏫 Teacher: <strong>Manal Bazzi</strong>
+            </div>
+        </div>
+
+        <div class="student-input" id="studentInput">
+            <h2 style="color: white; text-align: center;">✏️ What's Your Name?</h2>
+            <input type="text" id="studentName" placeholder="Type your name here..." />
+            <button class="start-button" onclick="startLearning()">Let's Learn! 🚀</button>
+        </div>
+
+        <div class="welcome-message hidden" id="welcomeMessage"></div>
+
+        <div class="main-content" id="mainContent">
+            <div class="number-selector">
+                <h2>🎯 Choose a Number (1-69)</h2>
+                <div class="slider-container">
+                    <input type="range" min="1" max="69" value="23" class="slider" id="numberSlider">
+                </div>
+                <div class="number-display" id="numberDisplay">23</div>
+            </div>
+
+            <div class="representation-grid">
+                <div class="rep-card">
+                    <h3>📝 Digit Form</h3>
+                    <div class="content" id="digitForm">23</div>
+                </div>
+
+                <div class="rep-card">
+                    <h3>💬 Word Form</h3>
+                    <div class="content" id="wordForm">Twenty-three</div>
+                </div>
+
+                <div class="rep-card">
+                    <h3>➕ Expanded Form</h3>
+                    <div class="content" id="expandedForm">20 + 3</div>
+                </div>
+
+                <div class="rep-card">
+                    <h3>🔢 Tens and Ones</h3>
+                    <div class="tens-ones-visual" id="tensOnesVisual">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <div class="rep-card">
+                    <h3>⚫ Dot Representation</h3>
+                    <div class="dots-container" id="dotsContainer">
+                        <!-- Dynamic dots -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-section">
+                <h2>🎮 Quick Quiz!</h2>
+                <p style="text-align: center; font-size: 1.1em; margin-bottom: 10px;" id="quizQuestion">
+                    What is the expanded form of <strong id="quizNumber">23</strong>?
+                </p>
+                <div class="quiz-options" id="quizOptions">
+                    <!-- Dynamic quiz options -->
+                </div>
+                <div class="feedback" id="feedback"></div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="generateNewQuiz()">New Question 🔄</button>
+                </div>
+            </div>
+
+            <div class="summary">
+                <h2>📚 Key Takeaways</h2>
+                <ul>
+                    <li><strong>Digit Form:</strong> This is how we write the number using digits (0-9)</li>
+                    <li><strong>Word Form:</strong> This is how we say and write the number in words</li>
+                    <li><strong>Expanded Form:</strong> This shows the value of each digit (tens + ones)</li>
+                    <li><strong>Tens:</strong> Groups of 10 (like 20 = 2 tens)</li>
+                    <li><strong>Ones:</strong> Individual units (like 3 ones)</li>
+                    <li>Numbers up to 69 have up to 6 tens and up to 9 ones!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentNumber = 23;
+        let studentNameGlobal = '';
+
+        const numberWords = {
+            1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five',
+            6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine', 10: 'Ten',
+            11: 'Eleven', 12: 'Twelve', 13: 'Thirteen', 14: 'Fourteen', 15: 'Fifteen',
+            16: 'Sixteen', 17: 'Seventeen', 18: 'Eighteen', 19: 'Nineteen',
+            20: 'Twenty', 30: 'Thirty', 40: 'Forty', 50: 'Fifty', 60: 'Sixty'
+        };
+
+        function startLearning() {
+            const name = document.getElementById('studentName').value.trim();
+            if (name === '') {
+                alert('Please enter your name! 😊');
+                return;
+            }
+            
+            studentNameGlobal = name;
+            document.getElementById('studentInput').classList.add('hidden');
+            document.getElementById('welcomeMessage').classList.remove('hidden');
+            document.getElementById('welcomeMessage').innerHTML = 
+                `🎉 Welcome, <strong>${name}</strong>! Let's explore numbers together! 🎉`;
+            
+            setTimeout(() => {
+                document.getElementById('mainContent').classList.add('active');
+            }, 1000);
+
+            updateDisplay();
+            generateNewQuiz();
+        }
+
+        function numberToWords(num) {
+            if (num <= 20) return numberWords[num];
+            
+            const tens = Math.floor(num / 10) * 10;
+            const ones = num % 10;
+            
+            if (ones === 0) return numberWords[tens];
+            return numberWords[tens] + '-' + numberWords[ones].toLowerCase();
+        }
+
+        function updateDisplay() {
+            currentNumber = parseInt(document.getElementById('numberSlider').value);
+            
+            // Update digit form
+            document.getElementById('numberDisplay').textContent = currentNumber;
+            document.getElementById('digitForm').textContent = currentNumber;
+            
+            // Update word form
+            document.getElementById('wordForm').textContent = numberToWords(currentNumber);
+            
+            // Update expanded form
+            const tens = Math.floor(currentNumber / 10) * 10;
+            const ones = currentNumber % 10;
+            let expanded = '';
+            if (tens > 0 && ones > 0) {
+                expanded = `${tens} + ${ones}`;
+            } else if (tens > 0) {
+                expanded = `${tens}`;
+            } else {
+                expanded = `${ones}`;
+            }
+            document.getElementById('expandedForm').textContent = expanded;
+            
+            // Update tens and ones visual
+            updateTensOnesVisual(Math.floor(currentNumber / 10), ones);
+            
+            // Update dots
+            updateDots(currentNumber);
+        }
+
+        function updateTensOnesVisual(tens, ones) {
+            const container = document.getElementById('tensOnesVisual');
+            container.innerHTML = '';
+            
+            if (tens > 0) {
+                const tensDiv = document.createElement('div');
+                tensDiv.className = 'tens-group';
+                tensDiv.innerHTML = `<h4>Tens (${tens})</h4>`;
+                for (let i = 0; i < tens; i++) {
+                    const block = document.createElement('div');
+                    block.className = 'ten-block';
+                    block.textContent = '10';
+                    tensDiv.appendChild(block);
+                }
+                container.appendChild(tensDiv);
+            }
+            
+            if (ones > 0) {
+                const onesDiv = document.createElement('div');
+                onesDiv.className = 'ones-group';
+                onesDiv.innerHTML = `<h4>Ones (${ones})</h4>`;
+                for (let i = 0; i < ones; i++) {
+                    const block = document.createElement('div');
+                    block.className = 'one-block';
+                    onesDiv.appendChild(block);
+                }
+                container.appendChild(onesDiv);
+            }
+        }
+
+        function updateDots(count) {
+            const container = document.getElementById('dotsContainer');
+            container.innerHTML = '';
+            
+            const maxDots = Math.min(count, 69);
+            for (let i = 0; i < maxDots; i++) {
+                setTimeout(() => {
+                    const dot = document.createElement('div');
+                    dot.className = 'dot';
+                    container.appendChild(dot);
+                }, i * 20);
+            }
+        }
+
+        document.getElementById('numberSlider').addEventListener('input', updateDisplay);
+
+        function generateNewQuiz() {
+            const quizNum = Math.floor(Math.random() * 69) + 1;
+            const tens = Math.floor(quizNum / 10) * 10;
+            const ones = quizNum % 10;
+            
+            let correctAnswer = '';
+            if (tens > 0 && ones > 0) {
+                correctAnswer = `${tens} + ${ones}`;
+            } else if (tens > 0) {
+                correctAnswer = `${tens}`;
+            } else {
+                correctAnswer = `${ones}`;
+            }
+            
+            document.getElementById('quizNumber').textContent = quizNum;
+            
+            const options = [correctAnswer];
+            while (options.length < 4) {
+                const wrongTens = Math.floor(Math.random() * 7) * 10;
+                const wrongOnes = Math.floor(Math.random() * 10);
+                let wrongAnswer = '';
+                if (wrongTens > 0 && wrongOnes > 0) {
+                    wrongAnswer = `${wrongTens} + ${wrongOnes}`;
+                } else if (wrongTens > 0) {
+                    wrongAnswer = `${wrongTens}`;
+                } else {
+                    wrongAnswer = `${wrongOnes}`;
+                }
+                if (!options.includes(wrongAnswer) && wrongAnswer !== correctAnswer) {
+                    options.push(wrongAnswer);
+                }
+            }
+            
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(option, correctAnswer, btn);
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('feedback').classList.remove('show');
+        }
+
+        function checkAnswer(selected, correct, button) {
+            const feedback = document.getElementById('feedback');
+            const allButtons = document.querySelectorAll('.quiz-btn');
+            
+            allButtons.forEach(btn => btn.disabled = true);
+            
+            if (selected === correct) {
+                button.classList.add('correct');
+                feedback.className = 'feedback success show';
+                feedback.innerHTML = `🎉 Excellent work, ${studentNameGlobal}! That's correct! 🎉`;
+            } else {
+                button.classList.add('incorrect');
+                feedback.className = 'feedback error show';
+                feedback.innerHTML = `💪 Good try, ${studentNameGlobal}! The correct answer is: <strong>${correct}</strong>`;
+                
+                allButtons.forEach(btn => {
+                    if (btn.textContent === correct) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+            
+            setTimeout(() => {
+                allButtons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('correct', 'incorrect');
+                });
+            }, 3000);
+        }
+
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>

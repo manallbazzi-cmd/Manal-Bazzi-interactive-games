@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vertical Addition Practice</title>
+    <style>
+        :root { --pink: #FF70A6; --purple: #9D4EDD; --blue: #4ECDC4; --bg: #FFF0F5; }
+        body { font-family: 'Comic Sans MS', cursive, sans-serif; background: var(--bg); color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; }
+        #app { max-width: 400px; width: 100%; text-align: center; }
+        .card { background: white; padding: 25px; border-radius: 30px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        h1 { color: var(--purple); margin-bottom: 10px; }
+        .vertical-math { display: inline-block; text-align: right; font-size: 3rem; font-weight: bold; margin: 20px 0; color: var(--pink); }
+        .line { border-bottom: 4px solid var(--purple); margin-bottom: 10px; }
+        .input-group { display: flex; gap: 10px; justify-content: center; }
+        input { width: 60px; height: 60px; font-size: 2rem; text-align: center; border: 3px solid var(--blue); border-radius: 15px; }
+        button { background: var(--blue); color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 1.2rem; cursor: pointer; margin-top: 20px; }
+        #feedback { font-size: 1.5rem; margin-top: 15px; height: 40px; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div id="setup" class="card">
+        <h1>Welcome!</h1>
+        <p>Teacher: <strong>Manal Bazzi</strong></p>
+        <input type="text" id="studentName" placeholder="Enter your name" style="width: 80%; padding: 10px; font-size: 1rem;"><br>
+        <button onclick="start()">Start Learning</button>
+    </div>
+
+    <div id="game" class="card" style="display:none;">
+        <p>Add the numbers below:</p>
+        <div class="vertical-math">
+            <div>&nbsp;23</div>
+            <div style="display:flex; gap:10px;"><span>+</span> 15</div>
+            <div class="line"></div>
+            <div class="input-group">
+                <input type="number" id="tens" placeholder="T">
+                <input type="number" id="ones" placeholder="O">
+            </div>
+        </div>
+        <br>
+        <button onclick="checkAnswer()">Check Answer</button>
+        <div id="feedback"></div>
+    </div>
+</div>
+
+<script>
+    let student = "";
+    function start() {
+        student = document.getElementById('studentName').value || "Student";
+        document.getElementById('setup').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+    }
+
+    function checkAnswer() {
+        const tens = document.getElementById('tens').value;
+        const ones = document.getElementById('ones').value;
+        const fb = document.getElementById('feedback');
+
+        if(tens == "3" && ones == "8") {
+            fb.innerHTML = "Well done, " + student + "! 🎉";
+            fb.style.color = "green";
+        } else {
+            fb.innerHTML = "Not quite! Try again. 😊";
+            fb.style.color = "red";
+        }
+    }
+</script>
+</body>
+</html>

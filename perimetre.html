@@ -1,0 +1,2428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Perimeter Explorer Adventure</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+:root {
+  --sky: #87CEEB;
+  --grass: #5DBB63;
+  --sun: #FFD700;
+  --castle: #C084FC;
+  --wood: #8B6914;
+  --stone: #9CA3AF;
+  --gold: #F59E0B;
+  --coral: #F87171;
+  --mint: #34D399;
+  --blue: #60A5FA;
+  --purple: #A78BFA;
+  --pink: #F472B6;
+  --orange: #FB923C;
+  --bg-dark: #1E1B4B;
+  --text-dark: #1F2937;
+  --white: #FFFFFF;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #0F0A2E;
+  min-height: 100vh;
+  overflow: hidden;
+  user-select: none;
+}
+
+#gameContainer {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+canvas { position: absolute; top: 0; left: 0; }
+
+.screen {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.screen.active { display: flex; }
+
+/* ====== BACKGROUND STARS ====== */
+.stars-bg {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ====== MAIN MENU ====== */
+#menuScreen {
+  background: linear-gradient(180deg, #0F0A2E 0%, #1a1040 40%, #0d2a5c 70%, #0a4a2a 100%);
+  z-index: 10;
+  padding: 20px 16px 40px;
+}
+
+.game-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(28px, 7vw, 56px);
+  color: #FFD700;
+  text-shadow: 0 0 20px #FFD70066, 3px 3px 0 #B45309, -1px -1px 0 #92400E;
+  text-align: center;
+  margin-top: 20px;
+  animation: titleFloat 3s ease-in-out infinite;
+  line-height: 1.1;
+}
+
+.game-subtitle {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(14px, 3.5vw, 22px);
+  color: #93C5FD;
+  text-align: center;
+  margin: 6px 0 0;
+  letter-spacing: 1px;
+}
+
+@keyframes titleFloat {
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-8px) rotate(1deg)}
+}
+
+.mascot-area {
+  position: relative;
+  width: clamp(120px, 35vw, 220px);
+  height: clamp(120px, 35vw, 220px);
+  margin: 10px auto;
+}
+
+.mascot-svg { width: 100%; height: 100%; animation: mascotBounce 2s ease-in-out infinite; }
+@keyframes mascotBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.teacher-badge {
+  background: linear-gradient(135deg, #7C3AED, #4F46E5);
+  border: 3px solid #C4B5FD;
+  border-radius: 20px;
+  padding: 10px 20px;
+  text-align: center;
+  margin: 8px auto;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 4px 20px #7C3AED44;
+}
+
+.teacher-badge .label {
+  font-size: 12px;
+  color: #C4B5FD;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.teacher-badge .name {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(18px, 5vw, 26px);
+  color: #FFD700;
+  text-shadow: 1px 1px 0 #B45309;
+}
+
+.student-section {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 14px 20px;
+  width: 90%;
+  max-width: 380px;
+  margin: 6px auto;
+}
+
+.student-section label {
+  display: block;
+  font-size: 13px;
+  color: #93C5FD;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.student-section input {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.student-section input:focus { border-color: #FFD700; background: rgba(255,255,255,0.2); }
+.student-section input::placeholder { color: rgba(255,255,255,0.4); }
+
+.btn {
+  font-family: 'Fredoka One', cursive;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+
+.btn:active { transform: scale(0.95); }
+
+.btn-start {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: white;
+  font-size: clamp(20px, 5vw, 28px);
+  padding: 16px 40px;
+  border-radius: 50px;
+  border: 3px solid #34D399;
+  box-shadow: 0 6px 0 #047857, 0 8px 20px #10B98166;
+  margin: 10px auto;
+  width: 90%;
+  max-width: 300px;
+  animation: pulseBtn 2s ease-in-out infinite;
+}
+
+@keyframes pulseBtn {
+  0%,100%{transform:scale(1);box-shadow:0 6px 0 #047857,0 8px 20px #10B98166}
+  50%{transform:scale(1.04);box-shadow:0 6px 0 #047857,0 12px 30px #10B98188}
+}
+
+.btn-howto {
+  background: linear-gradient(135deg, #6366F1, #4338CA);
+  color: white;
+  font-size: clamp(14px, 3.5vw, 18px);
+  padding: 12px 30px;
+  border-radius: 50px;
+  border: 3px solid #818CF8;
+  box-shadow: 0 4px 0 #3730A3;
+  margin: 4px auto;
+  width: 80%;
+  max-width: 240px;
+}
+
+.floating-shapes {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.float-shape {
+  position: absolute;
+  animation: floatAround linear infinite;
+  opacity: 0.6;
+  font-size: clamp(16px, 3vw, 24px);
+}
+
+@keyframes floatAround {
+  0%{transform:translateY(100vh) rotate(0deg);opacity:0}
+  10%{opacity:0.7}
+  90%{opacity:0.7}
+  100%{transform:translateY(-100px) rotate(360deg);opacity:0}
+}
+
+/* ====== HOW TO PLAY ====== */
+#howtoScreen {
+  background: linear-gradient(180deg, #1E1040 0%, #0d2a5c 100%);
+  z-index: 10;
+  padding: 20px 16px 40px;
+}
+
+.howto-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(22px, 6vw, 40px);
+  color: #FFD700;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.howto-card {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 16px;
+  width: 92%;
+  max-width: 500px;
+  margin: 8px auto;
+}
+
+.howto-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.howto-step:last-child { border-bottom: none; }
+
+.step-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px #F59E0B66;
+}
+
+.step-text { color: white; font-size: clamp(13px, 3vw, 15px); font-weight: 600; line-height: 1.4; }
+
+.perimeter-def {
+  background: linear-gradient(135deg, rgba(79,70,229,0.4), rgba(124,58,237,0.4));
+  border: 2px solid #818CF8;
+  border-radius: 20px;
+  padding: 16px;
+  width: 92%;
+  max-width: 500px;
+  margin: 8px auto;
+  text-align: center;
+}
+
+.perimeter-def .def-word {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(20px, 5vw, 32px);
+  color: #FFD700;
+}
+
+.perimeter-def p { color: #C4B5FD; font-size: clamp(13px, 3vw, 15px); margin-top: 6px; line-height: 1.5; }
+
+.times-table-section {
+  background: rgba(255,255,255,0.06);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 16px;
+  width: 92%;
+  max-width: 500px;
+  margin: 8px auto;
+}
+
+.times-table-section h3 {
+  font-family: 'Fredoka One', cursive;
+  color: #34D399;
+  font-size: clamp(16px, 4vw, 22px);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.tables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.table-col h4 {
+  font-family: 'Fredoka One', cursive;
+  color: #FFD700;
+  font-size: clamp(14px, 3.5vw, 18px);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.table-col .t-row {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: clamp(11px, 2.5vw, 13px);
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 8px;
+  margin-bottom: 3px;
+}
+
+.table-col .t-row:nth-child(even) { background: rgba(255,255,255,0.08); }
+
+.ordering-section {
+  background: rgba(255,255,255,0.06);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 16px;
+  width: 92%;
+  max-width: 500px;
+  margin: 8px auto;
+}
+
+.ordering-section h3 {
+  font-family: 'Fredoka One', cursive;
+  color: #F472B6;
+  font-size: clamp(16px, 4vw, 22px);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.ordering-section p { color: #E2E8F0; font-size: clamp(12px, 3vw, 14px); line-height: 1.6; }
+
+/* ====== LEVEL MAP ====== */
+#mapScreen {
+  background: linear-gradient(180deg, #1E3A5F 0%, #0F4C2A 60%, #0A3320 100%);
+  z-index: 10;
+  padding: 20px 16px 40px;
+}
+
+.map-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(20px, 5vw, 36px);
+  color: #FFD700;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.player-info {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px auto;
+  flex-wrap: wrap;
+}
+
+.info-pill {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.25);
+  border-radius: 50px;
+  padding: 6px 16px;
+  display: flex; align-items: center; gap: 6px;
+  color: white;
+  font-weight: 700;
+  font-size: clamp(13px, 3vw, 15px);
+}
+
+.info-pill span.icon { font-size: 18px; }
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 92%;
+  max-width: 500px;
+  margin: 16px auto;
+}
+
+.level-node {
+  background: linear-gradient(135deg, #1E3A5F, #0F2A4A);
+  border: 3px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-node.unlocked {
+  border-color: #FFD700;
+  background: linear-gradient(135deg, #1a4a2a, #0d3a1a);
+  cursor: pointer;
+}
+
+.level-node.unlocked:active { transform: scale(0.95); }
+
+.level-node.completed {
+  border-color: #34D399;
+  background: linear-gradient(135deg, #065F46, #064E3B);
+}
+
+.level-node.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.level-num {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(20px, 5vw, 32px);
+  color: #FFD700;
+}
+
+.level-name {
+  font-size: clamp(10px, 2.5vw, 12px);
+  color: #93C5FD;
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.level-stars {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.lock-icon { font-size: 24px; margin-top: 4px; }
+
+.bonus-btn {
+  background: linear-gradient(135deg, #D97706, #B45309);
+  color: white;
+  font-size: clamp(14px, 3.5vw, 18px);
+  padding: 12px 24px;
+  border-radius: 50px;
+  border: 3px solid #FBBF24;
+  box-shadow: 0 4px 0 #92400E;
+  margin: 8px auto;
+  width: 80%;
+  max-width: 280px;
+}
+
+/* ====== GAME SCREEN ====== */
+#gameScreen {
+  background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 30%, #90EE90 70%, #228B22 100%);
+  z-index: 10;
+}
+
+.game-hud {
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  width: 100%;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.hud-item {
+  display: flex; align-items: center; gap: 4px;
+  font-family: 'Fredoka One', cursive;
+  color: white;
+  font-size: clamp(13px, 3.5vw, 18px);
+}
+
+.hud-item .icon { font-size: clamp(16px, 4vw, 22px); }
+.hud-item.score { color: #FFD700; }
+.hud-item.lives { color: #F87171; }
+.hud-item.timer { color: #34D399; }
+
+.btn-pause {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 10px;
+  padding: 4px 10px;
+  font-size: clamp(11px, 2.5vw, 14px);
+  font-family: 'Fredoka One', cursive;
+}
+
+.level-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 16px 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.challenge-box {
+  background: rgba(255,255,255,0.9);
+  border: 4px solid #FFD700;
+  border-radius: 24px;
+  padding: 16px;
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.challenge-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(16px, 4.5vw, 26px);
+  color: #1F2937;
+  margin-bottom: 8px;
+}
+
+.challenge-subtitle {
+  font-size: clamp(12px, 3vw, 15px);
+  color: #6B7280;
+  margin-bottom: 12px;
+}
+
+.shape-canvas {
+  width: 100%;
+  max-width: 280px;
+  height: 180px;
+  margin: 0 auto 12px;
+  border: 3px dashed #D1D5DB;
+  border-radius: 16px;
+  position: relative;
+  background: #F9FAFB;
+}
+
+.answer-area {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.answer-input {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(18px, 5vw, 28px);
+  color: #1F2937;
+  background: white;
+  border: 3px solid #D1D5DB;
+  border-radius: 16px;
+  width: 100px;
+  height: 56px;
+  text-align: center;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.answer-input:focus { border-color: #6366F1; box-shadow: 0 0 0 3px #6366F133; }
+
+.btn-check {
+  background: linear-gradient(135deg, #6366F1, #4338CA);
+  color: white;
+  font-size: clamp(14px, 3.5vw, 18px);
+  padding: 14px 24px;
+  border-radius: 50px;
+  border: 3px solid #818CF8;
+  box-shadow: 0 4px 0 #3730A3;
+  min-width: 120px;
+}
+
+.btn-check:active { transform: translateY(2px); box-shadow: 0 2px 0 #3730A3; }
+
+.hint-btn {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: white;
+  font-size: clamp(12px, 3vw, 15px);
+  padding: 8px 18px;
+  border-radius: 50px;
+  border: 2px solid #FCD34D;
+  box-shadow: 0 3px 0 #92400E;
+  margin-top: 8px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+  margin: 12px auto;
+}
+
+.option-btn {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(16px, 4.5vw, 24px);
+  color: #1F2937;
+  background: white;
+  border: 3px solid #D1D5DB;
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.option-btn:active { transform: scale(0.95); }
+.option-btn.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+.option-btn.wrong { background: #FEE2E2; border-color: #F87171; color: #991B1B; }
+.option-btn.selected { background: #EDE9FE; border-color: #8B5CF6; }
+
+.feedback-msg {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(18px, 5vw, 28px);
+  padding: 12px 24px;
+  border-radius: 20px;
+  text-align: center;
+  margin: 10px auto;
+  max-width: 400px;
+  animation: feedbackPop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes feedbackPop {
+  0%{transform:scale(0.5);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+
+.feedback-msg.correct { background: #D1FAE5; color: #065F46; border: 3px solid #10B981; }
+.feedback-msg.wrong { background: #FEE2E2; color: #991B1B; border: 3px solid #F87171; }
+
+.sides-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+  width: 100%;
+  max-width: 400px;
+}
+
+.side-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 10px 16px;
+}
+
+.side-label {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(14px, 3.5vw, 18px);
+  color: #4B5563;
+  width: 80px;
+}
+
+.side-value {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(18px, 5vw, 26px);
+  color: #4F46E5;
+  flex: 1;
+  text-align: center;
+}
+
+.running-total {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(16px, 4.5vw, 22px);
+  color: #1F2937;
+  background: linear-gradient(135deg, #FEF9C3, #FEF08A);
+  border: 3px solid #F59E0B;
+  border-radius: 16px;
+  padding: 12px 20px;
+  text-align: center;
+  margin: 10px auto;
+  max-width: 400px;
+  width: 100%;
+}
+
+.hint-box {
+  background: linear-gradient(135deg, #FEF9C3, #FFFDE7);
+  border: 3px solid #F59E0B;
+  border-radius: 16px;
+  padding: 14px;
+  font-size: clamp(13px, 3vw, 15px);
+  color: #92400E;
+  margin: 10px auto;
+  max-width: 400px;
+  width: 100%;
+  line-height: 1.6;
+  font-weight: 700;
+  display: none;
+}
+
+.drag-container {
+  background: white;
+  border: 3px dashed #D1D5DB;
+  border-radius: 20px;
+  padding: 16px;
+  min-height: 120px;
+  position: relative;
+  margin: 10px auto;
+  width: 100%;
+  max-width: 400px;
+}
+
+.drag-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, #6366F1, #4F46E5);
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  border-radius: 12px;
+  border: 3px solid #818CF8;
+  cursor: grab;
+  box-shadow: 0 3px 10px #6366F144;
+  margin: 4px;
+  transition: transform 0.1s;
+  touch-action: none;
+}
+
+.drag-tile:active { transform: scale(1.1); cursor: grabbing; }
+
+.drop-zone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  background: #F3F4F6;
+  border: 3px dashed #9CA3AF;
+  border-radius: 12px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  color: #6B7280;
+  margin: 4px;
+  vertical-align: middle;
+  transition: all 0.2s;
+}
+
+.drop-zone.filled { background: #EDE9FE; border-color: #8B5CF6; color: #4F46E5; }
+.drop-zone.drag-over { background: #DBEAFE; border-color: #3B82F6; }
+
+/* ====== CANVAS SHAPE DRAWING ====== */
+.shape-display {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.shape-display canvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  position: relative;
+}
+
+/* ====== LEVEL COMPLETE ====== */
+#levelCompleteScreen {
+  background: linear-gradient(135deg, #0F0A2E, #1a1040, #0d2a5c);
+  z-index: 20;
+  padding: 30px 16px 40px;
+}
+
+.complete-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(28px, 8vw, 60px);
+  color: #FFD700;
+  text-align: center;
+  text-shadow: 0 0 30px #FFD70066, 3px 3px 0 #B45309;
+  animation: titleFloat 2s ease-in-out infinite;
+}
+
+.complete-stars {
+  font-size: clamp(40px, 12vw, 80px);
+  text-align: center;
+  margin: 16px 0;
+  animation: starsIn 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes starsIn { from{transform:scale(0) rotate(-20deg);opacity:0} to{transform:scale(1) rotate(0);opacity:1} }
+
+.complete-stats {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 16px 24px;
+  margin: 16px auto;
+  max-width: 380px;
+  width: 90%;
+}
+
+.stat-row {
+  display: flex; justify-content: space-between;
+  color: white;
+  font-weight: 700;
+  font-size: clamp(14px, 3.5vw, 18px);
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.stat-row:last-child { border-bottom: none; }
+.stat-row .val { color: #FFD700; font-family: 'Fredoka One', cursive; }
+
+/* ====== CERTIFICATE ====== */
+#certificateScreen {
+  background: linear-gradient(135deg, #0F0A2E, #1a1040);
+  z-index: 20;
+  padding: 20px 16px 40px;
+  overflow-y: auto;
+}
+
+.cert-card {
+  background: linear-gradient(135deg, #FFFDF0, #FFF8E1);
+  border: 6px solid #D97706;
+  border-radius: 24px;
+  padding: 24px 20px;
+  width: 92%;
+  max-width: 480px;
+  margin: 10px auto;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4), inset 0 0 0 4px #F59E0B44;
+}
+
+.cert-top-border {
+  position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
+  border: 2px dashed #F59E0B88;
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.cert-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(18px, 5vw, 32px);
+  color: #92400E;
+  margin-bottom: 4px;
+}
+
+.cert-sub {
+  font-size: clamp(11px, 2.5vw, 14px);
+  color: #B45309;
+  margin-bottom: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.cert-student {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(22px, 6vw, 40px);
+  color: #1F2937;
+  margin: 8px 0;
+  padding: 8px;
+  border-bottom: 3px solid #D97706;
+  border-top: 3px solid #D97706;
+}
+
+.cert-body { font-size: clamp(12px, 3vw, 15px); color: #374151; margin: 12px 0; line-height: 1.6; }
+.cert-trophy { font-size: 50px; margin: 10px 0; }
+
+.skills-list {
+  background: #FFFBEB;
+  border: 2px solid #FCD34D;
+  border-radius: 16px;
+  padding: 12px 16px;
+  margin: 12px auto;
+  text-align: left;
+}
+
+.skills-list h4 {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(14px, 3.5vw, 18px);
+  color: #B45309;
+  margin-bottom: 8px;
+}
+
+.skill-item {
+  display: flex; align-items: center; gap: 8px;
+  color: #374151;
+  font-weight: 700;
+  font-size: clamp(12px, 3vw, 14px);
+  padding: 4px 0;
+}
+
+.skill-icon { font-size: 16px; }
+
+.cert-teacher {
+  font-size: clamp(12px, 3vw, 14px);
+  color: #6B7280;
+  margin-top: 12px;
+  font-weight: 700;
+}
+
+.cert-teacher span { color: #4F46E5; font-family: 'Fredoka One', cursive; font-size: 1.2em; }
+
+.badges-area {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.badge {
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: white;
+  border: 3px solid #A78BFA;
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(11px, 2.5vw, 14px);
+  text-align: center;
+  box-shadow: 0 3px 10px #4F46E544;
+}
+
+/* ====== SUMMARY SECTION ====== */
+.summary-box {
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 16px;
+  width: 92%;
+  max-width: 500px;
+  margin: 8px auto;
+}
+
+.summary-box h3 {
+  font-family: 'Fredoka One', cursive;
+  color: #FFD700;
+  font-size: clamp(16px, 4vw, 22px);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.summary-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: white;
+  font-size: clamp(12px, 3vw, 14px);
+  font-weight: 600;
+  padding: 6px 0;
+  line-height: 1.4;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.summary-item:last-child { border-bottom: none; }
+.summary-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+/* ====== PARTICLES ====== */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  font-size: 20px;
+  animation: particleFly 1.2s ease-out forwards;
+  z-index: 1000;
+}
+
+@keyframes particleFly {
+  0%{transform:translateY(0) scale(1);opacity:1}
+  100%{transform:translateY(-100px) scale(0.3);opacity:0}
+}
+
+.firework {
+  position: fixed;
+  pointer-events: none;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  animation: fireworkExplode 1s ease-out forwards;
+  z-index: 1000;
+}
+
+@keyframes fireworkExplode {
+  0%{transform:translate(0,0) scale(1);opacity:1}
+  100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}
+}
+
+/* ====== SCROLLBAR ====== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 3px; }
+
+/* ====== SHAPE CLICK HIGHLIGHT ====== */
+.side-btn {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.side-btn.clicked { animation: sideClick 0.4s ease; }
+@keyframes sideClick {
+  0%{background:rgba(255,215,0,0.3)}
+  100%{background:transparent}
+}
+
+.build-grid {
+  display: grid;
+  gap: 8px;
+  margin: 10px auto;
+  width: 100%;
+  max-width: 400px;
+}
+
+.build-grid.cols-2 { grid-template-columns: repeat(2,1fr); }
+.build-grid.cols-3 { grid-template-columns: repeat(3,1fr); }
+
+.build-tile {
+  background: white;
+  border: 3px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 12px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Fredoka One', cursive;
+}
+
+.build-tile:active { transform: scale(0.95); }
+.build-tile.selected { background: #EDE9FE; border-color: #8B5CF6; }
+
+.build-tile .t-icon { font-size: 28px; display: block; margin-bottom: 4px; }
+.build-tile .t-label { font-size: clamp(12px, 3vw, 15px); color: #374151; }
+
+/* Treasure door */
+.door-svg { animation: doorGlow 2s ease-in-out infinite; }
+@keyframes doorGlow {
+  0%,100%{filter:drop-shadow(0 0 8px #F59E0B)}
+  50%{filter:drop-shadow(0 0 20px #FFD700)}
+}
+
+.door-svg.unlocked { animation: doorOpen 1s ease forwards; }
+@keyframes doorOpen {
+  0%{transform:scaleX(1)}
+  100%{transform:scaleX(0);opacity:0}
+}
+
+/* Progress bar */
+.progress-bar-wrap {
+  width: 100%;
+  max-width: 400px;
+  height: 12px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  margin: 6px auto;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10B981, #34D399);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+/* name display */
+.student-greeting {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(14px, 3.5vw, 20px);
+  color: #FFD700;
+  text-align: center;
+  margin: 4px 0;
+}
+
+.back-btn {
+  background: rgba(255,255,255,0.15);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(13px, 3vw, 16px);
+  cursor: pointer;
+  margin: 6px auto;
+}
+
+.quick-quiz-area {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.quiz-question {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(16px, 4.5vw, 24px);
+  color: #1F2937;
+  text-align: center;
+  margin: 12px 0;
+}
+
+.shape-info-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(14px, 3.5vw, 18px);
+  padding: 6px 16px;
+  border-radius: 50px;
+  margin: 4px;
+}
+
+@media (max-width: 480px) {
+  .levels-grid { grid-template-columns: repeat(2,1fr); }
+  .tables-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="gameContainer">
+
+<!-- ==================== MENU SCREEN ==================== -->
+<div id="menuScreen" class="screen active">
+  <div class="floating-shapes" id="floatingShapes"></div>
+
+  <div class="game-title">🏰 Perimeter<br>Explorer!</div>
+  <div class="game-subtitle">✨ Adventure · Math · Fun ✨</div>
+
+  <div class="mascot-area">
+    <svg class="mascot-svg" viewBox="0 0 180 200" xmlns="http://www.w3.org/2000/svg">
+      <!-- Explorer mascot -->
+      <circle cx="90" cy="80" r="52" fill="#FBBF24" stroke="#D97706" stroke-width="3"/>
+      <!-- Hat -->
+      <ellipse cx="90" cy="32" rx="56" ry="14" fill="#065F46"/>
+      <rect x="52" y="15" width="76" height="24" rx="8" fill="#065F46"/>
+      <rect x="60" y="12" width="60" height="8" rx="4" fill="#059669"/>
+      <!-- Face -->
+      <circle cx="72" cy="76" r="9" fill="white"/>
+      <circle cx="108" cy="76" r="9" fill="white"/>
+      <circle cx="74" cy="78" r="5" fill="#1F2937"/>
+      <circle cx="110" cy="78" r="5" fill="#1F2937"/>
+      <circle cx="76" cy="76" r="2" fill="white"/>
+      <circle cx="112" cy="76" r="2" fill="white"/>
+      <!-- Smile -->
+      <path d="M72 100 Q90 120 108 100" stroke="#D97706" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- Rosy cheeks -->
+      <circle cx="62" cy="92" r="8" fill="#F87171" opacity="0.5"/>
+      <circle cx="118" cy="92" r="8" fill="#F87171" opacity="0.5"/>
+      <!-- Body -->
+      <rect x="55" y="128" width="70" height="60" rx="20" fill="#059669"/>
+      <!-- Arms -->
+      <rect x="18" y="130" width="40" height="18" rx="9" fill="#059669" transform="rotate(-20 38 139)"/>
+      <rect x="122" y="130" width="40" height="18" rx="9" fill="#059669" transform="rotate(20 142 139)"/>
+      <!-- Star on chest -->
+      <text x="90" y="170" text-anchor="middle" font-size="22">⭐</text>
+      <!-- Legs -->
+      <rect x="65" y="182" width="20" height="18" rx="8" fill="#064E3B"/>
+      <rect x="95" y="182" width="20" height="18" rx="8" fill="#064E3B"/>
+      <!-- Speech bubble -->
+      <rect x="118" y="40" width="62" height="38" rx="12" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+      <polygon points="118,55 106,60 118,68" fill="white" stroke="#E5E7EB" stroke-width="1"/>
+      <text x="149" y="60" text-anchor="middle" font-size="11" fill="#4F46E5" font-weight="bold">P = sum</text>
+      <text x="149" y="73" text-anchor="middle" font-size="11" fill="#4F46E5" font-weight="bold">of sides!</text>
+    </svg>
+  </div>
+
+  <div class="teacher-badge">
+    <div class="label">✏️ Teacher</div>
+    <div class="name">Ms. Manal Bazzi</div>
+  </div>
+
+  <div class="student-section">
+    <label>🌟 Explorer's Name</label>
+    <input type="text" id="studentNameInput" placeholder="Type your name here..." maxlength="25">
+  </div>
+
+  <button class="btn btn-start" onclick="startGame()">🚀 Start Adventure!</button>
+  <button class="btn btn-howto" onclick="showScreen('howtoScreen')">📖 How To Play</button>
+
+  <div style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:16px;text-align:center;">
+    Grade 2–3 · Perimeter Explorer Adventure
+  </div>
+</div>
+
+<!-- ==================== HOW TO PLAY ==================== -->
+<div id="howtoScreen" class="screen">
+  <div class="howto-title">📖 How To Play</div>
+
+  <div class="perimeter-def">
+    <div class="def-word">🔲 What is Perimeter?</div>
+    <p>Perimeter is the <strong>total distance around the outside</strong> of a shape. To find it, add up the length of ALL the sides!</p>
+    <p style="margin-top:8px;font-family:'Fredoka One',cursive;font-size:clamp(15px,4vw,20px);color:#FFD700;">P = Side 1 + Side 2 + Side 3 + Side 4</p>
+    <p style="margin-top:6px;color:#A5F3FC;font-size:clamp(12px,3vw,14px);">For a rectangle: P = 2 × length + 2 × width</p>
+  </div>
+
+  <div class="howto-card">
+    <div class="howto-step">
+      <div class="step-num">1</div>
+      <div class="step-text">🗺️ Choose a level from the Adventure Map and explore magical lands!</div>
+    </div>
+    <div class="howto-step">
+      <div class="step-num">2</div>
+      <div class="step-text">🔢 Look at the shape shown. Add up all the sides to find the perimeter.</div>
+    </div>
+    <div class="howto-step">
+      <div class="step-num">3</div>
+      <div class="step-text">✏️ Type or tap your answer. Get it right to unlock doors and collect stars!</div>
+    </div>
+    <div class="howto-step">
+      <div class="step-num">4</div>
+      <div class="step-text">💡 Stuck? Tap the Hint button! A friendly hint will help you.</div>
+    </div>
+    <div class="howto-step">
+      <div class="step-num">5</div>
+      <div class="step-text">🏆 Complete all levels to earn your Perimeter Master Certificate!</div>
+    </div>
+  </div>
+
+  <div class="ordering-section">
+    <h3>🔢 Ordering Numbers</h3>
+    <p>Numbers can be ordered from <strong>smallest to biggest (ascending)</strong>: 3, 7, 12, 18, 25...</p>
+    <p style="margin-top:6px;">Or from <strong>biggest to smallest (descending)</strong>: 25, 18, 12, 7, 3...</p>
+    <p style="margin-top:6px;">When we calculate perimeters, we can order them to compare which shape has the bigger or smaller perimeter!</p>
+    <p style="margin-top:6px;color:#34D399;font-weight:700;">Example: Perimeters of 8, 12, 16, 24 — which is biggest? → 24!</p>
+  </div>
+
+  <div class="times-table-section">
+    <h3>✖️ Times Tables (2 & 10)</h3>
+    <div class="tables-grid">
+      <div class="table-col">
+        <h4>× 2</h4>
+        <div class="t-row"><span>1 × 2</span><span>= 2</span></div>
+        <div class="t-row"><span>2 × 2</span><span>= 4</span></div>
+        <div class="t-row"><span>3 × 2</span><span>= 6</span></div>
+        <div class="t-row"><span>4 × 2</span><span>= 8</span></div>
+        <div class="t-row"><span>5 × 2</span><span>= 10</span></div>
+        <div class="t-row"><span>6 × 2</span><span>= 12</span></div>
+        <div class="t-row"><span>7 × 2</span><span>= 14</span></div>
+        <div class="t-row"><span>8 × 2</span><span>= 16</span></div>
+        <div class="t-row"><span>9 × 2</span><span>= 18</span></div>
+        <div class="t-row"><span>10 × 2</span><span>= 20</span></div>
+      </div>
+      <div class="table-col">
+        <h4>× 10</h4>
+        <div class="t-row"><span>1 × 10</span><span>= 10</span></div>
+        <div class="t-row"><span>2 × 10</span><span>= 20</span></div>
+        <div class="t-row"><span>3 × 10</span><span>= 30</span></div>
+        <div class="t-row"><span>4 × 10</span><span>= 40</span></div>
+        <div class="t-row"><span>5 × 10</span><span>= 50</span></div>
+        <div class="t-row"><span>6 × 10</span><span>= 60</span></div>
+        <div class="t-row"><span>7 × 10</span><span>= 70</span></div>
+        <div class="t-row"><span>8 × 10</span><span>= 80</span></div>
+        <div class="t-row"><span>9 × 10</span><span>= 90</span></div>
+        <div class="t-row"><span>10 × 10</span><span>= 100</span></div>
+      </div>
+    </div>
+    <p style="color:#93C5FD;font-size:clamp(12px,3vw,14px);margin-top:10px;text-align:center;font-weight:700;">💡 Perimeter of a rectangle = 2 × (L + W) — uses the × 2 table!</p>
+  </div>
+
+  <button class="btn btn-start" style="margin-top:16px;" onclick="showScreen('menuScreen')">⬅️ Back to Menu</button>
+</div>
+
+<!-- ==================== MAP SCREEN ==================== -->
+<div id="mapScreen" class="screen">
+  <div class="map-title">🗺️ Adventure Map</div>
+  <div id="mapStudentName" class="student-greeting"></div>
+
+  <div class="player-info">
+    <div class="info-pill"><span class="icon">⭐</span><span id="totalStars">0</span> Stars</div>
+    <div class="info-pill"><span class="icon">🏆</span><span id="totalScore">0</span> Points</div>
+    <div class="info-pill"><span class="icon">❤️</span><span id="mapLives">3</span> Lives</div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+  </div>
+
+  <div class="levels-grid" id="levelsGrid"></div>
+
+  <button class="btn bonus-btn" onclick="startBonus()">🎁 Bonus: Build Your Shape!</button>
+  <button class="btn back-btn" style="margin-top:8px;" onclick="showScreen('menuScreen')">⬅️ Main Menu</button>
+</div>
+
+<!-- ==================== GAME SCREEN ==================== -->
+<div id="gameScreen" class="screen">
+  <div class="game-hud">
+    <div class="hud-item score">⭐ <span id="hudScore">0</span></div>
+    <div class="hud-item">❤️ <span id="hudLives">3</span></div>
+    <div class="hud-item timer">⏱ <span id="hudTimer">60</span>s</div>
+    <button class="btn btn-pause" onclick="pauseGame()">⏸ Pause</button>
+  </div>
+  <div class="level-content" id="levelContent"></div>
+</div>
+
+<!-- ==================== LEVEL COMPLETE ==================== -->
+<div id="levelCompleteScreen" class="screen">
+  <div class="complete-title">🎉 Level Complete!</div>
+  <div class="complete-stars" id="completeStars">⭐⭐⭐</div>
+
+  <div class="complete-stats">
+    <div class="stat-row"><span>Level</span><span class="val" id="completeLevel">1</span></div>
+    <div class="stat-row"><span>Score</span><span class="val" id="completeScore">0</span></div>
+    <div class="stat-row"><span>Correct</span><span class="val" id="completeCorrect">0/0</span></div>
+    <div class="stat-row"><span>Time Left</span><span class="val" id="completeTime">0s</span></div>
+  </div>
+
+  <div id="badgeEarned" style="margin:10px auto;text-align:center;"></div>
+
+  <button class="btn btn-start" onclick="nextLevel()">▶️ Next Level!</button>
+  <button class="btn btn-howto" style="margin-top:8px;" onclick="showScreen('mapScreen')">🗺️ Back to Map</button>
+</div>
+
+<!-- ==================== CERTIFICATE SCREEN ==================== -->
+<div id="certificateScreen" class="screen">
+  <div style="background:linear-gradient(180deg,#7C3AED,#4F46E5);width:100%;padding:16px;text-align:center;flex-shrink:0;">
+    <div style="font-family:'Fredoka One',cursive;font-size:clamp(20px,5vw,36px);color:#FFD700;text-shadow:2px 2px 0 #B45309;">
+      🏆 Game Complete!
+    </div>
+  </div>
+
+  <div class="cert-card">
+    <div class="cert-top-border"></div>
+    <div class="cert-trophy">🏆</div>
+    <div class="cert-title">🎓 Certificate of Achievement</div>
+    <div class="cert-sub">PERIMETER MASTER</div>
+    <div style="font-size:14px;color:#6B7280;margin-bottom:6px;">This certifies that</div>
+    <div class="cert-student" id="certStudentName">Explorer</div>
+    <div class="cert-body">
+      has successfully completed the<br>
+      <strong>Perimeter Explorer Adventure</strong><br>
+      and demonstrated mastery of perimeter concepts!
+    </div>
+
+    <div class="skills-list">
+      <h4>✅ Skills Mastered:</h4>
+      <div class="skill-item"><span class="skill-icon">🔲</span>Understanding what perimeter means</div>
+      <div class="skill-item"><span class="skill-icon">➕</span>Adding all side lengths correctly</div>
+      <div class="skill-item"><span class="skill-icon">📐</span>Finding missing sides of shapes</div>
+      <div class="skill-item"><span class="skill-icon">🏠</span>Solving real-world perimeter problems</div>
+      <div class="skill-item"><span class="skill-icon">🔢</span>Using the 2× and 10× times tables</div>
+      <div class="skill-item"><span class="skill-icon">📊</span>Ordering perimeter values</div>
+    </div>
+
+    <div class="badges-area">
+      <div class="badge">🌱 Perimeter Beginner</div>
+      <div class="badge">🔨 Shape Builder</div>
+      <div class="badge">🧭 Math Explorer</div>
+    </div>
+
+    <div class="cert-teacher">
+      Teacher: <span>Ms. Manal Bazzi</span>
+    </div>
+
+    <div style="margin-top:12px;color:#6B7280;font-size:12px;font-weight:700;">
+      Score: <span id="certScore" style="color:#D97706;">0</span> points &nbsp;|&nbsp;
+      Stars: <span id="certStars" style="color:#F59E0B;">0 ⭐</span>
+    </div>
+  </div>
+
+  <div class="summary-box">
+    <h3>📌 Key Takeaways</h3>
+    <div class="summary-item"><span class="summary-icon">🔲</span><span><strong>Perimeter</strong> = the total distance around the OUTSIDE of any shape.</span></div>
+    <div class="summary-item"><span class="summary-icon">➕</span><span>Add ALL sides together: P = S1 + S2 + S3 + S4</span></div>
+    <div class="summary-item"><span class="summary-icon">📐</span><span>Rectangle shortcut: P = 2 × Length + 2 × Width</span></div>
+    <div class="summary-item"><span class="summary-icon">🟦</span><span>Square shortcut: P = 4 × Side (all sides equal!)</span></div>
+    <div class="summary-item"><span class="summary-icon">✖️</span><span>Times tables ×2 and ×10 help you calculate perimeters fast!</span></div>
+    <div class="summary-item"><span class="summary-icon">🔢</span><span>Order perimeters to compare which shape is bigger or smaller.</span></div>
+  </div>
+
+  <div style="text-align:center;padding:16px;color:rgba(255,255,255,0.7);font-size:14px;font-weight:700;">
+    🌟 Amazing work, future Math Explorer! Keep it up! 🌟
+  </div>
+
+  <button class="btn btn-start" onclick="restartGame()">🔄 Play Again!</button>
+</div>
+
+</div>
+
+<script>
+// ============================================================
+// GAME STATE
+// ============================================================
+const GAME = {
+  studentName: '',
+  score: 0,
+  lives: 3,
+  totalStars: 0,
+  currentLevel: 0,
+  timer: 60,
+  timerInterval: null,
+  levelStars: [0,0,0,0,0,0,0],
+  levelUnlocked: [true,false,false,false,false,false,false],
+  levelCompleted: [false,false,false,false,false,false,false],
+  correctCount: 0,
+  totalCount: 0,
+  paused: false,
+  timeLeft: 60
+};
+
+// Level definitions
+const LEVELS = [
+  {
+    id: 1,
+    name: 'Garden Fence',
+    icon: '🌻',
+    time: 90,
+    type: 'build_fence',
+    description: 'Help rebuild the garden fence! Click each side to add it to the perimeter.',
+    shapes: [
+      { type: 'square', side: 5, label: 'Garden' },
+      { type: 'rectangle', w: 6, h: 3, label: 'Flowerbed' },
+      { type: 'square', side: 4, label: 'Pond' }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Castle Walls',
+    icon: '🏰',
+    time: 80,
+    type: 'quick_quiz',
+    description: 'Answer perimeter questions to unlock the castle gates!',
+    questions: [
+      { q: 'A square has a side of 3 cm. What is the perimeter?', shape:{type:'square',side:3}, answer: 12, options:[10,12,9,16] },
+      { q: 'A rectangle: length = 7, width = 2. What is the perimeter?', shape:{type:'rectangle',w:7,h:2}, answer: 18, options:[18,14,28,9] },
+      { q: 'A square has a side of 6 m. What is the perimeter?', shape:{type:'square',side:6}, answer: 24, options:[24,18,12,36] },
+      { q: 'Rectangle: length = 8, width = 3. Perimeter?', shape:{type:'rectangle',w:8,h:3}, answer: 22, options:[22,24,11,16] }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Magic Forest',
+    icon: '🌳',
+    time: 80,
+    type: 'missing_side',
+    description: 'Find the missing side of each shape to restore the forest magic!',
+    puzzles: [
+      { type:'rectangle', w:5, h:'?', perimeter:16, missing:'h', answer:3, label:'Forest Clearing' },
+      { type:'square', side:'?', perimeter:20, missing:'side', answer:5, label:'Magic Circle' },
+      { type:'rectangle', w:'?', h:4, perimeter:18, missing:'w', answer:5, label:'Fairy Ring' },
+      { type:'square', side:'?', perimeter:32, missing:'side', answer:8, label:'Ancient Stone' }
+    ]
+  },
+  {
+    id: 4,
+    name: 'Treasure Doors',
+    icon: '🚪',
+    time: 70,
+    type: 'treasure_door',
+    description: 'Solve perimeter riddles to unlock treasure doors!',
+    doors: [
+      { riddle:'A garden is 10 m long and 4 m wide. What is the perimeter of the fence needed?', answer:28, options:[28,24,40,14] },
+      { riddle:'A square room has walls 7 m long. How much skirting board is needed?', answer:28, options:[28,14,49,21] },
+      { riddle:'A rectangle: 9 cm × 3 cm. What is its perimeter?', answer:24, options:[24,12,27,18] },
+      { riddle:'A square tile has a side of 5 cm. What is the perimeter?', answer:20, options:[20,10,25,15] }
+    ]
+  },
+  {
+    id: 5,
+    name: 'Dragon Lair',
+    icon: '🐉',
+    time: 65,
+    type: 'drag_measure',
+    description: 'Drag the number tiles to set the side lengths, then calculate the perimeter!',
+    challenges: [
+      { type:'rectangle', lengths:[4,7], answer:22 },
+      { type:'square', lengths:[6], answer:24 },
+      { type:'rectangle', lengths:[5,9], answer:28 },
+      { type:'square', lengths:[8], answer:32 }
+    ]
+  },
+  {
+    id: 6,
+    name: 'Star Palace',
+    icon: '⭐',
+    time: 60,
+    type: 'quick_quiz',
+    hard: true,
+    description: 'Master level quiz — harder perimeter challenges!',
+    questions: [
+      { q: 'Square: side = 9 cm. Perimeter?', shape:{type:'square',side:9}, answer:36, options:[36,27,18,45] },
+      { q: 'Rectangle: 10 m × 6 m. Perimeter?', shape:{type:'rectangle',w:10,h:6}, answer:32, options:[32,60,16,40] },
+      { q: 'Square: P = 40 m. What is the side?', shape:{type:'square',side:10}, answer:10, options:[10,8,40,20] },
+      { q: 'Rectangle: P = 30. Width = 5. What is the length?', shape:{type:'rectangle',w:10,h:5}, answer:10, options:[10,6,20,25] },
+      { q: 'A square field has P = 60 m. What is each side?', shape:{type:'square',side:15}, answer:15, options:[15,10,20,12] }
+    ]
+  }
+];
+
+// ============================================================
+// AUDIO (Web Audio API)
+// ============================================================
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
+  return audioCtx;
+}
+
+function playTone(freq, type, duration, vol=0.3) {
+  const ctx = getAudioCtx(); if(!ctx) return;
+  try {
+    if(ctx.state === 'suspended') ctx.resume();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    o.start(); o.stop(ctx.currentTime + duration);
+  } catch(e){}
+}
+
+function soundCorrect() {
+  playTone(523,  'sine', 0.1, 0.3);
+  setTimeout(()=>playTone(659,'sine',0.1,0.3),120);
+  setTimeout(()=>playTone(784,'sine',0.15,0.3),240);
+  setTimeout(()=>playTone(1047,'sine',0.2,0.3),360);
+}
+
+function soundWrong() {
+  playTone(220, 'sawtooth', 0.3, 0.15);
+  setTimeout(()=>playTone(180,'sawtooth',0.2,0.15),200);
+}
+
+function soundStar() {
+  playTone(880,'sine',0.1,0.4);
+  setTimeout(()=>playTone(1108,'sine',0.1,0.4),100);
+}
+
+function soundUnlock() {
+  [523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.2,0.4),i*100));
+}
+
+function soundVictory() {
+  const melody = [523,659,784,1047,784,1047,1319];
+  melody.forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.25,0.4),i*120));
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function $(id) { return document.getElementById(id); }
+
+function createParticles(x, y, count=8, emojis=['⭐','✨','🌟']) {
+  for(let i=0;i<count;i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left = (x + (Math.random()-0.5)*60) + 'px';
+    p.style.top = (y + (Math.random()-0.5)*40) + 'px';
+    p.style.animationDuration = (0.8+Math.random()*0.8) + 's';
+    p.style.animationDelay = (Math.random()*0.3) + 's';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 2000);
+  }
+}
+
+function createFireworks() {
+  const colors = ['#FF6B6B','#FFD700','#4ECDC4','#45B7D1','#96E6A1','#DDA0DD','#FF8C00'];
+  for(let b=0;b<6;b++) {
+    const bx = Math.random()*window.innerWidth;
+    const by = Math.random()*window.innerHeight*0.6;
+    setTimeout(()=>{
+      for(let i=0;i<16;i++) {
+        const f = document.createElement('div');
+        f.className = 'firework';
+        const angle = (i/16)*Math.PI*2;
+        const dist = 60+Math.random()*80;
+        f.style.left = bx+'px'; f.style.top = by+'px';
+        f.style.background = colors[Math.floor(Math.random()*colors.length)];
+        f.style.setProperty('--tx', Math.cos(angle)*dist+'px');
+        f.style.setProperty('--ty', Math.sin(angle)*dist+'px');
+        f.style.animationDuration = (0.8+Math.random()*0.5)+'s';
+        document.body.appendChild(f);
+        setTimeout(()=>f.remove(),2000);
+      }
+    }, b*300);
+  }
+}
+
+// ============================================================
+// FLOATING SHAPES (menu)
+// ============================================================
+function initFloatingShapes() {
+  const container = $('floatingShapes'); if(!container) return;
+  const shapes = ['🔲','⬛','🟦','⬜','🔷','🔸','⭐','✨'];
+  for(let i=0;i<14;i++) {
+    const s = document.createElement('div');
+    s.className = 'float-shape';
+    s.textContent = shapes[Math.floor(Math.random()*shapes.length)];
+    s.style.left = Math.random()*100+'vw';
+    s.style.animationDuration = (8+Math.random()*10)+'s';
+    s.style.animationDelay = (Math.random()*10)+'s';
+    container.appendChild(s);
+  }
+}
+
+// ============================================================
+// START GAME
+// ============================================================
+function startGame() {
+  const input = $('studentNameInput');
+  GAME.studentName = input.value.trim() || 'Explorer';
+  GAME.score = 0; GAME.lives = 3; GAME.totalStars = 0;
+  GAME.levelStars = [0,0,0,0,0,0,0];
+  GAME.levelUnlocked = [true,false,false,false,false,false,false];
+  GAME.levelCompleted = [false,false,false,false,false,false,false];
+  buildMap();
+  showScreen('mapScreen');
+}
+
+// ============================================================
+// MAP
+// ============================================================
+function buildMap() {
+  $('mapStudentName').textContent = '🌟 Welcome, ' + GAME.studentName + '!';
+  $('totalStars').textContent = GAME.totalStars;
+  $('totalScore').textContent = GAME.score;
+  $('mapLives').textContent = GAME.lives;
+
+  const completed = GAME.levelCompleted.filter(Boolean).length;
+  $('progressBar').style.width = Math.round((completed/LEVELS.length)*100)+'%';
+
+  const grid = $('levelsGrid');
+  grid.innerHTML = '';
+  LEVELS.forEach((lv,i) => {
+    const node = document.createElement('div');
+    node.className = 'level-node';
+    const unlocked = GAME.levelUnlocked[i];
+    const completed = GAME.levelCompleted[i];
+    if(completed) node.classList.add('completed');
+    else if(unlocked) node.classList.add('unlocked');
+    else node.classList.add('locked');
+
+    const stars = GAME.levelStars[i] || 0;
+    const starStr = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
+
+    node.innerHTML = `
+      <div style="font-size:clamp(22px,6vw,36px)">${lv.icon}</div>
+      <div class="level-num">${lv.id}</div>
+      <div class="level-name">${lv.name}</div>
+      <div class="level-stars">${unlocked||completed ? starStr : ''}</div>
+      ${!unlocked&&!completed ? '<div class="lock-icon">🔒</div>' : ''}
+    `;
+
+    if(unlocked || completed) {
+      node.onclick = () => startLevel(i);
+    }
+    grid.appendChild(node);
+  });
+}
+
+// ============================================================
+// LEVEL START
+// ============================================================
+function startLevel(idx) {
+  GAME.currentLevel = idx;
+  const lv = LEVELS[idx];
+  GAME.correctCount = 0;
+  GAME.totalCount = 0;
+  GAME.timeLeft = lv.time;
+  GAME.paused = false;
+
+  $('hudScore').textContent = GAME.score;
+  $('hudLives').textContent = GAME.lives;
+  $('hudTimer').textContent = GAME.timeLeft;
+
+  showScreen('gameScreen');
+  renderLevel(lv);
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(GAME.timerInterval);
+  GAME.timerInterval = setInterval(() => {
+    if(GAME.paused) return;
+    GAME.timeLeft--;
+    $('hudTimer').textContent = GAME.timeLeft;
+    if(GAME.timeLeft <= 10) $('hudTimer').style.color = '#F87171';
+    if(GAME.timeLeft <= 0) {
+      clearInterval(GAME.timerInterval);
+      showFeedback('⏰ Time\'s up! Try the next challenge.', 'wrong');
+    }
+  }, 1000);
+}
+
+function pauseGame() {
+  GAME.paused = !GAME.paused;
+  document.querySelector('.btn-pause').textContent = GAME.paused ? '▶️ Resume' : '⏸ Pause';
+}
+
+// ============================================================
+// SHAPE DRAWING (Canvas)
+// ============================================================
+function drawShape(canvas, shape, highlighted=[]) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const colors = ['#EF4444','#3B82F6','#10B981','#F59E0B'];
+  const sides = getSides(shape);
+  const margin = 30;
+
+  if(shape.type === 'square') {
+    const s = shape.side||5;
+    const dim = Math.min(W-2*margin, H-2*margin);
+    const x = (W-dim)/2, y = (H-dim)/2;
+    // Fill
+    ctx.fillStyle = '#EDE9FE';
+    ctx.fillRect(x,y,dim,dim);
+    // Border
+    ctx.lineWidth = 4; ctx.lineCap='round';
+    // Top
+    ctx.strokeStyle = highlighted.includes(0) ? '#FFD700' : '#6366F1';
+    ctx.lineWidth = highlighted.includes(0) ? 6 : 4;
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+dim,y); ctx.stroke();
+    // Right
+    ctx.strokeStyle = highlighted.includes(1) ? '#FFD700' : '#6366F1';
+    ctx.lineWidth = highlighted.includes(1) ? 6 : 4;
+    ctx.beginPath(); ctx.moveTo(x+dim,y); ctx.lineTo(x+dim,y+dim); ctx.stroke();
+    // Bottom
+    ctx.strokeStyle = highlighted.includes(2) ? '#FFD700' : '#6366F1';
+    ctx.lineWidth = highlighted.includes(2) ? 6 : 4;
+    ctx.beginPath(); ctx.moveTo(x+dim,y+dim); ctx.lineTo(x,y+dim); ctx.stroke();
+    // Left
+    ctx.strokeStyle = highlighted.includes(3) ? '#FFD700' : '#6366F1';
+    ctx.lineWidth = highlighted.includes(3) ? 6 : 4;
+    ctx.beginPath(); ctx.moveTo(x,y+dim); ctx.lineTo(x,y); ctx.stroke();
+    // Labels
+    ctx.fillStyle = '#1F2937'; ctx.font = 'bold 13px Nunito'; ctx.textAlign='center';
+    const sv = shape.side==='?' ? '?' : shape.side+'';
+    ctx.fillText(sv+' cm', x+dim/2, y-8);
+    ctx.fillText(sv+' cm', x+dim/2, y+dim+18);
+    ctx.save(); ctx.translate(x-8,y+dim/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText(sv+' cm', 0, 0); ctx.restore();
+    ctx.save(); ctx.translate(x+dim+8,y+dim/2); ctx.rotate(Math.PI/2);
+    ctx.fillText(sv+' cm', 0, 0); ctx.restore();
+  } else {
+    // Rectangle
+    const lv = shape.w||5, ht = shape.h||3;
+    const ratio = lv/ht;
+    let rW = Math.min(W-2*margin, (H-2*margin)*ratio);
+    let rH = rW/ratio;
+    if(rH > H-2*margin) { rH = H-2*margin; rW = rH*ratio; }
+    const x = (W-rW)/2, y = (H-rH)/2;
+    ctx.fillStyle = '#D1FAE5';
+    ctx.fillRect(x,y,rW,rH);
+    ctx.lineWidth = 4;
+    // Top
+    ctx.strokeStyle = highlighted.includes(0) ? '#FFD700' : '#059669';
+    ctx.lineWidth = highlighted.includes(0) ? 6 : 4;
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+rW,y); ctx.stroke();
+    // Right
+    ctx.strokeStyle = highlighted.includes(1) ? '#FFD700' : '#059669';
+    ctx.lineWidth = highlighted.includes(1) ? 6 : 4;
+    ctx.beginPath(); ctx.moveTo(x+rW,y); ctx.lineTo(x+rW,y+rH); ctx.stroke();
+    // Bottom
+    ctx.strokeStyle = highlighted.includes(2) ? '#FFD700' : '#059669';
+    ctx.lineWidth = highlighted.includes(2) ? 6 : 4;
+    ctx.beginPath(); ctx.moveTo(x+rW,y+rH); ctx.lineTo(x,y+rH); ctx.stroke();
+    // Left
+    ctx.strokeStyle = highlighted.includes(3) ? '#FFD700' : '#059669';
+    ctx.lineWidth = highlighted.includes(3) ? 6 : 4;
+    ctx.beginPath(); ctx.moveTo(x,y+rH); ctx.lineTo(x,y); ctx.stroke();
+    // Labels
+    ctx.fillStyle = '#1F2937'; ctx.font = 'bold 13px Nunito'; ctx.textAlign='center';
+    const wv = shape.w==='?' ? '?' : shape.w+'';
+    const hv = shape.h==='?' ? '?' : shape.h+'';
+    ctx.fillText(wv+' cm', x+rW/2, y-8);
+    ctx.fillText(wv+' cm', x+rW/2, y+rH+18);
+    ctx.save(); ctx.translate(x-8,y+rH/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText(hv+' cm', 0, 0); ctx.restore();
+    ctx.save(); ctx.translate(x+rW+8,y+rH/2); ctx.rotate(Math.PI/2);
+    ctx.fillText(hv+' cm', 0, 0); ctx.restore();
+  }
+}
+
+function getSides(shape) {
+  if(shape.type==='square') return [shape.side,shape.side,shape.side,shape.side];
+  return [shape.w, shape.h, shape.w, shape.h];
+}
+
+// ============================================================
+// LEVEL RENDERERS
+// ============================================================
+let levelState = {};
+
+function renderLevel(lv) {
+  const content = $('levelContent');
+  content.innerHTML = '';
+  levelState = { qIndex:0, score:0, correct:0, total:0, highlighted:[] };
+  $('hudTimer').style.color='#34D399';
+
+  const titleDiv = document.createElement('div');
+  titleDiv.style.cssText = 'text-align:center;margin-bottom:8px;';
+  titleDiv.innerHTML = `<div style="font-family:'Fredoka One',cursive;font-size:clamp(18px,5vw,28px);color:#1F2937;">${lv.icon} ${lv.name}</div><div style="font-size:clamp(12px,3vw,14px);color:#374151;margin-top:4px;">${lv.description}</div>`;
+  content.appendChild(titleDiv);
+
+  if(lv.type==='build_fence') renderBuildFence(lv, content);
+  else if(lv.type==='quick_quiz') renderQuiz(lv, content);
+  else if(lv.type==='missing_side') renderMissingSide(lv, content);
+  else if(lv.type==='treasure_door') renderTreasureDoor(lv, content);
+  else if(lv.type==='drag_measure') renderDragMeasure(lv, content);
+}
+
+// --- BUILD FENCE ---
+function renderBuildFence(lv, parent) {
+  const shapes = lv.shapes;
+  let shapeIdx = 0;
+  let clickedSides = [];
+  let total = 0;
+
+  function renderShape() {
+    parent.querySelectorAll('.fence-challenge').forEach(e=>e.remove());
+    const shape = shapes[shapeIdx];
+    const sides = getSides(shape);
+    clickedSides = [];
+    total = 0;
+
+    const box = document.createElement('div');
+    box.className = 'challenge-box fence-challenge';
+    box.innerHTML = `
+      <div class="challenge-title">🏡 Build the Fence: ${shape.label}</div>
+      <div class="challenge-subtitle">Click/tap each side of the shape to add it to the perimeter!</div>
+      <div class="shape-display" style="max-width:280px;height:190px;margin:0 auto 10px;">
+        <canvas id="fenceCanvas" width="280" height="190"></canvas>
+      </div>
+      <div class="running-total" id="runningTotal">Perimeter so far: 0 cm</div>
+      <div class="sides-container" id="sidesContainer"></div>
+      <div id="fenceFeedback"></div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;">
+        <button class="btn btn-check" onclick="checkFence(${shapeIdx}, ${lv.shapes.length})">✅ Check Answer</button>
+        <button class="btn hint-btn" onclick="$('fenceHint').style.display='block'">💡 Hint</button>
+      </div>
+      <div class="hint-box" id="fenceHint">
+        💡 Click each side one by one! A ${shape.type} has ${shape.type==='square'?'4 equal sides of '+shape.side:
+        '2 sides of '+shape.w+' cm and 2 sides of '+shape.h+' cm'}.<br>
+        Add them all up: ${sides.join(' + ')} = ${sides.reduce((a,b)=>a+b,0)} cm
+      </div>
+    `;
+    parent.appendChild(box);
+
+    const canvas = box.querySelector('#fenceCanvas');
+    drawShape(canvas, shape);
+
+    // Make canvas clickable by region
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const cx = (e.clientX - rect.left) * (canvas.width/rect.width);
+      const cy = (e.clientY - rect.top) * (canvas.height/rect.height);
+      const W=canvas.width, H=canvas.height;
+      const margin=30;
+      let sideIdx = -1;
+      if(cy < H*0.25) sideIdx=0; // top
+      else if(cx > W*0.75) sideIdx=1; // right
+      else if(cy > H*0.75) sideIdx=2; // bottom
+      else if(cx < W*0.25) sideIdx=3; // left
+
+      if(sideIdx>=0 && !clickedSides.includes(sideIdx)) {
+        clickedSides.push(sideIdx);
+        total += sides[sideIdx];
+        drawShape(canvas, shape, clickedSides);
+        $('runningTotal').textContent = 'Perimeter so far: '+total+' cm';
+        soundStar();
+        createParticles(e.clientX, e.clientY, 5, ['✨','+'+sides[sideIdx]]);
+        addSideRow(sideIdx, sides[sideIdx], box.querySelector('#sidesContainer'));
+      }
+    });
+
+    canvas.style.cursor = 'pointer';
+  }
+
+  window.addSideRow = function(idx, val, container) {
+    const names = ['Top','Right','Bottom','Left'];
+    const row = document.createElement('div');
+    row.className = 'side-row';
+    row.innerHTML = `<span class="side-label">${names[idx]} side:</span><span class="side-value">+ ${val} cm</span>`;
+    row.style.animation = 'feedbackPop 0.3s ease';
+    container.appendChild(row);
+  };
+
+  window.checkFence = function(sIdx, total) {
+    const shape = shapes[sIdx];
+    const sides = getSides(shape);
+    const correct = sides.reduce((a,b)=>a+b,0);
+    const feedback = document.getElementById('fenceFeedback');
+
+    if(clickedSides.length < 4) {
+      feedback.className='feedback-msg wrong'; feedback.textContent='🤔 Click all 4 sides first!';
+      feedback.style.display='block'; return;
+    }
+
+    GAME.totalCount++; levelState.total++;
+    if(Math.abs(window.total - correct) < 0.1 || clickedSides.length===4) {
+      GAME.score += 30; GAME.correctCount++; levelState.correct++;
+      $('hudScore').textContent = GAME.score;
+      feedback.className='feedback-msg correct';
+      feedback.textContent='🎉 Amazing! Perimeter = '+correct+' cm!';
+      soundCorrect();
+      createParticles(window.innerWidth/2, window.innerHeight/2, 12);
+
+      setTimeout(()=>{
+        shapeIdx++;
+        if(shapeIdx >= shapes.length) {
+          finishLevel();
+        } else {
+          renderShape();
+        }
+      }, 1800);
+    } else {
+      soundWrong();
+      feedback.className='feedback-msg wrong';
+      feedback.textContent='❌ Not quite. Make sure you added all 4 sides!';
+      GAME.lives = Math.max(0,GAME.lives-1);
+      $('hudLives').textContent = GAME.lives;
+    }
+    feedback.style.display='block';
+  };
+
+  // expose total to checkFence
+  Object.defineProperty(window, 'total', { get:()=>total, configurable:true });
+  renderShape();
+}
+
+// --- QUICK QUIZ ---
+function renderQuiz(lv, parent) {
+  const qs = lv.questions;
+  let qIdx = 0;
+
+  function renderQ() {
+    parent.querySelectorAll('.quiz-challenge').forEach(e=>e.remove());
+    const q = qs[qIdx];
+
+    const box = document.createElement('div');
+    box.className = 'challenge-box quiz-challenge';
+
+    const optsHtml = q.options.map((o,i)=>`
+      <button class="option-btn" onclick="checkQuizAnswer(${o}, ${q.answer}, this)" id="opt${i}">${o} cm</button>
+    `).join('');
+
+    box.innerHTML = `
+      <div class="challenge-title">❓ Question ${qIdx+1} / ${qs.length}</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:clamp(14px,4vw,20px);color:#1F2937;margin:10px 0;">${q.q}</div>
+      <div class="shape-display" style="max-width:240px;height:160px;margin:0 auto 12px;">
+        <canvas id="quizCanvas" width="240" height="160"></canvas>
+      </div>
+      <div class="options-grid">${optsHtml}</div>
+      <div class="hint-box" id="quizHint">
+        💡 Remember: Add ALL sides together!<br>
+        ${q.shape.type==='square' ? 'Square: all 4 sides are equal. P = 4 × '+q.shape.side+' = '+(4*q.shape.side) :
+          'Rectangle: P = 2×'+q.shape.w+' + 2×'+q.shape.h+' = '+(2*q.shape.w+2*q.shape.h)}
+      </div>
+      <button class="btn hint-btn" onclick="$('quizHint').style.display='block'" style="margin-top:8px;">💡 Hint</button>
+      <div id="quizFeedback"></div>
+    `;
+    parent.appendChild(box);
+    drawShape(box.querySelector('#quizCanvas'), q.shape);
+  }
+
+  window.checkQuizAnswer = function(val, correct, btn) {
+    if(btn.classList.contains('correct') || btn.classList.contains('wrong')) return;
+    GAME.totalCount++; levelState.total++;
+    const fb = document.getElementById('quizFeedback');
+    if(val===correct) {
+      btn.classList.add('correct');
+      GAME.score+=25; GAME.correctCount++; levelState.correct++;
+      $('hudScore').textContent=GAME.score;
+      fb.className='feedback-msg correct'; fb.textContent='🌟 Correct! '+correct+' cm!';
+      fb.style.display='block';
+      soundCorrect();
+      createParticles(btn.getBoundingClientRect().left+30, btn.getBoundingClientRect().top, 8);
+      setTimeout(()=>{
+        qIdx++;
+        if(qIdx>=qs.length) finishLevel();
+        else renderQ();
+      },1600);
+    } else {
+      btn.classList.add('wrong');
+      GAME.lives=Math.max(0,GAME.lives-1); $('hudLives').textContent=GAME.lives;
+      fb.className='feedback-msg wrong'; fb.textContent='❌ Try again! The answer is '+correct+' cm.';
+      fb.style.display='block';
+      soundWrong();
+      setTimeout(()=>{ document.querySelectorAll('.option-btn').forEach(b=>{ if(parseInt(b.textContent)===correct) b.classList.add('correct'); }); },500);
+      setTimeout(()=>{ qIdx++; if(qIdx>=qs.length) finishLevel(); else renderQ(); },2000);
+    }
+  };
+
+  renderQ();
+}
+
+// --- MISSING SIDE ---
+function renderMissingSide(lv, parent) {
+  const puzzles = lv.puzzles;
+  let pIdx = 0;
+
+  function renderPuzzle() {
+    parent.querySelectorAll('.missing-challenge').forEach(e=>e.remove());
+    const p = puzzles[pIdx];
+    const shape = { type:p.type, w:p.w, h:p.h, side:p.side };
+
+    const hint = p.type==='square' ?
+      `P = 4 × side → ${p.perimeter} = 4 × ? → ? = ${p.perimeter}÷4 = ${p.answer}` :
+      `P = 2×w + 2×h → ${p.perimeter} = 2×${p.w==='?'?p.answer:p.w} + 2×${p.h==='?'?p.answer:p.h}`;
+
+    const box = document.createElement('div');
+    box.className = 'challenge-box missing-challenge';
+    box.innerHTML = `
+      <div class="challenge-title">🔍 Find the Missing Side! (${pIdx+1}/${puzzles.length})</div>
+      <div class="challenge-subtitle">${p.label} — Perimeter = ${p.perimeter} cm. What is the missing side?</div>
+      <div class="shape-display" style="max-width:260px;height:170px;margin:0 auto 12px;">
+        <canvas id="missingCanvas" width="260" height="170"></canvas>
+      </div>
+      <div style="font-family:'Fredoka One',cursive;color:#4F46E5;font-size:clamp(14px,4vw,20px);margin:8px 0;text-align:center;">
+        Perimeter = ${p.perimeter} cm
+      </div>
+      <div class="answer-area">
+        <div style="font-family:'Fredoka One',cursive;font-size:clamp(14px,4vw,20px);color:#1F2937;">Missing side = </div>
+        <input class="answer-input" type="number" id="missingInput" placeholder="?" min="1" max="99">
+        <div style="font-family:'Fredoka One',cursive;font-size:clamp(14px,4vw,18px);color:#1F2937;">cm</div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+        <button class="btn btn-check" onclick="checkMissing(${p.answer}, ${pIdx}, ${puzzles.length})">✅ Check</button>
+        <button class="btn hint-btn" onclick="$('missingHint').style.display='block'">💡 Hint</button>
+      </div>
+      <div class="hint-box" id="missingHint">💡 ${hint}</div>
+      <div id="missingFeedback"></div>
+    `;
+    parent.appendChild(box);
+    drawShape(box.querySelector('#missingCanvas'), shape);
+  }
+
+  window.checkMissing = function(answer, idx, total) {
+    const val = parseInt($('missingInput').value);
+    const fb = $('missingFeedback');
+    GAME.totalCount++; levelState.total++;
+    if(val===answer) {
+      GAME.score+=30; GAME.correctCount++; levelState.correct++;
+      $('hudScore').textContent=GAME.score;
+      fb.className='feedback-msg correct'; fb.textContent='🎉 Perfect! The missing side is '+answer+' cm!';
+      fb.style.display='block'; soundCorrect();
+      createParticles(window.innerWidth/2, window.innerHeight/2, 10);
+      setTimeout(()=>{ pIdx++; if(pIdx>=puzzles.length) finishLevel(); else renderPuzzle(); },1800);
+    } else {
+      GAME.lives=Math.max(0,GAME.lives-1); $('hudLives').textContent=GAME.lives;
+      fb.className='feedback-msg wrong'; fb.textContent='❌ Not right. The answer is '+answer+' cm. Try next!';
+      fb.style.display='block'; soundWrong();
+      setTimeout(()=>{ pIdx++; if(pIdx>=puzzles.length) finishLevel(); else renderPuzzle(); },2200);
+    }
+  };
+
+  renderPuzzle();
+}
+
+// --- TREASURE DOOR ---
+function renderTreasureDoor(lv, parent) {
+  const doors = lv.doors;
+  let dIdx=0;
+
+  function renderDoor() {
+    parent.querySelectorAll('.door-challenge').forEach(e=>e.remove());
+    const d = doors[dIdx];
+
+    const optsHtml = d.options.map((o,i)=>`
+      <button class="option-btn" onclick="checkDoor(${o},${d.answer},this)">${o} cm</button>
+    `).join('');
+
+    const box = document.createElement('div');
+    box.className = 'challenge-box door-challenge';
+    box.innerHTML = `
+      <div class="challenge-title">🚪 Treasure Door ${dIdx+1}/${doors.length}</div>
+      <svg width="100" height="130" viewBox="0 0 100 130" class="door-svg" style="display:block;margin:0 auto 8px;">
+        <rect x="5" y="10" width="90" height="115" rx="8" fill="#D97706" stroke="#92400E" stroke-width="3"/>
+        <rect x="12" y="17" width="76" height="101" rx="6" fill="#F59E0B"/>
+        <circle cx="75" cy="68" r="8" fill="#1F2937"/>
+        <circle cx="75" cy="68" r="5" fill="#6B7280"/>
+        <text x="50" y="80" text-anchor="middle" font-size="28">🔒</text>
+        <rect x="35" y="20" width="30" height="40" rx="4" fill="#FBBF24" opacity="0.6"/>
+        <text x="50" y="45" text-anchor="middle" font-size="18">🔑</text>
+      </svg>
+      <div style="font-family:'Fredoka One',cursive;font-size:clamp(13px,3.5vw,18px);color:#374151;margin:10px 0;text-align:center;line-height:1.4;">
+        ${d.riddle}
+      </div>
+      <div class="options-grid">${optsHtml}</div>
+      <div class="hint-box" id="doorHint">💡 Read the problem carefully and find all side lengths. Then add them all up!</div>
+      <button class="btn hint-btn" onclick="$('doorHint').style.display='block'" style="margin-top:8px;">💡 Hint</button>
+      <div id="doorFeedback"></div>
+    `;
+    parent.appendChild(box);
+  }
+
+  window.checkDoor = function(val, correct, btn) {
+    if(btn.classList.contains('correct')||btn.classList.contains('wrong')) return;
+    GAME.totalCount++; levelState.total++;
+    const fb=$('doorFeedback');
+    if(val===correct) {
+      btn.classList.add('correct');
+      GAME.score+=35; GAME.correctCount++; levelState.correct++;
+      $('hudScore').textContent=GAME.score;
+      fb.className='feedback-msg correct'; fb.textContent='🔓 Door unlocked! '+correct+' cm is correct!';
+      fb.style.display='block'; soundUnlock();
+      createParticles(window.innerWidth/2,window.innerHeight/2,15,['🔑','✨','🌟','🎉']);
+      setTimeout(()=>{ dIdx++; if(dIdx>=doors.length) finishLevel(); else renderDoor(); },2000);
+    } else {
+      btn.classList.add('wrong');
+      GAME.lives=Math.max(0,GAME.lives-1); $('hudLives').textContent=GAME.lives;
+      fb.className='feedback-msg wrong'; fb.textContent='❌ The door stays locked! Answer: '+correct+' cm';
+      fb.style.display='block'; soundWrong();
+      setTimeout(()=>{ document.querySelectorAll('.option-btn').forEach(b=>{ if(parseInt(b.textContent)===correct) b.classList.add('correct'); }); },400);
+      setTimeout(()=>{ dIdx++; if(dIdx>=doors.length) finishLevel(); else renderDoor(); },2200);
+    }
+  };
+
+  renderDoor();
+}
+
+// --- DRAG MEASURE ---
+function renderDragMeasure(lv, parent) {
+  const challenges = lv.challenges;
+  let cIdx=0;
+
+  function renderChallenge() {
+    parent.querySelectorAll('.drag-challenge').forEach(e=>e.remove());
+    const c = challenges[cIdx];
+    const numbers = c.type==='square' ? [c.lengths[0]] : [c.lengths[0],c.lengths[1]];
+    const shuffled = [...numbers,...[2,3,4,5,6,7,8,9,10].filter(n=>!numbers.includes(n)).slice(0,4)].sort(()=>Math.random()-0.5);
+
+    const labelsHtml = c.type==='square' ?
+      `<span style="font-family:'Fredoka One',cursive;color:#4F46E5;font-size:clamp(14px,4vw,20px);">Side = </span>
+       <div class="drop-zone" id="dropSide" data-expected="${numbers[0]}">?</div>
+       <span style="font-family:'Fredoka One',cursive;color:#374151;font-size:clamp(14px,4vw,18px);"> cm</span>` :
+      `<span style="font-family:'Fredoka One',cursive;color:#4F46E5;font-size:clamp(14px,4vw,20px);">L = </span>
+       <div class="drop-zone" id="dropL" data-expected="${numbers[0]}">?</div>
+       <span style="font-family:'Fredoka One',cursive;color:#374151;"> cm &nbsp;&nbsp; W = </span>
+       <div class="drop-zone" id="dropW" data-expected="${numbers[1]}">?</div>
+       <span style="font-family:'Fredoka One',cursive;color:#374151;"> cm</span>`;
+
+    const tilesHtml = shuffled.map(n=>`<div class="drag-tile" data-val="${n}" draggable="true">${n}</div>`).join('');
+
+    const box = document.createElement('div');
+    box.className = 'challenge-box drag-challenge';
+    box.innerHTML = `
+      <div class="challenge-title">🎯 Drag & Measure (${cIdx+1}/${challenges.length})</div>
+      <div class="challenge-subtitle">Drag the correct numbers to set the side lengths!</div>
+      <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin:12px 0;">
+        ${labelsHtml}
+      </div>
+      <div class="drag-container" style="text-align:center;padding:14px;">${tilesHtml}</div>
+      <div class="running-total" id="dragTotal">Perimeter = ? cm</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px;">
+        <button class="btn btn-check" onclick="checkDrag(${c.answer}, ${cIdx}, ${challenges.length})">✅ Check Perimeter</button>
+        <button class="btn hint-btn" onclick="$('dragHint').style.display='block'">💡 Hint</button>
+      </div>
+      <div class="hint-box" id="dragHint">
+        💡 ${c.type==='square'? 'Square: P = 4 × side = 4 × '+numbers[0]+' = '+c.answer+' cm' :
+          'Rectangle: P = 2×'+numbers[0]+' + 2×'+numbers[1]+' = '+c.answer+' cm'}
+      </div>
+      <div id="dragFeedback"></div>
+    `;
+    parent.appendChild(box);
+
+    // Setup drag & drop
+    const tiles = box.querySelectorAll('.drag-tile');
+    const drops = box.querySelectorAll('.drop-zone');
+
+    let dragVal = null;
+    tiles.forEach(tile=>{
+      tile.addEventListener('dragstart',e=>{ dragVal=tile.dataset.val; e.dataTransfer.setData('text',dragVal); });
+      tile.addEventListener('touchstart',e=>{
+        dragVal=tile.dataset.val;
+        tile.style.opacity='0.5';
+      },{passive:true});
+    });
+
+    drops.forEach(drop=>{
+      drop.addEventListener('dragover',e=>{ e.preventDefault(); drop.classList.add('drag-over'); });
+      drop.addEventListener('dragleave',()=>drop.classList.remove('drag-over'));
+      drop.addEventListener('drop',e=>{
+        e.preventDefault(); drop.classList.remove('drag-over');
+        drop.textContent = dragVal; drop.classList.add('filled');
+        drop.dataset.value = dragVal;
+        updateDragTotal(box, c);
+      });
+    });
+
+    // Touch-based drag for mobile
+    tiles.forEach(tile=>{
+      tile.addEventListener('touchend',e=>{
+        tile.style.opacity='1';
+        const touch = e.changedTouches[0];
+        const elem = document.elementFromPoint(touch.clientX, touch.clientY);
+        if(elem && elem.classList.contains('drop-zone')) {
+          elem.textContent=tile.dataset.val;
+          elem.classList.add('filled');
+          elem.dataset.value=tile.dataset.val;
+          updateDragTotal(box,c);
+        }
+        dragVal=null;
+      });
+    });
+  }
+
+  function updateDragTotal(box, c) {
+    if(c.type==='square') {
+      const dv = box.querySelector('#dropSide');
+      const val = dv&&dv.dataset.value ? parseInt(dv.dataset.value)*4 : '?';
+      $('dragTotal').textContent = 'Perimeter = '+(isNaN(val)?'?':val)+' cm';
+    } else {
+      const dl = box.querySelector('#dropL'), dw = box.querySelector('#dropW');
+      const l = dl&&dl.dataset.value?parseInt(dl.dataset.value):null;
+      const w = dw&&dw.dataset.value?parseInt(dw.dataset.value):null;
+      $('dragTotal').textContent = 'Perimeter = '+(l&&w?2*l+2*w:'?')+' cm';
+    }
+  }
+
+  window.checkDrag = function(answer, idx, total) {
+    GAME.totalCount++; levelState.total++;
+    const fb=$('dragFeedback');
+    const txt = $('dragTotal').textContent;
+    const match = txt.match(/(\d+)/);
+    const got = match?parseInt(match[1]):0;
+    if(got===answer) {
+      GAME.score+=35; GAME.correctCount++; levelState.correct++;
+      $('hudScore').textContent=GAME.score;
+      fb.className='feedback-msg correct'; fb.textContent='🎉 Brilliant! Perimeter = '+answer+' cm!';
+      fb.style.display='block'; soundCorrect();
+      createParticles(window.innerWidth/2,window.innerHeight/2,12);
+      setTimeout(()=>{ cIdx++; if(cIdx>=challenges.length) finishLevel(); else renderChallenge(); },1800);
+    } else {
+      GAME.lives=Math.max(0,GAME.lives-1); $('hudLives').textContent=GAME.lives;
+      fb.className='feedback-msg wrong'; fb.textContent='❌ Not quite! Answer = '+answer+' cm. Try next!';
+      fb.style.display='block'; soundWrong();
+      setTimeout(()=>{ cIdx++; if(cIdx>=challenges.length) finishLevel(); else renderChallenge(); },2200);
+    }
+  };
+
+  renderChallenge();
+}
+
+// ============================================================
+// FINISH LEVEL
+// ============================================================
+function finishLevel() {
+  clearInterval(GAME.timerInterval);
+  const lv = LEVELS[GAME.currentLevel];
+
+  const ratio = levelState.total>0 ? levelState.correct/levelState.total : 0;
+  let stars = ratio>=0.9?3:ratio>=0.6?2:1;
+
+  GAME.levelStars[GAME.currentLevel] = Math.max(GAME.levelStars[GAME.currentLevel], stars);
+  GAME.levelCompleted[GAME.currentLevel] = true;
+  GAME.totalStars = GAME.levelStars.reduce((a,b)=>a+b,0);
+
+  // Unlock next
+  if(GAME.currentLevel+1 < LEVELS.length) GAME.levelUnlocked[GAME.currentLevel+1]=true;
+
+  // Bonus score for time
+  GAME.score += GAME.timeLeft * 2;
+
+  // Show level complete
+  $('completeLevel').textContent = lv.id+' - '+lv.name;
+  $('completeScore').textContent = GAME.score;
+  $('completeCorrect').textContent = levelState.correct+'/'+levelState.total;
+  $('completeTime').textContent = GAME.timeLeft+'s';
+  $('completeStars').textContent = '⭐'.repeat(stars)+'☆'.repeat(3-stars);
+
+  // Badge
+  const badges = {0:'🌱 Perimeter Beginner',2:'🔨 Shape Builder',4:'🧭 Math Explorer'};
+  const badgeDiv=$('badgeEarned'); badgeDiv.innerHTML='';
+  if(badges[GAME.currentLevel]) {
+    badgeDiv.innerHTML=`<div class="badge">${badges[GAME.currentLevel]}</div>`;
+  }
+
+  showScreen('levelCompleteScreen');
+  soundVictory();
+  createFireworks();
+}
+
+function nextLevel() {
+  const next = GAME.currentLevel+1;
+  if(next >= LEVELS.length) {
+    showCertificate();
+  } else {
+    buildMap();
+    showScreen('mapScreen');
+  }
+}
+
+// ============================================================
+// BONUS MODE
+// ============================================================
+function startBonus() {
+  showScreen('gameScreen');
+  clearInterval(GAME.timerInterval);
+  $('hudTimer').textContent = '∞';
+  const content=$('levelContent');
+  content.innerHTML='';
+
+  const shapes = [
+    {type:'square',side:3,label:'Tiny Square'},
+    {type:'rectangle',w:5,h:2,label:'Little Rectangle'},
+    {type:'square',side:7,label:'Big Square'},
+    {type:'rectangle',w:10,h:4,label:'Wide Rectangle'},
+    {type:'rectangle',w:6,h:6,label:'Special Rectangle'}
+  ];
+
+  const idx = Math.floor(Math.random()*shapes.length);
+  const s = shapes[idx];
+  const sides = getSides(s);
+  const correct = sides.reduce((a,b)=>a+b,0);
+
+  const title = document.createElement('div');
+  title.style.cssText='text-align:center;margin-bottom:8px;';
+  title.innerHTML=`<div style="font-family:'Fredoka One',cursive;font-size:clamp(18px,5vw,28px);color:#1F2937;">🎁 Build Your Own Shape!</div><div style="font-size:clamp(12px,3vw,14px);color:#374151;">Find the perimeter of the ${s.label}</div>`;
+  content.appendChild(title);
+
+  const box=document.createElement('div');
+  box.className='challenge-box';
+  box.innerHTML=`
+    <div class="challenge-title">🏗️ ${s.label}</div>
+    <div class="shape-display" style="max-width:260px;height:170px;margin:0 auto 12px;">
+      <canvas id="bonusCanvas" width="260" height="170"></canvas>
+    </div>
+    <div style="font-family:'Fredoka One',cursive;color:#1F2937;margin:8px 0;font-size:clamp(14px,4vw,18px);text-align:center;">
+      Sides: ${sides.join(' cm + ')} cm
+    </div>
+    <div class="answer-area">
+      <div style="font-family:'Fredoka One',cursive;font-size:clamp(14px,4vw,20px);color:#1F2937;">P = </div>
+      <input class="answer-input" type="number" id="bonusInput" placeholder="?" min="1" max="200">
+      <div style="font-family:'Fredoka One',cursive;font-size:clamp(14px,4vw,18px);color:#1F2937;">cm</div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+      <button class="btn btn-check" onclick="checkBonus(${correct})">✅ Check</button>
+      <button class="btn hint-btn" onclick="$('bonusHint').style.display='block'">💡 Hint</button>
+    </div>
+    <div class="hint-box" id="bonusHint">💡 ${sides.join(' + ')} = ${correct} cm</div>
+    <div id="bonusFeedback"></div>
+    <button class="btn back-btn" style="margin-top:12px;" onclick="buildMap();showScreen('mapScreen')">⬅️ Back to Map</button>
+  `;
+  content.appendChild(box);
+  drawShape(box.querySelector('#bonusCanvas'),s);
+
+  window.checkBonus=function(correct){
+    const val=parseInt($('bonusInput').value);
+    const fb=$('bonusFeedback');
+    if(val===correct){
+      fb.className='feedback-msg correct';fb.textContent='🎊 Excellent! '+correct+' cm!';
+      GAME.score+=50;$('hudScore').textContent=GAME.score;soundCorrect();
+      createParticles(window.innerWidth/2,window.innerHeight/2,15);
+    } else {
+      fb.className='feedback-msg wrong';fb.textContent='❌ Try again! Answer = '+correct+' cm';soundWrong();
+    }
+    fb.style.display='block';
+  };
+}
+
+// ============================================================
+// CERTIFICATE
+// ============================================================
+function showCertificate() {
+  $('certStudentName').textContent = GAME.studentName;
+  $('certScore').textContent = GAME.score;
+  $('certStars').textContent = GAME.totalStars+' ⭐';
+  showScreen('certificateScreen');
+  soundVictory();
+  setTimeout(createFireworks,300);
+  setTimeout(createFireworks,1200);
+}
+
+function restartGame() {
+  GAME.score=0;GAME.lives=3;GAME.totalStars=0;
+  GAME.levelStars=[0,0,0,0,0,0,0];
+  GAME.levelUnlocked=[true,false,false,false,false,false,false];
+  GAME.levelCompleted=[false,false,false,false,false,false,false];
+  showScreen('menuScreen');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', ()=>{
+  initFloatingShapes();
+  // Pre-fill name if already set
+  if(GAME.studentName) $('studentNameInput').value=GAME.studentName;
+});
+
+// Prevent default touch scroll on game
+document.querySelector('#gameScreen').addEventListener('touchmove',e=>{
+  if(e.target.tagName!=='INPUT') e.preventDefault();
+},{passive:false});
+
+</script>
+</body>
+</html>

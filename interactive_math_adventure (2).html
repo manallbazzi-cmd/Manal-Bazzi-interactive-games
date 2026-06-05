@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Numbers up to 999 - Math Adventure</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind Configuration for customized kid-friendly fonts & themes -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fredoka: ['Fredoka', 'sans-serif'],
+            sans: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              yellow: '#FBBF24',
+              orange: '#F97316',
+              blue: '#0EA5E9',
+              green: '#10B981',
+              purple: '#8B5CF6',
+              pink: '#EC4899',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    
+    /* Animation Keyframes */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-slow {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 2s ease-in-out infinite;
+    }
+
+    /* Base 10 block designs */
+    .block-unit {
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, #fb923c, #ea580c);
+      border: 1px solid #c2410c;
+      box-shadow: 1px 1px 0px #9a3412;
+      border-radius: 2px;
+    }
+    
+    .block-rod {
+      width: 14px;
+      height: 122px;
+      background: linear-gradient(135deg, #a78bfa, #7c3aed);
+      border: 1.5px solid #6d28d9;
+      box-shadow: 2px 2px 0px #5b21b6;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1px;
+    }
+    .rod-segment {
+      height: 10px;
+      border-bottom: 1px solid #6d28d9;
+    }
+    .rod-segment:last-child {
+      border-bottom: none;
+    }
+
+    .block-flat {
+      width: 122px;
+      height: 122px;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border: 2px solid #0369a1;
+      box-shadow: 3px 3px 0px #075985;
+      border-radius: 6px;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      gap: 1px;
+      padding: 1px;
+    }
+    .flat-segment {
+      border: 0.5px solid #0369a1;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Cards Flip styling for Memory game */
+    .card-perspective {
+      perspective: 1000px;
+    }
+    .card-inner {
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .card-flipped {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      backface-visibility: hidden;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body class="bg-blue-50 font-sans min-h-screen flex flex-col selection:bg-brand-blue selection:text-white overflow-x-hidden">
+
+  <!-- TOP DECORATION BANNER -->
+  <div class="bg-gradient-to-r from-brand-blue via-brand-purple to-brand-pink text-white py-1 px-4 text-center text-xs font-semibold tracking-wider shadow-sm flex justify-between items-center">
+    <span>🌟 Welcome to the Ultimate Number Place Value Adventure! 🌟</span>
+    <span class="hidden md:inline">Let's Order Numbers up to 999! 🎉</span>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="bg-white border-b-4 border-slate-100 px-4 py-3 md:py-4 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3">
+      <!-- Logo & Teacher Info -->
+      <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+        <div class="flex items-center gap-2">
+          <div class="bg-brand-blue text-white p-2.5 rounded-2xl shadow-md rotate-[-3deg]">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          </div>
+          <div>
+            <h1 class="font-fredoka text-xl md:text-2xl font-bold text-slate-800 leading-none">Order to 999</h1>
+            <p class="text-xs text-brand-purple font-bold tracking-wide mt-1">Classroom: <span class="bg-purple-100 text-brand-purple px-1.5 py-0.5 rounded">Mrs. Manal Bazzi</span></p>
+          </div>
+        </div>
+        
+        <!-- Live Stars count and sound button -->
+        <div class="flex items-center gap-2">
+          <!-- Sound Toggle -->
+          <button id="soundToggleBtn" onclick="toggleSound()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition text-slate-600 focus:outline-none" title="Toggle Sound FX">
+            <svg id="soundOnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+            <svg id="soundOffIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zm12.364-5.636l4.243 4.243m0-4.243l-4.243 4.243"></path></svg>
+          </button>
+          <div class="bg-brand-yellow/10 border-2 border-brand-yellow/30 text-amber-700 px-3 py-1.5 rounded-xl flex items-center gap-1.5 font-bold text-sm">
+            <span>⭐</span>
+            <span id="globalStarsCount">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Navigation Menu -->
+      <nav id="mainNav" class="hidden flex-wrap items-center justify-center gap-2 w-full md:w-auto">
+        <button onclick="switchTab('explore')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 bg-brand-blue text-white shadow-sm" data-tab="explore">
+          🧱 Explore Blocks
+        </button>
+        <button onclick="switchTab('worksheet')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100" data-tab="worksheet">
+          📝 Worksheet
+        </button>
+        <button onclick="switchTab('arcade')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100" data-tab="arcade">
+          🎮 Runner Arcade
+        </button>
+        <button onclick="switchTab('match')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100" data-tab="match">
+          🧠 Memory Game
+        </button>
+        <button onclick="switchTab('summary')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 text-slate-600 hover:bg-slate-100" data-tab="summary">
+          🎓 Report Card
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="flex-grow max-w-7xl mx-auto w-full p-4 md:p-6 flex flex-col items-center justify-center">
+
+    <!-- 1. WELCOME SCREEN / AVATAR SETUP -->
+    <section id="screen-welcome" class="app-screen w-full max-w-2xl bg-white rounded-3xl border-4 border-slate-100 p-6 md:p-8 shadow-xl text-center">
+      <span class="inline-block bg-indigo-100 text-brand-purple px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase mb-4 animate-bounce">
+        🌟 GRADE 1 &amp; 2 SPECIAL EDITION 🌟
+      </span>
+      <h2 class="font-fredoka text-3xl md:text-5xl font-black text-slate-800 mb-2 leading-tight">
+        Mastering Numbers to <span class="text-brand-blue">999</span>!
+      </h2>
+      <p class="text-slate-500 text-sm md:text-base max-w-lg mx-auto mb-6">
+        Welcome to your playful place value laboratory. Compare blocks, play dynamic arcade races, and challenge your memory!
+      </p>
+
+      <!-- Welcome Form Box -->
+      <div class="bg-slate-50 rounded-2xl p-6 border-2 border-slate-100 text-left max-w-md mx-auto mb-6">
+        <!-- Student Name Input -->
+        <label class="block text-slate-700 font-bold mb-2 text-sm flex items-center gap-1">
+          ✍️ Enter Your Name:
+          <span class="text-red-500">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="studentNameInput" 
+          placeholder="Type your name here..." 
+          class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-brand-blue focus:outline-none font-semibold text-slate-800 placeholder-slate-400 shadow-sm transition mb-6 text-base"
+        />
+
+        <!-- Avatar Choice (Boy/Girl with Dynamic Selection) -->
+        <label class="block text-slate-700 font-bold mb-3 text-sm">🎒 Choose Your Avatar:</label>
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Boy Avatar option -->
+          <button type="button" onclick="selectAvatar('boy')" id="avatarBtn-boy" class="avatar-card p-4 rounded-xl border-4 border-slate-200 bg-white hover:border-brand-blue hover:bg-sky-50/50 transition duration-300 text-center flex flex-col items-center">
+            <div class="w-16 h-16 mb-2 rounded-full bg-sky-100 flex items-center justify-center text-3xl shadow-inner relative">
+              👦
+              <span class="absolute bottom-0 right-0 bg-brand-blue text-white text-[10px] px-1 rounded-full font-bold">Boy</span>
+            </div>
+            <span class="font-bold text-sm text-slate-700">Leo</span>
+          </button>
+          
+          <!-- Girl Avatar option -->
+          <button type="button" onclick="selectAvatar('girl')" id="avatarBtn-girl" class="avatar-card p-4 rounded-xl border-4 border-slate-200 bg-white hover:border-brand-pink hover:bg-pink-50/50 transition duration-300 text-center flex flex-col items-center">
+            <div class="w-16 h-16 mb-2 rounded-full bg-pink-100 flex items-center justify-center text-3xl shadow-inner relative">
+              👧
+              <span class="absolute bottom-0 right-0 bg-brand-pink text-white text-[10px] px-1 rounded-full font-bold">Girl</span>
+            </div>
+            <span class="font-bold text-sm text-slate-700">Maya</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button onclick="startAdventure()" class="w-full max-w-xs bg-brand-green text-white font-fredoka text-lg md:text-xl font-bold py-4 px-8 rounded-2xl shadow-lg shadow-green-500/20 hover:bg-emerald-600 transition-all duration-200 hover:scale-105 active:scale-95">
+        Let's Start! 🚀
+      </button>
+
+      <!-- Bottom Credits -->
+      <p class="text-xs text-slate-400 font-medium mt-6">
+        Curriculum Designed with ❤️ by <span class="font-bold text-slate-600">Mrs. Manal Bazzi</span>
+      </p>
+    </section>
+
+
+    <!-- 2. SCREEN: EXPLORE BASE 10 BLOCKS (PLAYGROUND) -->
+    <section id="screen-explore" class="app-screen w-full hidden flex-col gap-6">
+      
+      <!-- Tutorial Header -->
+      <div class="bg-white rounded-3xl p-6 border-4 border-slate-100 shadow-lg">
+        <div class="flex items-start gap-4">
+          <div class="bg-indigo-100 text-brand-purple p-3.5 rounded-2xl text-2xl hidden sm:block">📚</div>
+          <div>
+            <h3 class="font-fredoka text-xl md:text-2xl font-bold text-slate-800">Compare Using Base 10 Blocks</h3>
+            <p class="text-slate-500 text-sm mt-1 leading-relaxed">
+              When we compare numbers like <strong>hundreds, tens, and ones</strong>:
+              1. First look at the <strong>Hundreds</strong> flat blocks (Blue). The number with more hundreds is bigger!
+              2. If hundreds are equal, look at the <strong>Tens</strong> rods (Purple).
+              3. If those are equal too, look at the <strong>Ones</strong> blocks (Orange)!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Playground Workspace -->
+      <div class="grid grid-cols-1 lg:grid-cols-11 gap-6 items-stretch">
+        
+        <!-- NUMBER A COLUMN (LEFT) -->
+        <div class="lg:col-span-5 bg-white rounded-3xl p-6 border-4 border-sky-100 shadow-md flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-slate-50">
+              <span class="text-sm font-bold text-slate-400 tracking-wider uppercase">NUMBER A</span>
+              <span id="numberADisplay" class="font-fredoka text-3xl font-black text-brand-blue">345</span>
+            </div>
+
+            <!-- Block Adjuster Controls -->
+            <div class="grid grid-cols-3 gap-2 mb-6">
+              <!-- Hundreds -->
+              <div class="bg-sky-50 rounded-xl p-2.5 text-center border border-sky-100">
+                <p class="text-xs font-extrabold text-sky-800 mb-1.5 uppercase">Hundreds</p>
+                <div class="flex items-center justify-between bg-white rounded-lg border border-sky-200 px-1">
+                  <button onclick="adjustValue('A', 'H', -1)" class="text-lg font-bold text-sky-600 hover:bg-sky-50 w-7 h-7 rounded">-</button>
+                  <span id="valAH" class="font-black text-slate-700 text-sm">3</span>
+                  <button onclick="adjustValue('A', 'H', 1)" class="text-lg font-bold text-sky-600 hover:bg-sky-50 w-7 h-7 rounded">+</button>
+                </div>
+              </div>
+              <!-- Tens -->
+              <div class="bg-purple-50 rounded-xl p-2.5 text-center border border-purple-100">
+                <p class="text-xs font-extrabold text-purple-800 mb-1.5 uppercase">Tens</p>
+                <div class="flex items-center justify-between bg-white rounded-lg border border-purple-200 px-1">
+                  <button onclick="adjustValue('A', 'T', -1)" class="text-lg font-bold text-purple-600 hover:bg-purple-50 w-7 h-7 rounded">-</button>
+                  <span id="valAT" class="font-black text-slate-700 text-sm">4</span>
+                  <button onclick="adjustValue('A', 'T', 1)" class="text-lg font-bold text-purple-600 hover:bg-purple-50 w-7 h-7 rounded">+</button>
+                </div>
+              </div>
+              <!-- Ones -->
+              <div class="bg-orange-50 rounded-xl p-2.5 text-center border border-orange-100">
+                <p class="text-xs font-extrabold text-orange-800 mb-1.5 uppercase">Ones</p>
+                <div class="flex items-center justify-between bg-white rounded-lg border border-orange-200 px-1">
+                  <button onclick="adjustValue('A', 'O', -1)" class="text-lg font-bold text-orange-600 hover:bg-orange-50 w-7 h-7 rounded">-</button>
+                  <span id="valAO" class="font-black text-slate-700 text-sm">5</span>
+                  <button onclick="adjustValue('A', 'O', 1)" class="text-lg font-bold text-orange-600 hover:bg-orange-50 w-7 h-7 rounded">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Graphic Display Area -->
+            <div class="border-2 border-dashed border-slate-100 rounded-2xl p-4 bg-slate-50 min-h-[180px] flex flex-wrap content-start gap-4">
+              <!-- Hundreds Render Container -->
+              <div id="renderAHundreds" class="flex flex-wrap gap-1 w-full border-b border-slate-200/50 pb-2">
+                <!-- Javascript will render 100s -->
+              </div>
+              <!-- Tens Render Container -->
+              <div id="renderATens" class="flex flex-wrap gap-2 w-full border-b border-slate-200/50 pb-2">
+                <!-- Javascript will render 10s -->
+              </div>
+              <!-- Ones Render Container -->
+              <div id="renderAOnes" class="flex flex-wrap gap-1.5 w-full">
+                <!-- Javascript will render 1s -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Expanded Equation -->
+          <div class="mt-4 p-3 bg-sky-50 rounded-xl text-center text-xs font-bold text-sky-800">
+            Expanded Form: <span id="expandedFormDisplayA" class="font-mono text-sm tracking-wide">300 + 40 + 5</span>
+          </div>
+        </div>
+
+
+        <!-- COMPARATOR OPERATOR (MIDDLE) -->
+        <div class="lg:col-span-1 flex flex-col justify-center items-center gap-2">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wide">COMPARE</div>
+          <div id="comparisonSymbolBubble" class="w-16 h-16 md:w-20 md:h-20 bg-brand-yellow text-slate-900 border-4 border-white shadow-lg rounded-full flex items-center justify-center font-fredoka text-3xl md:text-5xl font-black select-none transform transition animate-float">
+            =
+          </div>
+          <span id="comparisonPhrase" class="text-xs font-black text-slate-500 text-center px-1">equals</span>
+        </div>
+
+
+        <!-- NUMBER B COLUMN (RIGHT) -->
+        <div class="lg:col-span-5 bg-white rounded-3xl p-6 border-4 border-pink-100 shadow-md flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-slate-50">
+              <span class="text-sm font-bold text-slate-400 tracking-wider uppercase">NUMBER B</span>
+              <span id="numberBDisplay" class="font-fredoka text-3xl font-black text-brand-pink">284</span>
+            </div>
+
+            <!-- Block Adjuster Controls -->
+            <div class="grid grid-cols-3 gap-2 mb-6">
+              <!-- Hundreds -->
+              <div class="bg-sky-50 rounded-xl p-2.5 text-center border border-sky-100">
+                <p class="text-xs font-extrabold text-sky-800 mb-1.5 uppercase">Hundreds</p>
+                <div class="flex items-center justify-between bg-white rounded-lg border border-sky-200 px-1">
+                  <button onclick="adjustValue('B', 'H', -1)" class="text-lg font-bold text-sky-600 hover:bg-sky-50 w-7 h-7 rounded">-</button>
+                  <span id="valBH" class="font-black text-slate-700 text-sm">2</span>
+                  <button onclick="adjustValue('B', 'H', 1)" class="text-lg font-bold text-sky-600 hover:bg-sky-50 w-7 h-7 rounded">+</button>
+                </div>
+              </div>
+              <!-- Tens -->
+              <div class="bg-purple-50 rounded-xl p-2.5 text-center border border-purple-100">
+                <p class="text-xs font-extrabold text-purple-800 mb-1.5 uppercase">Tens</p>
+                <div class="flex items-center justify-between bg-white rounded-lg border border-purple-200 px-1">
+                  <button onclick="adjustValue('B', 'T', -1)" class="text-lg font-bold text-purple-600 hover:bg-purple-50 w-7 h-7 rounded">-</button>
+                  <span id="valBT" class="font-black text-slate-700 text-sm">8</span>
+                  <button onclick="adjustValue('B', 'T', 1)" class="text-lg font-bold text-purple-600 hover:bg-purple-50 w-7 h-7 rounded">+</button>
+                </div>
+              </div>
+              <!-- Ones -->
+              <div class="bg-orange-50 rounded-xl p-2.5 text-center border border-orange-100">
+                <p class="text-xs font-extrabold text-orange-800 mb-1.5 uppercase">Ones</p>
+                <div class="flex items-center justify-between bg-white rounded-lg border border-orange-200 px-1">
+                  <button onclick="adjustValue('B', 'O', -1)" class="text-lg font-bold text-orange-600 hover:bg-orange-50 w-7 h-7 rounded">-</button>
+                  <span id="valBO" class="font-black text-slate-700 text-sm">4</span>
+                  <button onclick="adjustValue('B', 'O', 1)" class="text-lg font-bold text-orange-600 hover:bg-orange-50 w-7 h-7 rounded">+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Graphic Display Area -->
+            <div class="border-2 border-dashed border-slate-100 rounded-2xl p-4 bg-slate-50 min-h-[180px] flex flex-wrap content-start gap-4">
+              <!-- Hundreds Render Container -->
+              <div id="renderBHundreds" class="flex flex-wrap gap-1 w-full border-b border-slate-200/50 pb-2">
+                <!-- Javascript will render 100s -->
+              </div>
+              <!-- Tens Render Container -->
+              <div id="renderBTens" class="flex flex-wrap gap-2 w-full border-b border-slate-200/50 pb-2">
+                <!-- Javascript will render 10s -->
+              </div>
+              <!-- Ones Render Container -->
+              <div id="renderBOnes" class="flex flex-wrap gap-1.5 w-full">
+                <!-- Javascript will render 1s -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Expanded Equation -->
+          <div class="mt-4 p-3 bg-pink-50 rounded-xl text-center text-xs font-bold text-pink-800">
+            Expanded Form: <span id="expandedFormDisplayB" class="font-mono text-sm tracking-wide">200 + 80 + 4</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Concept Helper Box -->
+      <div id="comparisonRuleHelper" class="bg-indigo-50 border-2 border-indigo-100 text-indigo-900 rounded-2xl p-4 text-center font-bold text-sm">
+        💡 Compare hundreds: <span id="helperExplanation">A has 3 hundreds and B has 2 hundreds, so A is larger!</span>
+      </div>
+
+      <!-- Next Activity Prompts -->
+      <div class="text-center mt-2">
+        <button onclick="switchTab('worksheet')" class="bg-brand-purple text-white font-bold px-6 py-3 rounded-2xl shadow-md hover:bg-violet-600 transition">
+          Test Your Skills in the Worksheet! 📝
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- 3. SCREEN: GUIDED WORKSHEET / INTERACTIVE WORKSHEETS -->
+    <section id="screen-worksheet" class="app-screen w-full hidden flex-col gap-6 max-w-4xl">
+      
+      <!-- Top banner of worksheet -->
+      <div class="bg-white rounded-3xl p-6 border-4 border-slate-100 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <h3 class="font-fredoka text-xl md:text-2xl font-bold text-slate-800">Digital Interactive Lesson</h3>
+          <p class="text-slate-500 text-sm mt-1">
+            Complete the questions below! Each correct answer earns you <strong>+10 stars</strong>.
+          </p>
+        </div>
+        <!-- Progress Counter -->
+        <div class="bg-slate-50 border border-slate-200 px-4 py-2 rounded-2xl text-center">
+          <span class="text-xs font-extrabold text-slate-400 block tracking-wider">COMPLETED</span>
+          <span id="worksheetProgressText" class="font-fredoka text-lg font-black text-slate-700">0 / 4 Lessons</span>
+        </div>
+      </div>
+
+      <!-- WORKBOOK EXERCISES -->
+      <div class="flex flex-col gap-8">
+        
+        <!-- EXERCISE 1: Place value Block Identification -->
+        <div class="bg-white rounded-3xl p-6 border-4 border-slate-100 shadow-md">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-7 h-7 bg-brand-yellow text-slate-900 font-bold rounded-full flex items-center justify-center text-sm">1</span>
+            <h4 class="font-fredoka text-base md:text-lg font-bold text-slate-800">Identify and Compare blocks. Choose correct values &amp; symbol!</h4>
+          </div>
+
+          <!-- Problem Layout -->
+          <div class="grid grid-cols-1 md:grid-cols-7 gap-4 items-center bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-4">
+            <!-- Left blocks -->
+            <div class="md:col-span-3 flex flex-col items-center">
+              <div class="flex flex-wrap gap-2 justify-center mb-3">
+                <!-- Visualizing: 3 flats, 2 rods, 4 units = 324 -->
+                <div class="flex gap-1"><div class="block-flat"></div><div class="block-flat"></div><div class="block-flat"></div></div>
+                <div class="flex gap-1"><div class="block-rod"></div><div class="block-rod"></div></div>
+                <div class="flex gap-1 flex-col"><div class="block-unit"></div><div class="block-unit"></div><div class="block-unit"></div><div class="block-unit"></div></div>
+              </div>
+              <input type="number" id="ex1NumberInputA" placeholder="???" class="w-24 text-center font-fredoka font-black text-lg py-2 rounded-xl border-2 border-slate-200 focus:outline-none focus:border-brand-blue" />
+              <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase">Write A's Number</p>
+            </div>
+
+            <!-- Operator Select -->
+            <div class="md:col-span-1 flex justify-center">
+              <select id="ex1OperatorSelect" class="w-16 h-16 bg-white border-2 border-brand-purple rounded-2xl font-fredoka text-2xl font-black text-center text-slate-800 focus:outline-none focus:border-indigo-500 shadow-sm">
+                <option value="">?</option>
+                <option value="<">&lt;</option>
+                <option value="=">=</option>
+                <option value=">">&gt;</option>
+              </select>
+            </div>
+
+            <!-- Right blocks -->
+            <div class="md:col-span-3 flex flex-col items-center">
+              <div class="flex flex-wrap gap-2 justify-center mb-3">
+                <!-- Visualizing: 4 flats, 1 rod, 3 units = 413 -->
+                <div class="flex gap-1"><div class="block-flat"></div><div class="block-flat"></div><div class="block-flat"></div><div class="block-flat"></div></div>
+                <div class="flex gap-1"><div class="block-rod"></div></div>
+                <div class="flex gap-1 flex-col"><div class="block-unit"></div><div class="block-unit"></div><div class="block-unit"></div></div>
+              </div>
+              <input type="number" id="ex1NumberInputB" placeholder="???" class="w-24 text-center font-fredoka font-black text-lg py-2 rounded-xl border-2 border-slate-200 focus:outline-none focus:border-brand-pink" />
+              <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase">Write B's Number</p>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span id="ex1Status" class="text-xs font-bold text-slate-400">Not attempted yet</span>
+            <button onclick="checkExercise1()" class="bg-brand-blue hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition">
+              Check Answer 💡
+            </button>
+          </div>
+        </div>
+
+
+        <!-- EXERCISE 2: Complete using signs < or > (Grid of comparisons) -->
+        <div class="bg-white rounded-3xl p-6 border-4 border-slate-100 shadow-md">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-7 h-7 bg-brand-yellow text-slate-900 font-bold rounded-full flex items-center justify-center text-sm">2</span>
+            <h4 class="font-fredoka text-base md:text-lg font-bold text-slate-800">Compare the numbers. Complete by selecting the correct sign!</h4>
+          </div>
+
+          <!-- Problem Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+            <!-- Row 1 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <span class="font-fredoka text-lg font-black text-slate-700">385</span>
+              <select id="ex2SelA" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-fredoka text-lg font-black text-slate-700">685</span>
+            </div>
+            <!-- Row 2 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <span class="font-fredoka text-lg font-black text-slate-700">432</span>
+              <select id="ex2SelB" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-fredoka text-lg font-black text-slate-700">453</span>
+            </div>
+            <!-- Row 3 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <span class="font-fredoka text-lg font-black text-slate-700">963</span>
+              <select id="ex2SelC" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-fredoka text-lg font-black text-slate-700">582</span>
+            </div>
+          </div>
+
+          <!-- Row 2 Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+            <!-- Row 4 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <span class="font-fredoka text-lg font-black text-slate-700">863</span>
+              <select id="ex2SelD" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-fredoka text-lg font-black text-slate-700">563</span>
+            </div>
+            <!-- Row 5 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <span class="font-fredoka text-lg font-black text-slate-700">715</span>
+              <select id="ex2SelE" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-fredoka text-lg font-black text-slate-700">513</span>
+            </div>
+            <!-- Row 6 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-100">
+              <span class="font-fredoka text-lg font-black text-slate-700">901</span>
+              <select id="ex2SelF" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-fredoka text-lg font-black text-slate-700">899</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span id="ex2Status" class="text-xs font-bold text-slate-400">Not attempted yet</span>
+            <button onclick="checkExercise2()" class="bg-brand-blue hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition">
+              Check Answer 💡
+            </button>
+          </div>
+        </div>
+
+
+        <!-- EXERCISE 3: Compare Expanded Forms to Standard Numbers -->
+        <div class="bg-white rounded-3xl p-6 border-4 border-slate-100 shadow-md">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-7 h-7 bg-brand-yellow text-slate-900 font-bold rounded-full flex items-center justify-center text-sm">3</span>
+            <h4 class="font-fredoka text-base md:text-lg font-bold text-slate-800">Complete using signs &lt; , &gt; , or = (Equation Level)</h4>
+          </div>
+
+          <!-- Problems grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <!-- P1 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+              <span class="font-fredoka text-sm md:text-base font-black text-slate-700">385</span>
+              <select id="ex3SelA" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value="=">=</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-mono text-xs md:text-sm font-bold text-brand-purple">900 + 40 + 5</span>
+            </div>
+            <!-- P2 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+              <span class="font-mono text-xs md:text-sm font-bold text-brand-purple">200 + 40 + 6</span>
+              <select id="ex3SelB" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value="=">=</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-fredoka text-sm md:text-base font-black text-slate-700">246</span>
+            </div>
+            <!-- P3 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+              <span class="font-fredoka text-sm md:text-base font-black text-slate-700">629</span>
+              <select id="ex3SelC" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value="=">=</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-mono text-xs md:text-sm font-bold text-brand-purple">600 + 20 + 9</span>
+            </div>
+            <!-- P4 -->
+            <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+              <span class="font-mono text-xs md:text-sm font-bold text-brand-purple">500 + 70 + 5</span>
+              <select id="ex3SelD" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800">
+                <option value="">?</option><option value="<">&lt;</option><option value="=">=</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-fredoka text-sm md:text-base font-black text-slate-700">565</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span id="ex3Status" class="text-xs font-bold text-slate-400">Not attempted yet</span>
+            <button onclick="checkExercise3()" class="bg-brand-blue hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition">
+              Check Answer 💡
+            </button>
+          </div>
+        </div>
+
+
+        <!-- EXERCISE 4: Comparing Two Expanded Forms -->
+        <div class="bg-white rounded-3xl p-6 border-4 border-slate-100 shadow-md">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-7 h-7 bg-brand-yellow text-slate-900 font-bold rounded-full flex items-center justify-center text-sm">4</span>
+            <h4 class="font-fredoka text-base md:text-lg font-bold text-slate-800">Compare expanded forms on both sides!</h4>
+          </div>
+
+          <!-- Problems grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <!-- P1 -->
+            <div class="flex flex-col sm:flex-row items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100 gap-2">
+              <span class="font-mono text-xs font-bold text-brand-purple text-center">400 + 50 + 7</span>
+              <select id="ex4SelA" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800 shrink-0">
+                <option value="">?</option><option value="<">&lt;</option><option value="=">=</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-mono text-xs font-bold text-brand-purple text-center">500 + 50 + 7</span>
+            </div>
+            <!-- P2 -->
+            <div class="flex flex-col sm:flex-row items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100 gap-2">
+              <span class="font-mono text-xs font-bold text-brand-purple text-center">700 + 60 + 9</span>
+              <select id="ex4SelB" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800 shrink-0">
+                <option value="">?</option><option value="<">&lt;</option><option value="=">=</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-mono text-xs font-bold text-brand-purple text-center">700 + 60 + 3</span>
+            </div>
+            <!-- P3 -->
+            <div class="flex flex-col sm:flex-row items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100 gap-2">
+              <span class="font-mono text-xs font-bold text-brand-purple text-center">600 + 20 + 8</span>
+              <select id="ex4SelC" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800 shrink-0">
+                <option value="">?</option><option value="<">&lt;</option><option value="=">=</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-mono text-xs font-bold text-brand-purple text-center">600 + 20 + 5</span>
+            </div>
+            <!-- P4 -->
+            <div class="flex flex-col sm:flex-row items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-100 gap-2">
+              <span class="font-mono text-xs font-bold text-brand-purple text-center">600 + 40 + 7</span>
+              <select id="ex4SelD" class="w-12 h-10 text-center font-bold bg-white border border-slate-300 rounded-lg text-sm text-slate-800 shrink-0">
+                <option value="">?</option><option value="<">&lt;</option><option value="=">=</option><option value=">">&gt;</option>
+              </select>
+              <span class="font-mono text-xs font-bold text-brand-purple text-center">600 + 7</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span id="ex4Status" class="text-xs font-bold text-slate-400">Not attempted yet</span>
+            <button onclick="checkExercise4()" class="bg-brand-blue hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition">
+              Check Answer 💡
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="text-center mt-4">
+        <button onclick="switchTab('arcade')" class="bg-brand-green text-white font-bold px-8 py-3.5 rounded-2xl shadow-md hover:bg-emerald-600 transition text-base">
+          Let's Play the Runner Game! 🎮
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- 4. SCREEN: THE NUMBER RUNNER ARCADE GAME -->
+    <section id="screen-arcade" class="app-screen w-full hidden flex-col gap-6 max-w-3xl">
+      
+      <!-- Instructions Banner -->
+      <div class="bg-white rounded-3xl p-5 border-4 border-slate-100 shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h3 class="font-fredoka text-xl font-bold text-slate-800">Runner Arcade Game 🏃‍♂️💫</h3>
+            <p id="gameGoalLabel" class="text-slate-500 text-xs md:text-sm mt-0.5">
+              Jump and collect numbers that are <strong class="text-brand-purple font-black">GREATER THAN 450</strong>! Avoid other numbers!
+            </p>
+          </div>
+          <!-- Game Stats -->
+          <div class="flex items-center gap-2">
+            <div class="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-center">
+              <span class="text-[9px] font-black tracking-wide text-slate-400 block">LEVEL</span>
+              <span id="arcadeLevel" class="font-fredoka text-sm font-black text-slate-700">1</span>
+            </div>
+            <div class="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-center">
+              <span class="text-[9px] font-black tracking-wide text-slate-400 block">SCORE</span>
+              <span id="arcadeScore" class="font-fredoka text-sm font-black text-slate-700">0</span>
+            </div>
+            <div class="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-center">
+              <span class="text-[9px] font-black tracking-wide text-slate-400 block">LIVES</span>
+              <span id="arcadeLives" class="font-fredoka text-sm font-black text-brand-pink">❤️❤️❤️</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Play Workspace Container -->
+      <div class="bg-slate-900 rounded-3xl overflow-hidden relative border-4 border-slate-800 shadow-xl select-none" style="max-width: 100%; height: 320px;">
+        <!-- Canvas -->
+        <canvas id="arcadeCanvas" class="w-full h-full block" width="800" height="320"></canvas>
+        
+        <!-- Welcome Overlay (Before Game Start) -->
+        <div id="gameOverlayWelcome" class="absolute inset-0 bg-slate-900/90 flex flex-col justify-center items-center text-center p-6 z-10">
+          <div class="animate-bounce text-4xl mb-2">💫</div>
+          <h4 class="font-fredoka text-2xl md:text-3xl font-black text-white mb-2">Ready to Race, <span id="gamePlayerName" class="text-brand-yellow">Student</span>?</h4>
+          <p class="text-slate-400 text-xs md:text-sm max-w-md mb-6 leading-relaxed">
+            Click / Tap the screen (or press <strong>SPACEBAR</strong> or <strong>UP ARROW</strong>) to jump! 
+            Collect correct numbers to win, avoid the wrong ones!
+          </p>
+          <button onclick="startGame()" class="bg-brand-green text-white font-fredoka font-bold text-base px-8 py-3 rounded-2xl shadow-lg hover:bg-emerald-500 hover:scale-105 active:scale-95 transition">
+            Start Game! 🕹️
+          </button>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div id="gameOverlayOver" class="absolute inset-0 bg-slate-950/95 flex flex-col justify-center items-center text-center p-6 z-10 hidden">
+          <div class="text-4xl mb-2">🏆</div>
+          <h4 class="font-fredoka text-2xl md:text-3xl font-black text-white mb-1">Adventure Complete!</h4>
+          <p class="text-brand-yellow font-bold text-sm mb-4">You scored <span id="finalScoreVal">0</span> points!</p>
+          <p id="gameOverMsg" class="text-slate-400 text-xs mb-6 max-w-sm"></p>
+          <div class="flex gap-4">
+            <button onclick="startGame()" class="bg-brand-blue text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-sky-500 transition">
+              Play Again 🔄
+            </button>
+            <button onclick="switchTab('match')" class="bg-brand-purple text-white font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-violet-500 transition">
+              Play Memory Game 🧠
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls Guidance -->
+      <div class="flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 font-bold bg-white px-5 py-3 rounded-2xl border border-slate-100 gap-2">
+        <span>⌨️ KEYBOARD: SPACE or UP to Jump</span>
+        <span>📱 MOBILE: Tap screen anywhere to Jump</span>
+      </div>
+
+    </section>
+
+
+    <!-- 5. SCREEN: MEMORY MATH MATCH GAME -->
+    <section id="screen-match" class="app-screen w-full hidden flex-col gap-6 max-w-3xl">
+      
+      <!-- Card game description header -->
+      <div class="bg-white rounded-3xl p-5 border-4 border-slate-100 shadow-md">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            <h3 class="font-fredoka text-xl font-bold text-slate-800">Math Memory Match! 🧠</h3>
+            <p class="text-slate-500 text-xs md:text-sm mt-0.5">
+              Match standard numbers with their correct expanded forms! (e.g. <strong>345</strong> matches with <strong>300 + 40 + 5</strong>)
+            </p>
+          </div>
+          <!-- Memory Game Statistics -->
+          <div class="flex items-center gap-2">
+            <div class="bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-center">
+              <span class="text-[9px] font-black tracking-wide text-slate-400 block">MOVES</span>
+              <span id="memoryMoves" class="font-fredoka text-sm font-black text-slate-700">0</span>
+            </div>
+            <button onclick="initMemoryGame()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3 py-2 rounded-xl text-xs transition">
+              Restart 🔄
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Memory Game Grid Container -->
+      <div id="memoryGameGrid" class="grid grid-cols-3 sm:grid-cols-4 gap-4 max-w-2xl mx-auto w-full min-h-[300px]">
+        <!-- Cards generated by JS -->
+      </div>
+
+      <div class="text-center mt-2">
+        <button onclick="switchTab('summary')" class="bg-brand-pink text-white font-bold px-8 py-3 rounded-2xl shadow-md hover:bg-pink-600 transition text-sm">
+          Check Your Final Report Card! 🎓
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- 6. SCREEN: REPORT SUMMARY & KEY POINTS -->
+    <section id="screen-summary" class="app-screen w-full hidden flex-col gap-6 max-w-2xl">
+      
+      <!-- Teacher's Badge and Student name showcase -->
+      <div class="bg-white rounded-3xl p-6 md:p-8 border-4 border-slate-100 shadow-xl text-center relative overflow-hidden">
+        
+        <!-- Top decorative burst -->
+        <div class="absolute -top-12 -right-12 w-28 h-28 bg-brand-yellow/10 rounded-full"></div>
+        <div class="absolute -bottom-12 -left-12 w-28 h-28 bg-brand-pink/10 rounded-full"></div>
+
+        <span class="text-4xl mb-3 inline-block animate-float">🎓</span>
+        <h3 class="font-fredoka text-2xl md:text-3xl font-black text-slate-800">Your Place Value Report Card</h3>
+        <p class="text-slate-400 text-xs md:text-sm">Great Adventure with Mrs. Manal Bazzi!</p>
+
+        <!-- Dynamic student block -->
+        <div class="bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-4 my-6 text-left max-w-sm mx-auto">
+          <div class="flex items-center gap-3">
+            <span id="summaryAvatarBadge" class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center text-2xl">👦</span>
+            <div>
+              <span id="summaryStudentName" class="font-fredoka text-lg font-black text-slate-800">Smart Student</span>
+              <span class="text-[10px] text-slate-400 font-bold uppercase block tracking-wider">Level 1 Graduate</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-200/50 grid grid-cols-2 gap-4">
+            <div>
+              <span class="text-[10px] font-black text-slate-400 block uppercase">TOTAL STARS</span>
+              <span id="summaryStars" class="font-fredoka text-xl font-bold text-brand-yellow">0 ⭐</span>
+            </div>
+            <div>
+              <span class="text-[10px] font-black text-slate-400 block uppercase">ARCADE SCORE</span>
+              <span id="summaryGameScore" class="font-fredoka text-xl font-bold text-brand-green">0 pts</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-500 font-medium">
+          “You've shown amazing progress comparing hundreds, tens, and ones blocks!”
+        </p>
+      </div>
+
+      <!-- KEY MATH POINTS SUMMARY -->
+      <div class="bg-white rounded-3xl p-6 border-4 border-slate-100 shadow-lg">
+        <h4 class="font-fredoka text-lg font-bold text-slate-800 mb-4 flex items-center gap-1.5">
+          🔑 Key Math Points to Remember:
+        </h4>
+        <ul class="space-y-4 text-sm text-slate-600">
+          <li class="flex items-start gap-2">
+            <span class="text-brand-blue text-base mt-0.5">🧱</span>
+            <div>
+              <strong>Base-10 Blocks:</strong> A <strong>Hundreds Flat</strong> is 100 cubes, a <strong>Tens Rod</strong> is 10 cubes, and a <strong>Ones Unit</strong> is 1 cube.
+            </div>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-brand-purple text-base mt-0.5">🔍</span>
+            <div>
+              <strong>Left to Right Rule:</strong> Always compare starting with the largest place value. Compare <strong>Hundreds first</strong>! If they match, compare <strong>Tens</strong>. If they also match, compare <strong>Ones</strong>.
+            </div>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-brand-green text-base mt-0.5">🐊</span>
+            <div>
+              <strong>The Hungry Gator (&lt; and &gt;):</strong> The alligator's mouth always opens towards the <strong>larger number</strong>! For example: $345 < 413$ because 400 is larger than 300!
+            </div>
+          </li>
+          <li class="flex items-start gap-2">
+            <span class="text-brand-pink text-base mt-0.5">➕</span>
+            <div>
+              <strong>Expanded Form:</strong> Breaking up a number into hundreds, tens, and ones. $825 = 800 + 20 + 5$.
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action Footer -->
+      <div class="text-center mt-2 flex flex-col sm:flex-row justify-center gap-4">
+        <button onclick="printCertificate()" class="bg-brand-blue text-white font-bold px-6 py-3 rounded-2xl hover:bg-sky-600 transition flex items-center justify-center gap-1.5">
+          🖨️ Print Report Card
+        </button>
+        <button onclick="switchTab('explore')" class="bg-slate-100 text-slate-600 font-bold px-6 py-3 rounded-2xl hover:bg-slate-200 transition">
+          Back to Playground
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- CELEBRATION MODAL OVERLAY -->
+  <div id="celebrationModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden transition-all">
+    <div class="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full border-4 border-slate-100 shadow-2xl text-center transform scale-95 transition-all">
+      <div class="text-5xl mb-3 animate-bounce" id="celebrationEmoji">🌟</div>
+      <h3 class="font-fredoka text-2xl font-black text-slate-800" id="celebrationTitle">Fantastic!</h3>
+      <p class="text-slate-500 text-sm mt-2 mb-6" id="celebrationText">You got the correct answer!</p>
+      <button onclick="closeCelebrationModal()" class="w-full bg-brand-green text-white font-fredoka font-bold py-3 px-6 rounded-2xl hover:bg-emerald-600 transition shadow-md">
+        Awesome! Keep going! 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- BOTTOM FOOTER -->
+  <footer class="bg-slate-100 border-t border-slate-200 py-6 px-4 text-center mt-8 text-xs text-slate-400 font-medium">
+    <p>Math Interactive Simulator - Class curriculum by Mrs. Manal Bazzi</p>
+    <p class="mt-1">Built using lightweight pure HTML, Tailwind CSS, &amp; vanilla JS with Web Audio Synthesizer.</p>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT SYSTEM ==================== -->
+  <script>
+    // --- GLOBAL STATE ---
+    let student = {
+      name: "Leo Maya",
+      gender: "boy", // "boy" or "girl"
+      stars: 0,
+      completedWorksheets: new Set()
+    };
+
+    let soundEnabled = true;
+
+    // Place value sandbox state
+    let placeValueA = { H: 3, T: 4, O: 5 };
+    let placeValueB = { H: 2, T: 8, O: 4 };
+
+    // Synth Setup for browser self-contained sound generation
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioCtx;
+    }
+
+    // Play synthesized sound effects
+    function playSynthSound(type) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+
+        if (type === 'click') {
+          // Bubble pop sound
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(1000, now + 0.1);
+          gainNode.gain.setValueAtTime(0.15, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === 'success') {
+          // Arpeggio chime
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+          osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+          gainNode.gain.setValueAtTime(0.2, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        } else if (type === 'error') {
+          // Low buzzing sound
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, now);
+          osc.frequency.linearRampToValueAtTime(100, now + 0.25);
+          gainNode.gain.setValueAtTime(0.15, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.26);
+        } else if (type === 'jump') {
+          // Rising jump whistle
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(200, now);
+          osc.frequency.exponentialRampToValueAtTime(800, now + 0.18);
+          gainNode.gain.setValueAtTime(0.1, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        }
+      } catch (err) {
+        console.warn("Audio Context error ignored:", err);
+      }
+    }
+
+    // Toggle sound states
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const onIcon = document.getElementById('soundOnIcon');
+      const offIcon = document.getElementById('soundOffIcon');
+      if (soundEnabled) {
+        onIcon.classList.remove('hidden');
+        offIcon.classList.add('hidden');
+      } else {
+        onIcon.classList.add('hidden');
+        offIcon.classList.remove('hidden');
+      }
+    }
+
+    // --- NAVIGATION CONTROLLER ---
+    function switchTab(tabId) {
+      playSynthSound('click');
+      // Hide all screens
+      document.querySelectorAll('.app-screen').forEach(screen => {
+        screen.classList.add('hidden');
+        screen.classList.remove('flex');
+      });
+
+      // Show selected screen
+      const activeScreen = document.getElementById(`screen-${tabId}`);
+      if (activeScreen) {
+        activeScreen.classList.remove('hidden');
+        activeScreen.classList.add('flex');
+      }
+
+      // Update navbar highlighting
+      document.querySelectorAll('#mainNav button').forEach(btn => {
+        if (btn.getAttribute('data-tab') === tabId) {
+          btn.classList.add('bg-brand-blue', 'text-white', 'shadow-sm');
+          btn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+        } else {
+          btn.classList.remove('bg-brand-blue', 'text-white', 'shadow-sm');
+          btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+        }
+      });
+
+      // Special triggers upon entering a tab
+      if (tabId === 'arcade') {
+        resizeCanvas();
+      } else if (tabId === 'match') {
+        initMemoryGame();
+      } else if (tabId === 'summary') {
+        updateSummaryPage();
+      }
+    }
+
+    // Start adventure action
+    function startAdventure() {
+      const inputEl = document.getElementById('studentNameInput');
+      const enteredName = inputEl.value.trim();
+      
+      if (!enteredName) {
+        // Simple error feedback without alert()
+        inputEl.classList.add('border-brand-pink', 'animate-shake');
+        setTimeout(() => inputEl.classList.remove('animate-shake'), 500);
+        playSynthSound('error');
+        return;
+      }
+
+      student.name = enteredName;
+      document.getElementById('mainNav').classList.remove('hidden');
+      document.getElementById('mainNav').classList.add('flex');
+      
+      // Update displays
+      document.getElementById('gamePlayerName').innerText = student.name;
+      document.getElementById('summaryStudentName').innerText = student.name;
+      
+      playSynthSound('success');
+      switchTab('explore');
+      renderBase10();
+    }
+
+    // Avatar card select
+    function selectAvatar(gender) {
+      playSynthSound('click');
+      student.gender = gender;
+      
+      const boyBtn = document.getElementById('avatarBtn-boy');
+      const girlBtn = document.getElementById('avatarBtn-girl');
+
+      if (gender === 'boy') {
+        boyBtn.classList.add('border-brand-blue', 'bg-sky-50');
+        girlBtn.classList.remove('border-brand-pink', 'bg-pink-50');
+        document.getElementById('summaryAvatarBadge').innerText = "👦";
+      } else {
+        girlBtn.classList.add('border-brand-pink', 'bg-pink-50');
+        boyBtn.classList.remove('border-brand-blue', 'bg-sky-50');
+        document.getElementById('summaryAvatarBadge').innerText = "👧";
+      }
+    }
+
+    // Awarding stars and animating
+    function addStars(num) {
+      student.stars += num;
+      document.getElementById('globalStarsCount').innerText = student.stars;
+      
+      // Animate global counter slightly
+      const badge = document.getElementById('globalStarsCount').parentElement;
+      badge.classList.add('scale-110', 'bg-amber-100');
+      setTimeout(() => {
+        badge.classList.remove('scale-110', 'bg-amber-100');
+      }, 300);
+    }
+
+    // Show beautiful educational dialog helper (replaces standard alerts)
+    function showCelebrationModal(title, text, emoji = "⭐") {
+      document.getElementById('celebrationEmoji').innerText = emoji;
+      document.getElementById('celebrationTitle').innerText = title;
+      document.getElementById('celebrationText').innerText = text;
+      
+      const modal = document.getElementById('celebrationModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      
+      // Scale-up animation effect
+      const child = modal.querySelector('div');
+      child.classList.remove('scale-95');
+      child.classList.add('scale-100');
+    }
+
+    function closeCelebrationModal() {
+      playSynthSound('click');
+      const modal = document.getElementById('celebrationModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+
+    // --- PLAYGROUND SYSTEM (BASE 10 EXPLORER) ---
+    function adjustValue(target, place, amount) {
+      playSynthSound('click');
+      let currentVal = (target === 'A') ? placeValueA[place] : placeValueB[place];
+      
+      // Keep boundaries between 0 and 9
+      currentVal += amount;
+      if (currentVal < 0) currentVal = 0;
+      if (currentVal > 9) currentVal = 9;
+
+      if (target === 'A') {
+        placeValueA[place] = currentVal;
+        document.getElementById(`valA${place}`).innerText = currentVal;
+      } else {
+        placeValueB[place] = currentVal;
+        document.getElementById(`valB${place}`).innerText = currentVal;
+      }
+
+      renderBase10();
+    }
+
+    function renderBase10() {
+      // Calculate integers
+      const intA = placeValueA.H * 100 + placeValueA.T * 10 + placeValueA.O;
+      const intB = placeValueB.H * 100 + placeValueB.T * 10 + placeValueB.O;
+
+      // Update text indicators
+      document.getElementById('numberADisplay').innerText = intA;
+      document.getElementById('numberBDisplay').innerText = intB;
+      
+      document.getElementById('expandedFormDisplayA').innerText = `${placeValueA.H * 100} + ${placeValueA.T * 10} + ${placeValueA.O}`;
+      document.getElementById('expandedFormDisplayB').innerText = `${placeValueB.H * 100} + ${placeValueB.T * 10} + ${placeValueB.O}`;
+
+      // Render physical block elements dynamically
+      renderBlockContainer('renderAHundreds', 'flat', placeValueA.H);
+      renderBlockContainer('renderATens', 'rod', placeValueA.T);
+      renderBlockContainer('renderAOnes', 'unit', placeValueA.O);
+
+      renderBlockContainer('renderBHundreds', 'flat', placeValueB.H);
+      renderBlockContainer('renderBTens', 'rod', placeValueB.T);
+      renderBlockContainer('renderBOnes', 'unit', placeValueB.O);
+
+      // Perform comparison logic & set bubble symbol
+      const bubble = document.getElementById('comparisonSymbolBubble');
+      const phrase = document.getElementById('comparisonPhrase');
+      const helper = document.getElementById('helperExplanation');
+
+      if (intA > intB) {
+        bubble.innerText = ">";
+        bubble.className = "w-16 h-16 md:w-20 md:h-20 bg-brand-green text-white border-4 border-white shadow-lg rounded-full flex items-center justify-center font-fredoka text-3xl md:text-5xl font-black select-none transform transition animate-float";
+        phrase.innerText = "is GREATER than";
+        phrase.className = "text-xs font-black text-brand-green text-center px-1";
+      } else if (intA < intB) {
+        bubble.innerText = "<";
+        bubble.className = "w-16 h-16 md:w-20 md:h-20 bg-brand-pink text-white border-4 border-white shadow-lg rounded-full flex items-center justify-center font-fredoka text-3xl md:text-5xl font-black select-none transform transition animate-float";
+        phrase.innerText = "is LESS than";
+        phrase.className = "text-xs font-black text-brand-pink text-center px-1";
+      } else {
+        bubble.innerText = "=";
+        bubble.className = "w-16 h-16 md:w-20 md:h-20 bg-brand-yellow text-slate-800 border-4 border-white shadow-lg rounded-full flex items-center justify-center font-fredoka text-3xl md:text-5xl font-black select-none transform transition animate-float";
+        phrase.innerText = "is EQUAL to";
+        phrase.className = "text-xs font-black text-brand-yellow text-center px-1";
+      }
+
+      // Generate the helper explanation text
+      if (placeValueA.H !== placeValueB.H) {
+        helper.innerHTML = `Let's look at the <strong>Hundreds</strong> flat blocks! <br/> Number A has <strong>${placeValueA.H} hundreds</strong> and Number B has <strong>${placeValueB.H} hundreds</strong>. Since ${placeValueA.H} ${intA > intB ? '>' : '<'} ${placeValueB.H}, we know that <strong>${intA} ${intA > intB ? '>' : '<'} ${intB}</strong>!`;
+      } else if (placeValueA.T !== placeValueB.T) {
+        helper.innerHTML = `The Hundreds match! Let's check the <strong>Tens</strong> rods! <br/> Number A has <strong>${placeValueA.T} tens</strong> and Number B has <strong>${placeValueB.T} tens</strong>. Since ${placeValueA.T} ${intA > intB ? '>' : '<'} ${placeValueB.T}, we know that <strong>${intA} ${intA > intB ? '>' : '<'} ${intB}</strong>!`;
+      } else if (placeValueA.O !== placeValueB.O) {
+        helper.innerHTML = `The Hundreds and Tens both match! Let's check the <strong>Ones</strong> blocks! <br/> Number A has <strong>${placeValueA.O} ones</strong> and Number B has <strong>${placeValueB.O} ones</strong>. Since ${placeValueA.O} ${intA > intB ? '>' : '<'} ${placeValueB.O}, we know that <strong>${intA} ${intA > intB ? '>' : '<'} ${intB}</strong>!`;
+      } else {
+        helper.innerHTML = `All blocks are completely identical! Therefore, <strong>${intA} is EQUAL to ${intB}</strong>! 🤝`;
+      }
+    }
+
+    function renderBlockContainer(elementId, type, count) {
+      const container = document.getElementById(elementId);
+      container.innerHTML = '';
+      
+      if (count === 0) {
+        container.innerHTML = `<span class="text-[10px] text-slate-300 font-bold italic py-1 px-2">none</span>`;
+        return;
+      }
+
+      for (let i = 0; i < count; i++) {
+        const item = document.createElement('div');
+        if (type === 'flat') {
+          item.className = 'block-flat scale-90 sm:scale-100 origin-top-left';
+          for (let s = 0; s < 100; s++) {
+            const seg = document.createElement('div');
+            seg.className = 'flat-segment';
+            item.appendChild(seg);
+          }
+        } else if (type === 'rod') {
+          item.className = 'block-rod';
+          for (let s = 0; s < 10; s++) {
+            const seg = document.createElement('div');
+            seg.className = 'rod-segment';
+            item.appendChild(seg);
+          }
+        } else if (type === 'unit') {
+          item.className = 'block-unit';
+        }
+        container.appendChild(item);
+      }
+    }
+
+
+    // --- DIGITAL WORKSHEET EVALUATORS ---
+    function updateProgressUI() {
+      const size = student.completedWorksheets.size;
+      document.getElementById('worksheetProgressText').innerText = `${size} / 4 Lessons`;
+    }
+
+    function checkExercise1() {
+      const valA = parseInt(document.getElementById('ex1NumberInputA').value);
+      const op = document.getElementById('ex1OperatorSelect').value;
+      const valB = parseInt(document.getElementById('ex1NumberInputB').value);
+
+      const statusEl = document.getElementById('ex1Status');
+
+      // Targets: 324 < 413
+      if (valA === 324 && op === '<' && valB === 413) {
+        statusEl.innerHTML = "✅ Correct! Great job!";
+        statusEl.className = "text-xs font-bold text-brand-green";
+        playSynthSound('success');
+        
+        if (!student.completedWorksheets.has(1)) {
+          student.completedWorksheets.add(1);
+          addStars(10);
+          showCelebrationModal("Excellent Work!", "You correctly identified $324 < 413$ place value blocks!", "🧱");
+          updateProgressUI();
+        }
+      } else {
+        statusEl.innerHTML = "❌ Try again! Count the hundreds (large squares), tens (rods) and ones (little cubes).";
+        statusEl.className = "text-xs font-bold text-brand-pink animate-pulse";
+        playSynthSound('error');
+      }
+    }
+
+    function checkExercise2() {
+      const sa = document.getElementById('ex2SelA').value; // 385 < 685
+      const sb = document.getElementById('ex2SelB').value; // 432 < 453
+      const sc = document.getElementById('ex2SelC').value; // 963 > 582
+      const sd = document.getElementById('ex2SelD').value; // 863 > 563
+      const se = document.getElementById('ex2SelE').value; // 715 > 513
+      const sf = document.getElementById('ex2SelF').value; // 901 > 899
+
+      const statusEl = document.getElementById('ex2Status');
+
+      if (sa === '<' && sb === '<' && sc === '>' && sd === '>' && se === '>' && sf === '>') {
+        statusEl.innerHTML = "✅ All 6 inequalities are absolutely correct!";
+        statusEl.className = "text-xs font-bold text-brand-green";
+        playSynthSound('success');
+
+        if (!student.completedWorksheets.has(2)) {
+          student.completedWorksheets.add(2);
+          addStars(10);
+          showCelebrationModal("Math Master!", "Fantastic work comparing standard numbers!", "🐊");
+          updateProgressUI();
+        }
+      } else {
+        statusEl.innerHTML = "❌ Some inequalities are incorrect. Check each one again carefully!";
+        statusEl.className = "text-xs font-bold text-brand-pink animate-pulse";
+        playSynthSound('error');
+      }
+    }
+
+    function checkExercise3() {
+      const sa = document.getElementById('ex3SelA').value; // 385 < 945 (900+40+5)
+      const sb = document.getElementById('ex3SelB').value; // 246 = 246 (200+40+6)
+      const sc = document.getElementById('ex3SelC').value; // 629 = 629 (600+20+9)
+      const sd = document.getElementById('ex3SelD').value; // 575 (500+70+5) > 565
+
+      const statusEl = document.getElementById('ex3Status');
+
+      if (sa === '<' && sb === '=' && sc === '=' && sd === '>') {
+        statusEl.innerHTML = "✅ Perfect! Expanded equations solved correctly!";
+        statusEl.className = "text-xs font-bold text-brand-green";
+        playSynthSound('success');
+
+        if (!student.completedWorksheets.has(3)) {
+          student.completedWorksheets.add(3);
+          addStars(10);
+          showCelebrationModal("Stellar Equations!", "You solved and compared expanded forms beautifully!", "➕");
+          updateProgressUI();
+        }
+      } else {
+        statusEl.innerHTML = "❌ Try again. Calculate the standard number of each expanded side first!";
+        statusEl.className = "text-xs font-bold text-brand-pink animate-pulse";
+        playSynthSound('error');
+      }
+    }
+
+    function checkExercise4() {
+      const sa = document.getElementById('ex4SelA').value; // 457 < 557
+      const sb = document.getElementById('ex4SelB').value; // 769 > 763
+      const sc = document.getElementById('ex4SelC').value; // 628 > 625
+      const sd = document.getElementById('ex4SelD').value; // 647 > 607
+
+      const statusEl = document.getElementById('ex4Status');
+
+      if (sa === '<' && sb === '>' && sc === '>' && sd === '>') {
+        statusEl.innerHTML = "✅ Amazing work! Expanded comparisons complete!";
+        statusEl.className = "text-xs font-bold text-brand-green";
+        playSynthSound('success');
+
+        if (!student.completedWorksheets.has(4)) {
+          student.completedWorksheets.add(4);
+          addStars(10);
+          showCelebrationModal("Class Champion!", "You compared both sets of expanded math formulas!", "🏆");
+          updateProgressUI();
+        }
+      } else {
+        statusEl.innerHTML = "❌ Double check. Add the values on both sides before deciding the sign!";
+        statusEl.className = "text-xs font-bold text-brand-pink animate-pulse";
+        playSynthSound('error');
+      }
+    }
+
+
+    // --- RUNNER ARCADE GAME SYSTEM ---
+    const canvas = document.getElementById('arcadeCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let gameActive = false;
+    let score = 0;
+    let lives = 3;
+    let level = 1;
+    let currentCondition = { text: "GREATER THAN 500", test: (n) => n > 500 };
+
+    // Runner physics parameters
+    let runner = {
+      x: 80,
+      y: 220,
+      width: 40,
+      height: 50,
+      vy: 0,
+      gravity: 0.6,
+      jumpStrength: -12.5,
+      isGrounded: true,
+      animationFrame: 0
+    };
+
+    let items = [];
+    let gameLoopId = null;
+    let spawnTimer = 0;
+    let particles = [];
+
+    // Canvas resizing
+    function resizeCanvas() {
+      const container = canvas.parentElement;
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      runner.y = canvas.height - 100; // Recalculate ground base
+    }
+    window.addEventListener('resize', () => {
+      if (document.getElementById('screen-arcade').classList.contains('hidden') === false) {
+        resizeCanvas();
+      }
+    });
+
+    // Handle user inputs for jump
+    function handleJump() {
+      if (!gameActive) return;
+      if (runner.isGrounded) {
+        runner.vy = runner.jumpStrength;
+        runner.isGrounded = false;
+        playSynthSound('jump');
+        // Spawn leap particles
+        for(let i=0; i<8; i++) {
+          particles.push({
+            x: runner.x + 20,
+            y: runner.y + 40,
+            vx: -2 + Math.random() * 4,
+            vy: -1 - Math.random() * 3,
+            color: '#38bdf8',
+            radius: 3 + Math.random() * 3,
+            life: 20
+          });
+        }
+      }
+    }
+
+    // Controls listeners
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault();
+        handleJump();
+      }
+    });
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handleJump();
+    }, {passive: false});
+    canvas.addEventListener('mousedown', (e) => {
+      handleJump();
+    });
+
+    // Define interactive levels & challenges
+    const levelsList = [
+      { text: "GREATER THAN 450", test: (n) => n > 450 },
+      { text: "LESS THAN 300", test: (n) => n < 300 },
+      { text: "GREATER THAN 600", test: (n) => n > 600 },
+      { text: "LESS THAN 750", test: (n) => n < 750 },
+      { text: "GREATER THAN 800", test: (n) => n > 800 }
+    ];
+
+    function startGame() {
+      document.getElementById('gameOverlayWelcome').classList.add('hidden');
+      document.getElementById('gameOverlayOver').classList.add('hidden');
+      
+      gameActive = true;
+      score = 0;
+      lives = 3;
+      level = 1;
+      items = [];
+      particles = [];
+      spawnTimer = 0;
+      
+      currentCondition = levelsList[0];
+      updateGameStatsUI();
+      resizeCanvas();
+
+      if (gameLoopId) cancelAnimationFrame(gameLoopId);
+      gameLoopId = requestAnimationFrame(gameLoop);
+    }
+
+    function updateGameStatsUI() {
+      document.getElementById('arcadeScore').innerText = score;
+      document.getElementById('arcadeLevel').innerText = level;
+      document.getElementById('arcadeLives').innerText = "❤️".repeat(Math.max(0, lives));
+      document.getElementById('gameGoalLabel').innerHTML = `Jump and collect numbers that are <strong class="text-brand-purple text-base uppercase bg-purple-50 px-2 py-0.5 rounded border border-purple-200">${currentCondition.text}</strong>!`;
+    }
+
+    function stopGame(win = false) {
+      gameActive = false;
+      cancelAnimationFrame(gameLoopId);
+      
+      document.getElementById('finalScoreVal').innerText = score;
+      const overEl = document.getElementById('gameOverlayOver');
+      overEl.classList.remove('hidden');
+
+      const msgEl = document.getElementById('gameOverMsg');
+      if (win) {
+        msgEl.innerText = "🏆 Incredible! You cleared all place value game levels! You earned +25 extra bonus stars!";
+        addStars(25);
+        playSynthSound('success');
+      } else {
+        msgEl.innerText = "❤️ Oh! You ran out of lives. Practice makes perfect, try the adventure run again!";
+        playSynthSound('error');
+      }
+    }
+
+    // Dynamic Game Loop
+    function gameLoop(time) {
+      if (!gameActive) return;
+
+      updateArcadeState();
+      drawArcade();
+
+      gameLoopId = requestAnimationFrame(gameLoop);
+    }
+
+    function updateArcadeState() {
+      // 1. Runner physics
+      runner.vy += runner.gravity;
+      runner.y += runner.vy;
+
+      const groundY = canvas.height - 80;
+      if (runner.y >= groundY - runner.height) {
+        runner.y = groundY - runner.height;
+        runner.vy = 0;
+        runner.isGrounded = true;
+      }
+
+      runner.animationFrame += 0.15;
+
+      // 2. Spawn incoming numbers
+      spawnTimer++;
+      if (spawnTimer > 100 - (level * 10)) { // Faster spawns at higher levels
+        spawnTimer = 0;
+        
+        // Decide if correct or decoy
+        const wantCorrect = Math.random() > 0.4;
+        let finalNum = 0;
+
+        if (wantCorrect) {
+          // Generate valid number based on the dynamic tester function
+          for (let attempt = 0; attempt < 100; attempt++) {
+            let rNum = Math.floor(100 + Math.random() * 899);
+            if (currentCondition.test(rNum)) {
+              finalNum = rNum;
+              break;
+            }
+          }
+        } else {
+          // Generate invalid decoy number
+          for (let attempt = 0; attempt < 100; attempt++) {
+            let rNum = Math.floor(100 + Math.random() * 899);
+            if (!currentCondition.test(rNum)) {
+              finalNum = rNum;
+              break;
+            }
+          }
+        }
+
+        if (finalNum === 0) finalNum = 500; // Safety fallback
+
+        // Height variation
+        const itemY = Math.random() > 0.5 ? groundY - 50 : groundY - 110;
+
+        items.push({
+          x: canvas.width + 50,
+          y: itemY,
+          value: finalNum,
+          width: 48,
+          height: 36,
+          speed: 4.5 + level * 0.7,
+          isCorrect: currentCondition.test(finalNum)
+        });
+      }
+
+      // 3. Move and test items collisions
+      for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        item.x -= item.speed;
+
+        // Simple box collision
+        if (
+          runner.x < item.x + item.width &&
+          runner.x + runner.width > item.x &&
+          runner.y < item.y + item.height &&
+          runner.y + runner.height > item.y
+        ) {
+          // Collided!
+          if (item.isCorrect) {
+            // Success! Collected correct place value
+            score += 10;
+            playSynthSound('success');
+            
+            // Score bonus sparks
+            for (let p = 0; p < 15; p++) {
+              particles.push({
+                x: item.x,
+                y: item.y,
+                vx: -3 + Math.random() * 6,
+                vy: -3 + Math.random() * 6,
+                color: '#fbbf24',
+                radius: 4 + Math.random() * 4,
+                life: 30
+              });
+            }
+
+            // Level progression checks
+            if (score > 0 && score % 40 === 0) {
+              if (level < levelsList.length) {
+                level++;
+                currentCondition = levelsList[level - 1];
+                // Spawn big blast
+                for (let p = 0; p < 40; p++) {
+                  particles.push({
+                    x: canvas.width/2,
+                    y: canvas.height/2,
+                    vx: -5 + Math.random() * 10,
+                    vy: -5 + Math.random() * 10,
+                    color: '#8b5cf6',
+                    radius: 5 + Math.random() * 5,
+                    life: 40
+                  });
+                }
+              } else {
+                stopGame(true); // Wins game entirely
+                return;
+              }
+            }
+          } else {
+            // Error: hit a decoy!
+            lives--;
+            playSynthSound('error');
+            
+            // Damage sparks
+            for (let p = 0; p < 15; p++) {
+              particles.push({
+                x: runner.x + 20,
+                y: runner.y + 20,
+                vx: -4 + Math.random() * 8,
+                vy: -4 + Math.random() * 8,
+                color: '#ec4899',
+                radius: 3 + Math.random() * 4,
+                life: 30
+              });
+            }
+
+            if (lives <= 0) {
+              stopGame(false);
+              return;
+            }
+          }
+
+          updateGameStatsUI();
+          items.splice(i, 1);
+          continue;
+        }
+
+        // Remove off-screen items
+        if (item.x < -100) {
+          // If a correct item is missed, penalize gently or just let it go
+          items.splice(i, 1);
+        }
+      }
+
+      // 4. Update decorative particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+    }
+
+    function drawArcade() {
+      // Clear with soft gradient dark sky
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      skyGrad.addColorStop(0, '#0f172a'); // slate-900
+      skyGrad.addColorStop(1, '#1e293b'); // slate-800
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw background tiny stars
+      ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+      for (let s = 1; s <= 15; s++) {
+        let sx = (s * 110) % canvas.width;
+        let sy = (s * 45) % (canvas.height - 120);
+        ctx.fillRect(sx, sy, 2, 2);
+      }
+
+      // Draw active Level/Objective banner at background
+      ctx.fillStyle = "rgba(139, 92, 246, 0.08)";
+      ctx.fillRect(0, 30, canvas.width, 50);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.font = "bold 12px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(`GOAL: FIND NUMBERS ${currentCondition.text.toUpperCase()}`, canvas.width / 2, 60);
+
+      // Draw Ground
+      const groundY = canvas.height - 80;
+      ctx.fillStyle = '#334155'; // slate-700
+      ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
+      // Grass strip
+      ctx.fillStyle = '#10b981'; // green-500
+      ctx.fillRect(0, groundY, canvas.width, 6);
+
+      // Draw Runner Character
+      ctx.save();
+      ctx.translate(runner.x, runner.y);
+      
+      const bounce = Math.sin(runner.animationFrame) * 3;
+      
+      // Boy / Girl Avatar choice visualization inside Canvas
+      if (student.gender === 'boy') {
+        // Leo's Shirt
+        ctx.fillStyle = '#0ea5e9'; // sky-500
+        ctx.beginPath();
+        ctx.roundRect(5, 18 + bounce, 30, 22, 6);
+        ctx.fill();
+        // Head / Face
+        ctx.fillStyle = '#fbcfe8'; // skin
+        ctx.beginPath();
+        ctx.arc(20, 10 + bounce, 11, 0, Math.PI * 2);
+        ctx.fill();
+        // Hair (Boy)
+        ctx.fillStyle = '#475569'; // grey hair
+        ctx.beginPath();
+        ctx.arc(20, 7 + bounce, 12, Math.PI, 0);
+        ctx.fill();
+        // Eyes
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(15, 8 + bounce, 2, 3);
+        ctx.fillRect(23, 8 + bounce, 2, 3);
+        // Happy Mouth
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(20, 13 + bounce, 3, 0, Math.PI);
+        ctx.stroke();
+      } else {
+        // Maya's Pink Dress
+        ctx.fillStyle = '#ec4899'; // pink-500
+        ctx.beginPath();
+        ctx.roundRect(5, 18 + bounce, 30, 22, [6, 6, 2, 2]);
+        ctx.fill();
+        // Head / Face
+        ctx.fillStyle = '#fbcfe8'; // skin
+        ctx.beginPath();
+        ctx.arc(20, 10 + bounce, 11, 0, Math.PI * 2);
+        ctx.fill();
+        // Hair & Pigtails (Girl)
+        ctx.fillStyle = '#b45309'; // warm brown hair
+        ctx.beginPath();
+        ctx.arc(20, 7 + bounce, 12, Math.PI, 0);
+        ctx.fill();
+        // Pigtail left & right
+        ctx.beginPath();
+        ctx.arc(6, 6 + bounce, 6, 0, Math.PI * 2);
+        ctx.arc(34, 6 + bounce, 6, 0, Math.PI * 2);
+        ctx.fill();
+        // Eyes
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(15, 8 + bounce, 2, 3);
+        ctx.fillRect(23, 8 + bounce, 2, 3);
+        // Happy Mouth
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(20, 13 + bounce, 3, 0, Math.PI);
+        ctx.stroke();
+      }
+
+      // Runner Shoes/Feet moving
+      ctx.fillStyle = '#ffffff';
+      const leftFootY = 38 + (runner.isGrounded ? Math.sin(runner.animationFrame * 2) * 4 : 0);
+      const rightFootY = 38 + (runner.isGrounded ? -Math.sin(runner.animationFrame * 2) * 4 : 0);
+      ctx.fillRect(8, leftFootY + bounce, 8, 5);
+      ctx.fillRect(24, rightFootY + bounce, 8, 5);
+
+      ctx.restore();
+
+      // Draw Floating Target Numbers
+      items.forEach(item => {
+        // Draw bubble container
+        ctx.fillStyle = item.isCorrect ? '#10b981' : '#f43f5e';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(item.x, item.y, item.width, item.height, 12);
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw inner standard digits
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 15px "Fredoka", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(item.value, item.x + item.width/2, item.y + item.height/2);
+      });
+
+      // Draw Decorative Particles (Stars / Sparks)
+      particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+
+    // --- MATH MEMORY MATCH GAME ---
+    let memoryCards = [];
+    let memoryFlipped = [];
+    let memoryMoves = 0;
+    let memoryMatches = 0;
+
+    // Pairs of (Standard Numbers & Expanded representations)
+    const memoryBank = [
+      { id: 1, text: "345", matchGroup: "A" },
+      { id: 1, text: "300 + 40 + 5", matchGroup: "A" },
+      
+      { id: 2, text: "825", matchGroup: "B" },
+      { id: 2, text: "800 + 20 + 5", matchGroup: "B" },
+      
+      { id: 3, text: "647", matchGroup: "C" },
+      { id: 3, text: "600 + 40 + 7", matchGroup: "C" },
+      
+      { id: 4, text: "109", matchGroup: "D" },
+      { id: 4, text: "100 + 9", matchGroup: "D" },
+      
+      { id: 5, text: "550", matchGroup: "E" },
+      { id: 5, text: "500 + 50", matchGroup: "E" },
+      
+      { id: 6, text: "777", matchGroup: "F" },
+      { id: 6, text: "700 + 70 + 7", matchGroup: "F" }
+    ];
+
+    function initMemoryGame() {
+      memoryFlipped = [];
+      memoryMoves = 0;
+      memoryMatches = 0;
+      document.getElementById('memoryMoves').innerText = memoryMoves;
+      
+      // Shuffle deep-copied cards
+      memoryCards = JSON.parse(JSON.stringify(memoryBank))
+        .map((card, idx) => ({ ...card, index: idx, state: 'down' })) // down, up, matched
+        .sort(() => Math.random() - 0.5);
+
+      renderMemoryBoard();
+    }
+
+    function renderMemoryBoard() {
+      const grid = document.getElementById('memoryGameGrid');
+      grid.innerHTML = '';
+
+      memoryCards.forEach((card, idx) => {
+        const wrap = document.createElement('div');
+        wrap.className = "card-perspective h-24 sm:h-28 cursor-pointer select-none";
+        wrap.onclick = () => flipMemoryCard(idx);
+
+        const inner = document.createElement('div');
+        inner.className = `card-inner w-full h-full relative rounded-2xl shadow-md border-2 border-slate-100 transition duration-500 transform ${
+          card.state !== 'down' ? 'card-flipped' : ''
+        }`;
+
+        // Front Face (Card back/hidden cover)
+        const front = document.createElement('div');
+        front.className = "card-front absolute inset-0 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-2xl flex flex-col items-center justify-center text-center p-2 font-black border-2 border-white";
+        front.innerHTML = `
+          <span class="text-xl sm:text-2xl">❓</span>
+          <span class="text-[8px] uppercase tracking-wider text-indigo-200">Mrs. Manal</span>
+        `;
+
+        // Back Face (Card open revealing math term)
+        const back = document.createElement('div');
+        const isEquation = card.text.includes('+');
+        back.className = `card-back absolute inset-0 ${
+          card.state === 'matched' 
+            ? 'bg-emerald-50 border-emerald-400 text-emerald-800' 
+            : 'bg-white border-brand-purple text-slate-800'
+        } rounded-2xl border-4 flex items-center justify-center text-center p-2`;
+        
+        back.innerHTML = `
+          <p class="${isEquation ? 'font-mono text-[10px] sm:text-xs font-bold' : 'font-fredoka text-lg sm:text-xl font-black'}">
+            ${card.text}
+          </p>
+        `;
+
+        inner.appendChild(front);
+        inner.appendChild(back);
+        wrap.appendChild(inner);
+        grid.appendChild(wrap);
+      });
+    }
+
+    function flipMemoryCard(idx) {
+      const card = memoryCards[idx];
+      if (card.state !== 'down' || memoryFlipped.length >= 2) return;
+
+      playSynthSound('click');
+      card.state = 'up';
+      memoryFlipped.push(card);
+      renderMemoryBoard();
+
+      if (memoryFlipped.length === 2) {
+        memoryMoves++;
+        document.getElementById('memoryMoves').innerText = memoryMoves;
+
+        const [c1, c2] = memoryFlipped;
+        if (c1.id === c2.id) {
+          // Success: Match found!
+          setTimeout(() => {
+            c1.state = 'matched';
+            c2.state = 'matched';
+            memoryMatches++;
+            playSynthSound('success');
+            memoryFlipped = [];
+            renderMemoryBoard();
+
+            // Win condition checks
+            if (memoryMatches === 6) {
+              addStars(15);
+              showCelebrationModal(
+                "Memory Completed! 🎉", 
+                `Excellent attention! You completed the match game in ${memoryMoves} moves and earned +15 stars.`,
+                "🧠"
+              );
+            }
+          }, 600);
+        } else {
+          // Failure: turn back down after delay
+          setTimeout(() => {
+            c1.state = 'down';
+            c2.state = 'down';
+            playSynthSound('error');
+            memoryFlipped = [];
+            renderMemoryBoard();
+          }, 1200);
+        }
+      }
+    }
+
+
+    // --- SUMMARY & PRINTING ---
+    function updateSummaryPage() {
+      document.getElementById('summaryStars').innerText = `${student.stars} ⭐`;
+      document.getElementById('summaryGameScore').innerText = `${score} pts`;
+    }
+
+    function printCertificate() {
+      // Create printable page window dynamically
+      const w = window.open();
+      w.document.write(`
+        <html>
+        <head>
+          <title>Place Value Certificate - ${student.name}</title>
+          <style>
+            body { font-family: 'Comic Sans MS', sans-serif; text-align: center; padding: 40px; background: #fafafa; }
+            .cert-box { border: 10px double #4f46e5; padding: 40px; background: white; border-radius: 20px; max-width: 600px; margin: auto; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+            h1 { color: #4f46e5; margin-bottom: 5px; }
+            h2 { color: #10b981; margin-top: 0; }
+            .name { font-size: 28px; font-weight: bold; border-bottom: 2px solid #ddd; display: inline-block; padding: 5px 30px; margin: 20px 0; color: #334155; }
+            .stats { margin: 20px 0; font-size: 18px; color: #475569; }
+            .footer-teacher { margin-top: 5px; font-size: 18px; font-weight: bold; color: #8b5cf6; }
+          </style>
+        </head>
+        <body>
+          <div class="cert-box">
+            <h1>🏆 Place Value Master Certificate 🏆</h1>
+            <h2>Numbers up to 999</h2>
+            <p>This certifies that our brilliant math explorer</p>
+            <div class="name">${student.name}</div>
+            <p>has successfully completed interactive worksheets, place value modeling, and the memory matching run challenge!</p>
+            
+            <div class="stats">
+              ⭐ Total Stars Earned: <strong>${student.stars} Stars</strong> <br/>
+              🎮 Runner Game High Score: <strong>${score} points</strong>
+            </div>
+
+            <div class="footer-teacher">
+              Classroom Instructor: Mrs. Manal Bazzi
+            </div>
+            <p style="font-size: 11px; color:#94a3b8; margin-top: 30px;">Certified Digital Report Card</p>
+          </div>
+          <script>window.print();<\/script>
+        </body>
+        </html>
+      `);
+      w.document.close();
+    }
+
+    // Default initialization when loaded
+    window.onload = function() {
+      // Ensure everything starts in a clean welcome profile state
+      selectAvatar('boy');
+    };
+  </script>
+</body>
+</html>

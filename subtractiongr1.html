@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fun Subtraction Adventure! 🎈</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #764ba2;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 15px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .instruction {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .playground {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .items-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            min-height: 120px;
+            padding: 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 15px;
+            width: 100%;
+        }
+
+        .item {
+            font-size: 3em;
+            animation: popIn 0.3s ease;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .item:active {
+            transform: scale(1.2);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes popOut {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        .removing {
+            animation: popOut 0.5s ease forwards;
+        }
+
+        .equation {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2d3436;
+            text-align: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .equation span {
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .number-display {
+            color: #667eea;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 15px 25px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-family: inherit;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .slider-container {
+            width: 100%;
+            margin: 15px 0;
+        }
+
+        .slider-label {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2d3436;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 15px;
+            border-radius: 10px;
+            background: #d3d3d3;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            border: none;
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin: 10px 0;
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            border: 3px solid transparent;
+            border-radius: 15px;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            transform: translateX(5px);
+        }
+
+        .quiz-option.correct {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            animation: pulse 0.5s ease;
+        }
+
+        .quiz-option.incorrect {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+            font-size: 1.2em;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback.success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .feedback.error {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+        .summary h2 {
+            color: #2d3436;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .summary ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .summary li {
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+            border-radius: 10px;
+            font-size: 1.1em;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .summary li:before {
+            content: "✨ ";
+            font-size: 1.2em;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1000;
+        }
+
+        .celebration.show {
+            animation: celebrate 1s ease;
+        }
+
+        @keyframes celebrate {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.5em; }
+            .subtitle { font-size: 1em; }
+            .equation { font-size: 2em; }
+            .item { font-size: 2.5em; }
+            .tab { font-size: 0.9em; min-width: 100px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎈 Subtraction Adventure! 🎈</h1>
+        <p class="subtitle">Let's learn to take away!</p>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar">0%</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab(0)">📚 Learn</button>
+            <button class="tab" onclick="switchTab(1)">🎮 Practice</button>
+            <button class="tab" onclick="switchTab(2)">🎯 Quiz</button>
+            <button class="tab" onclick="switchTab(3)">⭐ Summary</button>
+        </div>
+
+        <!-- SECTION 1: LEARN -->
+        <div class="section active" id="section0">
+            <div class="instruction">
+                👋 Hi! Subtraction means "taking away"! Let's start with some balloons! 🎈
+            </div>
+
+            <div class="slider-container">
+                <div class="slider-label">How many balloons do we start with? <span id="startValue">5</span></div>
+                <input type="range" id="startSlider" min="1" max="10" value="5" oninput="updateLearn()">
+            </div>
+
+            <div class="slider-container">
+                <div class="slider-label">How many balloons fly away? <span id="takeValue">2</span></div>
+                <input type="range" id="takeSlider" min="0" max="10" value="2" oninput="updateLearn()">
+            </div>
+
+            <div class="playground">
+                <div id="learnItems" class="items-container"></div>
+                <div class="equation" id="learnEquation">5 - 2 = 3</div>
+            </div>
+
+            <div class="controls">
+                <button class="btn-primary" onclick="animateSubtraction()">✨ Show Me!</button>
+                <button class="btn-success" onclick="resetLearn()">🔄 Reset</button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PRACTICE -->
+        <div class="section" id="section1">
+            <div class="instruction">
+                🎮 Click on the apples to take them away! 🍎
+            </div>
+
+            <div class="equation" id="practiceEquation">8 - ? = ?</div>
+
+            <div class="playground">
+                <div id="practiceItems" class="items-container"></div>
+            </div>
+
+            <div class="score-display">Removed: <span id="removedCount">0</span></div>
+
+            <div class="controls">
+                <button class="btn-success" onclick="checkPractice()">✅ Check Answer</button>
+                <button class="btn-primary" onclick="newPractice()">🎲 New Problem</button>
+            </div>
+
+            <div class="feedback" id="practiceFeedback"></div>
+        </div>
+
+        <!-- SECTION 3: QUIZ -->
+        <div class="section" id="section2">
+            <div class="instruction" id="quizQuestion">
+                What is 6 - 2?
+            </div>
+
+            <div class="playground" id="quizVisual"></div>
+
+            <div id="quizOptions"></div>
+
+            <div class="score-display">Score: <span id="quizScore">0</span> / <span id="quizTotal">0</span></div>
+
+            <div class="controls">
+                <button class="btn-primary" onclick="nextQuiz()">➡️ Next Question</button>
+            </div>
+
+            <div class="feedback" id="quizFeedback"></div>
+        </div>
+
+        <!-- SECTION 4: SUMMARY -->
+        <div class="section" id="section3">
+            <div class="summary">
+                <h2>🌟 What We Learned! 🌟</h2>
+                <ul>
+                    <li><strong>Subtraction means taking away!</strong> When we subtract, we remove things from a group.</li>
+                    <li><strong>The minus sign (-) means "take away".</strong> It tells us to make the number smaller.</li>
+                    <li><strong>Start with the big number.</strong> The first number tells us how many we have at the beginning.</li>
+                    <li><strong>Take away the second number.</strong> Remove that many items from the group.</li>
+                    <li><strong>Count what's left!</strong> The answer is how many remain after taking away.</li>
+                    <li><strong>Example: 5 - 2 = 3</strong> means start with 5, take away 2, and you have 3 left!</li>
+                </ul>
+            </div>
+
+            <div class="instruction" style="margin-top: 20px;">
+                🎉 Great job learning subtraction! Keep practicing to become a math superstar! ⭐
+            </div>
+
+            <div class="controls">
+                <button class="btn-success" onclick="switchTab(0)">🔄 Start Again</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        // Global variables
+        let currentTab = 0;
+        let practiceStart = 8;
+        let practiceTarget = 3;
+        let practiceRemoved = 0;
+        let quizScore = 0;
+        let quizTotal = 0;
+        let currentQuizAnswer = 0;
+        let quizAnswered = false;
+
+        const emojis = ['🎈', '🍎', '⭐', '🍪', '🌸', '🎁', '🦋', '🍓'];
+
+        // Tab switching
+        function switchTab(index) {
+            document.querySelectorAll('.tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.section').forEach((section, i) => {
+                section.classList.toggle('active', i === index);
+            });
+            currentTab = index;
+            updateProgress();
+
+            if (index === 1) newPractice();
+            if (index === 2) startQuiz();
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = ((currentTab + 1) / 4) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = Math.round(progress) + '%';
+        }
+
+        // LEARN SECTION
+        function updateLearn() {
+            const start = parseInt(document.getElementById('startSlider').value);
+            const take = parseInt(document.getElementById('takeSlider').value);
+            
+            document.getElementById('startValue').textContent = start;
+            document.getElementById('takeValue').textContent = take;
+
+            // Adjust take slider max
+            document.getElementById('takeSlider').max = start;
+            if (take > start) {
+                document.getElementById('takeSlider').value = start;
+                document.getElementById('takeValue').textContent = start;
+            }
+
+            resetLearn();
+        }
+
+        function resetLearn() {
+            const start = parseInt(document.getElementById('startSlider').value);
+            const take = parseInt(document.getElementById('takeSlider').value);
+            const result = start - take;
+
+            const container = document.getElementById('learnItems');
+            container.innerHTML = '';
+
+            for (let i = 0; i < start; i++) {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.textContent = '🎈';
+                container.appendChild(item);
+            }
+
+            document.getElementById('learnEquation').innerHTML = 
+                `<span class="number-display">${start}</span> - <span class="number-display">${take}</span> = <span class="number-display">${result}</span>`;
+        }
+
+        function animateSubtraction() {
+            const take = parseInt(document.getElementById('takeSlider').value);
+            const items = document.querySelectorAll('#learnItems .item');
+            
+            let removed = 0;
+            const interval = setInterval(() => {
+                if (removed < take && removed < items.length) {
+                    items[items.length - 1 - removed].classList.add('removing');
+                    removed++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        showCelebration('🎉');
+                    }, 500);
+                }
+            }, 600);
+        }
+
+        // PRACTICE SECTION
+        function newPractice() {
+            practiceStart = Math.floor(Math.random() * 6) + 5; // 5-10
+            practiceTarget = Math.floor(Math.random() * (practiceStart - 1)) + 1; // 1 to start-1
+            practiceRemoved = 0;
+
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const container = document.getElementById('practiceItems');
+            container.innerHTML = '';
+
+            for (let i = 0; i < practiceStart; i++) {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.textContent = emoji;
+                item.onclick = function() {
+                    if (!this.classList.contains('removing')) {
+                        this.classList.add('removing');
+                        practiceRemoved++;
+                        updatePracticeDisplay();
+                    }
+                };
+                container.appendChild(item);
+            }
+
+            document.getElementById('practiceEquation').innerHTML = 
+                `<span class="number-display">${practiceStart}</span> - <span class="number-display">${practiceTarget}</span> = <span class="number-display">?</span>`;
+            document.getElementById('removedCount').textContent = '0';
+            
+            const feedback = document.getElementById('practiceFeedback');
+            feedback.classList.remove('show');
+        }
+
+        function updatePracticeDisplay() {
+            document.getElementById('removedCount').textContent = practiceRemoved;
+        }
+
+        function checkPractice() {
+            const feedback = document.getElementById('practiceFeedback');
+            
+            if (practiceRemoved === practiceTarget) {
+                const result = practiceStart - practiceTarget;
+                feedback.textContent = `🎉 Perfect! ${practiceStart} - ${practiceTarget} = ${result}`;
+                feedback.className = 'feedback success show';
+                showCelebration('⭐');
+                
+                setTimeout(() => {
+                    newPractice();
+                }, 2000);
+            } else {
+                feedback.textContent = `Try again! You need to remove ${practiceTarget} items.`;
+                feedback.className = 'feedback error show';
+            }
+        }
+
+        // QUIZ SECTION
+        function startQuiz() {
+            quizScore = 0;
+            quizTotal = 0;
+            updateQuizScore();
+            nextQuiz();
+        }
+
+        function nextQuiz() {
+            if (quizAnswered) {
+                quizAnswered = false;
+                document.getElementById('quizFeedback').classList.remove('show');
+            }
+
+            quizTotal++;
+            updateQuizScore();
+
+            const num1 = Math.floor(Math.random() * 8) + 3; // 3-10
+            const num2 = Math.floor(Math.random() * (num1 - 1)) + 1; // 1 to num1-1
+            currentQuizAnswer = num1 - num2;
+
+            document.getElementById('quizQuestion').textContent = `What is ${num1} - ${num2}?`;
+
+            // Visual representation
+            const visual = document.getElementById('quizVisual');
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            visual.innerHTML = '<div class="items-container" style="min-height: 80px;"></div>';
+            const container = visual.querySelector('.items-container');
+            
+            for (let i = 0; i < num1; i++) {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.textContent = emoji;
+                item.style.fontSize = '2em';
+                if (i >= currentQuizAnswer) {
+                    item.style.opacity = '0.3';
+                }
+                container.appendChild(item);
+            }
+
+            // Generate options
+            const options = [currentQuizAnswer];
+            while (options.length < 4) {
+                const opt = Math.floor(Math.random() * 10);
+                if (!options.includes(opt) && opt >= 0) {
+                    options.push(opt);
+                }
+            }
+            
+            // Shuffle options
+            options.sort(() => Math.random() - 0.5);
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach(opt => {
+                const button = document.createElement('button');
+                button.className = 'quiz-option';
+                button.textContent = opt;
+                button.onclick = () => checkQuizAnswer(opt, button);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkQuizAnswer(selected, button) {
+            if (quizAnswered) return;
+            quizAnswered = true;
+
+            const feedback = document.getElementById('quizFeedback');
+            
+            if (selected === currentQuizAnswer) {
+                button.classList.add('correct');
+                feedback.textContent = '🎉 Awesome! That\'s correct!';
+                feedback.className = 'feedback success show';
+                quizScore++;
+                showCelebration('🌟');
+            } else {
+                button.classList.add('incorrect');
+                feedback.textContent = `Not quite! The answer is ${currentQuizAnswer}. Keep trying!`;
+                feedback.className = 'feedback error show';
+                
+                // Highlight correct answer
+                setTimeout(() => {
+                    document.querySelectorAll('.quiz-option').forEach(opt => {
+                        if (parseInt(opt.textContent) === currentQuizAnswer) {
+                            opt.classList.add('correct');
+                        }
+                    });
+                }, 500);
+            }
+            
+            updateQuizScore();
+        }
+
+        function updateQuizScore() {
+            document.getElementById('quizScore').textContent = quizScore;
+            document.getElementById('quizTotal').textContent = quizTotal;
+        }
+
+        // Celebration animation
+        function showCelebration(emoji) {
+            const celebration = document.getElementById('celebration');
+            celebration.textContent = emoji;
+            celebration.classList.add('show');
+            setTimeout(() => {
+                celebration.classList.remove('show');
+            }, 1000);
+        }
+
+        // Initialize
+        updateLearn();
+        updateProgress();
+    </script>
+</body>
+</html>

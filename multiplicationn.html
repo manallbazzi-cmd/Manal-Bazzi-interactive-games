@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Math Master: Tables 2-10</title>
+    <style>
+        /* --- 1. FONTS & VARIABLES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+        :root {
+            --primary: #6C5CE7;
+            --secondary: #00CEC9;
+            --accent: #FD79A8;
+            --warning: #FFEAA7;
+            --success: #55EFC4;
+            --dark: #2D3436;
+            --light: #DFE6E9;
+            --card-bg: #FFFFFF;
+            --shadow: 0 8px 15px rgba(0,0,0,0.1);
+            --radius: 20px;
+        }
+
+        /* --- 2. GLOBAL STYLES & MOBILE RESET --- */
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
+            color: var(--dark);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+        }
+
+        /* Layout Container */
+        #app {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 15px; /* Less padding on mobile */
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.95);
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+        }
+
+        .logo { font-weight: 900; font-size: 1.2rem; color: var(--primary); display: flex; align-items: center; gap: 5px;}
+        .stats-bar { display: flex; gap: 10px; font-weight: 700; }
+        .stat-item { 
+            display: flex; align-items: center; gap: 5px; 
+            background: var(--light); padding: 5px 10px; 
+            border-radius: 15px; font-size: 0.9rem; 
+        }
+
+        /* --- 3. NAVIGATION & SCREENS --- */
+        .screen { display: none; animation: fadeIn 0.3s ease; padding-bottom: 40px; }
+        .screen.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Main Menu */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive Grid */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-bottom: 5px solid rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .game-card:active { transform: scale(0.98); } /* Mobile touch feedback */
+        .game-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .game-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+        .game-title { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; }
+        .game-desc { font-size: 0.85rem; color: #636e72; line-height: 1.4; }
+
+        /* --- 4. COMMON GAME UI --- */
+        .game-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; background: rgba(255,255,255,0.8); 
+            padding: 10px; border-radius: 15px;
+        }
+        .btn {
+            background: var(--primary); color: white; border: none; 
+            padding: 12px 20px; border-radius: 12px; font-family: inherit; 
+            font-weight: 700; cursor: pointer; font-size: 1rem;
+            transition: 0.1s; box-shadow: 0 4px 0 #4834d4;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn:active { transform: translateY(4px); box-shadow: none; }
+        .btn-outline { background: white; border: 2px solid var(--primary); color: var(--primary); box-shadow: none; }
+        .btn-outline:active { background: var(--light); transform: translateY(0); }
+        .btn-danger { background: var(--accent); box-shadow: 0 4px 0 #e84393; }
+
+        /* Feedback Toast */
+        #feedback-toast {
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+            padding: 12px 25px; border-radius: 50px; color: white; font-weight: 800;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); z-index: 100;
+            opacity: 0; pointer-events: none; transition: 0.3s; width: 80%; text-align: center;
+        }
+        #feedback-toast.show { opacity: 1; transform: translateX(-50%) translateY(10px); }
+        .toast-correct { background: var(--success); }
+        .toast-wrong { background: var(--accent); }
+
+        /* --- 5. MEMORY GAME --- */
+        .memory-grid {
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); /* Desktop Default */
+            gap: 10px;
+            perspective: 1000px; margin: 0 auto; width: 100%; max-width: 500px;
+        }
+        .memory-card {
+            aspect-ratio: 1; position: relative; transform-style: preserve-3d;
+            transition: transform 0.4s; cursor: pointer;
+        }
+        .memory-card.flipped { transform: rotateY(180deg); }
+        .memory-card.matched { cursor: default; animation: pulse 0.4s; }
+        .front, .back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; border-radius: 12px; box-shadow: var(--shadow);
+            font-size: 0.9rem; /* Adjusted for smaller cards */
+        }
+        .front { background: var(--primary); color: white; transform: rotateY(180deg); }
+        .back { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        
+        @keyframes pulse { 0% { transform: rotateY(180deg) scale(1); } 50% { transform: rotateY(180deg) scale(1.1); } 100% { transform: rotateY(180deg) scale(1); } }
+
+        /* --- 6. SPINNING WHEEL --- */
+        .wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto 30px; }
+        .wheel {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 8px solid white; box-shadow: var(--shadow);
+            background: conic-gradient(
+                #FF7675 0deg 60deg, #74B9FF 60deg 120deg, 
+                #55EFC4 120deg 180deg, #FFEAA7 180deg 240deg, 
+                #A29BFE 240deg 300deg, #FD79A8 300deg 360deg
+            );
+            transition: transform 3s cubic-bezier(0.1, 0.7, 0.1, 1);
+        }
+        .wheel-marker {
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent;
+            border-top: 25px solid var(--dark); z-index: 2;
+        }
+        .wheel-center {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 50px; height: 50px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2); z-index: 2;
+        }
+        .wheel-question {
+            text-align: center; background: white; padding: 20px; border-radius: var(--radius);
+            margin-top: 20px; display: none; box-shadow: var(--shadow); border: 2px solid var(--primary);
+        }
+        .wheel-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+
+        /* --- 7. TIMED QUIZ --- */
+        .quiz-container { max-width: 100%; text-align: center; }
+        .timer-bar-bg { width: 100%; height: 20px; background: var(--light); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+        .timer-bar-fill { width: 100%; height: 100%; background: var(--success); transition: width 1s linear; }
+        .question-display { font-size: 2.5rem; font-weight: 900; color: var(--primary); margin: 20px 0; line-height: 1.2; }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .option-btn {
+            background: white; border: 3px solid var(--light); padding: 20px;
+            font-size: 1.3rem; border-radius: 15px; cursor: pointer; font-weight: 700;
+            transition: 0.1s;
+        }
+        .option-btn:active { transform: scale(0.95); background: #f0fffd; }
+
+        /* --- 8. SUMMARY --- */
+        .summary-card {
+            background: white; padding: 30px; border-radius: var(--radius);
+            text-align: center; box-shadow: var(--shadow);
+        }
+        .stars-earned { font-size: 3rem; margin: 10px 0; }
+        .key-takeaways {
+            text-align: left; background: #f8f9fa; padding: 15px; border-radius: 10px;
+            margin-top: 20px; border-left: 5px solid var(--primary); font-size: 0.9rem;
+        }
+        .key-takeaways h3 { margin-top: 0; font-size: 1.1rem; }
+        .key-takeaways ul { padding-left: 20px; line-height: 1.5; margin-bottom: 0; }
+
+        /* --- 9. MOBILE ADAPTATIONS (Smartphone / Android) --- */
+        @media (max-width: 600px) {
+            /* Stack menu cards vertically for easy scrolling */
+            .menu-grid { grid-template-columns: 1fr; }
+            
+            /* Memory: 4 columns is too tight on phone. Switch to 3x3 grid ish or 3 cols. 
+               16 cards = 4 cols. 18 cards? Let's keep 16 cards but make them fit better. */
+            .memory-grid { gap: 8px; }
+            .front, .back { font-size: 0.8rem; border-radius: 8px; }
+            
+            /* Wheel: Make it smaller to fit screen height */
+            .wheel-container { width: 240px; height: 240px; }
+            
+            /* Quiz: Adjust fonts */
+            .question-display { font-size: 2rem; }
+            .option-btn { padding: 15px; font-size: 1.2rem; }
+            
+            /* Adjust header */
+            .logo span { display: none; } /* Hide text on very small screens if needed, or just shrink */
+            .logo { font-size: 1.5rem; }
+            .stat-item { padding: 4px 8px; font-size: 0.8rem; }
+        }
+
+        /* Extra small screens (iPhone SE, etc) */
+        @media (max-height: 600px) {
+            .wheel-container { margin: 10px auto; width: 200px; height: 200px; }
+            .header { margin-bottom: 5px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <!-- HEADER -->
+        <header>
+            <div class="logo">✖️<span>MathHero</span></div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    🏆 <span id="score-display">0</span>
+                </div>
+                <div class="stat-item">
+                    ⭐ <span id="star-display">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN MENU SCREEN -->
+        <main id="screen-home" class="screen active">
+            <div style="text-align: center; color: white; margin-bottom: 10px;">
+                <h1 style="font-size: 2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Tables 2 to 10</h1>
+                <p style="font-size: 1rem; opacity: 0.9;">Master your multiplication skills!</p>
+            </div>
+
+            <div class="menu-grid">
+                <div class="game-card" onclick="Game.startMemory()">
+                    <span class="game-icon">🎴</span>
+                    <div class="game-title">Memory Match</div>
+                    <div class="game-desc">Find the pairs. Match the equation (2x5) with the answer (10).</div>
+                </div>
+                <div class="game-card" onclick="Game.startWheel()">
+                    <span class="game-icon">🎡</span>
+                    <div class="game-title">Spin to Solve</div>
+                    <div class="game-desc">Spin the lucky wheel for a random multiplication challenge!</div>
+                </div>
+                <div class="game-card" onclick="Game.startQuiz()">
+                    <span class="game-icon">⚡</span>
+                    <div class="game-title">Speed Quiz</div>
+                    <div class="game-desc">Race against the clock. How many can you solve?</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- MEMORY GAME SCREEN -->
+        <main id="screen-memory" class="screen">
+            <div class="game-header">
+                <button class="btn btn-outline" onclick="App.showHome()">🏠 Home</button>
+                <h3>Memory Match</h3>
+                <div id="memory-status" style="font-size:0.8rem; font-weight:bold; color:var(--primary);">Pairs left: 8</div>
+            </div>
+            <div class="memory-grid" id="memory-board">
+                <!-- Cards injected by JS -->
+            </div>
+            <div style="text-align: center; margin-top: 25px;">
+                <button class="btn" onclick="Game.startMemory()">🔄 Restart</button>
+            </div>
+        </main>
+
+        <!-- WHEEL GAME SCREEN -->
+        <main id="screen-wheel" class="screen">
+            <div class="game-header">
+                <button class="btn btn-outline" onclick="App.showHome()">🏠 Home</button>
+                <h3>Lucky Spin</h3>
+                <div></div>
+            </div>
+            
+            <div class="wheel-container">
+                <div class="wheel-marker"></div>
+                <div class="wheel" id="wheel-el"></div>
+                <div class="wheel-center">SPIN</div>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn" id="spin-btn" onclick="WheelGame.spin()">🎲 SPIN!</button>
+            </div>
+
+            <div class="wheel-question" id="wheel-panel">
+                <h2 id="wheel-q-text">2 x 3 = ?</h2>
+                <div class="wheel-options" id="wheel-opts">
+                    <!-- Options -->
+                </div>
+            </div>
+        </main>
+
+        <!-- QUIZ SCREEN -->
+        <main id="screen-quiz" class="screen">
+            <div class="game-header">
+                <button class="btn btn-outline" onclick="App.showHome()">🏠 Quit</button>
+                <h3>Speed Round</h3>
+                <div id="quiz-timer-text" style="color:var(--dark); font-weight:900;">60s</div>
+            </div>
+            
+            <div class="quiz-container">
+                <div class="timer-bar-bg">
+                    <div class="timer-bar-fill" id="quiz-timer-bar"></div>
+                </div>
+                
+                <div class="question-display" id="quiz-question">
+                    2 x 5
+                </div>
+
+                <div class="quiz-options" id="quiz-options">
+                    <!-- Options -->
+                </div>
+                
+                <div id="quiz-msg" style="margin-top: 15px; font-weight: 700; height: 1.5em; color: var(--primary);"></div>
+            </div>
+        </main>
+
+        <!-- SUMMARY SCREEN -->
+        <main id="screen-summary" class="screen">
+            <div class="summary-card">
+                <h2>🎉 Game Over!</h2>
+                <p>Great effort practicing your math!</p>
+                
+                <div class="stars-earned">⭐⭐⭐</div>
+                
+                <div class="stat-grid" style="display:flex; justify-content:center; gap:40px; margin: 20px 0;">
+                    <div>
+                        <h4 style="margin:0; font-size:0.9rem;">Score</h4>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);" id="final-score">0</div>
+                    </div>
+                    <div>
+                        <h4 style="margin:0; font-size:0.9rem;">Accuracy</h4>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--success);" id="final-accuracy">0%</div>
+                    </div>
+                </div>
+
+                <div class="key-takeaways">
+                    <h3>📝 Tips for Tables 2-10</h3>
+                    <ul>
+                        <li><strong>Table 2:</strong> Just double the number.</li>
+                        <li><strong>Table 5:</strong> Ends in 0 or 5.</li>
+                        <li><strong>Table 9:</strong> The digits add up to 9 (e.g., 18, 27).</li>
+                        <li><strong>Table 10:</strong> Add a zero to the number!</li>
+                    </ul>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <button class="btn" style="width:100%" onclick="App.showHome()">🔄 Play Again</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Feedback Toast -->
+    <div id="feedback-toast">Correct!</div>
+
+    <script>
+        /**
+         * MOBILE OPTIMIZED MATH ENGINE
+         */
+
+        // --- Sound Engine ---
+        const AudioSys = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+            playTone(freq, type, duration) {
+                if (!this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            },
+            playCorrect() {
+                this.playTone(600, 'sine', 0.1);
+                setTimeout(() => this.playTone(800, 'sine', 0.2), 100);
+            },
+            playWrong() {
+                this.playTone(200, 'sawtooth', 0.3);
+            },
+            playWin() {
+                [523, 659, 783, 1046].forEach((freq, i) => {
+                    setTimeout(() => this.playTone(freq, 'square', 0.2), i * 100);
+                });
+            }
+        };
+
+        // --- Global State ---
+        const State = {
+            totalScore: 0,
+            stars: 0,
+            currentQuestionsAnswered: 0,
+            currentQuestionsCorrect: 0
+        };
+
+        // --- Navigation ---
+        const App = {
+            screens: ['home', 'memory', 'wheel', 'quiz', 'summary'],
+            show(screenId) {
+                this.screens.forEach(s => document.getElementById(`screen-${s}`).classList.remove('active'));
+                document.getElementById(`screen-${screenId}`).classList.add('active');
+                // Initialize audio on first interaction
+                AudioSys.init();
+                window.scrollTo(0,0); // Scroll to top on screen change
+            },
+            showHome() {
+                // Reset session counters slightly but keep total score/stars
+                State.currentQuestionsAnswered = 0;
+                State.currentQuestionsCorrect = 0;
+                this.show('home');
+            },
+            updateStats(points, starBonus) {
+                State.totalScore += points;
+                State.stars += starBonus;
+                document.getElementById('score-display').textContent = State.totalScore;
+                document.getElementById('star-display').textContent = State.stars;
+            },
+            showToast(isCorrect) {
+                const toast = document.getElementById('feedback-toast');
+                toast.textContent = isCorrect ? "Correct! 🌟" : "Oops! Try again";
+                toast.className = isCorrect ? "toast-correct show" : "toast-wrong show";
+                if(isCorrect) AudioSys.playCorrect(); else AudioSys.playWrong();
+                setTimeout(() => toast.classList.remove('show'), 1200);
+            },
+            showSummary() {
+                this.show('summary');
+                document.getElementById('final-score').textContent = State.totalScore;
+                const acc = State.currentQuestionsAnswered === 0 ? 0 : Math.round((State.currentQuestionsCorrect / State.currentQuestionsAnswered) * 100);
+                document.getElementById('final-accuracy').textContent = acc + "%";
+                
+                // Visual Star Logic
+                const starContainer = document.querySelector('.stars-earned');
+                if(acc >= 90) starContainer.textContent = "⭐⭐⭐";
+                else if(acc >= 60) starContainer.textContent = "⭐⭐";
+                else starContainer.textContent = "⭐";
+                
+                AudioSys.playWin();
+            }
+        };
+
+        // --- Math Utilities (UPDATED FOR 2-10) ---
+        const MathUtil = {
+            tables: [2, 3, 4, 5, 6, 7, 8, 9, 10], // Expanded range
+            generateProblem() {
+                const a = this.tables[Math.floor(Math.random() * this.tables.length)];
+                const b = Math.floor(Math.random() * 10) + 1; 
+                const answer = a * b;
+                return { q: `${a} × ${b}`, a: answer };
+            },
+            generateOptions(correctAnswer) {
+                let opts = new Set([correctAnswer]);
+                while(opts.size < 4) {
+                    // Smart offsets: for 2-10, answers can be up to 100
+                    let offset = Math.floor(Math.random() * 10) - 5; 
+                    let val = correctAnswer + offset;
+                    if(val > 0 && val !== correctAnswer && val <= 110) opts.add(val);
+                }
+                return Array.from(opts).sort(() => Math.random() - 0.5);
+            }
+        };
+
+        // --- Memory Game Logic ---
+        const MemoryGame = {
+            cards: [],
+            flipped: [],
+            matches: 0,
+            locked: false,
+
+            start() {
+                App.show('memory');
+                this.matches = 0;
+                this.flipped = [];
+                this.locked = false;
+                this.generateCards();
+            },
+
+            generateCards() {
+                // Generate 8 pairs (16 cards). 
+                // On small screens, 16 cards (4x4) fits okay with CSS adjustments.
+                let pairs = [];
+                while(pairs.length < 8) {
+                    const p = MathUtil.generateProblem();
+                    // Avoid duplicate problems to keep it fair
+                    if(!pairs.some(x => x.q === p.q)) {
+                        pairs.push(p); 
+                        pairs.push({q: String(p.a), a: p.a}); 
+                    }
+                }
+                
+                pairs.sort(() => Math.random() - 0.5);
+                
+                const board = document.getElementById('memory-board');
+                board.innerHTML = '';
+                pairs.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'memory-card';
+                    card.dataset.val = item.a;
+                    card.dataset.index = index;
+                    // Use a generic emoji or symbol for the back to look nice
+                    card.innerHTML = `<div class="front">${item.q}</div><div class="back">?</div>`;
+                    card.onclick = () => this.flip(card);
+                    board.appendChild(card);
+                });
+                this.updateStatus();
+            },
+
+            flip(card) {
+                if(this.locked) return;
+                if(card.classList.contains('flipped') || card.classList.contains('matched')) return;
+
+                card.classList.add('flipped');
+                this.flipped.push(card);
+
+                if(this.flipped.length === 2) {
+                    this.checkMatch();
+                }
+            },
+
+            checkMatch() {
+                this.locked = true;
+                const [c1, c2] = this.flipped;
+                const match = c1.dataset.val === c2.dataset.val;
+
+                if(match) {
+                    c1.classList.add('matched');
+                    c2.classList.add('matched');
+                    this.matches++;
+                    this.flipped = [];
+                    this.locked = false;
+                    App.showToast(true);
+                    App.updateStats(15, 1);
+                    this.updateStatus();
+                    if(this.matches === 8) {
+                        setTimeout(() => App.showSummary(), 1500);
+                    }
+                } else {
+                    setTimeout(() => {
+                        c1.classList.remove('flipped');
+                        c2.classList.remove('flipped');
+                        this.flipped = [];
+                        this.locked = false;
+                        App.showToast(false);
+                    }, 1000);
+                }
+            },
+
+            updateStatus() {
+                document.getElementById('memory-status').textContent = `Pairs left: ${8 - this.matches}`;
+            }
+        };
+
+        // --- Wheel Game Logic ---
+        const WheelGame = {
+            isSpinning: false,
+            rotation: 0,
+
+            start() {
+                App.show('wheel');
+                document.getElementById('wheel-panel').style.display = 'none';
+                document.getElementById('spin-btn').style.display = 'inline-block';
+            },
+
+            spin() {
+                if(this.isSpinning) return;
+                this.isSpinning = true;
+                AudioSys.init();
+                
+                // Calculate random spin (3 to 5 full rotations + random segment)
+                const baseRot = 360 * (3 + Math.random() * 2);
+                this.rotation += baseRot;
+                
+                const wheel = document.getElementById('wheel-el');
+                wheel.style.transform = `rotate(${this.rotation}deg)`;
+
+                setTimeout(() => {
+                    this.isSpinning = false;
+                    this.showQuestion();
+                }, 3000); // 3s spin duration
+            },
+
+            showQuestion() {
+                const prob = MathUtil.generateProblem();
+                const opts = MathUtil.generateOptions(prob.a);
+                
+                const panel = document.getElementById('wheel-panel');
+                const qText = document.getElementById('wheel-q-text');
+                const optsDiv = document.getElementById('wheel-opts');
+                const spinBtn = document.getElementById('spin-btn');
+
+                panel.style.display = 'block';
+                spinBtn.style.display = 'none';
+                
+                qText.textContent = prob.q;
+                optsDiv.innerHTML = '';
+                
+                opts.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
+                    btn.onclick = () => this.handleAnswer(opt, prob.a);
+                    optsDiv.appendChild(btn);
+                });
+            },
+
+            handleAnswer(selected, correct) {
+                State.currentQuestionsAnswered++;
+                if(selected === correct) {
+                    App.showToast(true);
+                    App.updateStats(25, 2);
+                    State.currentQuestionsCorrect++;
+                    setTimeout(() => {
+                        document.getElementById('wheel-panel').style.display = 'none';
+                        document.getElementById('spin-btn').style.display = 'inline-block';
+                    }, 1200);
+                } else {
+                    App.showToast(false);
+                }
+            }
+        };
+
+        // --- Quiz Logic ---
+        const QuizGame = {
+            timeLeft: 60, // Increased to 60s for wider range of numbers
+            timerInterval: null,
+            isActive: false,
+
+            start() {
+                App.show('quiz');
+                this.isActive = true;
+                this.timeLeft = 60;
+                this.updateTimerDisplay();
+                this.nextQuestion();
+                
+                clearInterval(this.timerInterval);
+                this.timerInterval = setInterval(() => {
+                    this.timeLeft--;
+                    this.updateTimerDisplay();
+                    if(this.timeLeft <= 0) this.end();
+                }, 1000);
+            },
+
+            updateTimerDisplay() {
+                const pct = (this.timeLeft / 60) * 100;
+                document.getElementById('quiz-timer-bar').style.width = pct + "%";
+                document.getElementById('quiz-timer-text').textContent = this.timeLeft + "s";
+                if(this.timeLeft < 10) {
+                    document.getElementById('quiz-timer-bar').style.background = "#ff7675";
+                } else {
+                    document.getElementById('quiz-timer-bar').style.background = "#55efc4";
+                }
+            },
+
+            nextQuestion() {
+                if(!this.isActive) return;
+                const prob = MathUtil.generateProblem();
+                const opts = MathUtil.generateOptions(prob.a);
+                
+                document.getElementById('quiz-question').textContent = prob.q;
+                const container = document.getElementById('quiz-options');
+                container.innerHTML = '';
+                
+                opts.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
+                    btn.onclick = () => this.handleAnswer(opt, prob.a);
+                    container.appendChild(btn);
+                });
+                document.getElementById('quiz-msg').textContent = "";
+            },
+
+            handleAnswer(selected, correct) {
+                State.currentQuestionsAnswered++;
+                if(selected === correct) {
+                    App.showToast(true);
+                    App.updateStats(10, 0); 
+                    State.currentQuestionsCorrect++;
+                    document.getElementById('quiz-msg').textContent = "✅ Correct!";
+                    this.nextQuestion();
+                } else {
+                    App.showToast(false);
+                    document.getElementById('quiz-msg').textContent = "❌ Missed!";
+                    this.timeLeft -= 3; // Penalty
+                    if(this.timeLeft < 0) this.timeLeft = 0;
+                    this.nextQuestion(); // Still move to next question to keep flow
+                }
+            },
+
+            end() {
+                this.isActive = false;
+                clearInterval(this.timerInterval);
+                App.showSummary();
+            }
+        };
+
+        // --- Initialization ---
+        const Game = {
+            startMemory: () => MemoryGame.start(),
+            startWheel: () => WheelGame.start(),
+            startQuiz: () => QuizGame.start()
+        };
+
+    </script>
+</body>
+</html>

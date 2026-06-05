@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Number World Adventure - Grade 2</title>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338ca;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text: #1F2937;
+            --font-main: 'Nunito', sans-serif;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none; /* Prevent selection for app-like feel */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- FONTS IMPORT --- */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+        /* --- LAYOUT UTILITIES --- */
+        .hidden { display: none !important; }
+        .flex-center { display: flex; justify-content: center; align-items: center; }
+        .full-screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; overflow-y: auto; padding: 20px; }
+        
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.95); }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            height: 60px;
+        }
+        .teacher-info { font-weight: 700; font-size: 0.9rem; }
+        .student-info { font-weight: 700; font-size: 1rem; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
+
+        /* --- WELCOME SCREEN --- */
+        #welcome-screen {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .welcome-card {
+            background: rgba(255,255,255,0.95);
+            color: var(--text);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+            animation: popIn 0.5s ease-out;
+        }
+        h1 { margin: 0 0 20px 0; color: var(--primary); }
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input[type="text"]:focus { border-color: var(--primary); outline: none; }
+        
+        .avatar-selection { display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; }
+        .avatar-btn {
+            font-size: 3rem;
+            background: #f0f0f0;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid transparent;
+        }
+        .avatar-btn.selected { border-color: var(--primary); background: #e0e7ff; transform: scale(1.1); }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        /* --- DASHBOARD --- */
+        #dashboard-screen {
+            background: var(--bg);
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 40px auto;
+            width: 100%;
+        }
+        .menu-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+        }
+        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .menu-icon { font-size: 3rem; margin-bottom: 10px; }
+        .menu-title { font-weight: 700; color: var(--primary); }
+
+        /* --- LEARN SECTION --- */
+        #learn-screen { background: white; }
+        .interactive-tool {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .big-number { font-size: 4rem; font-weight: 900; color: var(--primary); margin: 10px 0; font-variant-numeric: tabular-nums; }
+        .place-value-row { display: flex; justify-content: space-around; margin-top: 20px; }
+        .pv-block { 
+            background: white; border: 2px solid #cbd5e1; border-radius: 10px; padding: 10px; width: 30%; 
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .pv-label { font-size: 0.8rem; color: #64748b; text-transform: uppercase; font-weight: bold; }
+        .pv-value { font-size: 1.5rem; font-weight: 800; color: var(--text); }
+        input[type=range] { width: 100%; margin: 20px 0; }
+
+        /* --- DRAG AND DROP GAME --- */
+        #drag-screen { background: #e0f2fe; }
+        .game-header { text-align: center; margin-bottom: 20px; }
+        .drop-zones {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .zone {
+            width: 100px;
+            height: 100px;
+            border: 3px dashed var(--primary);
+            border-radius: 15px;
+            background: rgba(255,255,255,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: var(--primary-dark);
+            position: relative;
+        }
+        .zone-label { position: absolute; top: -25px; font-size: 0.9rem; color: var(--text); width: 100%; text-align: center; }
+        
+        .draggable-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .draggable {
+            width: 90px;
+            height: 90px;
+            background: var(--accent);
+            color: white;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            cursor: grab;
+            box-shadow: 0 4px 0 #d97706;
+            touch-action: none; /* Important for custom drag logic */
+        }
+        .draggable.dragging { opacity: 0.5; transform: scale(1.1); }
+
+        /* --- RUNNER GAME --- */
+        #runner-screen { 
+            background: #87CEEB; /* Sky blue */
+            overflow: hidden;
+            touch-action: none;
+            font-family: monospace;
+        }
+        #game-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .game-overlay {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 10;
+        }
+        .game-btn {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        .controls-hint {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+            background: rgba(255,255,255,0.7);
+            padding: 5px;
+        }
+
+        /* --- MEMORY GAME --- */
+        #memory-screen { background: #fdf4ff; }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .memory-card {
+            aspect-ratio: 1;
+            background: var(--primary);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+        .memory-card.flipped { transform: rotateY(180deg); }
+        .front, .back {
+            position: absolute;
+            width: 100%; height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .front { background: var(--primary); color: white; font-size: 2rem; }
+        .back { background: white; color: var(--text); font-size: 1.2rem; transform: rotateY(180deg); border: 2px solid var(--primary); }
+
+        /* --- KEY POINTS --- */
+        #key-points-screen { background: #fff; }
+        .points-container { max-width: 600px; margin: 0 auto; }
+        .point-card {
+            background: #fff;
+            border-left: 5px solid var(--secondary);
+            box-shadow: var(--shadow);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 10px 10px 0;
+        }
+        .certificate {
+            border: 5px double var(--primary);
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+            background: #fffbeb;
+        }
+
+        /* --- UTILS --- */
+        .back-btn {
+            position: absolute;
+            top: 20px; left: 20px;
+            background: rgba(255,255,255,0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: var(--text);
+            z-index: 50;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake { animation: shake 0.3s; }
+
+        /* --- TOAST --- */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 200;
+        }
+        #toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <header id="app-header" class="hidden">
+        <div class="teacher-info">Teacher: Manal Bazzi</div>
+        <div class="student-info" id="display-name">Student</div>
+    </header>
+
+    <main>
+        <!-- WELCOME SCREEN -->
+        <section id="welcome-screen" class="full-screen">
+            <div class="welcome-card">
+                <h1>Math Adventure</h1>
+                <p>Welcome to the world of numbers!</p>
+                
+                <div class="avatar-selection">
+                    <div class="avatar-btn selected" onclick="selectAvatar('👦', this)">👦</div>
+                    <div class="avatar-btn" onclick="selectAvatar('👧', this)">👧</div>
+                </div>
+
+                <input type="text" id="student-name-input" placeholder="Type your name here..." maxlength="15">
+                <button class="btn-primary" onclick="startApp()">Start Learning</button>
+            </div>
+        </section>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard-screen" class="full-screen hidden">
+            <h2 style="text-align:center; color: var(--primary);">Choose an Activity</h2>
+            <div class="menu-grid">
+                <div class="menu-card" onclick="showSection('learn-screen')">
+                    <div class="menu-icon">📚</div>
+                    <div class="menu-title">Learn Numbers</div>
+                </div>
+                <div class="menu-card" onclick="startSortingGame()">
+                    <div class="menu-icon">🔢</div>
+                    <div class="menu-title">Ordering</div>
+                </div>
+                <div class="menu-card" onclick="startRunnerGame()">
+                    <div class="menu-icon">🏃</div>
+                    <div class="menu-title">Runner Game</div>
+                </div>
+                <div class="menu-card" onclick="startMemoryGame()">
+                    <div class="menu-icon">🎴</div>
+                    <div class="menu-title">Math Memory</div>
+                </div>
+                <div class="menu-card" onclick="showSection('key-points-screen')">
+                    <div class="menu-icon">🏆</div>
+                    <div class="menu-title">Key Points</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LEARN SECTION -->
+        <section id="learn-screen" class="full-screen hidden">
+            <button class="back-btn" onclick="showSection('dashboard-screen')">⬅ Back</button>
+            <div style="max-width: 600px; margin: 60px auto 0;">
+                <h2 style="text-align:center;">Numbers up to 999</h2>
+                <p style="text-align:center;">Move the slider to make a number. See the Hundreds, Tens, and Ones change!</p>
+                
+                <div class="interactive-tool">
+                    <div class="big-number" id="learn-number-display">000</div>
+                    <input type="range" id="number-slider" min="0" max="999" value="0">
+                    
+                    <div class="place-value-row">
+                        <div class="pv-block">
+                            <div class="pv-value" id="val-hundreds">0</div>
+                            <div class="pv-label">Hundreds</div>
+                        </div>
+                        <div class="pv-block">
+                            <div class="pv-value" id="val-tens">0</div>
+                            <div class="pv-label">Tens</div>
+                        </div>
+                        <div class="pv-block">
+                            <div class="pv-value" id="val-ones">0</div>
+                            <div class="pv-label">Ones</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <p><strong>Tip:</strong> The number 456 is read as "Four Hundred Fifty-Six".</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SORTING GAME -->
+        <section id="drag-screen" class="full-screen hidden">
+            <button class="back-btn" onclick="showSection('dashboard-screen')">⬅ Back</button>
+            <div class="game-header">
+                <h2>Order the Numbers</h2>
+                <p>Drag the numbers to the correct boxes!</p>
+            </div>
+            
+            <div class="drop-zones">
+                <div class="zone" data-order="small"><span class="zone-label">Smallest</span><div class="placeholder">?</div></div>
+                <div class="zone" data-order="middle"><span class="zone-label">Middle</span><div class="placeholder">?</div></div>
+                <div class="zone" data-order="large"><span class="zone-label">Largest</span><div class="placeholder">?</div></div>
+            </div>
+
+            <div class="draggable-container" id="draggables-area">
+                <!-- Draggables injected by JS -->
+            </div>
+        </section>
+
+        <!-- RUNNER GAME -->
+        <section id="runner-screen" class="full-screen hidden">
+            <button class="back-btn" onclick="exitRunner()">⬅ Exit</button>
+            <div style="position: absolute; top: 20px; right: 20px; font-weight: bold; color: white; text-shadow: 1px 1px 2px black;">
+                Score: <span id="runner-score">0</span>
+            </div>
+            <canvas id="game-canvas"></canvas>
+            
+            <div id="runner-start-overlay" class="game-overlay">
+                <h2>Number Runner!</h2>
+                <p>Tap screen or press Space to Jump.</p>
+                <p>Collect coins. Hit the <strong>correct answer</strong> numbers.<br>Avoid the wrong ones!</p>
+                <p style="color: #F59E0B;">Target: Numbers greater than 500</p>
+                <button class="game-btn" onclick="initGameRun()">Play</button>
+            </div>
+            <div id="runner-game-over-overlay" class="game-overlay hidden">
+                <h2>Game Over!</h2>
+                <p>Score: <span id="final-score">0</span></p>
+                <button class="game-btn" onclick="initGameRun()">Try Again</button>
+            </div>
+            <div class="controls-hint">Tap / Spacebar to Jump</div>
+        </section>
+
+        <!-- MEMORY GAME -->
+        <section id="memory-screen" class="full-screen hidden">
+            <button class="back-btn" onclick="showSection('dashboard-screen')">⬅ Back</button>
+            <h2 style="text-align:center;">Math Memory Match</h2>
+            <p style="text-align:center;">Find the matching pairs (Problem + Answer).</p>
+            <div class="memory-grid" id="memory-grid">
+                <!-- Cards injected JS -->
+            </div>
+        </section>
+
+        <!-- KEY POINTS -->
+        <section id="key-points-screen" class="full-screen hidden">
+            <button class="back-btn" onclick="showSection('dashboard-screen')">⬅ Back</button>
+            <div class="points-container">
+                <h2 style="text-align: center; color: var(--primary);">Key Points</h2>
+                
+                <div class="point-card">
+                    <h3>🔢 Place Value</h3>
+                    <p>Every digit has a value. In 345, 3 is hundreds, 4 is tens, and 5 is ones.</p>
+                </div>
+                <div class="point-card">
+                    <h3>📈 Ordering</h3>
+                    <p>When ordering numbers, look at the hundreds first, then tens, then ones.</p>
+                </div>
+                <div class="point-card">
+                    <h3>🧮 Mental Math</h3>
+                    <p>Practice makes perfect! Matching games help your memory for math facts.</p>
+                </div>
+
+                <div class="certificate">
+                    <h3>🎓 Certificate of Completion</h3>
+                    <p>This certifies that</p>
+                    <h2 id="cert-name" style="margin: 10px 0;">Student Name</h2>
+                    <p>Has mastered numbers up to 999!</p>
+                    <p style="font-size: 0.8rem; color: #666;">Teacher: Manal Bazzi</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="toast">Message</div>
+
+    <script>
+        /* --- STATE & DATA --- */
+        let state = {
+            studentName: "Student",
+            avatar: "👦",
+            currentScore: 0,
+            dragSrcEl: null
+        };
+
+        /* --- AUDIO ENGINE (Synthesizer) --- */
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'success') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'jump') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'coin') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(1600, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        /* --- UI HELPERS --- */
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function selectAvatar(emoji, btn) {
+            state.avatar = emoji;
+            document.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            playSound('success');
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            
+            const header = document.getElementById('app-header');
+            if (id === 'welcome-screen') {
+                header.classList.add('hidden');
+            } else {
+                header.classList.remove('hidden');
+                document.getElementById('display-name').textContent = state.studentName;
+            }
+
+            if (id === 'key-points-screen') {
+                document.getElementById('cert-name').textContent = state.studentName;
+            }
+        }
+
+        /* --- INITIALIZATION --- */
+        function startApp() {
+            const nameInput = document.getElementById('student-name-input').value.trim();
+            if (nameInput) state.studentName = nameInput;
+            
+            showToast(`Hello ${state.avatar} ${state.studentName}!`);
+            playSound('success');
+            showSection('dashboard-screen');
+        }
+
+        /* --- LEARNING MODULE --- */
+        const slider = document.getElementById('number-slider');
+        slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            updateLearningVisuals(val);
+        });
+
+        function updateLearningVisuals(num) {
+            const str = num.toString().padStart(3, '0');
+            document.getElementById('learn-number-display').textContent = str;
+            document.getElementById('val-hundreds').textContent = str[0];
+            document.getElementById('val-tens').textContent = str[1];
+            document.getElementById('val-ones').textContent = str[2];
+        }
+
+        /* --- DRAG AND DROP GAME --- */
+        function startSortingGame() {
+            showSection('drag-screen');
+            const container = document.getElementById('draggables-area');
+            container.innerHTML = '';
+            
+            // Generate 3 distinct random numbers
+            let nums = new Set();
+            while(nums.size < 3) nums.add(Math.floor(Math.random() * 900) + 1);
+            const numsArr = Array.from(nums);
+            
+            // Clear zones
+            document.querySelectorAll('.zone').forEach(z => {
+                z.innerHTML = `<span class="zone-label">${z.querySelector('.zone-label').textContent}</span><div class="placeholder">?</div>`;
+                z.style.backgroundColor = "rgba(255,255,255,0.5)";
+            });
+
+            // Create Drag Elements
+            numsArr.forEach(n => {
+                const el = document.createElement('div');
+                el.classList.add('draggable');
+                el.textContent = n;
+                el.draggable = true;
+                el.id = 'drag-' + n;
+                
+                // Desktop Drag Events
+                el.addEventListener('dragstart', handleDragStart);
+                el.addEventListener('dragend', handleDragEnd);
+                
+                // Touch/Mobile Support (Custom Click to Pick up)
+                el.addEventListener('click', handleMobileDrag);
+                
+                container.appendChild(el);
+            });
+            
+            // Zone Events
+            const zones = document.querySelectorAll('.zone');
+            zones.forEach(zone => {
+                zone.addEventListener('dragover', e => e.preventDefault());
+                zone.addEventListener('drop', handleDrop);
+                zone.addEventListener('click', handleMobileDrop); // For mobile tap interaction
+            });
+        }
+
+        function handleDragStart(e) {
+            state.dragSrcEl = this;
+            this.classList.add('dragging');
+            playSound('coin'); // subtle sound
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const zone = this;
+            const data = parseInt(state.dragSrcEl.textContent);
+            placeItem(zone, data, state.dragSrcEl);
+        }
+
+        // Mobile Logic: Tap to select, Tap to place
+        let selectedMobileEl = null;
+        function handleMobileDrag(e) {
+            if(selectedMobileEl === this) {
+                selectedMobileEl = null; // deselect
+                this.style.transform = "scale(1)";
+            } else {
+                if(selectedMobileEl) selectedMobileEl.style.transform = "scale(1)";
+                selectedMobileEl = this;
+                this.style.transform = "scale(1.2)";
+                playSound('coin');
+            }
+        }
+
+        function handleMobileDrop(e) {
+            if(selectedMobileEl) {
+                const data = parseInt(selectedMobileEl.textContent);
+                placeItem(this, data, selectedMobileEl);
+                selectedMobileEl.style.transform = "scale(1)";
+                selectedMobileEl = null;
+            }
+        }
+
+        function placeItem(zone, value, originalEl) {
+            if(zone.querySelector('.placeholder') === null) {
+                // Zone already full
+                return; 
+            }
+
+            // Visual placement
+            zone.innerHTML = `<span class="zone-label">${zone.querySelector('.zone-label').textContent}</span><div style="font-size:1.5rem; font-weight:bold; color:var(--primary);">${value}</div>`;
+            originalEl.remove(); // Remove from bottom list
+
+            // Get values in all zones
+            const zones = document.querySelectorAll('.zone');
+            const valSmall = parseInt(zones[0].textContent) || 0;
+            const valMid = parseInt(zones[1].textContent) || 0;
+            const valLarge = parseInt(zones[2].textContent) || 0;
+
+            // Check if all filled
+            if (!zones[0].querySelector('.placeholder') && !zones[1].querySelector('.placeholder') && !zones[2].querySelector('.placeholder')) {
+                if (valSmall < valMid && valMid < valLarge) {
+                    showToast("Correct! Great Job! 🌟");
+                    playSound('success');
+                    setTimeout(startSortingGame, 1500); // Reset next level
+                } else {
+                    showToast("Oops! Not quite right.");
+                    playSound('error');
+                    zones.forEach(z => z.classList.add('shake'));
+                    setTimeout(() => {
+                        zones.forEach(z => z.classList.remove('shake'));
+                        startSortingGame();
+                    }, 1000);
+                }
+            }
+        }
+
+        /* --- RUNNER GAME (Canvas) --- */
+        let gameRunning = false;
+        let canvas, ctx;
+        let player = { x: 50, y: 0, w: 40, h: 40, dy: 0, jumpPower: -12, grounded: true };
+        let obstacles = [];
+        let coins = [];
+        let frameCount = 0;
+        let score = 0;
+        let gameSpeed = 5;
+
+        function startRunnerGame() {
+            showSection('runner-screen');
+            canvas = document.getElementById('game-canvas');
+            ctx = canvas.getContext('2d');
+            
+            // Resize canvas to fit
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            player.y = canvas.height - 100; // Ground level
+            
+            document.getElementById('runner-start-overlay').classList.remove('hidden');
+            document.getElementById('runner-game-over-overlay').classList.add('hidden');
+        }
+
+        function exitRunner() {
+            gameRunning = false;
+            showSection('dashboard-screen');
+        }
+
+        function initGameRun() {
+            gameRunning = true;
+            score = 0;
+            obstacles = [];
+            coins = [];
+            player.y = canvas.height - 100;
+            player.dy = 0;
+            frameCount = 0;
+            document.getElementById('runner-start-overlay').classList.add('hidden');
+            document.getElementById('runner-game-over-overlay').classList.add('hidden');
+            document.getElementById('runner-score').textContent = 0;
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Ground
+            ctx.fillStyle = "#8B4513";
+            ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
+
+            // Player
+            player.dy += 0.6; // Gravity
+            player.y += player.dy;
+
+            // Ground Collision
+            if (player.y > canvas.height - 90) {
+                player.y = canvas.height - 90;
+                player.dy = 0;
+                player.grounded = true;
+            } else {
+                player.grounded = false;
+            }
+
+            // Draw Player (Avatar)
+            ctx.font = "40px Arial";
+            ctx.fillText(state.avatar, player.x, player.y + 40);
+
+            // Spawner
+            frameCount++;
+            if (frameCount % 100 === 0) {
+                // Spawn Obstacle (Number)
+                const isTarget = Math.random() > 0.5;
+                const val = isTarget ? Math.floor(Math.random() * 499) + 500 : Math.floor(Math.random() * 500); // Target > 500
+                obstacles.push({
+                    x: canvas.width,
+                    y: canvas.height - 90,
+                    val: val,
+                    isTarget: isTarget, // Actually for this game, we want to HIT the target > 500?
+                    // Let's refine: The prompt says "avoid wrong answers". 
+                    // Let's say: Collect Numbers > 500. Avoid Numbers < 500. Avoid Rocks.
+                    type: 'number' 
+                });
+            }
+            if (frameCount % 140 === 0) {
+                coins.push({ x: canvas.width, y: canvas.height - 150, w: 20, h: 20 });
+            }
+
+            // Move & Draw Obstacles
+            ctx.fillStyle = "black";
+            ctx.font = "20px Arial";
+            ctx.textAlign = "center";
+            
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                let obs = obstacles[i];
+                obs.x -= gameSpeed;
+
+                // Draw Block
+                ctx.fillStyle = obs.val > 500 ? "#10B981" : "#EF4444"; // Green for target, Red for bad
+                ctx.fillRect(obs.x, obs.y, 40, 40);
+                ctx.fillStyle = "white";
+                ctx.fillText(obs.val, obs.x + 20, obs.y + 25);
+
+                // Collision
+                if (
+                    player.x < obs.x + 40 &&
+                    player.x + 40 > obs.x &&
+                    player.y < obs.y + 40 &&
+                    player.y + 40 > obs.y
+                ) {
+                    if (obs.val > 500) {
+                        // Correct
+                        score += 10;
+                        playSound('success');
+                        obstacles.splice(i, 1);
+                        document.getElementById('runner-score').textContent = score;
+                    } else {
+                        // Wrong
+                        gameOver();
+                    }
+                }
+
+                if (obs.x < -50) obstacles.splice(i, 1);
+            }
+
+            // Move & Draw Coins
+            for (let i = coins.length - 1; i >= 0; i--) {
+                let c = coins[i];
+                c.x -= gameSpeed;
+                ctx.fillStyle = "#F59E0B";
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, 10, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Collision
+                if (
+                    player.x < c.x + 20 &&
+                    player.x + 40 > c.x &&
+                    player.y < c.y + 20 &&
+                    player.y + 40 > c.y
+                ) {
+                    score += 5;
+                    playSound('coin');
+                    coins.splice(i, 1);
+                    document.getElementById('runner-score').textContent = score;
+                }
+                if (c.x < -50) coins.splice(i, 1);
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function jump() {
+            if (player.grounded && gameRunning) {
+                player.dy = player.jumpPower;
+                playSound('jump');
+            }
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            playSound('error');
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('runner-game-over-overlay').classList.remove('hidden');
+        }
+
+        // Input Handling
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') jump();
+        });
+        canvas && canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            jump();
+        });
+        canvas && canvas.addEventListener('mousedown', (e) => {
+            jump();
+        });
+
+
+        /* --- MEMORY GAME --- */
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function startMemoryGame() {
+            showSection('memory-screen');
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            flippedCards = [];
+            matchedPairs = 0;
+
+            // Generate pairs
+            // Format: { id: 1, content: '10+5', matchId: 1 } 
+            // And { id: 2, content: '15', matchId: 1 }
+            let data = [];
+            for(let i=0; i<6; i++) {
+                let a = Math.floor(Math.random()*20) + 1;
+                let b = Math.floor(Math.random()*20) + 1;
+                let ans = a + b;
+                let matchId = i;
+                
+                data.push({ type: 'prob', val: `${a}+${b}`, matchId: matchId });
+                data.push({ type: 'ans', val: ans, matchId: matchId });
+            }
+
+            // Shuffle
+            data.sort(() => 0.5 - Math.random());
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('memory-card');
+                card.dataset.matchId = item.matchId;
+                card.dataset.val = item.val; // For identification
+                
+                card.innerHTML = `
+                    <div class="front">?</div>
+                    <div class="back">${item.val}</div>
+                `;
+                
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (flippedCards.length === 2) return;
+            if (this.classList.contains('flipped')) return;
+
+            this.classList.add('flipped');
+            flippedCards.push(this);
+
+            if (flippedCards.length === 2) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [c1, c2] = flippedCards;
+            const match1 = c1.dataset.matchId;
+            const match2 = c2.dataset.matchId;
+
+            if (match1 === match2) {
+                playSound('success');
+                showToast("Match!");
+                matchedPairs++;
+                flippedCards = [];
+                if(matchedPairs === 6) {
+                    setTimeout(() => showToast("You Won! 🎉"), 500);
+                }
+            } else {
+                playSound('error');
+                setTimeout(() => {
+                    c1.classList.remove('flipped');
+                    c2.classList.remove('flipped');
+                    flippedCards = [];
+                }, 1000);
+            }
+        }
+
+    </script>
+</body>
+</html>

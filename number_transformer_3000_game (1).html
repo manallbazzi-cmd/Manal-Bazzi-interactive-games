@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Transformer 3000 - Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background-color: #1e293b;
+            background-image: radial-gradient(#334155 1px, transparent 1px);
+            background-size: 20px 20px;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1, h2, h3, .comfortaa {
+            font-family: 'Comfortaa', cursive;
+        }
+
+        /* Machine Chassis */
+        .machine-container {
+            background: linear-gradient(145deg, #bc84ee, #9b51e0);
+            border-radius: 40px;
+            box-shadow: 
+                0 20px 0 #7e22ce,
+                0 30px 40px rgba(0,0,0,0.5),
+                inset 0 10px 0 rgba(255,255,255,0.3);
+            border: 8px solid #4c1d95;
+            position: relative;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Glowing Screen */
+        .machine-screen {
+            background-color: #dcfd8b;
+            border: 8px solid #1e293b;
+            border-radius: 20px;
+            box-shadow: 
+                inset 0 0 20px rgba(0,0,0,0.2),
+                0 10px 0 rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(255,255,255,0.2);
+            position: absolute;
+            top: -10px;
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: -10px; }
+            100% { top: 100%; }
+        }
+
+        /* 3D Buttons */
+        .btn-3d {
+            transition: all 0.1s ease;
+            position: relative;
+            top: 0;
+            user-select: none;
+        }
+        
+        .btn-3d:active {
+            top: 5px;
+            box-shadow: 0 0px 0px rgba(0,0,0,0) !important;
+        }
+
+        /* Control Panels */
+        .control-panel {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .value-display {
+            background-color: #fff;
+            border: 4px solid #1e293b;
+            border-radius: 12px;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Word Choice Buttons */
+        .word-choice {
+            background-color: #fff;
+            border: 4px solid #1e293b;
+            box-shadow: 0 6px 0 #1e293b;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .word-choice:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #1e293b;
+        }
+        .word-choice.selected {
+            background-color: #ff823a;
+            color: white;
+            border-color: #fff;
+            box-shadow: 0 4px 0 #9c3c0b;
+            transform: translateY(2px);
+        }
+
+        /* Big Action Button */
+        .transform-btn {
+            background: linear-gradient(145deg, #ff823a, #e85d04);
+            box-shadow: 0 10px 0 #9c3c0b, 0 15px 20px rgba(0,0,0,0.3);
+            border: 4px solid #fff;
+        }
+        .transform-btn:active {
+            box-shadow: 0 0px 0 #9c3c0b !important;
+            top: 10px;
+        }
+
+        /* Confetti Canvas */
+        #confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Custom Message Box Overlay */
+        #message-overlay {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 32px;
+            z-index: 50;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .lights-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100px;
+            margin: 0 auto 10px;
+        }
+        
+        .light {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #333;
+            border: 3px solid #111;
+            box-shadow: inset 0 0 5px #000;
+        }
+        
+        .light.on {
+            background-color: #39ff14;
+            box-shadow: 0 0 15px #39ff14, inset 0 0 5px #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti"></canvas>
+
+    <div class="machine-container p-6 md:p-10 flex flex-col gap-6">
+        
+        <!-- Top Decorative Header -->
+        <div class="text-center relative">
+            <div class="lights-container" id="status-lights">
+                <div class="light on"></div>
+                <div class="light on"></div>
+                <div class="light on"></div>
+            </div>
+            <h1 class="text-white text-3xl md:text-5xl font-bold tracking-wider drop-shadow-md">
+                NUMBER TRANSFORMER <span class="text-[#dcfd8b]">3000</span>
+            </h1>
+            <p class="text-white mt-2 text-lg md:text-xl font-bold comfortaa drop-shadow-sm">
+                Teacher: <span class="text-black">Manal Bazzi</span>
+            </p>
+            <div class="absolute top-0 right-0 bg-[#ff823a] text-white px-4 py-2 rounded-xl border-4 border-white font-bold text-xl shadow-[0_4px_0_#000]">
+                Score: <span id="score-display">0</span>
+            </div>
+        </div>
+
+        <!-- The Screen (Target Number) -->
+        <div class="machine-screen p-8 text-center relative flex flex-col justify-center items-center h-48">
+            <div class="scanline"></div>
+            <h2 class="text-2xl text-[#1e293b] font-bold mb-2">TARGET NUMBER</h2>
+            <div id="target-number" class="text-7xl md:text-8xl font-black text-[#1e293b] tracking-widest drop-shadow-sm">
+                ???
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- Left Panel: Expanded Form Controls -->
+            <div class="control-panel p-6 flex-1 flex flex-col items-center">
+                <h3 class="text-white text-2xl font-bold mb-4 w-full text-center border-b-2 border-white/20 pb-2">1. Expand It!</h3>
+                
+                <div class="flex items-center justify-center gap-2 md:gap-4 w-full">
+                    <!-- Hundreds -->
+                    <div class="flex flex-col items-center">
+                        <button onclick="changeValue('hundreds', 1)" class="btn-3d bg-[#ff823a] text-white w-12 h-12 rounded-full text-2xl font-bold border-4 border-[#1e293b] shadow-[0_4px_0_#1e293b]"><i class="fa-solid fa-plus"></i></button>
+                        <div id="val-hundreds" class="value-display w-20 h-16 flex items-center justify-center text-2xl font-bold text-[#1e293b] my-3">0</div>
+                        <button onclick="changeValue('hundreds', -1)" class="btn-3d bg-gray-300 text-[#1e293b] w-12 h-12 rounded-full text-2xl font-bold border-4 border-[#1e293b] shadow-[0_4px_0_#1e293b]"><i class="fa-solid fa-minus"></i></button>
+                    </div>
+                    
+                    <div class="text-white text-3xl font-black">+</div>
+                    
+                    <!-- Tens -->
+                    <div class="flex flex-col items-center">
+                        <button onclick="changeValue('tens', 1)" class="btn-3d bg-[#dcfd8b] text-[#1e293b] w-12 h-12 rounded-full text-2xl font-bold border-4 border-[#1e293b] shadow-[0_4px_0_#1e293b]"><i class="fa-solid fa-plus"></i></button>
+                        <div id="val-tens" class="value-display w-16 h-16 flex items-center justify-center text-2xl font-bold text-[#1e293b] my-3">0</div>
+                        <button onclick="changeValue('tens', -1)" class="btn-3d bg-gray-300 text-[#1e293b] w-12 h-12 rounded-full text-2xl font-bold border-4 border-[#1e293b] shadow-[0_4px_0_#1e293b]"><i class="fa-solid fa-minus"></i></button>
+                    </div>
+
+                    <div class="text-white text-3xl font-black">+</div>
+                    
+                    <!-- Ones -->
+                    <div class="flex flex-col items-center">
+                        <button onclick="changeValue('ones', 1)" class="btn-3d bg-[#bc84ee] text-white w-12 h-12 rounded-full text-2xl font-bold border-4 border-[#1e293b] shadow-[0_4px_0_#1e293b]"><i class="fa-solid fa-plus"></i></button>
+                        <div id="val-ones" class="value-display w-12 h-16 flex items-center justify-center text-2xl font-bold text-[#1e293b] my-3">0</div>
+                        <button onclick="changeValue('ones', -1)" class="btn-3d bg-gray-300 text-[#1e293b] w-12 h-12 rounded-full text-2xl font-bold border-4 border-[#1e293b] shadow-[0_4px_0_#1e293b]"><i class="fa-solid fa-minus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Word Form Selection -->
+            <div class="control-panel p-6 flex-1 flex flex-col items-center">
+                <h3 class="text-white text-2xl font-bold mb-4 w-full text-center border-b-2 border-white/20 pb-2">2. Read It!</h3>
+                <div class="flex flex-col gap-4 w-full" id="word-choices-container">
+                    <!-- Buttons generated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="flex justify-center mt-4">
+            <button onclick="checkAnswer()" class="transform-btn btn-3d text-white font-black text-3xl md:text-5xl py-4 px-12 rounded-full w-full md:w-auto tracking-wide comfortaa">
+                <i class="fa-solid fa-bolt mr-2"></i> TRANSFORM!
+            </button>
+        </div>
+
+        <!-- Custom Feedback Overlay (Hidden by default) -->
+        <div id="message-overlay">
+            <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-center border-8 border-[#1e293b] shadow-2xl transform scale-95 transition-transform duration-300" id="message-box">
+                <div id="message-icon" class="text-6xl mb-4 text-[#ff823a]"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <h2 id="message-title" class="text-3xl font-bold text-[#1e293b] mb-2">Oops!</h2>
+                <p id="message-text" class="text-xl text-gray-700 mb-6 font-medium">Check your Expanded Form!</p>
+                <button onclick="closeMessage()" class="bg-[#1e293b] text-white text-xl font-bold py-3 px-8 rounded-full hover:bg-gray-800 btn-3d shadow-[0_6px_0_#000]">
+                    Try Again
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Game State ---
+        let targetNum = 0;
+        let targetHundreds = 0;
+        let targetTens = 0;
+        let targetOnes = 0;
+        
+        let currentHundreds = 0;
+        let currentTens = 0;
+        let currentOnes = 0;
+        
+        let selectedWordForm = null;
+        let correctWordForm = "";
+        let score = 0;
+
+        // Vocabulary for numbers
+        const onesWords = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+        const tensWords = ['', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+        const teensWords = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+
+        // --- Core Functions ---
+        
+        function initGame() {
+            generateNewTarget();
+            resetInputs();
+            updateDisplay();
+        }
+
+        function generateNewTarget() {
+            // Generate a random number between 100 and 999
+            targetHundreds = Math.floor(Math.random() * 9) + 1;
+            targetTens = Math.floor(Math.random() * 10);
+            targetOnes = Math.floor(Math.random() * 10);
+            
+            targetNum = (targetHundreds * 100) + (targetTens * 10) + targetOnes;
+            document.getElementById('target-number').innerText = targetNum;
+            
+            // Generate Word Choices
+            correctWordForm = numberToWords(targetHundreds, targetTens, targetOnes);
+            generateWordChoices();
+        }
+
+        function numberToWords(h, t, o) {
+            let words = [];
+            if (h > 0) words.push(onesWords[h] + " hundred");
+            
+            if (t === 1) {
+                words.push(teensWords[o]);
+            } else {
+                if (t > 1) words.push(tensWords[t]);
+                if (o > 0 && t !== 1) words.push(onesWords[o]);
+            }
+            
+            // Capitalize first letter
+            let result = words.join(" ");
+            return result.charAt(0).toUpperCase() + result.slice(1);
+        }
+
+        function generateWordChoices() {
+            const container = document.getElementById('word-choices-container');
+            container.innerHTML = '';
+            
+            let choices = [correctWordForm];
+            
+            // Generate distractor 1 (Swap tens and ones if possible, or tweak ones)
+            let d1_t = targetOnes;
+            let d1_o = targetTens;
+            if (d1_t === targetTens && d1_o === targetOnes) { d1_o = (d1_o + 1) % 10; }
+            let distractor1 = numberToWords(targetHundreds, d1_t, d1_o);
+            if(distractor1 === correctWordForm) distractor1 = numberToWords(targetHundreds, targetTens, (targetOnes+2)%10);
+            choices.push(distractor1);
+            
+            // Generate distractor 2 (Wrong hundreds)
+            let d2_h = (targetHundreds % 9) + 1; // +1 to ensure it's not 0
+            let distractor2 = numberToWords(d2_h, targetTens, targetOnes);
+            choices.push(distractor2);
+
+            // Shuffle array
+            choices = choices.sort(() => Math.random() - 0.5);
+
+            choices.forEach((choice, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'word-choice p-3 text-center text-lg md:text-xl font-bold text-[#1e293b] select-none';
+                btn.innerText = choice;
+                btn.onclick = () => selectWord(index, choice);
+                btn.id = `word-choice-${index}`;
+                container.appendChild(btn);
+            });
+            
+            selectedWordForm = null;
+        }
+
+        function changeValue(type, amount) {
+            if (type === 'hundreds') {
+                currentHundreds += (amount * 100);
+                if (currentHundreds > 900) currentHundreds = 0;
+                if (currentHundreds < 0) currentHundreds = 900;
+            } else if (type === 'tens') {
+                currentTens += (amount * 10);
+                if (currentTens > 90) currentTens = 0;
+                if (currentTens < 0) currentTens = 90;
+            } else if (type === 'ones') {
+                currentOnes += amount;
+                if (currentOnes > 9) currentOnes = 0;
+                if (currentOnes < 0) currentOnes = 9;
+            }
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('val-hundreds').innerText = currentHundreds;
+            document.getElementById('val-tens').innerText = currentTens;
+            document.getElementById('val-ones').innerText = currentOnes;
+        }
+
+        function resetInputs() {
+            currentHundreds = 0;
+            currentTens = 0;
+            currentOnes = 0;
+            selectedWordForm = null;
+            updateDisplay();
+        }
+
+        function selectWord(index, word) {
+            // Deselect all
+            document.querySelectorAll('.word-choice').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            // Select clicked
+            document.getElementById(`word-choice-${index}`).classList.add('selected');
+            selectedWordForm = word;
+        }
+
+        function checkAnswer() {
+            let userNum = currentHundreds + currentTens + currentOnes;
+            
+            // Check Expanded Form
+            if (userNum !== targetNum) {
+                showMessage("Oops!", "Your Expanded Form doesn't match the Target Number. Try adding it up!", "error");
+                return;
+            }
+
+            // Check Word Form
+            if (!selectedWordForm) {
+                showMessage("Hold on!", "You forgot to select the Word Form!", "error");
+                return;
+            }
+
+            if (selectedWordForm !== correctWordForm) {
+                showMessage("Almost!", "Your Expanded Form is correct, but the Word Form is wrong.", "error");
+                return;
+            }
+
+            // WIN!
+            score += 100;
+            document.getElementById('score-display').innerText = score;
+            triggerConfetti();
+            
+            // Temporarily change target text to SUCCESS
+            const targetEl = document.getElementById('target-number');
+            targetEl.innerHTML = `<span class="text-[#39ff14]">SUCCESS!</span>`;
+            targetEl.classList.remove('text-7xl', 'md:text-8xl');
+            targetEl.classList.add('text-5xl', 'md:text-6xl');
+            
+            setTimeout(() => {
+                targetEl.classList.add('text-7xl', 'md:text-8xl');
+                targetEl.classList.remove('text-5xl', 'md:text-6xl');
+                initGame();
+            }, 2500);
+        }
+
+        function showMessage(title, text, type) {
+            const overlay = document.getElementById('message-overlay');
+            const box = document.getElementById('message-box');
+            const titleEl = document.getElementById('message-title');
+            const textEl = document.getElementById('message-text');
+            const iconEl = document.getElementById('message-icon');
+            const btn = overlay.querySelector('button');
+
+            titleEl.innerText = title;
+            textEl.innerText = text;
+
+            if (type === 'error') {
+                iconEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                iconEl.className = 'text-6xl mb-4 text-[#ff823a]';
+                btn.innerText = 'Try Again';
+            }
+
+            overlay.style.display = 'flex';
+            // Trigger reflow for animation
+            void box.offsetWidth; 
+            box.classList.remove('scale-95');
+            box.classList.add('scale-100');
+        }
+
+        function closeMessage() {
+            const overlay = document.getElementById('message-overlay');
+            const box = document.getElementById('message-box');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 150);
+        }
+
+        // --- Simple Confetti Implementation ---
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animating = false;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function triggerConfetti() {
+            particles = [];
+            const colors = ['#ff823a', '#bc84ee', '#dcfd8b', '#39ff14', '#fff'];
+            
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2 + 100, // Erupt from center machine
+                    vx: (Math.random() - 0.5) * 20,
+                    vy: (Math.random() - 1) * 20 - 5,
+                    size: Math.random() * 10 + 5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rot: Math.random() * 360,
+                    rotSpeed: (Math.random() - 0.5) * 10
+                });
+            }
+            
+            if (!animating) {
+                animating = true;
+                animateConfetti();
+            }
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let active = false;
+
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.5; // gravity
+                p.rot += p.rotSpeed;
+
+                if (p.y < canvas.height) active = true;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+            }
+
+            if (active) {
+                requestAnimationFrame(animateConfetti);
+            } else {
+                animating = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        // Start game on load
+        window.onload = initGame;
+
+    </script>
+</body>
+</html>

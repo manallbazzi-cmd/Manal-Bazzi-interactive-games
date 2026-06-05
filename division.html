@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Division Adventure</title>
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #FFD700;
+            --bg: #F0F4F8;
+            --text: #333;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        #app { width: 100%; max-width: 500px; padding: 20px; box-sizing: border-box; text-align: center; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h1, h2 { color: var(--primary); }
+        input { padding: 10px; width: 80%; border: 2px solid var(--primary); border-radius: 10px; margin: 10px 0; }
+        button { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        button:active { transform: scale(0.95); }
+        .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 10px; margin: 20px 0; }
+        .star { width: 40px; height: 40px; background: var(--secondary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; animation: pop 0.3s ease-out; }
+        @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!-- Screen 1: Welcome -->
+    <div id="screen-welcome" class="card">
+        <h1>Division Adventure</h1>
+        <p>Teacher: <b>Manal Bazzi</b></p>
+        <input type="text" id="studentName" placeholder="Enter your name, explorer!">
+        <button onclick="startGame()">Start Learning</button>
+    </div>
+
+    <!-- Screen 2: Simulation -->
+    <div id="screen-game" class="card hidden">
+        <h2 id="msg">Let's divide!</h2>
+        <p>Total Stars: <span id="totalCount">12</span></p>
+        <input type="range" id="divisorSlider" min="1" max="6" value="1" oninput="updateSimulation()">
+        <p>Divide by: <b id="divisorDisplay">1</b></p>
+        <div id="playground" class="item-grid"></div>
+        <div id="feedback"></div>
+    </div>
+
+    <!-- Screen 3: Takeaways -->
+    <div id="screen-end" class="card hidden">
+        <h2>Great Job, <span id="displayName"></span>!</h2>
+        <div style="text-align: left;">
+            <p>✅ <b>Division</b> is splitting into equal groups.</p>
+            <p>✅ If you have 12 and divide by 3, you get 4 in each group.</p>
+            <p>✅ Division is the opposite of multiplication!</p>
+        </div>
+        <button onclick="location.reload()">Play Again</button>
+    </div>
+</div>
+
+<script>
+    const totalItems = 12;
+
+    function startGame() {
+        const name = document.getElementById('studentName').value;
+        if (!name) return alert("Please enter your name!");
+        document.getElementById('displayName').innerText = name;
+        document.getElementById('screen-welcome').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        updateSimulation();
+    }
+
+    function updateSimulation() {
+        const d = parseInt(document.getElementById('divisorSlider').value);
+        document.getElementById('divisorDisplay').innerText = d;
+        const playground = document.getElementById('playground');
+        playground.innerHTML = '';
+
+        if (totalItems % d === 0) {
+            const groupSize = totalItems / d;
+            document.getElementById('msg').innerText = `Perfect! ${totalItems} ÷ ${d} = ${groupSize}`;
+            for (let i = 0; i < totalItems; i++) {
+                const div = document.createElement('div');
+                div.className = 'star';
+                div.innerText = '⭐';
+                playground.appendChild(div);
+            }
+        } else {
+            document.getElementById('msg').innerText = `Not an equal split! Try a factor of ${totalItems}.`;
+        }
+        
+        if (d === 4) setTimeout(() => document.getElementById('screen-game').classList.add('hidden'), 3000);
+        if (d === 4) document.getElementById('screen-end').classList.remove('hidden');
+    }
+</script>
+</body>
+</html>
