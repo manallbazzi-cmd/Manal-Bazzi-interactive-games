@@ -367,6 +367,105 @@
   }
   .dot.on { background: var(--sun); }
 
+  /* ===== ABOUT ===== */
+  .about-section {
+    background: white;
+    padding: 80px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-section::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(14,165,233,0.06), rgba(168,85,247,0.06));
+    top: -150px; right: -150px;
+    pointer-events: none;
+  }
+  .about-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .about-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, #fde68a, #fbbf24);
+    color: #92400e;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 6px 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .about-title {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    color: var(--dark);
+    line-height: 1.3;
+    margin-bottom: 20px;
+  }
+  .about-title span {
+    background: linear-gradient(90deg, var(--sky), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .about-lead {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: #64748b;
+    max-width: 680px;
+    margin: 0 auto 50px;
+    line-height: 1.8;
+  }
+  .about-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    text-align: right;
+  }
+  .about-card {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 28px 24px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: var(--c);
+    border-radius: 0 20px 20px 0;
+  }
+  .about-card:hover {
+    border-color: var(--c);
+    background: white;
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+  }
+  .about-icon {
+    font-size: 2.4rem;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .about-card h3 {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .about-card p {
+    font-size: 0.88rem;
+    color: #64748b;
+    line-height: 1.7;
+  }
+
   /* ===== VISION SECTION ===== */
   .vision-section {
     background: linear-gradient(135deg, var(--dark) 0%, #312e81 100%);
@@ -474,6 +573,37 @@
   </div>
 </section>
 
+<!-- ===== ABOUT ===== -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="about-badge">✨ من نحن</div>
+    <h2 class="about-title">ليست مجرد ألعاب...<br><span>إنها بوابتك إلى عالم الرياضيات!</span></h2>
+    <p class="about-lead">تخيّل أن تتعلم الرياضيات وأنت تطير في الفضاء، تبني في ماينكرافت، وتحل ألغازاً مثيرة — هذا ما نقدمه هنا.</p>
+    <div class="about-cards">
+      <div class="about-card" style="--c:#0ea5e9">
+        <div class="about-icon">🎯</div>
+        <h3>تعلّم بهدف</h3>
+        <p>كل لعبة مصمّمة لتحقيق هدف تعليمي واضح يتوافق مع المنهج الرسمي</p>
+      </div>
+      <div class="about-card" style="--c:#22c55e">
+        <div class="about-icon">🚀</div>
+        <h3>تقدّم مستمر</h3>
+        <p>مستويات متدرجة من الصف الأول حتى الثالث تنمو مع التلميذ خطوة بخطوة</p>
+      </div>
+      <div class="about-card" style="--c:#f59e0b">
+        <div class="about-icon">💡</div>
+        <h3>إبداع لا حدود له</h3>
+        <p>ألعاب مبرمجة يدوياً بأفكار مبتكرة تجعل كل جلسة تعليمية تجربة لا تُنسى</p>
+      </div>
+      <div class="about-card" style="--c:#a855f7">
+        <div class="about-icon">❤️</div>
+        <h3>صُنعت بحب</h3>
+        <p>من معلمة تؤمن أن كل طفل يستحق تعليماً يُشعل شغفه ويبني ثقته بنفسه</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== MAIN ===== -->
 <main class="main">
 
@@ -530,85 +660,85 @@ for(let i=0;i<60;i++){
 const games = [
   {
     emoji:'🚀', color:'linear-gradient(135deg,#f97316,#fbbf24)',
-    title:'Rocket Numbers', desc:'رحلة فضائية ممتعة لتعلم الأعداد والحساب بطريقة تفاعلية',
+    title:'Rocket Numbers', desc:'A fun space journey to learn numbers and arithmetic in an interactive way',
     grade:'1', gradeLabel:'الصف الأول', type:'numbers', typeLabel:'الأعداد',
     difficulty:1, url:'rocket_numbers.html'
   },
   {
     emoji:'🔢', color:'linear-gradient(135deg,#0ea5e9,#6366f1)',
-    title:'Math Fun — الأعداد حتى 79', desc:'تعلم الأعداد حتى 79 من خلال تمارين تفاعلية وممتعة',
+    title:'Math Fun — Numbers up to 79', desc:'Learn numbers up to 79 through fun and interactive exercises',
     grade:'1', gradeLabel:'الصف الأول', type:'numbers', typeLabel:'الأعداد',
     difficulty:1, url:'math_fun_numbers_up_to_79 (1).html'
   },
   {
     emoji:'💯', color:'linear-gradient(135deg,#22c55e,#0ea5e9)',
-    title:'الأعداد حتى 999', desc:'استكشف عالم الأعداد الكبيرة وتعلم قراءتها وكتابتها بسهولة',
+    title:'Numbers up to 999', desc:'Explore the world of large numbers and learn to read and write them with ease',
     grade:'2', gradeLabel:'الصف الثاني', type:'numbers', typeLabel:'الأعداد',
     difficulty:2, url:'numbers up to 999.html'
   },
   {
     emoji:'✖️', color:'linear-gradient(135deg,#a855f7,#ec4899)',
-    title:'الضرب والقسمة — الصف الثالث', desc:'تحديات الضرب والقسمة بمستويات متعددة لتعزيز المهارات الحسابية',
+    title:'Multiplication & Division — Grade 3', desc:'Multiplication and division challenges with multiple levels to strengthen math skills',
     grade:'3', gradeLabel:'الصف الثالث', type:'ops', typeLabel:'العمليات',
     difficulty:3, url:'multiplication_division_grade3 (2).html'
   },
   {
     emoji:'➗', color:'linear-gradient(135deg,#f43f5e,#f97316)',
-    title:'القسمة', desc:'تعلم القسمة خطوة بخطوة مع تمارين تفاعلية ومتدرجة الصعوبة',
+    title:'Division', desc:'Learn division step by step with interactive and progressive exercises',
     grade:'3', gradeLabel:'الصف الثالث', type:'ops', typeLabel:'العمليات',
     difficulty:2, url:'division.html'
   },
   {
     emoji:'📏', color:'linear-gradient(135deg,#06b6d4,#22c55e)',
-    title:'درس الطول التفاعلي', desc:'تعلم قياس الأطوال والمقارنة بين الوحدات بطريقة عملية وبصرية',
+    title:'Interactive Length Lesson', desc:'Learn to measure lengths and compare units in a practical and visual way',
     grade:'2', gradeLabel:'الصف الثاني', type:'geo', typeLabel:'الهندسة',
     difficulty:2, url:'interactive_length_lesson (1).html'
   },
   {
     emoji:'🎮', color:'linear-gradient(135deg,#f59e0b,#ef4444)',
-    title:'مغامرة الرياضيات', desc:'مغامرة تعليمية شاملة تجمع مهارات رياضية متعددة في قصة ممتعة',
+    title:'Interactive Math Adventure', desc:'A comprehensive educational adventure combining multiple math skills in one exciting story',
     grade:'2', gradeLabel:'الصف الثاني', type:'ops', typeLabel:'العمليات',
     difficulty:2, url:'interactive_math_adventure (2).html'
   },
   {
     emoji:'🔄', color:'linear-gradient(135deg,#8b5cf6,#0ea5e9)',
-    title:'Number Transformer 3000', desc:'محوّل الأعداد الخارق — تحويل الأعداد بين الصيغ المختلفة بأسلوب مشوّق',
+    title:'Number Transformer 3000', desc:'The ultimate number converter — transform numbers between different forms in a thrilling way',
     grade:'2', gradeLabel:'الصف الثاني', type:'numbers', typeLabel:'الأعداد',
     difficulty:2, url:'number_transformer_3000_game (1).html'
   },
   {
     emoji:'⛏️', color:'linear-gradient(135deg,#78716c,#22c55e)',
-    title:'Minecraft Perimeter', desc:'احسب محيط الأشكال في عالم ماينكرافت الممتع والمثير',
+    title:'Minecraft Perimeter', desc:'Calculate the perimeter of shapes in the exciting world of Minecraft',
     grade:'3', gradeLabel:'الصف الثالث', type:'geo', typeLabel:'الهندسة',
     difficulty:3, url:'minecraftthe perimetre.html'
   },
   {
     emoji:'✨', color:'linear-gradient(135deg,#ec4899,#f59e0b)',
-    title:'Multiplication Magic', desc:'سحر جداول الضرب — تعلم الضرب بطريقة سحرية ومرئية لا تُنسى',
+    title:'Multiplication Magic', desc:'The magic of multiplication tables — learn in a magical and visual way you will never forget',
     grade:'2', gradeLabel:'الصف الثاني', type:'ops', typeLabel:'العمليات',
     difficulty:2, url:'multiplication_magic_full.html'
   },
   {
     emoji:'➖', color:'linear-gradient(135deg,#0ea5e9,#22c55e)',
-    title:'الطرح — الصف الأول', desc:'تعلم الطرح بأساليب بصرية وتفاعلية تناسب المبتدئين',
+    title:'Subtraction — Grade 1', desc:'Learn subtraction through visual and interactive methods designed for beginners',
     grade:'1', gradeLabel:'الصف الأول', type:'ops', typeLabel:'العمليات',
     difficulty:1, url:'subtractiongr1.html'
   },
   {
     emoji:'🔢', color:'linear-gradient(135deg,#f97316,#a855f7)',
-    title:'الأعداد حتى 69', desc:'بناء أساس قوي للأعداد من خلال تمارين ممتعة ومتنوعة',
+    title:'Numbers up to 69', desc:'Build a strong foundation in numbers through fun and varied exercises',
     grade:'1', gradeLabel:'الصف الأول', type:'numbers', typeLabel:'الأعداد',
     difficulty:1, url:'numbers up to 69.html'
   },
   {
     emoji:'📐', color:'linear-gradient(135deg,#06b6d4,#6366f1)',
-    title:'المحيط', desc:'استكشف المحيط والمساحة بتمارين هندسية تفاعلية وملوّنة',
+    title:'Perimeter', desc:'Explore perimeter and area with colorful and interactive geometry exercises',
     grade:'3', gradeLabel:'الصف الثالث', type:'geo', typeLabel:'الهندسة',
     difficulty:3, url:'perimetre.html'
   },
   {
     emoji:'✖️', color:'linear-gradient(135deg,#22c55e,#f59e0b)',
-    title:'الضرب', desc:'ألعاب الضرب المتنوعة لتثبيت جداول الضرب بطريقة شيّقة',
+    title:'Multiplication', desc:'Varied multiplication games to master the times tables in an engaging way',
     grade:'2', gradeLabel:'الصف الثاني', type:'ops', typeLabel:'العمليات',
     difficulty:2, url:'multiplicationn.html'
   }
