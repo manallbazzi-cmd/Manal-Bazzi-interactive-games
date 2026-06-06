@@ -3,99 +3,642 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-title <h1>🚀 رحلة التعلّم التفاعلي</h1>
-<h2>المعلمة منال بزي</h2><style>
-body{font-family:Tahoma,Arial,sans-serif;margin:0;background:#f5f7fb;color:#222}
-.hero{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:40px;text-align:center}
-.hero h1{margin:0}
-.container{max-width:1100px;margin:auto;padding:20px}
-.card{background:#fff;border-radius:14px;padding:20px;margin:15px 0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.stats{display:flex;gap:15px;flex-wrap:wrap}
-.stat{flex:1;min-width:180px;background:#eef4ff;padding:15px;border-radius:10px;text-align:center}
-.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-.game{background:#eef4ff;padding:15px;border-radius:10px}
-a{color:#1e40af;text-decoration:none}
-footer{text-align:center;padding:25px;color:#666}
+<title>منصة الألعاب التعليمية | معلمة منال بزي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #0ea5e9;
+    --sun: #f59e0b;
+    --grass: #22c55e;
+    --coral: #f97316;
+    --purple: #a855f7;
+    --pink: #ec4899;
+    --bg: #fefce8;
+    --dark: #1e1b4b;
+    --card-radius: 24px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0ea5e9 0%, #6366f1 50%, #a855f7 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px 80px;
+    overflow: hidden;
+  }
+
+  /* Floating shapes */
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    top: -200px; left: -200px;
+    animation: float1 8s ease-in-out infinite;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    bottom: -100px; right: -100px;
+    animation: float2 10s ease-in-out infinite;
+  }
+
+  @keyframes float1 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(30px) scale(1.05)} }
+  @keyframes float2 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-20px) rotate(10deg)} }
+
+  .stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:0.8} }
+
+  .school-logo {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    margin-bottom: 24px;
+    position: relative; z-index: 2;
+    animation: popIn 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+  }
+  @keyframes popIn { from{transform:scale(0) rotate(-10deg);opacity:0} to{transform:scale(1) rotate(0deg);opacity:1} }
+
+  .school-name {
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.7s ease 0.4s both;
+  }
+
+  .hero h1 {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 900;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.7s ease 0.5s both;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+
+  .hero h1 span {
+    display: inline-block;
+    background: linear-gradient(90deg, #fde68a, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .tagline {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 32px;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.7s ease 0.6s both;
+    letter-spacing: 2px;
+  }
+
+  .tagline span {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin: 0 4px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative; z-index: 2;
+    animation: fadeUp 0.7s ease 0.7s both;
+    margin-top: 8px;
+  }
+
+  .stat-bubble {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 16px 28px;
+    text-align: center;
+    color: white;
+  }
+  .stat-bubble .num {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    display: block;
+    line-height: 1;
+  }
+  .stat-bubble .lbl { font-size: 0.82rem; opacity: 0.85; margin-top: 4px; }
+
+  .wave-divider {
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    line-height: 0;
+  }
+  .wave-divider svg { display: block; width: 100%; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ===== MAIN CONTENT ===== */
+  .main { padding: 60px 20px 80px; max-width: 1200px; margin: 0 auto; }
+
+  /* Section title */
+  .section-title {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .section-title .label {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--sky), var(--purple));
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .section-title h2 {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    color: var(--dark);
+  }
+  .section-title h2 span { color: var(--sky); }
+
+  /* Filter tabs */
+  .filter-tabs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .filter-tab {
+    padding: 10px 22px;
+    border-radius: 50px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    color: #64748b;
+  }
+  .filter-tab:hover, .filter-tab.active {
+    background: var(--dark);
+    border-color: var(--dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(30,27,75,0.2);
+  }
+  .filter-tab.active { background: linear-gradient(135deg, var(--sky), var(--purple)); border-color: transparent; }
+
+  /* Games grid */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .game-card {
+    background: white;
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s cubic-bezier(0.34,1.2,0.64,1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid transparent;
+    animation: cardIn 0.5s ease both;
+  }
+  @keyframes cardIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  .game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+  }
+
+  .card-thumb {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    filter: blur(30px) opacity(0.4);
+    transform: scale(2);
+  }
+  .card-thumb span { position: relative; z-index: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+
+  .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+
+  .card-badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .badge-grade { background: #ede9fe; color: #7c3aed; }
+  .badge-type  { background: #e0f2fe; color: #0369a1; }
+
+  .card-title {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-footer {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--sky), var(--purple));
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(14,165,233,0.35);
+  }
+  .play-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(14,165,233,0.45);
+  }
+  .play-btn svg { width: 16px; height: 16px; }
+
+  .difficulty {
+    display: flex;
+    gap: 4px;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #e2e8f0;
+  }
+  .dot.on { background: var(--sun); }
+
+  /* ===== VISION SECTION ===== */
+  .vision-section {
+    background: linear-gradient(135deg, var(--dark) 0%, #312e81 100%);
+    border-radius: 32px;
+    padding: 60px 40px;
+    text-align: center;
+    color: white;
+    margin-top: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vision-section::before {
+    content: '✨';
+    font-size: 200px;
+    position: absolute;
+    top: -40px; right: -40px;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+  .vision-section h2 {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 900;
+    margin-bottom: 16px;
+  }
+  .vision-section p {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.82);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .vision-pills {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+  .vision-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 0.88rem;
+    color: #94a3b8;
+    border-top: 1px solid #f1f5f9;
+  }
+  footer strong { color: var(--dark); }
+
+  /* Responsive */
+  @media(max-width:600px) {
+    .games-grid { grid-template-columns: 1fr; }
+    .vision-section { padding: 40px 24px; }
+  }
 </style>
 </head>
 <body>
 
-<div class="hero">
-<img src="logo-school.png" alt="شعار المدرسة" width="220">
-    <h1>🌟 منصة مخصصة للألعاب التعليمية التفاعلية</h1>
-    <p>مدرسة برج البراجنة الأولى الرسمية للصبيان</p>
-    <p>ألهم • أعلم • أمكّن</p>
-</div>
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="stars" id="stars"></div>
 
-<div class="container">
+  <div class="school-logo">🏫</div>
+  <p class="school-name">مدرسة برج البراجنة الأولى الرسمية للصبيان</p>
 
-<div class="card">
-<h2>نبذة عن المشروع</h2>
-<p>
-مشروع تربوي يعتمد على تصميم ألعاب تعليمية تفاعلية باستخدام البرمجة
-لتعزيز التعلم النشط وتنمية مهارات التفكير والإبداع لدى التلاميذ.
-</p>
-</div>
+  <h1>منصة <span>الألعاب التعليمية</span><br>التفاعلية</h1>
 
-<div class="card">
-<h2>الأثر التربوي</h2>
-<div class="stats">
-<div class="stat"><h3>10+</h3><p>ألعاب تعليمية</p></div>
-<div class="stat"><h3>100</h3><p>تلميذ مستفيد</p></div>
-<div class="stat"><h3>3</h3><p>صفوف مستهدفة</p></div>
-</div>
-</div>
+  <p class="tagline">
+    <span>ألهم</span>
+    <span>أعلم</span>
+    <span>أمكّن</span>
+  </p>
 
-<div class="card">
-<h2>🎮 مكتبة الألعاب</h2>
-<div class="games">
-<div class="game"><a href="rocket_numbers.html">🚀 Rocket Numbers</a></div>
+  <div class="stats-row">
+    <div class="stat-bubble">
+      <span class="num">14</span>
+      <div class="lbl">لعبة تعليمية</div>
+    </div>
+    <div class="stat-bubble">
+      <span class="num">100+</span>
+      <div class="lbl">تلميذ مستفيد</div>
+    </div>
+    <div class="stat-bubble">
+      <span class="num">3</span>
+      <div class="lbl">صفوف مستهدفة</div>
+    </div>
+  </div>
 
-<div class="game"><a href="math_fun_numbers_up_to_79 (1).html">🔢 Math Fun Numbers up to 79</a></div>
+  <div class="wave-divider">
+    <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z" fill="#fefce8"/>
+    </svg>
+  </div>
+</section>
 
+<!-- ===== MAIN ===== -->
+<main class="main">
 
-<div class="game"><a href="numbers up to 999.html">🔢 Numbers up to 999</a></div>
+  <div class="section-title">
+    <div class="label">🎮 مكتبة الألعاب</div>
+    <h2>اختر لعبتك و<span>ابدأ التعلم</span></h2>
+  </div>
 
+  <!-- Filter tabs -->
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="filterGames('all', this)">📚 جميع الألعاب</button>
+    <button class="filter-tab" onclick="filterGames('1', this)">الصف الأول</button>
+    <button class="filter-tab" onclick="filterGames('2', this)">الصف الثاني</button>
+    <button class="filter-tab" onclick="filterGames('3', this)">الصف الثالث</button>
+    <button class="filter-tab" onclick="filterGames('numbers', this)">🔢 الأعداد</button>
+    <button class="filter-tab" onclick="filterGames('ops', this)">➕ العمليات</button>
+    <button class="filter-tab" onclick="filterGames('geo', this)">📐 الهندسة</button>
+  </div>
 
-<div class="game"><a href="multiplication_division_grade3 (2).html">✖️➗ Multiplication & Division Grade 3</a></div>
+  <!-- Games grid -->
+  <div class="games-grid" id="gamesGrid"></div>
 
-<div class="game"><a href="division.html">➗ Division</a></div>
+  <!-- Vision -->
+  <div class="vision-section">
+    <h2>🌟 رؤيتي التعليمية</h2>
+    <p>أؤمن أن كل طفل قادر على التعلم والنجاح عندما نقدم له بيئة تعليمية آمنة ومحفزة تجمع بين المتعة والمعرفة. البرمجة ليست مجرد أداة — هي لغة جديدة لإيصال المعرفة.</p>
+    <div class="vision-pills">
+      <div class="vision-pill">💡 التعلم النشط</div>
+      <div class="vision-pill">🎯 التفكير النقدي</div>
+      <div class="vision-pill">🚀 الإبداع والابتكار</div>
+      <div class="vision-pill">🤝 التعلم بالمتعة</div>
+    </div>
+  </div>
 
-<div class="game"><a href="interactive_length_lesson (1).html">📏 Interactive Length Lesson</a></div>
+</main>
 
-<div class="game"><a href="interactive_math_adventure (2).html">🎮 Interactive Math Adventure</a></div>
-
-<div class="game"><a href="number_transformer_3000_game (1).html">🔄 Number Transformer 3000</a></div>
-
-<div class="game"><a href="minecraftthe perimetre.html">📐 Minecraft Perimeter</a></div>
-
-<div class="game"><a href="multiplicationn.html">✖️ Multiplication</a></div>
-
-<div class="game"><a href="numbers up to 69.html">🔢 Numbers up to 69</a></div>
-
-<div class="game"><a href="perimetre.html">📏 Perimeter</a></div>
-    
- <div class="game"><a href="subtractiongr1.html">➖ Subtraction Grade 1</a></div>  
-
-<div class="game"><a href="multiplication_magic_full.html">✨ Multiplication Magic</a></div>
-
-</div>
-<p>يمكن ربط كل اسم بملف اللعبة HTML داخل المجلد نفسه.</p>
-</div>
-
-<div class="card">
-<h2>رؤيتي التعليمية</h2>
-<p>
-أؤمن أن كل طفل قادر على التعلم والنجاح عندما نقدم له بيئة تعليمية آمنة
-ومحفزة تجمع بين المتعة والمعرفة.
-</p>
-</div>
-
-</div>
-
+<!-- Footer -->
 <footer>
-المعلمة منال بزي © 2026
+  صُمِّمت بـ ❤️ من قِبَل <strong>المعلمة منال بزي</strong> &nbsp;•&nbsp; © 2026 جميع الحقوق محفوظة
 </footer>
 
+<script>
+// ===== Stars =====
+const starsEl = document.getElementById('stars');
+for(let i=0;i<60;i++){
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random()*3+1;
+  s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${Math.random()*3+2}s;animation-delay:${Math.random()*4}s`;
+  starsEl.appendChild(s);
+}
+
+// ===== Games data =====
+const games = [
+  {
+    emoji:'🚀', color:'linear-gradient(135deg,#f97316,#fbbf24)',
+    title:'Rocket Numbers', desc:'رحلة فضائية ممتعة لتعلم الأعداد والحساب بطريقة تفاعلية',
+    grade:'1', gradeLabel:'الصف الأول', type:'numbers', typeLabel:'الأعداد',
+    difficulty:1, url:'rocket_numbers.html'
+  },
+  {
+    emoji:'🔢', color:'linear-gradient(135deg,#0ea5e9,#6366f1)',
+    title:'Math Fun — الأعداد حتى 79', desc:'تعلم الأعداد حتى 79 من خلال تمارين تفاعلية وممتعة',
+    grade:'1', gradeLabel:'الصف الأول', type:'numbers', typeLabel:'الأعداد',
+    difficulty:1, url:'math_fun_numbers_up_to_79 (1).html'
+  },
+  {
+    emoji:'💯', color:'linear-gradient(135deg,#22c55e,#0ea5e9)',
+    title:'الأعداد حتى 999', desc:'استكشف عالم الأعداد الكبيرة وتعلم قراءتها وكتابتها بسهولة',
+    grade:'2', gradeLabel:'الصف الثاني', type:'numbers', typeLabel:'الأعداد',
+    difficulty:2, url:'numbers up to 999.html'
+  },
+  {
+    emoji:'✖️', color:'linear-gradient(135deg,#a855f7,#ec4899)',
+    title:'الضرب والقسمة — الصف الثالث', desc:'تحديات الضرب والقسمة بمستويات متعددة لتعزيز المهارات الحسابية',
+    grade:'3', gradeLabel:'الصف الثالث', type:'ops', typeLabel:'العمليات',
+    difficulty:3, url:'multiplication_division_grade3 (2).html'
+  },
+  {
+    emoji:'➗', color:'linear-gradient(135deg,#f43f5e,#f97316)',
+    title:'القسمة', desc:'تعلم القسمة خطوة بخطوة مع تمارين تفاعلية ومتدرجة الصعوبة',
+    grade:'3', gradeLabel:'الصف الثالث', type:'ops', typeLabel:'العمليات',
+    difficulty:2, url:'division.html'
+  },
+  {
+    emoji:'📏', color:'linear-gradient(135deg,#06b6d4,#22c55e)',
+    title:'درس الطول التفاعلي', desc:'تعلم قياس الأطوال والمقارنة بين الوحدات بطريقة عملية وبصرية',
+    grade:'2', gradeLabel:'الصف الثاني', type:'geo', typeLabel:'الهندسة',
+    difficulty:2, url:'interactive_length_lesson (1).html'
+  },
+  {
+    emoji:'🎮', color:'linear-gradient(135deg,#f59e0b,#ef4444)',
+    title:'مغامرة الرياضيات', desc:'مغامرة تعليمية شاملة تجمع مهارات رياضية متعددة في قصة ممتعة',
+    grade:'2', gradeLabel:'الصف الثاني', type:'ops', typeLabel:'العمليات',
+    difficulty:2, url:'interactive_math_adventure (2).html'
+  },
+  {
+    emoji:'🔄', color:'linear-gradient(135deg,#8b5cf6,#0ea5e9)',
+    title:'Number Transformer 3000', desc:'محوّل الأعداد الخارق — تحويل الأعداد بين الصيغ المختلفة بأسلوب مشوّق',
+    grade:'2', gradeLabel:'الصف الثاني', type:'numbers', typeLabel:'الأعداد',
+    difficulty:2, url:'number_transformer_3000_game (1).html'
+  },
+  {
+    emoji:'⛏️', color:'linear-gradient(135deg,#78716c,#22c55e)',
+    title:'Minecraft Perimeter', desc:'احسب محيط الأشكال في عالم ماينكرافت الممتع والمثير',
+    grade:'3', gradeLabel:'الصف الثالث', type:'geo', typeLabel:'الهندسة',
+    difficulty:3, url:'minecraftthe perimetre.html'
+  },
+  {
+    emoji:'✨', color:'linear-gradient(135deg,#ec4899,#f59e0b)',
+    title:'Multiplication Magic', desc:'سحر جداول الضرب — تعلم الضرب بطريقة سحرية ومرئية لا تُنسى',
+    grade:'2', gradeLabel:'الصف الثاني', type:'ops', typeLabel:'العمليات',
+    difficulty:2, url:'multiplication_magic_full.html'
+  },
+  {
+    emoji:'➖', color:'linear-gradient(135deg,#0ea5e9,#22c55e)',
+    title:'الطرح — الصف الأول', desc:'تعلم الطرح بأساليب بصرية وتفاعلية تناسب المبتدئين',
+    grade:'1', gradeLabel:'الصف الأول', type:'ops', typeLabel:'العمليات',
+    difficulty:1, url:'subtractiongr1.html'
+  },
+  {
+    emoji:'🔢', color:'linear-gradient(135deg,#f97316,#a855f7)',
+    title:'الأعداد حتى 69', desc:'بناء أساس قوي للأعداد من خلال تمارين ممتعة ومتنوعة',
+    grade:'1', gradeLabel:'الصف الأول', type:'numbers', typeLabel:'الأعداد',
+    difficulty:1, url:'numbers up to 69.html'
+  },
+  {
+    emoji:'📐', color:'linear-gradient(135deg,#06b6d4,#6366f1)',
+    title:'المحيط', desc:'استكشف المحيط والمساحة بتمارين هندسية تفاعلية وملوّنة',
+    grade:'3', gradeLabel:'الصف الثالث', type:'geo', typeLabel:'الهندسة',
+    difficulty:3, url:'perimetre.html'
+  },
+  {
+    emoji:'✖️', color:'linear-gradient(135deg,#22c55e,#f59e0b)',
+    title:'الضرب', desc:'ألعاب الضرب المتنوعة لتثبيت جداول الضرب بطريقة شيّقة',
+    grade:'2', gradeLabel:'الصف الثاني', type:'ops', typeLabel:'العمليات',
+    difficulty:2, url:'multiplicationn.html'
+  }
+];
+
+function renderGames(list) {
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML = '';
+  list.forEach((g, i) => {
+    const dots = [1,2,3].map(d=>`<div class="dot${d<=g.difficulty?' on':''}"></div>`).join('');
+    const card = document.createElement('a');
+    card.className = 'game-card';
+    card.href = g.url;
+    card.style.animationDelay = (i*0.06)+'s';
+    card.innerHTML = `
+      <div class="card-thumb" style="background:${g.color}">
+        <span>${g.emoji}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-badges">
+          <span class="badge badge-grade">${g.gradeLabel}</span>
+          <span class="badge badge-type">${g.typeLabel}</span>
+        </div>
+        <div class="card-title">${g.title}</div>
+        <div class="card-desc">${g.desc}</div>
+        <div class="card-footer">
+          <span class="play-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            العب الآن
+          </span>
+          <div class="difficulty" title="مستوى الصعوبة">${dots}</div>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function filterGames(filter, btn) {
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = filter === 'all' ? games : games.filter(g => g.grade === filter || g.type === filter);
+  renderGames(filtered);
+}
+
+renderGames(games);
+</script>
 </body>
 </html>
