@@ -1,0 +1,2284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometry & Shapes / عالم الأشكال الهندسية</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Fredoka+One&display=swap');
+
+:root {
+  --blue:#3a86ff; --purple:#8b5cf6; --pink:#f472b6;
+  --yellow:#fbbf24; --green:#10b981; --orange:#f97316;
+  --red:#ef4444; --teal:#06b6d4; --dark:#1e1b4b;
+  --shadow:0 8px 32px rgba(58,134,255,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:linear-gradient(135deg,#e0f4ff 0%,#fce7f3 50%,#ede9fe 100%);
+  min-height:100vh; overflow-x:hidden;
+}
+
+/* BG SHAPES */
+.bg-shapes{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bg-shape{position:absolute;opacity:.07;animation:floatS 8s ease-in-out infinite;}
+.bg-shape:nth-child(1){top:5%;left:5%;width:80px;height:80px;background:var(--blue);border-radius:50%;}
+.bg-shape:nth-child(2){top:15%;right:8%;width:60px;height:60px;background:var(--yellow);clip-path:polygon(50% 0%,0% 100%,100% 100%);animation-delay:1s;}
+.bg-shape:nth-child(3){bottom:20%;left:10%;width:70px;height:70px;background:var(--pink);animation-delay:2s;}
+.bg-shape:nth-child(4){bottom:10%;right:5%;width:90px;height:90px;background:var(--purple);clip-path:polygon(25% 0%,75% 0%,100% 50%,75% 100%,25% 100%,0% 50%);animation-delay:3s;}
+.bg-shape:nth-child(5){top:50%;left:2%;width:50px;height:50px;background:var(--green);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);animation-delay:1.5s;}
+@keyframes floatS{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-18px) rotate(10deg);}}
+
+/* HEADER */
+header{
+  position:relative;z-index:10;
+  background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
+  padding:16px 20px; text-align:center;
+  box-shadow:0 4px 20px rgba(58,134,255,.4);
+}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+header h1{
+  font-family:'Fredoka One','Tajawal',sans-serif;
+  font-size:clamp(1.2rem,4vw,2rem);
+  color:white; text-shadow:2px 3px 0 rgba(0,0,0,.2);
+}
+.header-sub{color:rgba(255,255,255,.85);font-size:.85rem;}
+.teacher-badge{
+  display:inline-block;background:rgba(255,255,255,.2);
+  border:2px solid rgba(255,255,255,.4);color:white;
+  padding:3px 12px;border-radius:20px;font-size:.78rem;
+  margin-top:6px;
+}
+
+/* LANG TOGGLE */
+.lang-btn{
+  background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);
+  color:white;border-radius:12px;padding:7px 14px;
+  font-family:'Tajawal',sans-serif;font-size:.85rem;font-weight:700;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+  display:flex;align-items:center;gap:6px;
+}
+.lang-btn:hover{background:rgba(255,255,255,.38);}
+
+/* STUDENT SECTION */
+.student-section{
+  position:relative;z-index:10;background:white;
+  margin:14px;border-radius:18px;padding:14px 18px;
+  box-shadow:var(--shadow);display:flex;align-items:center;
+  gap:10px;flex-wrap:wrap;
+}
+.student-section label{font-weight:800;color:var(--dark);font-size:.9rem;white-space:nowrap;}
+.student-section input{
+  flex:1;min-width:160px;border:2.5px solid #e0e7ff;
+  border-radius:12px;padding:9px 13px;
+  font-family:'Tajawal',sans-serif;font-size:.95rem;
+  outline:none;transition:border-color .2s;color:var(--dark);
+}
+.student-section input:focus{border-color:var(--blue);}
+.start-btn{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:white;border:none;border-radius:12px;
+  padding:9px 20px;font-family:'Tajawal',sans-serif;
+  font-size:.95rem;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 12px rgba(58,134,255,.35);transition:all .2s;
+}
+.start-btn:hover{transform:translateY(-2px);}
+
+/* GRADE TABS */
+.grade-tabs{
+  position:relative;z-index:10;display:flex;gap:10px;
+  margin:0 14px 14px;overflow-x:auto;padding-bottom:4px;
+}
+.grade-tab{
+  flex:1;min-width:90px;background:white;
+  border:2.5px solid #e0e7ff;border-radius:14px;
+  padding:10px 12px;text-align:center;cursor:pointer;
+  transition:all .2s;font-family:'Tajawal',sans-serif;font-weight:700;
+}
+.grade-tab .g-num{font-size:1.4rem;display:block;}
+.grade-tab .g-lbl{font-size:.72rem;color:#777;}
+.grade-tab.active{border-color:transparent;color:white;transform:translateY(-2px);box-shadow:var(--shadow);}
+.grade-tab[data-grade="1"].active{background:linear-gradient(135deg,#f97316,#fbbf24);}
+.grade-tab[data-grade="2"].active{background:linear-gradient(135deg,#10b981,#06b6d4);}
+.grade-tab[data-grade="3"].active{background:linear-gradient(135deg,#8b5cf6,#3a86ff);}
+
+/* MAIN */
+.main{position:relative;z-index:10;padding:0 14px 30px;}
+.grade-content{display:none;}
+.grade-content.active{display:block;}
+
+.section-title{
+  font-size:1.1rem;font-weight:900;color:var(--dark);
+  margin:18px 0 10px;display:flex;align-items:center;gap:8px;
+}
+.games-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;
+}
+.game-card{
+  background:white;border-radius:20px;padding:18px 12px;
+  text-align:center;cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 16px rgba(0,0,0,.08);border:3px solid transparent;
+  position:relative;overflow:hidden;
+}
+.game-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:5px;border-radius:20px 20px 0 0;
+}
+.game-card:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,.13);}
+.game-card .icon{font-size:2.5rem;margin-bottom:8px;display:block;}
+.game-card .gname{font-weight:800;font-size:.88rem;color:var(--dark);margin-bottom:2px;}
+.game-card .gdesc{font-size:.72rem;color:#999;}
+.card-orange::before{background:var(--orange);}
+.card-green::before{background:var(--green);}
+.card-blue::before{background:var(--blue);}
+.card-purple::before{background:var(--purple);}
+.card-pink::before{background:var(--pink);}
+.card-teal::before{background:var(--teal);}
+.card-yellow::before{background:var(--yellow);}
+.card-red::before{background:var(--red);}
+
+/* MODAL */
+.modal-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(30,27,75,.7);z-index:100;
+  align-items:center;justify-content:center;
+  padding:14px;backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:white;border-radius:24px;
+  width:100%;max-width:600px;max-height:90vh;
+  overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);
+  animation:mIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes mIn{from{transform:scale(.85) translateY(20px);opacity:0;}to{transform:scale(1) translateY(0);opacity:1;}}
+.modal-header{
+  padding:18px 22px 14px;display:flex;
+  align-items:center;justify-content:space-between;
+  border-bottom:2px solid #f0f4ff;
+}
+.modal-title{font-size:1.2rem;font-weight:900;color:var(--dark);}
+.modal-close{
+  background:#f0f4ff;border:none;border-radius:10px;
+  width:34px;height:34px;font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.modal-close:hover{background:#fce7f3;}
+.modal-body{padding:18px 22px 22px;}
+
+/* SCORE BAR */
+.score-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,#f0f4ff,#fce7f3);
+  border-radius:14px;padding:9px 14px;margin-bottom:14px;
+}
+.score-item{text-align:center;}
+.score-num{font-size:1.5rem;font-weight:900;color:var(--blue);line-height:1;}
+.score-label{font-size:.68rem;color:#999;}
+
+/* QUESTION BOX */
+.question-box{
+  background:linear-gradient(135deg,#f8f9ff,#f0f4ff);
+  border-radius:18px;padding:16px;margin-bottom:16px;text-align:center;
+}
+.question-text{
+  font-size:clamp(.95rem,3vw,1.2rem);font-weight:800;
+  color:var(--dark);line-height:1.5;margin-bottom:8px;
+}
+.shape-display{
+  display:flex;justify-content:center;align-items:center;
+  min-height:110px;margin:10px 0;
+}
+.shape-display svg{max-width:130px;max-height:130px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.12));}
+
+/* OPTIONS */
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.option-btn{
+  background:white;border:3px solid #e0e7ff;border-radius:14px;
+  padding:11px 8px;font-family:'Tajawal',sans-serif;
+  font-size:.9rem;font-weight:700;cursor:pointer;
+  transition:all .15s;color:var(--dark);text-align:center;
+}
+.option-btn:hover{border-color:var(--blue);background:#f0f4ff;transform:translateY(-2px);}
+.option-btn.correct{background:#d1fae5;border-color:var(--green);color:var(--green);}
+.option-btn.wrong{background:#fee2e2;border-color:var(--red);color:var(--red);}
+
+/* PROGRESS */
+.progress-wrap{background:#e0e7ff;border-radius:20px;height:7px;overflow:hidden;margin-bottom:12px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:20px;transition:width .4s;}
+
+/* FEEDBACK */
+.feedback{
+  text-align:center;padding:10px;border-radius:14px;
+  font-size:1rem;font-weight:800;margin-bottom:10px;display:none;
+}
+.feedback.show{display:block;}
+.feedback.correct{background:#d1fae5;color:var(--green);}
+.feedback.wrong{background:#fee2e2;color:var(--red);}
+
+/* NEXT BTN */
+.next-btn{
+  width:100%;padding:13px;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:white;border:none;border-radius:14px;
+  font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:800;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 14px rgba(58,134,255,.35);display:none;
+}
+.next-btn.show{display:block;}
+.next-btn:hover{transform:translateY(-2px);}
+
+/* RESULTS */
+.results-screen{text-align:center;padding:20px 0;display:none;}
+.results-screen.show{display:block;}
+.results-emoji{font-size:3.8rem;margin-bottom:8px;}
+.results-score{font-size:2.4rem;font-weight:900;color:var(--blue);margin:6px 0;}
+.results-stars{font-size:1.9rem;margin-bottom:12px;}
+.results-msg{font-size:1rem;font-weight:700;color:#555;margin-bottom:18px;}
+.restart-btn{
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:white;border:none;border-radius:14px;
+  padding:11px 28px;font-family:'Tajawal',sans-serif;
+  font-size:.95rem;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 14px rgba(249,115,22,.35);transition:all .2s;
+}
+.restart-btn:hover{transform:translateY(-2px);}
+
+/* CONNECT */
+.connect-grid{display:flex;justify-content:space-between;align-items:stretch;gap:8px;margin:10px 0;position:relative;}
+.connect-col{display:flex;flex-direction:column;gap:10px;width:44%;}
+.connect-item{
+  background:white;border:3px solid #e0e7ff;border-radius:12px;
+  padding:9px 6px;text-align:center;cursor:pointer;
+  transition:all .15s;font-weight:700;font-size:.82rem;color:var(--dark);
+}
+.connect-item:hover{border-color:var(--blue);background:#f0f4ff;}
+.connect-item.selected{border-color:var(--yellow);background:#fef9c3;}
+.connect-item.matched{border-color:var(--green);background:#d1fae5;}
+.connect-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+
+/* DRAG/DROP */
+.drag-container{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:10px 0;}
+.draggable-shape{
+  width:65px;height:65px;display:flex;align-items:center;justify-content:center;
+  background:white;border-radius:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,.1);cursor:grab;
+  transition:all .15s;border:2px solid #e0e7ff;user-select:none;
+}
+.draggable-shape:active{cursor:grabbing;transform:scale(1.1);}
+.draggable-shape svg{width:40px;height:40px;}
+.drop-zones{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0;}
+.drop-zone{
+  min-width:95px;min-height:75px;border:3px dashed #c7d2fe;
+  border-radius:14px;padding:7px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;
+  transition:all .15s;background:#f8f9ff;
+}
+.drop-zone.drag-over{border-color:var(--blue);background:#e0f4ff;}
+.drop-zone.correct-zone{border-color:var(--green);background:#d1fae5;}
+.drop-zone.wrong-zone{border-color:var(--red);background:#fee2e2;}
+.zone-label{font-size:.76rem;font-weight:700;color:#555;text-align:center;}
+
+/* CANVAS / BUILDER */
+.shape-canvas-wrap{text-align:center;margin:10px 0;}
+#shapeCanvas{
+  border:3px solid #e0e7ff;border-radius:18px;
+  background:#f8f9ff;cursor:crosshair;touch-action:none;max-width:100%;
+}
+.tool-row{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:8px 0;}
+.tool-btn{
+  padding:7px 12px;border-radius:10px;border:2px solid #e0e7ff;
+  background:white;font-family:'Tajawal',sans-serif;font-size:.82rem;
+  font-weight:700;cursor:pointer;transition:all .15s;color:var(--dark);
+}
+.tool-btn.active,.tool-btn:hover{border-color:var(--blue);background:#e0f4ff;}
+.color-swatch{
+  width:28px;height:28px;border-radius:8px;
+  border:3px solid transparent;cursor:pointer;transition:all .15s;
+}
+.color-swatch.selected{border-color:var(--dark);transform:scale(1.2);}
+
+/* LESSONS GRID */
+.lessons-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-bottom:4px;}
+.lesson-card{
+  background:linear-gradient(135deg,#fff 60%,#f0f4ff);
+  border-radius:18px;padding:16px 12px;text-align:center;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 16px rgba(0,0,0,.07);
+  border:3px solid #e0e7ff;position:relative;overflow:hidden;
+}
+.lesson-card::after{
+  content:'📖';position:absolute;top:6px;right:8px;
+  font-size:.8rem;opacity:.5;
+}
+[dir="ltr"] .lesson-card::after{right:auto;left:8px;}
+.lesson-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(58,134,255,.18);border-color:var(--blue);}
+.lesson-card .l-icon{font-size:2.4rem;display:block;margin-bottom:8px;}
+.lesson-card .l-name{font-weight:800;font-size:.88rem;color:var(--dark);margin-bottom:3px;}
+.lesson-card .l-desc{font-size:.72rem;color:#888;}
+.lesson-card .l-badge{
+  display:inline-block;background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:white;border-radius:8px;padding:2px 8px;
+  font-size:.65rem;font-weight:700;margin-top:6px;
+}
+
+/* LESSON MODAL CONTENT */
+.lesson-slides{position:relative;overflow:hidden;}
+.lesson-slide{display:none;animation:slideIn .35s ease;}
+.lesson-slide.active{display:block;}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0);}}
+[dir="rtl"] @keyframes slideIn{from{opacity:0;transform:translateX(-30px);}to{opacity:1;transform:translateX(0);}}
+
+.slide-visual{
+  background:linear-gradient(135deg,#f0f4ff,#fce7f3);
+  border-radius:20px;padding:20px 16px;
+  text-align:center;margin-bottom:14px;min-height:160px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+}
+.slide-visual svg{max-width:150px;max-height:150px;filter:drop-shadow(0 4px 14px rgba(0,0,0,.12));}
+.slide-anim{animation:popIn .5s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popIn{from{transform:scale(.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+.slide-title{font-size:1.15rem;font-weight:900;color:var(--dark);margin-bottom:6px;}
+.slide-body{font-size:.92rem;color:#444;line-height:1.7;margin-bottom:12px;}
+.slide-body strong{color:var(--blue);}
+.slide-body .highlight{
+  display:inline-block;background:linear-gradient(135deg,var(--yellow),#fde68a);
+  color:#92400e;border-radius:8px;padding:2px 10px;font-weight:800;
+}
+.slide-fact{
+  background:linear-gradient(135deg,#ede9fe,#ddd6fe);
+  border-radius:14px;padding:10px 14px;
+  font-size:.85rem;color:var(--purple);font-weight:700;
+  border-right:4px solid var(--purple);margin-bottom:12px;
+}
+[dir="ltr"] .slide-fact{border-right:none;border-left:4px solid var(--purple);}
+
+.slide-example-grid{
+  display:flex;flex-wrap:wrap;gap:10px;
+  justify-content:center;margin:10px 0;
+}
+.slide-example{
+  background:white;border-radius:14px;padding:10px;
+  text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.08);
+  border:2px solid #e0e7ff;min-width:80px;
+}
+.slide-example svg{width:54px;height:54px;}
+.slide-example .ex-name{font-size:.78rem;font-weight:800;color:var(--dark);margin-top:5px;}
+.slide-example .ex-sub{font-size:.68rem;color:#888;}
+
+.slide-formula{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:white;border-radius:16px;padding:14px 18px;
+  text-align:center;font-size:1.1rem;font-weight:900;
+  margin:10px 0;box-shadow:0 4px 14px rgba(58,134,255,.3);
+  letter-spacing:.5px;
+}
+.slide-formula small{display:block;font-size:.75rem;font-weight:400;opacity:.85;margin-top:4px;}
+
+.slide-steps{list-style:none;margin:8px 0;}
+.slide-steps li{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:9px 12px;border-radius:12px;margin-bottom:8px;
+  background:#f8f9ff;border:2px solid #e0e7ff;
+  font-size:.88rem;color:var(--dark);font-weight:600;
+  animation:fadeSlide .4s ease both;
+}
+.slide-steps li:nth-child(1){animation-delay:.1s;}
+.slide-steps li:nth-child(2){animation-delay:.2s;}
+.slide-steps li:nth-child(3){animation-delay:.3s;}
+.slide-steps li:nth-child(4){animation-delay:.4s;}
+@keyframes fadeSlide{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+[dir="ltr"] @keyframes fadeSlide{from{opacity:0;transform:translateX(-14px);}to{opacity:1;transform:translateX(0);}}
+.step-num{
+  min-width:26px;height:26px;background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:white;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:900;flex-shrink:0;
+}
+
+/* LESSON NAV */
+.lesson-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:14px;gap:10px;
+}
+.lesson-nav-btn{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:white;border:none;border-radius:12px;
+  padding:10px 20px;font-family:'Tajawal',sans-serif;
+  font-size:.92rem;font-weight:800;cursor:pointer;
+  transition:all .2s;box-shadow:0 3px 12px rgba(58,134,255,.3);
+  display:flex;align-items:center;gap:6px;
+}
+.lesson-nav-btn:hover{transform:translateY(-2px);}
+.lesson-nav-btn:disabled{background:#ccc;box-shadow:none;cursor:default;transform:none;}
+.lesson-dots{display:flex;gap:6px;align-items:center;}
+.lesson-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#e0e7ff;transition:all .2s;cursor:pointer;
+}
+.lesson-dot.active{background:var(--blue);transform:scale(1.3);}
+.lesson-progress-label{font-size:.78rem;color:#888;font-weight:600;}
+
+/* LESSON COMPLETE */
+.lesson-complete{
+  text-align:center;padding:20px 0;
+}
+.lesson-complete .lc-emoji{font-size:3.5rem;margin-bottom:8px;}
+.lesson-complete .lc-title{font-size:1.3rem;font-weight:900;color:var(--dark);margin-bottom:8px;}
+.lesson-complete .lc-msg{font-size:.92rem;color:#555;margin-bottom:18px;line-height:1.6;}
+.lesson-complete .lc-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.lc-btn-play{
+  background:linear-gradient(135deg,var(--orange),var(--yellow));
+  color:white;border:none;border-radius:12px;padding:11px 22px;
+  font-family:'Tajawal',sans-serif;font-size:.92rem;font-weight:800;
+  cursor:pointer;box-shadow:0 3px 12px rgba(249,115,22,.3);transition:all .2s;
+}
+.lc-btn-play:hover{transform:translateY(-2px);}
+.lc-btn-again{
+  background:white;color:var(--blue);border:2.5px solid var(--blue);
+  border-radius:12px;padding:11px 22px;
+  font-family:'Tajawal',sans-serif;font-size:.92rem;font-weight:800;
+  cursor:pointer;transition:all .2s;
+}
+.lc-btn-again:hover{background:#f0f4ff;}
+
+@media(max-width:480px){.lessons-grid{grid-template-columns:repeat(2,1fr);}}
+.confetti-piece{
+  position:fixed;width:9px;height:9px;pointer-events:none;
+  z-index:9999;animation:cFall 1.5s linear forwards;border-radius:2px;
+}
+@keyframes cFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+
+/* RTL/LTR aware */
+[dir="ltr"] .student-section, [dir="ltr"] .grade-tabs, [dir="ltr"] .main{direction:ltr;}
+[dir="ltr"] .modal{direction:ltr;}
+[dir="ltr"] .connect-grid{direction:ltr;}
+
+@media(max-width:480px){
+  .games-grid{grid-template-columns:repeat(2,1fr);}
+  .game-card .icon{font-size:2rem;}
+  .options-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-shapes">
+  <div class="bg-shape"></div><div class="bg-shape"></div>
+  <div class="bg-shape"></div><div class="bg-shape"></div>
+  <div class="bg-shape"></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div style="width:80px"></div>
+    <h1 id="hTitle">🔷 عالم الأشكال الهندسية 🔶</h1>
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">🌐 English</button>
+  </div>
+  <p class="header-sub" id="hSub">Geometry &amp; Shapes — الهندسة والأشكال</p>
+  <span class="teacher-badge">👩‍🏫 Teacher Manal Bazzi / المعلمة منال بزي</span>
+</header>
+
+<!-- STUDENT -->
+<div class="student-section">
+  <label id="lblStudent">👤 اسم الطالب / Student Name:</label>
+  <input type="text" id="studentName" placeholder="اكتب اسمك / Write your name..." />
+  <button class="start-btn" onclick="setStudent()" id="btnStart">ابدأ! 🚀</button>
+</div>
+
+<!-- GRADE TABS -->
+<div class="grade-tabs">
+  <div class="grade-tab active" data-grade="1" onclick="switchGrade(1)">
+    <span class="g-num">🌱</span>
+    <span class="g-lbl" id="g1lbl">الصف الأول / Grade 1</span>
+  </div>
+  <div class="grade-tab" data-grade="2" onclick="switchGrade(2)">
+    <span class="g-num">🌿</span>
+    <span class="g-lbl" id="g2lbl">الصف الثاني / Grade 2</span>
+  </div>
+  <div class="grade-tab" data-grade="3" onclick="switchGrade(3)">
+    <span class="g-num">🌳</span>
+    <span class="g-lbl" id="g3lbl">الصف الثالث / Grade 3</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- GRADE 1 -->
+  <div class="grade-content active" id="grade1">
+    <div class="section-title"><span>📚</span> <span id="g1les_title"></span></div>
+    <div class="lessons-grid" id="g1lessons"></div>
+    <div class="section-title" style="margin-top:22px"><span>🎯</span> <span id="g1sec"></span></div>
+    <div class="games-grid">
+      <div class="game-card card-orange" onclick="openGame('g1_identify')">
+        <span class="icon">🔍</span>
+        <div class="gname" id="c1n1"></div>
+        <div class="gdesc" id="c1d1"></div>
+      </div>
+      <div class="game-card card-green" onclick="openGame('g1_color')">
+        <span class="icon">🎨</span>
+        <div class="gname" id="c1n2"></div>
+        <div class="gdesc" id="c1d2"></div>
+      </div>
+      <div class="game-card card-blue" onclick="openGame('g1_count')">
+        <span class="icon">🔢</span>
+        <div class="gname" id="c1n3"></div>
+        <div class="gdesc" id="c1d3"></div>
+      </div>
+      <div class="game-card card-pink" onclick="openGame('g1_match')">
+        <span class="icon">🔗</span>
+        <div class="gname" id="c1n4"></div>
+        <div class="gdesc" id="c1d4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRADE 2 -->
+  <div class="grade-content" id="grade2">
+    <div class="section-title"><span>📚</span> <span id="g2les_title"></span></div>
+    <div class="lessons-grid" id="g2lessons"></div>
+    <div class="section-title" style="margin-top:22px"><span>⭐</span> <span id="g2sec"></span></div>
+    <div class="games-grid">
+      <div class="game-card card-teal" onclick="openGame('g2_sides')">
+        <span class="icon">📐</span>
+        <div class="gname" id="c2n1"></div>
+        <div class="gdesc" id="c2d1"></div>
+      </div>
+      <div class="game-card card-purple" onclick="openGame('g2_sort')">
+        <span class="icon">📦</span>
+        <div class="gname" id="c2n2"></div>
+        <div class="gdesc" id="c2d2"></div>
+      </div>
+      <div class="game-card card-yellow" onclick="openGame('g2_perimeter')">
+        <span class="icon">📏</span>
+        <div class="gname" id="c2n3"></div>
+        <div class="gdesc" id="c2d3"></div>
+      </div>
+      <div class="game-card card-red" onclick="openGame('g2_3d')">
+        <span class="icon">🧊</span>
+        <div class="gname" id="c2n4"></div>
+        <div class="gdesc" id="c2d4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRADE 3 -->
+  <div class="grade-content" id="grade3">
+    <div class="section-title"><span>📚</span> <span id="g3les_title"></span></div>
+    <div class="lessons-grid" id="g3lessons"></div>
+    <div class="section-title" style="margin-top:22px"><span>🏆</span> <span id="g3sec"></span></div>
+    <div class="games-grid">
+      <div class="game-card card-blue" onclick="openGame('g3_area')">
+        <span class="icon">📊</span>
+        <div class="gname" id="c3n1"></div>
+        <div class="gdesc" id="c3d1"></div>
+      </div>
+      <div class="game-card card-purple" onclick="openGame('g3_angles')">
+        <span class="icon">📐</span>
+        <div class="gname" id="c3n2"></div>
+        <div class="gdesc" id="c3d2"></div>
+      </div>
+      <div class="game-card card-green" onclick="openGame('g3_symmetry')">
+        <span class="icon">🪞</span>
+        <div class="gname" id="c3n3"></div>
+        <div class="gdesc" id="c3d3"></div>
+      </div>
+      <div class="game-card card-orange" onclick="openGame('g3_builder')">
+        <span class="icon">🏗️</span>
+        <div class="gname" id="c3n4"></div>
+        <div class="gdesc" id="c3d4"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal" id="modalBox">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">Game</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ========== LANGUAGE ==========
+let lang = 'ar';
+
+const T = {
+  ar: {
+    hTitle: '🔷 عالم الأشكال الهندسية 🔶',
+    hSub: 'Geometry & Shapes — الهندسة والأشكال',
+    langBtn: '🌐 English',
+    lblStudent: '👤 اسم الطالب / Student Name:',
+    inputPlaceholder: 'اكتب اسمك / Write your name...',
+    btnStart: 'ابدأ! 🚀',
+    g1lbl: 'الصف الأول', g2lbl: 'الصف الثاني', g3lbl: 'الصف الثالث',
+    g1sec: 'الصف الأول — تعرّف على الأشكال الأساسية',
+    g2sec: 'الصف الثاني — خصائص الأشكال',
+    g3sec: 'الصف الثالث — الهندسة المتقدمة',
+    c1n1:'تعرّف الشكل', c1d1:'ما اسم هذا الشكل؟',
+    c1n2:'لوّن الشكل',  c1d2:'ارسم وألوّن!',
+    c1n3:'عدّ الجوانب', c1d3:'كم جانباً له؟',
+    c1n4:'طابق الشكل',  c1d4:'وصّل الشكل بالاسم',
+    c2n1:'جوانب وزوايا', c2d1:'اكتشف الخصائص',
+    c2n2:'صنّف الأشكال', c2d2:'رتّب حسب النوع',
+    c2n3:'المحيط',       c2d3:'احسب المحيط',
+    c2n4:'أشكال 3D',     c2d4:'الأشكال الفراغية',
+    c3n1:'المساحة',      c3d1:'احسب المساحة',
+    c3n2:'أنواع الزوايا',c3d2:'حادة، قائمة، منفرجة',
+    c3n3:'التماثل',      c3d3:'محاور التماثل',
+    c3n4:'منشئ الأشكال', c3d4:'ارسم وتعلّم!',
+    // game strings
+    identify_q: 'ما اسم هذا الشكل؟',
+    count_q: 'كم عدد جوانب هذا الشكل؟',
+    sides_q_sides: 'كم عدد أضلاع هذا الشكل؟',
+    sides_q_angles: 'كم عدد زوايا هذا الشكل؟',
+    perimeter_q: 'احسب محيط',
+    perimeter_hint: 'المحيط = مجموع كل الأضلاع',
+    area_q: 'احسب مساحة',
+    area_hint: 'المساحة = الطول × العرض',
+    angle_q: 'ما نوع هذه الزاوية؟',
+    sym_q: 'هل الخط المرسوم محور تماثل؟',
+    sym_yes: '✅ نعم، محور تماثل', sym_no: '❌ لا، ليس محور تماثل',
+    sort_q: 'اسحب كل شكل إلى المجموعة الصحيحة!',
+    match_q: 'وصّل كل شكل باسمه الصحيح!',
+    draw_q: 'ارسم وألوّن أشكالك الخاصة! 🎨',
+    correct: '✅ صحيح! ممتاز!', wrong_prefix: '❌ الجواب الصحيح: ',
+    correct_sides: '✅ صحيح!', wrong_sides: '❌ الجواب: ',
+    correct_sort: 'في المكان الصحيح!', wrong_sort: 'ليس في المكان الصحيح',
+    check_match: 'تحقق من الإجابات ✓',
+    match_result: 'أصبت بـ', of: 'من',
+    next: 'السؤال التالي ▶', restart: '🔄 العب مرة أخرى',
+    score_correct: '✅ صحيح', score_student: '👤 الطالب', score_q: '📍 السؤال',
+    res_excellent:'ممتاز! 🎉 أنت نجم!', res_good:'جيد جداً! 👍 استمر!', res_try:'حاول مرة أخرى! 💪',
+    bravo: 'أحسنت يا ',
+    hi: 'أهلاً ',
+    zone_round:'أشكال مستديرة', zone_3:'3 جوانب', zone_4:'4 جوانب', zone_5:'5+ جوانب',
+    draw_circle:'⭕ دائرة', draw_rect:'🟦 مربع', draw_tri:'🔺 مثلث', draw_pen:'✏️ قلم', draw_erase:'🧹 محّاية', draw_clear:'🗑️ مسح الكل',
+    // shape names
+    shapes:{
+      circle:'دائرة', triangle:'مثلث', square:'مربع', rectangle:'مستطيل',
+      diamond:'معين', pentagon:'مخمس', hexagon:'مسدس', oval:'بيضاوي',
+      sphere:'كرة', cube:'مكعب', cylinder:'أسطوانة', cone:'مخروط'
+    },
+    angle_names:{acute:'زاوية حادة', right:'زاوية قائمة', obtuse:'زاوية منفرجة', straight:'زاوية مستقيمة'},
+    angle_descs:{acute:'أقل من 90°', right:'تساوي 90°', obtuse:'أكبر من 90° وأقل من 180°', straight:'تساوي 180°'},
+    perim_formula: 'المحيط = مجموع كل الأضلاع',
+    area_formula: 'المساحة = الطول × العرض',
+    sym_axes: 'محاور التماثل',
+    sides_label: 'الشكل',
+    cm: 'سم', cm2: 'سم²',
+    builder_title:'🎨 منشئ الأشكال الملونة',
+  },
+  en: {
+    hTitle: '🔷 World of Geometry & Shapes 🔶',
+    hSub: 'الهندسة والأشكال — Geometry & Shapes',
+    langBtn: '🌐 عربي',
+    lblStudent: '👤 Student Name / اسم الطالب:',
+    inputPlaceholder: 'Write your name / اكتب اسمك...',
+    btnStart: 'Start! 🚀',
+    g1lbl: 'Grade 1', g2lbl: 'Grade 2', g3lbl: 'Grade 3',
+    g1sec: 'Grade 1 — Basic Shapes',
+    g2sec: 'Grade 2 — Shape Properties',
+    g3sec: 'Grade 3 — Advanced Geometry',
+    c1n1:'Identify Shape', c1d1:'What is this shape?',
+    c1n2:'Color & Draw',   c1d2:'Draw and color!',
+    c1n3:'Count Sides',    c1d3:'How many sides?',
+    c1n4:'Match Shapes',   c1d4:'Connect shape to name',
+    c2n1:'Sides & Angles', c2d1:'Discover properties',
+    c2n2:'Sort Shapes',    c2d2:'Sort by type',
+    c2n3:'Perimeter',      c2d3:'Calculate perimeter',
+    c2n4:'3D Shapes',      c2d4:'3D solid shapes',
+    c3n1:'Area',           c3d1:'Calculate area',
+    c3n2:'Types of Angles',c3d2:'Acute, right, obtuse',
+    c3n3:'Symmetry',       c3d3:'Lines of symmetry',
+    c3n4:'Shape Builder',  c3d4:'Draw and learn!',
+    identify_q: 'What is the name of this shape?',
+    count_q: 'How many sides does this shape have?',
+    sides_q_sides: 'How many sides does this shape have?',
+    sides_q_angles: 'How many angles does this shape have?',
+    perimeter_q: 'Calculate the perimeter of the',
+    perimeter_hint: 'Perimeter = sum of all sides',
+    area_q: 'Calculate the area of the',
+    area_hint: 'Area = Length × Width',
+    angle_q: 'What type of angle is this?',
+    sym_q: 'Is the dashed line a line of symmetry?',
+    sym_yes: '✅ Yes, line of symmetry', sym_no: '❌ No, not a line of symmetry',
+    sort_q: 'Drag each shape to the correct group!',
+    match_q: 'Match each shape to its name!',
+    draw_q: 'Draw and color your own shapes! 🎨',
+    correct: '✅ Correct! Excellent!', wrong_prefix: '❌ Correct answer: ',
+    correct_sides: '✅ Correct!', wrong_sides: '❌ Answer: ',
+    correct_sort: 'is in the right place!', wrong_sort: 'is in the wrong place',
+    check_match: 'Check Answers ✓',
+    match_result: 'You got', of: 'out of',
+    next: 'Next Question ▶', restart: '🔄 Play Again',
+    score_correct: '✅ Correct', score_student: '👤 Student', score_q: '📍 Question',
+    res_excellent:'Excellent! 🎉 You\'re a star!', res_good:'Very Good! 👍 Keep going!', res_try:'Try Again! 💪',
+    bravo: 'Well done, ',
+    hi: 'Hello ',
+    zone_round:'Round shapes', zone_3:'3 sides', zone_4:'4 sides', zone_5:'5+ sides',
+    draw_circle:'⭕ Circle', draw_rect:'🟦 Square', draw_tri:'🔺 Triangle', draw_pen:'✏️ Pen', draw_erase:'🧹 Eraser', draw_clear:'🗑️ Clear All',
+    shapes:{
+      circle:'Circle', triangle:'Triangle', square:'Square', rectangle:'Rectangle',
+      diamond:'Diamond', pentagon:'Pentagon', hexagon:'Hexagon', oval:'Oval',
+      sphere:'Sphere', cube:'Cube', cylinder:'Cylinder', cone:'Cone'
+    },
+    angle_names:{acute:'Acute Angle', right:'Right Angle', obtuse:'Obtuse Angle', straight:'Straight Angle'},
+    angle_descs:{acute:'Less than 90°', right:'Equals 90°', obtuse:'Greater than 90° and less than 180°', straight:'Equals 180°'},
+    perim_formula: 'Perimeter = sum of all sides',
+    area_formula: 'Area = Length × Width',
+    sym_axes: 'Lines of Symmetry',
+    sides_label: 'Shape',
+    cm: 'cm', cm2: 'cm²',
+    builder_title:'🎨 Shape Builder & Painter',
+  }
+};
+
+function t(key) { return T[lang][key] || key; }
+function ts(key) { return T[lang].shapes[key] || key; }
+
+function applyLang() {
+  const isAr = lang === 'ar';
+  const html = document.getElementById('htmlRoot');
+  html.setAttribute('lang', lang);
+  html.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+
+  document.getElementById('hTitle').textContent = t('hTitle');
+  document.getElementById('hSub').textContent = t('hSub');
+  document.getElementById('langBtn').textContent = t('langBtn');
+  document.getElementById('lblStudent').textContent = t('lblStudent');
+  document.getElementById('studentName').placeholder = t('inputPlaceholder');
+  document.getElementById('btnStart').textContent = t('btnStart');
+
+  ['g1lbl','g2lbl','g3lbl','g1sec','g2sec','g3sec',
+   'c1n1','c1d1','c1n2','c1d2','c1n3','c1d3','c1n4','c1d4',
+   'c2n1','c2d1','c2n2','c2d2','c2n3','c2d3','c2n4','c2d4',
+   'c3n1','c3d1','c3n2','c3d2','c3n3','c3d3','c3n4','c3d4'
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = t(id);
+  });
+}
+
+function toggleLang() {
+  lang = lang === 'ar' ? 'en' : 'ar';
+  applyLang();
+}
+
+// ========== SHAPES DATA ==========
+function getShapes2D() {
+  return [
+    { key:'circle',    sides:0, svg:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="#3a86ff" stroke="#1d4ed8" stroke-width="3"/></svg>` },
+    { key:'triangle',  sides:3, svg:`<svg viewBox="0 0 100 100"><polygon points="50,6 94,94 6,94" fill="#f97316" stroke="#c2410c" stroke-width="3"/></svg>` },
+    { key:'square',    sides:4, svg:`<svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#10b981" stroke="#047857" stroke-width="3"/></svg>` },
+    { key:'rectangle', sides:4, svg:`<svg viewBox="0 0 100 100"><rect x="5" y="22" width="90" height="56" fill="#8b5cf6" stroke="#5b21b6" stroke-width="3"/></svg>` },
+    { key:'diamond',   sides:4, svg:`<svg viewBox="0 0 100 100"><polygon points="50,5 95,50 50,95 5,50" fill="#f472b6" stroke="#be185d" stroke-width="3"/></svg>` },
+    { key:'pentagon',  sides:5, svg:`<svg viewBox="0 0 100 100"><polygon points="50,5 95,34 79,90 21,90 5,34" fill="#fbbf24" stroke="#d97706" stroke-width="3"/></svg>` },
+    { key:'hexagon',   sides:6, svg:`<svg viewBox="0 0 100 100"><polygon points="50,5 91,27 91,73 50,95 9,73 9,27" fill="#06b6d4" stroke="#0e7490" stroke-width="3"/></svg>` },
+    { key:'oval',      sides:0, svg:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="45" ry="28" fill="#ef4444" stroke="#b91c1c" stroke-width="3"/></svg>` },
+  ];
+}
+
+function getShapes3D() {
+  return [
+    { key:'sphere',   svg:`<svg viewBox="0 0 100 100"><defs><radialGradient id="sg"><stop offset="20%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></radialGradient></defs><circle cx="50" cy="50" r="44" fill="url(#sg)"/></svg>` },
+    { key:'cube',     svg:`<svg viewBox="0 0 100 100"><polygon points="20,35 50,15 80,35 80,70 50,90 20,70" fill="#10b981" stroke="#047857" stroke-width="2"/><polygon points="20,35 50,55 80,35" fill="#34d399" stroke="#047857" stroke-width="2"/><line x1="50" y1="55" x2="50" y2="90" stroke="#047857" stroke-width="2"/></svg>` },
+    { key:'cylinder', svg:`<svg viewBox="0 0 100 100"><ellipse cx="50" cy="28" rx="35" ry="12" fill="#a78bfa" stroke="#5b21b6" stroke-width="2"/><rect x="15" y="28" width="70" height="46" fill="#8b5cf6" stroke="#5b21b6" stroke-width="2"/><ellipse cx="50" cy="74" rx="35" ry="12" fill="#7c3aed" stroke="#5b21b6" stroke-width="2"/></svg>` },
+    { key:'cone',     svg:`<svg viewBox="0 0 100 100"><polygon points="50,8 90,86 10,86" fill="#f97316" stroke="#c2410c" stroke-width="2"/><ellipse cx="50" cy="86" rx="40" ry="10" fill="#fb923c" stroke="#c2410c" stroke-width="2"/></svg>` },
+  ];
+}
+
+function sName(key) { return ts(key); }
+
+// ========== STATE ==========
+let currentGame='', score=0, total=0, qIndex=0, questions=[], studentName='';
+
+function shuffle(a) { return [...a].sort(()=>Math.random()-.5); }
+function rnd(a) { return a[Math.floor(Math.random()*a.length)]; }
+
+function setStudent() {
+  const n = document.getElementById('studentName').value.trim();
+  if (n) { studentName=n; showToast(t('hi')+n+' 🎉'); }
+}
+
+function showToast(msg) {
+  const d=document.createElement('div');
+  d.textContent=msg;
+  Object.assign(d.style,{
+    position:'fixed',bottom:'28px',left:'50%',transform:'translateX(-50%)',
+    background:'#1e1b4b',color:'white',padding:'11px 22px',
+    borderRadius:'14px',fontFamily:"'Tajawal',sans-serif",fontWeight:'700',
+    fontSize:'1rem',zIndex:'9999',boxShadow:'0 4px 20px rgba(0,0,0,.3)'
+  });
+  document.body.appendChild(d);
+  setTimeout(()=>d.remove(),2400);
+}
+
+function switchGrade(g) {
+  document.querySelectorAll('.grade-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.grade-content').forEach(c=>c.classList.remove('active'));
+  document.querySelector(`.grade-tab[data-grade="${g}"]`).classList.add('active');
+  document.getElementById('grade'+g).classList.add('active');
+}
+
+function openGame(id) {
+  currentGame=id; score=0; total=0; qIndex=0;
+  document.getElementById('modalOverlay').classList.add('open');
+  renderGame();
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+function closeModalOutside(e) { if(e.target===document.getElementById('modalOverlay')) closeModal(); }
+
+// ========== RENDER ==========
+function renderGame() {
+  const titles = {
+    g1_identify: lang==='ar'?'🔍 تعرّف على الشكل':'🔍 Identify the Shape',
+    g1_color:    t('builder_title'),
+    g1_count:    lang==='ar'?'🔢 عدّ الجوانب':'🔢 Count the Sides',
+    g1_match:    lang==='ar'?'🔗 طابق الشكل باسمه':'🔗 Match Shape to Name',
+    g2_sides:    lang==='ar'?'📐 جوانب وزوايا':'📐 Sides & Angles',
+    g2_sort:     lang==='ar'?'📦 صنّف الأشكال':'📦 Sort the Shapes',
+    g2_perimeter:lang==='ar'?'📏 احسب المحيط':'📏 Calculate Perimeter',
+    g2_3d:       lang==='ar'?'🧊 الأشكال الفراغية':'🧊 3D Shapes',
+    g3_area:     lang==='ar'?'📊 احسب المساحة':'📊 Calculate Area',
+    g3_angles:   lang==='ar'?'📐 أنواع الزوايا':'📐 Types of Angles',
+    g3_symmetry: lang==='ar'?'🪞 محاور التماثل':'🪞 Lines of Symmetry',
+    g3_builder:  t('builder_title'),
+  };
+  document.getElementById('modalTitle').textContent = titles[currentGame]||'';
+  const body = document.getElementById('modalBody');
+  const map = {
+    g1_identify: startIdentify,
+    g1_color: startBuilder,
+    g1_count: startCount,
+    g1_match: startMatch,
+    g2_sides: startSides,
+    g2_sort: startSort,
+    g2_perimeter: startPerimeter,
+    g2_3d: start3D,
+    g3_area: startArea,
+    g3_angles: startAngles,
+    g3_symmetry: startSymmetry,
+    g3_builder: startBuilder,
+  };
+  if (map[currentGame]) map[currentGame]();
+}
+
+// ========== HELPERS ==========
+function scoreBarHTML() {
+  return `<div class="score-bar">
+    <div class="score-item"><div class="score-num">${score}</div><div class="score-label">${t('score_correct')}</div></div>
+    <div class="score-item"><div class="score-num" style="font-size:1rem;padding-top:4px">${studentName||'—'}</div><div class="score-label">${t('score_student')}</div></div>
+    <div class="score-item"><div class="score-num">${qIndex+1}/${total||'?'}</div><div class="score-label">${t('score_q')}</div></div>
+  </div>`;
+}
+function progressHTML() {
+  const pct = total ? Math.round((qIndex/total)*100) : 0;
+  return `<div class="progress-wrap"><div class="progress-fill" style="width:${pct}%"></div></div>`;
+}
+function showResults(body) {
+  const pct = total ? Math.round((score/total)*100) : 0;
+  const stars = pct>=90?'⭐⭐⭐':pct>=60?'⭐⭐':'⭐';
+  const msg = pct>=90?t('res_excellent'):pct>=60?t('res_good'):t('res_try');
+  body.innerHTML=`<div class="results-screen show">
+    <div class="results-emoji">${pct>=90?'🏆':pct>=60?'🥈':'🎯'}</div>
+    <div class="results-score">${score} / ${total}</div>
+    <div class="results-stars">${stars}</div>
+    <div class="results-msg">${msg}<br><small style="font-size:.82rem;color:#aaa">${studentName?t('bravo')+studentName+'!':''}</small></div>
+    <button class="restart-btn" onclick="renderGame()">${t('restart')}</button>
+  </div>`;
+  if(pct>=60) confetti();
+}
+
+function lockOptions() { document.querySelectorAll('.option-btn').forEach(b=>b.style.pointerEvents='none'); }
+
+// ========== GAME 1: IDENTIFY ==========
+function startIdentify() {
+  questions = shuffle(getShapes2D()).slice(0,8);
+  qIndex=0; score=0; total=questions.length;
+  renderIdentifyQ();
+}
+function renderIdentifyQ() {
+  const body=document.getElementById('modalBody');
+  if(qIndex>=questions.length){showResults(body);return;}
+  const q=questions[qIndex];
+  const all=getShapes2D();
+  const opts=shuffle([q,...shuffle(all.filter(s=>s.key!==q.key)).slice(0,3)]);
+  body.innerHTML=`${scoreBarHTML()}${progressHTML()}
+    <div class="question-box">
+      <div class="question-text">${t('identify_q')}</div>
+      <div class="shape-display">${q.svg}</div>
+    </div>
+    <div class="options-grid">
+      ${opts.map(o=>`<button class="option-btn" onclick="checkOpt(this,'${o.key}','${q.key}','identify')">${sName(o.key)}</button>`).join('')}
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="qIndex++;renderIdentifyQ()">${t('next')}</button>`;
+}
+
+// ========== GAME 2: COUNT SIDES ==========
+function startCount() {
+  questions=shuffle(getShapes2D().filter(s=>s.sides>0)).slice(0,6);
+  qIndex=0; score=0; total=questions.length;
+  renderCountQ();
+}
+function renderCountQ() {
+  const body=document.getElementById('modalBody');
+  if(qIndex>=questions.length){showResults(body);return;}
+  const q=questions[qIndex];
+  const correct=q.sides;
+  const opts=shuffle([...new Set([correct,Math.max(1,correct-1),correct+1,correct+2])].slice(0,4));
+  body.innerHTML=`${scoreBarHTML()}${progressHTML()}
+    <div class="question-box">
+      <div class="question-text">${t('count_q')}</div>
+      <div class="shape-display">${q.svg}</div>
+      <div style="font-size:.88rem;color:#555;font-weight:600">${sName(q.key)}</div>
+    </div>
+    <div class="options-grid">
+      ${shuffle(opts).map(n=>`<button class="option-btn" onclick="checkNum(this,${n},${correct},'count')" style="font-size:1.5rem;font-weight:900">${n}</button>`).join('')}
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="qIndex++;renderCountQ()">${t('next')}</button>`;
+}
+
+// ========== GAME 3: MATCH ==========
+function startMatch() {
+  const body=document.getElementById('modalBody');
+  const sel=shuffle(getShapes2D()).slice(0,4);
+  const left=shuffle([...sel]); const right=shuffle([...sel]);
+  body.innerHTML=`
+    <div class="question-box" style="margin-bottom:12px;padding:12px">
+      <div class="question-text" style="font-size:.95rem">${t('match_q')}</div>
+    </div>
+    <div class="connect-grid" id="cGrid" style="position:relative">
+      <div class="connect-col" id="leftCol">
+        ${left.map((s,i)=>`<div class="connect-item" data-key="${s.key}" data-side="left" id="L${i}" onclick="selectConn(this)">${s.svg.replace('viewBox','style="width:46px;height:46px" viewBox')}</div>`).join('')}
+      </div>
+      <svg class="connect-svg" id="cSVG"></svg>
+      <div class="connect-col" id="rightCol">
+        ${right.map((s,i)=>`<div class="connect-item" data-key="${s.key}" data-side="right" id="R${i}" onclick="selectConn(this)">${sName(s.key)}</div>`).join('')}
+      </div>
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn show" onclick="checkAllMatch()">${t('check_match')}</button>`;
+  window._matchSel=null; window._matchPairs={};
+}
+
+function selectConn(el) {
+  if(el.classList.contains('matched')) return;
+  const side=el.dataset.side;
+  if(!window._matchSel) {
+    document.querySelectorAll('.connect-item.selected').forEach(e=>e.classList.remove('selected'));
+    el.classList.add('selected'); window._matchSel=el;
+  } else {
+    const prev=window._matchSel;
+    if(prev.dataset.side===side){ prev.classList.remove('selected'); el.classList.add('selected'); window._matchSel=el; return; }
+    const lEl=side==='right'?prev:el, rEl=side==='right'?el:prev;
+    window._matchPairs[lEl.id]=rEl.id;
+    drawConnLine(lEl,rEl);
+    prev.classList.remove('selected'); window._matchSel=null;
+  }
+}
+function drawConnLine(l,r) {
+  const svg=document.getElementById('cSVG');
+  const gr=document.getElementById('cGrid').getBoundingClientRect();
+  const lr=l.getBoundingClientRect(), rr=r.getBoundingClientRect();
+  const x1=lr.right-gr.left, y1=lr.top+lr.height/2-gr.top;
+  const x2=rr.left-gr.left, y2=rr.top+rr.height/2-gr.top;
+  const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+  ln.setAttribute('x1',x1);ln.setAttribute('y1',y1);ln.setAttribute('x2',x2);ln.setAttribute('y2',y2);
+  ln.setAttribute('stroke','#3a86ff');ln.setAttribute('stroke-width','3');ln.setAttribute('stroke-linecap','round');
+  ln.id='line_'+l.id; svg.appendChild(ln);
+}
+function checkAllMatch() {
+  let ok=0,tot=0;
+  for(const [lid,rid] of Object.entries(window._matchPairs)) {
+    tot++;
+    const lEl=document.getElementById(lid), rEl=document.getElementById(rid);
+    const correct=lEl.dataset.key===rEl.dataset.key;
+    if(correct){ok++;lEl.classList.add('matched');rEl.classList.add('matched');const ln=document.getElementById('line_'+lid);if(ln)ln.setAttribute('stroke','#10b981');}
+    else{const ln=document.getElementById('line_'+lid);if(ln)ln.setAttribute('stroke','#ef4444');}
+  }
+  const fb=document.getElementById('fb');
+  fb.textContent=`${t('match_result')} ${ok} ${t('of')} ${tot}!`;
+  fb.className='feedback show '+(ok===tot?'correct':'wrong');
+  if(ok===tot) confetti();
+}
+
+// ========== GAME 4: SIDES+ANGLES ==========
+function startSides() {
+  questions=shuffle(getShapes2D().filter(s=>s.sides>0)).slice(0,6);
+  qIndex=0; score=0; total=questions.length;
+  renderSidesQ();
+}
+function renderSidesQ() {
+  const body=document.getElementById('modalBody');
+  if(qIndex>=questions.length){showResults(body);return;}
+  const q=questions[qIndex];
+  const isAngles=Math.random()>.5;
+  const correct=q.sides;
+  const opts=shuffle([...new Set([correct,Math.max(1,correct-1),correct+1,correct+2])].slice(0,4));
+  body.innerHTML=`${scoreBarHTML()}${progressHTML()}
+    <div class="question-box">
+      <div class="question-text">${isAngles?t('sides_q_angles'):t('sides_q_sides')}</div>
+      <div class="shape-display">${q.svg}</div>
+      <div style="font-size:.88rem;color:#555;font-weight:700">${t('sides_label')}: ${sName(q.key)}</div>
+    </div>
+    <div class="options-grid">
+      ${shuffle(opts).map(n=>`<button class="option-btn" onclick="checkNum(this,${n},${correct},'sides')" style="font-size:1.5rem;font-weight:900">${n}</button>`).join('')}
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="qIndex++;renderSidesQ()">${t('next')}</button>`;
+}
+
+// ========== GAME 5: SORT ==========
+function startSort() {
+  const body=document.getElementById('modalBody');
+  const sortShapes=shuffle(getShapes2D()).slice(0,6);
+  body.innerHTML=`
+    <div class="question-box" style="margin-bottom:10px;padding:12px">
+      <div class="question-text" style="font-size:.9rem">${t('sort_q')}</div>
+    </div>
+    <div class="drag-container" id="dragSrc">
+      ${sortShapes.map((s,i)=>`<div class="draggable-shape" draggable="true" data-key="${s.key}" data-sides="${s.sides}" id="drag${i}" ondragstart="dStart(event,'${s.key}',${s.sides})" ontouchstart="tStart(event,this)">${s.svg.replace('viewBox','style="width:38px;height:38px" viewBox')}</div>`).join('')}
+    </div>
+    <div class="drop-zones">
+      <div class="drop-zone" data-cat="round" ondragover="aD(event)" ondrop="dDrop(event,'round')">
+        <span style="font-size:1.4rem">⭕</span><span class="zone-label">${t('zone_round')}</span>
+      </div>
+      <div class="drop-zone" data-cat="3" ondragover="aD(event)" ondrop="dDrop(event,'3')">
+        <span style="font-size:1.4rem">🔺</span><span class="zone-label">${t('zone_3')}</span>
+      </div>
+      <div class="drop-zone" data-cat="4" ondragover="aD(event)" ondrop="dDrop(event,'4')">
+        <span style="font-size:1.4rem">🟦</span><span class="zone-label">${t('zone_4')}</span>
+      </div>
+      <div class="drop-zone" data-cat="5+" ondragover="aD(event)" ondrop="dDrop(event,'5+')">
+        <span style="font-size:1.4rem">⬡</span><span class="zone-label">${t('zone_5')}</span>
+      </div>
+    </div>
+    <div class="feedback" id="fb"></div>`;
+}
+function aD(e){e.preventDefault();}
+function dStart(e,key,sides){e.dataTransfer.setData('key',key);e.dataTransfer.setData('sides',sides);}
+function dDrop(e,cat){
+  e.preventDefault();
+  const key=e.dataTransfer.getData('key'), sides=parseInt(e.dataTransfer.getData('sides'));
+  const zone=e.currentTarget;
+  const ok=(cat==='round'&&sides===0)||(cat==='3'&&sides===3)||(cat==='4'&&sides===4)||(cat==='5+'&&sides>=5);
+  zone.classList.add(ok?'correct-zone':'wrong-zone');
+  const fb=document.getElementById('fb');
+  fb.textContent=ok?`✅ ${sName(key)} ${t('correct_sort')}`:`❌ ${sName(key)} ${t('wrong_sort')}`;
+  fb.className='feedback show '+(ok?'correct':'wrong');
+  if(ok){score++;confetti();}
+  document.querySelectorAll('.draggable-shape').forEach(d=>{if(d.dataset.key===key)d.remove();});
+  zone.innerHTML+=`<span style="font-size:.72rem;font-weight:700;color:#333;margin-top:2px">${sName(key)}</span>`;
+}
+let _tEl=null;
+function tStart(e,el){_tEl=el;el.style.opacity='.6';document.addEventListener('touchend',tEnd,{once:true});}
+function tEnd(e){
+  if(!_tEl)return;_tEl.style.opacity='1';
+  const touch=e.changedTouches[0];
+  const target=document.elementFromPoint(touch.clientX,touch.clientY);
+  const zone=target?.closest('.drop-zone');
+  if(zone){const fe={preventDefault:()=>{},dataTransfer:{getData:k=>k==='key'?_tEl.dataset.key:_tEl.dataset.sides},currentTarget:zone};dDrop(fe,zone.dataset.cat);}
+  _tEl=null;
+}
+
+// ========== GAME 6: PERIMETER ==========
+function startPerimeter() {
+  const pqs=[
+    {key:'square',   w:5,h:5, perimeter:20, svg:`<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#10b981" stroke="#047857" stroke-width="3"/><text x="50" y="56" text-anchor="middle" fill="white" font-size="16" font-weight="bold">5</text></svg>`},
+    {key:'rectangle',w:6,h:4, perimeter:20, svg:`<svg viewBox="0 0 100 100"><rect x="5" y="24" width="90" height="52" fill="#8b5cf6" stroke="#5b21b6" stroke-width="3"/><text x="50" y="44" text-anchor="middle" fill="white" font-size="13" font-weight="bold">6</text><text x="50" y="62" text-anchor="middle" fill="white" font-size="13" font-weight="bold">4</text></svg>`},
+    {key:'triangle', w:7,h:7, perimeter:21, svg:`<svg viewBox="0 0 100 100"><polygon points="50,5 93,90 7,90" fill="#f97316" stroke="#c2410c" stroke-width="3"/><text x="50" y="65" text-anchor="middle" fill="white" font-size="14" font-weight="bold">7</text></svg>`},
+    {key:'square',   w:3,h:3, perimeter:12, svg:`<svg viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#3a86ff" stroke="#1d4ed8" stroke-width="3"/><text x="50" y="55" text-anchor="middle" fill="white" font-size="18" font-weight="bold">3</text></svg>`},
+    {key:'rectangle',w:8,h:3, perimeter:22, svg:`<svg viewBox="0 0 100 100"><rect x="5" y="33" width="90" height="34" fill="#f472b6" stroke="#be185d" stroke-width="3"/><text x="50" y="47" text-anchor="middle" fill="white" font-size="12" font-weight="bold">8</text><text x="50" y="62" text-anchor="middle" fill="white" font-size="12" font-weight="bold">3</text></svg>`},
+  ];
+  questions=shuffle(pqs); qIndex=0; score=0; total=questions.length;
+  renderPerimQ();
+}
+function renderPerimQ() {
+  const body=document.getElementById('modalBody');
+  if(qIndex>=questions.length){showResults(body);return;}
+  const q=questions[qIndex];
+  const correct=q.perimeter;
+  const opts=shuffle([...new Set([correct,correct-2,correct+2,correct+4])]);
+  body.innerHTML=`${scoreBarHTML()}${progressHTML()}
+    <div class="question-box">
+      <div class="question-text">${t('perimeter_q')} ${sName(q.key)}:<br><small style="font-size:.76rem;color:#888">${t('perimeter_hint')}</small></div>
+      <div class="shape-display">${q.svg}</div>
+    </div>
+    <div class="options-grid">
+      ${opts.map(n=>`<button class="option-btn" onclick="checkNum(this,${n},${correct},'perim')" style="font-size:1.2rem;font-weight:900">${n} ${t('cm')}</button>`).join('')}
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="qIndex++;renderPerimQ()">${t('next')}</button>`;
+}
+
+// ========== GAME 7: 3D ==========
+function start3D() {
+  questions=shuffle(getShapes3D()); qIndex=0; score=0; total=questions.length;
+  render3DQ();
+}
+function render3DQ() {
+  const body=document.getElementById('modalBody');
+  if(qIndex>=questions.length){showResults(body);return;}
+  const q=questions[qIndex];
+  const all=getShapes3D();
+  const opts=shuffle([q,...shuffle(all.filter(s=>s.key!==q.key)).slice(0,3)]);
+  body.innerHTML=`${scoreBarHTML()}${progressHTML()}
+    <div class="question-box">
+      <div class="question-text">${lang==='ar'?'ما اسم هذا الشكل الفراغي؟':'What is the name of this 3D shape?'}</div>
+      <div class="shape-display">${q.svg}</div>
+    </div>
+    <div class="options-grid">
+      ${opts.map(o=>`<button class="option-btn" onclick="checkOpt(this,'${o.key}','${q.key}','3d')">${sName(o.key)}</button>`).join('')}
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="qIndex++;render3DQ()">${t('next')}</button>`;
+}
+
+// ========== GAME 8: AREA ==========
+function startArea() {
+  const aqs=[
+    {key:'square',   w:5,h:5,area:25, svg:`<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2"/><text x="50" y="55" text-anchor="middle" fill="white" font-size="14" font-weight="bold">5×5</text></svg>`},
+    {key:'rectangle',w:6,h:4,area:24, svg:`<svg viewBox="0 0 100 100"><rect x="5" y="25" width="90" height="50" fill="#8b5cf6" stroke="#5b21b6" stroke-width="2"/><text x="50" y="54" text-anchor="middle" fill="white" font-size="14" font-weight="bold">6×4</text></svg>`},
+    {key:'rectangle',w:8,h:3,area:24, svg:`<svg viewBox="0 0 100 100"><rect x="5" y="35" width="90" height="30" fill="#10b981" stroke="#047857" stroke-width="2"/><text x="50" y="55" text-anchor="middle" fill="white" font-size="13" font-weight="bold">8×3</text></svg>`},
+    {key:'square',   w:7,h:7,area:49, svg:`<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#f97316" stroke="#c2410c" stroke-width="2"/><text x="50" y="55" text-anchor="middle" fill="white" font-size="14" font-weight="bold">7×7</text></svg>`},
+    {key:'rectangle',w:9,h:2,area:18, svg:`<svg viewBox="0 0 100 100"><rect x="5" y="40" width="90" height="20" fill="#f472b6" stroke="#be185d" stroke-width="2"/><text x="50" y="54" text-anchor="middle" fill="white" font-size="12" font-weight="bold">9×2</text></svg>`},
+  ];
+  questions=shuffle(aqs); qIndex=0; score=0; total=questions.length;
+  renderAreaQ();
+}
+function renderAreaQ() {
+  const body=document.getElementById('modalBody');
+  if(qIndex>=questions.length){showResults(body);return;}
+  const q=questions[qIndex];
+  const correct=q.area;
+  const opts=shuffle([...new Set([correct,correct-4,correct+4,correct+8,q.w+q.h])].slice(0,4));
+  body.innerHTML=`${scoreBarHTML()}${progressHTML()}
+    <div class="question-box">
+      <div class="question-text">${t('area_q')} ${sName(q.key)}:<br><small style="font-size:.76rem;color:#888">${t('area_hint')}</small></div>
+      <div class="shape-display">${q.svg}</div>
+      <div style="font-size:.88rem;color:#3a86ff;font-weight:800">${q.w} × ${q.h} = ? ${t('cm2')}</div>
+    </div>
+    <div class="options-grid">
+      ${opts.map(n=>`<button class="option-btn" onclick="checkNum(this,${n},${correct},'area')" style="font-size:1.2rem;font-weight:900">${n} ${t('cm2')}</button>`).join('')}
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="qIndex++;renderAreaQ()">${t('next')}</button>`;
+}
+
+// ========== GAME 9: ANGLES ==========
+function startAngles() {
+  const raw=[
+    {key:'acute',  example:45,  svg:`<svg viewBox="0 0 100 100"><line x1="10" y1="85" x2="90" y2="85" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="85" x2="50" y2="20" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/><path d="M28,85 Q28,70 35,65" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="44" y="95" fill="#555" font-size="11">45°</text></svg>`},
+    {key:'right',  example:90,  svg:`<svg viewBox="0 0 100 100"><line x1="10" y1="85" x2="90" y2="85" stroke="#10b981" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="85" x2="10" y2="15" stroke="#10b981" stroke-width="4" stroke-linecap="round"/><rect x="10" y="70" width="15" height="15" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="28" y="95" fill="#555" font-size="11">90°</text></svg>`},
+    {key:'obtuse', example:120, svg:`<svg viewBox="0 0 100 100"><line x1="10" y1="70" x2="90" y2="70" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="70" x2="60" y2="10" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/><path d="M30,70 Q35,60 45,55" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="30" y="90" fill="#555" font-size="11">120°</text></svg>`},
+    {key:'straight',example:180,svg:`<svg viewBox="0 0 100 100"><line x1="5" y1="55" x2="95" y2="55" stroke="#f97316" stroke-width="4" stroke-linecap="round"/><path d="M30,55 Q50,30 70,55" fill="none" stroke="#3a86ff" stroke-width="2.5"/><text x="40" y="45" fill="#555" font-size="11">180°</text></svg>`},
+  ];
+  questions=shuffle([...raw,...shuffle(raw)].slice(0,6));
+  qIndex=0; score=0; total=questions.length;
+  renderAngleQ();
+}
+function renderAngleQ() {
+  const body=document.getElementById('modalBody');
+  if(qIndex>=questions.length){showResults(body);return;}
+  const q=questions[qIndex];
+  const names=T[lang].angle_names;
+  const allKeys=['acute','right','obtuse','straight'];
+  const opts=shuffle([q.key,...shuffle(allKeys.filter(k=>k!==q.key)).slice(0,3)]);
+  body.innerHTML=`${scoreBarHTML()}${progressHTML()}
+    <div class="question-box">
+      <div class="question-text">${t('angle_q')}</div>
+      <div class="shape-display">${q.svg}</div>
+      <div style="font-size:.82rem;color:#666">${T[lang].angle_descs[q.key]}</div>
+    </div>
+    <div class="options-grid">
+      ${opts.map(k=>`<button class="option-btn" onclick="checkOpt(this,'${k}','${q.key}','angle')" style="font-size:.85rem">${names[k]}</button>`).join('')}
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="qIndex++;renderAngleQ()">${t('next')}</button>`;
+}
+
+// ========== GAME 10: SYMMETRY ==========
+function startSymmetry() {
+  const syms=[
+    {key:'circle',    hasV:true, axesCount:'∞', svg:`<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2"/><line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="2" stroke-dasharray="4"/></svg>`},
+    {key:'square',    hasV:true, axesCount:'4', svg:`<svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" fill="#10b981" stroke="#047857" stroke-width="2"/><line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="2" stroke-dasharray="4"/><line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="2" stroke-dasharray="4"/></svg>`},
+    {key:'rectangle', hasV:true, axesCount:'2', svg:`<svg viewBox="0 0 100 100"><rect x="10" y="26" width="80" height="48" fill="#8b5cf6" stroke="#5b21b6" stroke-width="2"/><line x1="50" y1="20" x2="50" y2="80" stroke="white" stroke-width="2" stroke-dasharray="4"/></svg>`},
+    {key:'triangle',  hasV:true, axesCount:'3', svg:`<svg viewBox="0 0 100 100"><polygon points="50,5 93,90 7,90" fill="#f97316" stroke="#c2410c" stroke-width="2"/><line x1="50" y1="5" x2="50" y2="90" stroke="white" stroke-width="2" stroke-dasharray="4"/></svg>`},
+  ];
+  questions=shuffle(syms); qIndex=0; score=0; total=questions.length;
+  renderSymQ();
+}
+function renderSymQ() {
+  const body=document.getElementById('modalBody');
+  if(qIndex>=questions.length){showResults(body);return;}
+  const q=questions[qIndex];
+  body.innerHTML=`${scoreBarHTML()}${progressHTML()}
+    <div class="question-box">
+      <div class="question-text">${t('sym_q')}</div>
+      <div class="shape-display">${q.svg}</div>
+      <div style="font-size:.82rem;color:#555;font-weight:600">${sName(q.key)} — ${t('sym_axes')}: ${q.axesCount}</div>
+    </div>
+    <div class="options-grid">
+      <button class="option-btn" onclick="checkSym(this,true,${q.hasV})">${t('sym_yes')}</button>
+      <button class="option-btn" onclick="checkSym(this,false,${q.hasV})">${t('sym_no')}</button>
+    </div>
+    <div class="feedback" id="fb"></div>
+    <button class="next-btn" id="nxt" onclick="qIndex++;renderSymQ()">${t('next')}</button>`;
+}
+function checkSym(btn,chosen,correct) {
+  if(document.querySelector('.option-btn.correct')) return;
+  lockOptions();
+  const fb=document.getElementById('fb'),nxt=document.getElementById('nxt');
+  if(chosen===correct){btn.classList.add('correct');fb.textContent='✅ '+t('res_excellent').split('!')[0]+'!';fb.className='feedback show correct';score++;confetti();}
+  else{btn.classList.add('wrong');fb.textContent='❌';fb.className='feedback show wrong';}
+  nxt.classList.add('show');
+}
+
+// ========== GAME 11: BUILDER ==========
+function startBuilder() {
+  const body=document.getElementById('modalBody');
+  body.innerHTML=`
+    <div class="question-box" style="margin-bottom:10px;padding:11px">
+      <div class="question-text" style="font-size:.92rem">${t('draw_q')}</div>
+    </div>
+    <div class="tool-row">
+      <button class="tool-btn active" id="tbC" onclick="setTool('circle')">${t('draw_circle')}</button>
+      <button class="tool-btn" id="tbR" onclick="setTool('rect')">${t('draw_rect')}</button>
+      <button class="tool-btn" id="tbT" onclick="setTool('triangle')">${t('draw_tri')}</button>
+      <button class="tool-btn" id="tbP" onclick="setTool('pen')">${t('draw_pen')}</button>
+      <button class="tool-btn" id="tbE" onclick="setTool('eraser')">${t('draw_erase')}</button>
+    </div>
+    <div class="tool-row">
+      ${['#3a86ff','#f97316','#10b981','#8b5cf6','#f472b6','#fbbf24','#ef4444','#000'].map((c,i)=>`<div class="color-swatch ${i===0?'selected':''}" style="background:${c}" onclick="setClr('${c}',this)"></div>`).join('')}
+    </div>
+    <div class="shape-canvas-wrap">
+      <canvas id="shapeCanvas" width="500" height="270" style="width:100%;height:210px"></canvas>
+    </div>
+    <button class="tool-btn" style="margin-top:7px;width:100%;background:#fee2e2;border-color:#fca5a5;color:#ef4444" onclick="clearC()">${t('draw_clear')}</button>`;
+  initCanvas();
+}
+
+let tool='circle',clr='#3a86ff',drawing=false,sX=0,sY=0,canvHist=[];
+function setTool(tk){
+  tool=tk;
+  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
+  const m={circle:'tbC',rect:'tbR',triangle:'tbT',pen:'tbP',eraser:'tbE'};
+  document.getElementById(m[tk])?.classList.add('active');
+}
+function setClr(c,el){
+  clr=c;
+  document.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+  if(tool==='eraser') setTool('pen');
+}
+function clearC(){const cv=document.getElementById('shapeCanvas');if(!cv)return;cv.getContext('2d').clearRect(0,0,cv.width,cv.height);canvHist=[];}
+function initCanvas(){
+  const cv=document.getElementById('shapeCanvas');if(!cv)return;
+  const ctx=cv.getContext('2d');canvHist=[];
+  function gp(e){const r=cv.getBoundingClientRect(),sx=cv.width/r.width,sy=cv.height/r.height;if(e.touches)return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};}
+  function dn(e){e.preventDefault();drawing=true;const p=gp(e);sX=p.x;sY=p.y;if(tool==='pen'||tool==='eraser'){canvHist.push(ctx.getImageData(0,0,cv.width,cv.height));ctx.beginPath();ctx.moveTo(sX,sY);}}
+  function mv(e){if(!drawing)return;e.preventDefault();const p=gp(e);if(tool==='pen'){ctx.strokeStyle=clr;ctx.lineWidth=4;ctx.lineCap='round';ctx.lineTo(p.x,p.y);ctx.stroke();}else if(tool==='eraser'){ctx.strokeStyle='white';ctx.lineWidth=20;ctx.lineCap='round';ctx.lineTo(p.x,p.y);ctx.stroke();}else{if(canvHist.length)ctx.putImageData(canvHist[canvHist.length-1],0,0);ctx.strokeStyle=clr;ctx.fillStyle=clr+'44';ctx.lineWidth=3;const w=p.x-sX,h=p.y-sY;if(tool==='rect'){ctx.beginPath();ctx.rect(sX,sY,w,h);ctx.fill();ctx.stroke();}else if(tool==='circle'){const rx=Math.abs(w)/2,ry=Math.abs(h)/2;ctx.beginPath();ctx.ellipse(sX+w/2,sY+h/2,rx,ry,0,0,2*Math.PI);ctx.fill();ctx.stroke();}else if(tool==='triangle'){ctx.beginPath();ctx.moveTo(sX+w/2,sY);ctx.lineTo(sX+w,sY+h);ctx.lineTo(sX,sY+h);ctx.closePath();ctx.fill();ctx.stroke();}}}
+  function up(e){if(!drawing)return;e.preventDefault();drawing=false;canvHist.push(ctx.getImageData(0,0,cv.width,cv.height));if(canvHist.length>20)canvHist.shift();}
+  cv.addEventListener('mousedown',dn);cv.addEventListener('mousemove',mv);cv.addEventListener('mouseup',up);
+  cv.addEventListener('touchstart',dn,{passive:false});cv.addEventListener('touchmove',mv,{passive:false});cv.addEventListener('touchend',up,{passive:false});
+}
+
+// ========== CHECK HELPERS ==========
+function checkOpt(btn,chosen,correct,type) {
+  if(document.querySelector('.option-btn.correct')) return;
+  lockOptions();
+  const fb=document.getElementById('fb'),nxt=document.getElementById('nxt');
+  if(chosen===correct){
+    btn.classList.add('correct');
+    fb.textContent=t('correct'); fb.className='feedback show correct'; score++; confetti();
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.option-btn').forEach(b=>{if(b.textContent.trim().startsWith(sName(correct))) b.classList.add('correct');});
+    fb.textContent=t('wrong_prefix')+sName(correct); fb.className='feedback show wrong';
+  }
+  nxt.classList.add('show');
+}
+function checkNum(btn,chosen,correct,type) {
+  if(document.querySelector('.option-btn.correct')) return;
+  lockOptions();
+  const fb=document.getElementById('fb'),nxt=document.getElementById('nxt');
+  if(chosen===correct){
+    btn.classList.add('correct');
+    fb.textContent=t('correct_sides'); fb.className='feedback show correct'; score++; confetti();
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.option-btn').forEach(b=>{const txt=b.textContent.trim();if(txt==correct||txt.startsWith(correct+' ')) b.classList.add('correct');});
+    fb.textContent=t('wrong_sides')+correct; fb.className='feedback show wrong';
+  }
+  nxt.classList.add('show');
+}
+
+// ========== CONFETTI ==========
+function confetti(){
+  const cols=['#3a86ff','#f97316','#10b981','#8b5cf6','#f472b6','#fbbf24','#ef4444'];
+  for(let i=0;i<16;i++){
+    const p=document.createElement('div'); p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw'; p.style.top='0';
+    p.style.background=cols[Math.floor(Math.random()*cols.length)];
+    p.style.animationDuration=(1+Math.random())+'s';
+    p.style.animationDelay=Math.random()*.3+'s';
+    p.style.borderRadius=Math.random()>.5?'50%':'3px';
+    document.body.appendChild(p); setTimeout(()=>p.remove(),2000);
+  }
+}
+
+// ========== SOUND ENGINE (Web Audio API) ==========
+let _ctx = null;
+function getAudioCtx() {
+  if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (_ctx.state === 'suspended') _ctx.resume();
+  return _ctx;
+}
+
+// Generic tone player
+function playTone(freq, type, duration, vol=0.4, delay=0) {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+    gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+    gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + delay + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + duration + 0.05);
+  } catch(e) {}
+}
+
+// 🎉 CORRECT answer — happy ascending arpeggio
+function soundCorrect() {
+  const notes = [523, 659, 784, 1047]; // C5 E5 G5 C6
+  notes.forEach((f, i) => playTone(f, 'sine', 0.18, 0.35, i * 0.09));
+}
+
+// ❌ WRONG answer — low descending thud
+function soundWrong() {
+  playTone(220, 'sawtooth', 0.12, 0.3);
+  playTone(180, 'sawtooth', 0.18, 0.25, 0.1);
+}
+
+// 🏆 GAME WIN — full fanfare
+function soundWin() {
+  const melody = [
+    [523,0],[659,0.1],[784,0.2],[1047,0.35],
+    [784,0.55],[1047,0.7],[1319,0.85]
+  ];
+  melody.forEach(([f,d]) => playTone(f, 'sine', 0.22, 0.38, d));
+  // sparkle layer
+  [1319,1568,2093].forEach((f,i) => playTone(f,'triangle',0.15,0.2,0.9+i*0.1));
+}
+
+// 🚀 START button click — whoosh pop
+function soundStart() {
+  playTone(440, 'sine', 0.08, 0.3);
+  playTone(660, 'sine', 0.12, 0.3, 0.07);
+  playTone(880, 'sine', 0.1,  0.25, 0.14);
+}
+
+// 🔘 Button hover click — soft tick
+function soundClick() {
+  playTone(800, 'sine', 0.06, 0.15);
+}
+
+// 🔄 Next question — soft whoosh
+function soundNext() {
+  const ctx = getAudioCtx();
+  try {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(700, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+    osc.start(); osc.stop(ctx.currentTime + 0.25);
+  } catch(e) {}
+}
+
+// 🎨 Draw stroke — soft pencil scratch
+function soundDraw() {
+  try {
+    const ctx = getAudioCtx();
+    const buf = ctx.createBuffer(1, ctx.sampleRate * 0.06, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random()*2-1) * (1 - i/data.length) * 0.4;
+    const src = ctx.createBufferSource();
+    const gain = ctx.createGain(); gain.gain.value = 0.18;
+    src.buffer = buf; src.connect(gain); gain.connect(ctx.destination);
+    src.start();
+  } catch(e) {}
+}
+
+// 🔗 Connect/match drop — satisfying pop
+function soundMatch() {
+  playTone(660, 'sine', 0.1, 0.3);
+  playTone(880, 'triangle', 0.12, 0.25, 0.08);
+}
+
+// 🔀 Grade tab switch — slide swoosh
+function soundTab() {
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(300, ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(550, ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+    osc.start(); osc.stop(ctx.currentTime + 0.22);
+  } catch(e) {}
+}
+
+// 🔇 SOUND TOGGLE
+let soundOn = true;
+function toggleSound() {
+  soundOn = !soundOn;
+  const btn = document.getElementById('soundToggle');
+  btn.textContent = soundOn ? '🔊' : '🔇';
+  btn.title = soundOn ? 'Mute sounds' : 'Enable sounds';
+  if (soundOn) soundClick();
+}
+// Wrap all sound calls to respect mute
+const _sc=soundCorrect,_sw=soundWrong,_swin=soundWin,_ss=soundStart,_sck=soundClick,_sn=soundNext,_sd=soundDraw,_sm=soundMatch,_st=soundTab;
+soundCorrect=()=>{if(soundOn)_sc();};
+soundWrong=()=>{if(soundOn)_sw();};
+soundWin=()=>{if(soundOn)_swin();};
+soundStart=()=>{if(soundOn)_ss();};
+soundClick=()=>{if(soundOn)_sck();};
+soundNext=()=>{if(soundOn)_sn();};
+soundDraw=()=>{if(soundOn)_sd();};
+soundMatch=()=>{if(soundOn)_sm();};
+soundTab=()=>{if(soundOn)_st();};
+
+// ========== LESSON DATA ==========
+const LESSONS = {
+  ar: {
+    grade1: [
+      {
+        id:'l1_shapes', icon:'🔷', name:'الأشكال الأساسية', desc:'تعرّف على 8 أشكال', badge:'8 أشكال',
+        gameLink:'g1_identify',
+        slides:[
+          {
+            title:'ما هي الأشكال الهندسية؟',
+            visual:`<div class="slide-anim" style="font-size:4rem;line-height:1.4">🔵🔺🟦<br>🔶⬡🟣</div>`,
+            body:`الأشكال الهندسية هي أشكال لها <strong>حدود وجوانب واضحة</strong>.<br>نراها في كل مكان حولنا! 🌍`,
+            fact:`💡 الدائرة لا جوانب لها — إنها شكل مستدير تماماً!`
+          },
+          {
+            title:'الدائرة والبيضاوي',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#3a86ff" stroke="#1d4ed8" stroke-width="3"/></svg><div class="ex-name">دائرة</div><div class="ex-sub">0 جانب</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="44" ry="26" fill="#ef4444" stroke="#b91c1c" stroke-width="3"/></svg><div class="ex-name">بيضاوي</div><div class="ex-sub">0 جانب</div></div>
+            </div>`,
+            body:`الدائرة والبيضاوي <strong>لا جوانب لهما</strong>.<br>الدائرة كاملة الاستدارة، والبيضاوي يشبه <span class="highlight">البيضة 🥚</span>`,
+            fact:`💡 أمثلة: عجلة السيارة دائرة، البيضة شكل بيضاوي!`
+          },
+          {
+            title:'المثلث',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,6 94,94 6,94" fill="#f97316" stroke="#c2410c" stroke-width="3"/></svg><div class="ex-name">مثلث</div><div class="ex-sub">3 جوانب • 3 زوايا</div></div>
+            </div>`,
+            body:`المثلث له <strong>3 جوانب و3 زوايا</strong>.<br>اسمه مثلث لأنه يحتوي على <span class="highlight">ثلاثة أضلاع!</span>`,
+            fact:`💡 شعار التنبيه على الطريق مثلث!`
+          },
+          {
+            title:'المربع والمستطيل',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#10b981" stroke="#047857" stroke-width="3"/></svg><div class="ex-name">مربع</div><div class="ex-sub">4 جوانب متساوية</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><rect x="5" y="22" width="90" height="56" fill="#8b5cf6" stroke="#5b21b6" stroke-width="3"/></svg><div class="ex-name">مستطيل</div><div class="ex-sub">4 جوانب</div></div>
+            </div>`,
+            body:`المربع له <strong>4 جوانب متساوية</strong>.<br>المستطيل له <strong>4 جوانب</strong> لكن جانبان أطول من الآخرين.`,
+            fact:`💡 كل مربع مستطيل، لكن ليس كل مستطيل مربعاً!`
+          },
+          {
+            title:'المعين والمخمس والمسدس',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,5 95,50 50,95 5,50" fill="#f472b6" stroke="#be185d" stroke-width="3"/></svg><div class="ex-name">معين</div><div class="ex-sub">4 جوانب</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,5 95,34 79,90 21,90 5,34" fill="#fbbf24" stroke="#d97706" stroke-width="3"/></svg><div class="ex-name">مخمس</div><div class="ex-sub">5 جوانب</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,5 91,27 91,73 50,95 9,73 9,27" fill="#06b6d4" stroke="#0e7490" stroke-width="3"/></svg><div class="ex-name">مسدس</div><div class="ex-sub">6 جوانب</div></div>
+            </div>`,
+            body:`<strong>المعين</strong>: 4 جوانب متساوية مثل ورقة اللعب ♦️<br><strong>المخمس</strong>: 5 جوانب مثل <span class="highlight">نجمة البحر ⭐</span><br><strong>المسدس</strong>: 6 جوانب مثل خلية النحل 🍯`,
+            fact:`💡 خلية النحل مسدسة الشكل لأنه أقوى شكل في الطبيعة!`
+          },
+        ]
+      },
+      {
+        id:'l1_sides', icon:'🔢', name:'الجوانب والزوايا', desc:'عدّ جوانب الأشكال', badge:'مهارة أساسية',
+        gameLink:'g1_count',
+        slides:[
+          {
+            title:'ما هو الجانب؟',
+            visual:`<svg viewBox="0 0 200 100" class="slide-anim"><rect x="20" y="15" width="160" height="70" fill="#10b981" stroke="#047857" stroke-width="3" rx="4"/>
+              <line x1="20" y1="50" x2="180" y2="50" stroke="white" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="10" text-anchor="middle" fill="#047857" font-size="11" font-weight="bold">الجانب العلوي</text>
+              <text x="100" y="98" text-anchor="middle" fill="#047857" font-size="11" font-weight="bold">الجانب السفلي</text>
+              <text x="8" y="54" text-anchor="middle" fill="#047857" font-size="9" font-weight="bold">يسار</text>
+              <text x="190" y="54" text-anchor="middle" fill="#047857" font-size="9" font-weight="bold">يمين</text>
+            </svg>`,
+            body:`الجانب هو <strong>الخط المستقيم</strong> الذي يحيط بالشكل.<br>نعدّ كل الخطوط لنعرف عدد الجوانب!`,
+            fact:`💡 الدائرة ليس لها جوانب مستقيمة — لهذا نقول 0 جوانب!`
+          },
+          {
+            title:'كيف نعدّ الجوانب؟',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <polygon points="50,8 92,92 8,92" fill="#f97316" stroke="#c2410c" stroke-width="3"/>
+              <text x="50" y="60" text-anchor="middle" fill="white" font-size="13" font-weight="bold">1</text>
+              <text x="72" y="85" text-anchor="middle" fill="#c2410c" font-size="11" font-weight="bold">2</text>
+              <text x="28" y="85" text-anchor="middle" fill="#c2410c" font-size="11" font-weight="bold">3</text>
+            </svg>`,
+            body:`نبدأ من أي جانب ونعدّ بالترتيب ↪️<br><ul class="slide-steps"><li><span class="step-num">1</span>أشر على جانب وقل "واحد"</li><li><span class="step-num">2</span>انتقل للجانب التالي وقل "اثنان"</li><li><span class="step-num">3</span>استمر حتى تكمل الدورة</li></ul>`,
+            fact:`💡 دائماً ابدأ من نفس النقطة لتتأكد أنك لم تعدّ مرتين!`
+          },
+          {
+            title:'جدول عدد الجوانب',
+            visual:`<div style="overflow-x:auto;width:100%"><table style="width:100%;border-collapse:collapse;font-size:.82rem;font-family:'Tajawal',sans-serif">
+              <tr style="background:linear-gradient(135deg,#3a86ff,#8b5cf6);color:white">
+                <th style="padding:7px;border-radius:8px 0 0 0">الشكل</th><th style="padding:7px">الرمز</th><th style="padding:7px;border-radius:0 8px 0 0">الجوانب</th>
+              </tr>
+              ${[['دائرة','⭕','0'],['مثلث','🔺','3'],['مربع','🟦','4'],['مستطيل','▬','4'],['معين','♦️','4'],['مخمس','⬠','5'],['مسدس','⬡','6']].map((r,i)=>`<tr style="background:${i%2?'#f8f9ff':'white'}"><td style="padding:7px;font-weight:700">${r[0]}</td><td style="padding:7px;text-align:center;font-size:1.1rem">${r[1]}</td><td style="padding:7px;text-align:center;font-weight:900;color:#3a86ff">${r[2]}</td></tr>`).join('')}
+            </table></div>`,
+            body:`احفظ هذا الجدول! سيساعدك كثيراً 📝`,
+            fact:`💡 الشكل الذي له أكثر من 6 جوانب يسمى مضلّع!`
+          },
+        ]
+      },
+    ],
+    grade2: [
+      {
+        id:'l2_properties', icon:'📐', name:'خصائص الأشكال', desc:'الأضلاع والزوايا والمحيط', badge:'مستوى 2',
+        gameLink:'g2_sides',
+        slides:[
+          {
+            title:'خصائص الأشكال الهندسية',
+            visual:`<div class="slide-anim" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+              <div style="background:#e0f4ff;border-radius:12px;padding:10px 14px;text-align:center;font-weight:800;color:#1d4ed8;font-size:.85rem">📏<br>الأضلاع<br><span style="font-size:1.3rem">الطول</span></div>
+              <div style="background:#fce7f3;border-radius:12px;padding:10px 14px;text-align:center;font-weight:800;color:#be185d;font-size:.85rem">📐<br>الزوايا<br><span style="font-size:1.3rem">الاتجاه</span></div>
+              <div style="background:#d1fae5;border-radius:12px;padding:10px 14px;text-align:center;font-weight:800;color:#047857;font-size:.85rem">🔄<br>المحيط<br><span style="font-size:1.3rem">الدورة</span></div>
+            </div>`,
+            body:`لكل شكل هندسي <strong>ثلاث خصائص أساسية</strong>:<br>• عدد <strong>الأضلاع</strong> وأطوالها<br>• عدد <strong>الزوايا</strong> وأنواعها<br>• <strong>المحيط</strong> وهو مجموع الأضلاع`,
+            fact:`💡 عدد الزوايا = عدد الأضلاع دائماً!`
+          },
+          {
+            title:'الفرق بين المربع والمستطيل',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" fill="#10b981" stroke="#047857" stroke-width="3"/>
+                <text x="50" y="54" text-anchor="middle" fill="white" font-size="10" font-weight="bold">جميع الأضلاع</text>
+                <text x="50" y="66" text-anchor="middle" fill="white" font-size="10" font-weight="bold">متساوية ✓</text></svg>
+                <div class="ex-name">مربع</div><div class="ex-sub">4 أضلاع متساوية</div>
+              </div>
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><rect x="5" y="25" width="90" height="50" fill="#8b5cf6" stroke="#5b21b6" stroke-width="3"/>
+                <text x="50" y="48" text-anchor="middle" fill="white" font-size="9" font-weight="bold">ضلعان طويلان</text>
+                <text x="50" y="60" text-anchor="middle" fill="white" font-size="9" font-weight="bold">وضلعان قصيران</text></svg>
+                <div class="ex-name">مستطيل</div><div class="ex-sub">ضلعان متساويان</div>
+              </div>
+            </div>`,
+            body:`<strong>المربع</strong>: كل أضلاعه الأربعة <span class="highlight">متساوية</span><br><strong>المستطيل</strong>: الضلعان المتقابلان متساويان فقط`,
+            fact:`💡 المربع هو نوع خاص من المستطيل!`
+          },
+          {
+            title:'الأشكال الثلاثية الأبعاد',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><defs><radialGradient id="sg2"><stop offset="20%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(#sg2)"/></svg><div class="ex-name">كرة</div><div class="ex-sub">وجه منحن</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="20,35 50,15 80,35 80,70 50,90 20,70" fill="#10b981" stroke="#047857" stroke-width="2"/><polygon points="20,35 50,55 80,35" fill="#34d399" stroke="#047857" stroke-width="2"/><line x1="50" y1="55" x2="50" y2="90" stroke="#047857" stroke-width="2"/></svg><div class="ex-name">مكعب</div><div class="ex-sub">6 وجوه مربعة</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,8 90,86 10,86" fill="#f97316" stroke="#c2410c" stroke-width="2"/><ellipse cx="50" cy="86" rx="40" ry="10" fill="#fb923c" stroke="#c2410c" stroke-width="2"/></svg><div class="ex-name">مخروط</div><div class="ex-sub">قاعدة دائرية</div></div>
+            </div>`,
+            body:`الأشكال <strong>ثلاثية الأبعاد (3D)</strong> لها طول وعرض <span class="highlight">وارتفاع</span>!<br>نراها في حياتنا اليومية.`,
+            fact:`💡 الكرة ليس لها أضلاع على الإطلاق، فقط سطح منحنٍ!`
+          },
+        ]
+      },
+      {
+        id:'l2_perimeter', icon:'📏', name:'المحيط', desc:'احسب المحيط خطوة بخطوة', badge:'حساب',
+        gameLink:'g2_perimeter',
+        slides:[
+          {
+            title:'ما هو المحيط؟',
+            visual:`<svg viewBox="0 0 200 100" class="slide-anim">
+              <rect x="20" y="15" width="160" height="70" fill="none" stroke="#3a86ff" stroke-width="4" stroke-dasharray="8"/>
+              <text x="100" y="11" text-anchor="middle" fill="#3a86ff" font-size="11" font-weight="bold">160 سم</text>
+              <text x="100" y="99" text-anchor="middle" fill="#3a86ff" font-size="11" font-weight="bold">160 سم</text>
+              <text x="10" y="54" fill="#f97316" font-size="10" font-weight="bold">70</text>
+              <text x="178" y="54" fill="#f97316" font-size="10" font-weight="bold">70</text>
+              <text x="100" y="58" text-anchor="middle" fill="#1e1b4b" font-size="13" font-weight="900">مستطيل</text>
+            </svg>`,
+            body:`المحيط هو <strong>المسافة حول الشكل كله</strong>.<br>تخيّل أنك تمشي حول الشكل — المسافة التي قطعتها هي المحيط! 🚶`,
+            fact:`💡 المحيط = مجموع أطوال جميع الأضلاع`
+          },
+          {
+            title:'محيط المربع',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <rect x="15" y="15" width="70" height="70" fill="#10b981" stroke="#047857" stroke-width="3"/>
+              <text x="50" y="11" text-anchor="middle" fill="#047857" font-size="10" font-weight="bold">5 سم</text>
+              <text x="50" y="99" text-anchor="middle" fill="#047857" font-size="10" font-weight="bold">5 سم</text>
+              <text x="8" y="54" fill="#047857" font-size="10" font-weight="bold">5</text>
+              <text x="90" y="54" fill="#047857" font-size="10" font-weight="bold">5</text>
+              <text x="50" y="54" text-anchor="middle" fill="white" font-size="11" font-weight="bold">5×4</text>
+              <text x="50" y="68" text-anchor="middle" fill="white" font-size="11" font-weight="bold">=20</text>
+            </svg>`,
+            body:`<ul class="slide-steps">
+              <li><span class="step-num">1</span>المربع له 4 أضلاع متساوية</li>
+              <li><span class="step-num">2</span>طول كل ضلع = 5 سم</li>
+              <li><span class="step-num">3</span>المحيط = 5 + 5 + 5 + 5</li>
+              <li><span class="step-num">4</span>أو: المحيط = 4 × 5 = <span class="highlight">20 سم</span></li>
+            </ul>`,
+            fact:`💡 محيط المربع = 4 × الضلع`
+          },
+          {
+            title:'محيط المستطيل',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <rect x="8" y="25" width="84" height="50" fill="#8b5cf6" stroke="#5b21b6" stroke-width="3"/>
+              <text x="50" y="21" text-anchor="middle" fill="#5b21b6" font-size="10" font-weight="bold">6 سم</text>
+              <text x="50" y="97" text-anchor="middle" fill="#5b21b6" font-size="10" font-weight="bold">6 سم</text>
+              <text x="4" y="54" fill="#f97316" font-size="9" font-weight="bold">4</text>
+              <text x="94" y="54" fill="#f97316" font-size="9" font-weight="bold">4</text>
+              <text x="50" y="52" text-anchor="middle" fill="white" font-size="11" font-weight="bold">6+4+6+4</text>
+              <text x="50" y="66" text-anchor="middle" fill="white" font-size="11" font-weight="bold">=20</text>
+            </svg>`,
+            body:`<ul class="slide-steps">
+              <li><span class="step-num">1</span>الطول = 6 سم، العرض = 4 سم</li>
+              <li><span class="step-num">2</span>المحيط = 6+4+6+4</li>
+              <li><span class="step-num">3</span>أو: المحيط = 2×(6+4)</li>
+              <li><span class="step-num">4</span>= 2×10 = <span class="highlight">20 سم</span></li>
+            </ul>`,
+            fact:`💡 محيط المستطيل = 2 × (الطول + العرض)`
+          },
+        ]
+      },
+    ],
+    grade3: [
+      {
+        id:'l3_area', icon:'📊', name:'المساحة', desc:'الطول × العرض', badge:'صف 3',
+        gameLink:'g3_area',
+        slides:[
+          {
+            title:'ما هي المساحة؟',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              ${Array.from({length:25},(_,i)=>`<rect x="${(i%5)*18+10}" y="${Math.floor(i/5)*18+10}" width="17" height="17" fill="${i%2?'#bfdbfe':'#93c5fd'}" stroke="white" stroke-width="1.5" rx="2"/>`).join('')}
+              <text x="50" y="104" text-anchor="middle" fill="#1d4ed8" font-size="10" font-weight="bold">5×5 = 25 مربع</text>
+            </svg>`,
+            body:`المساحة هي <strong>مقدار المكان داخل الشكل</strong>.<br>نقيسها بـ <span class="highlight">المربعات الصغيرة</span> التي تملأ الشكل!`,
+            fact:`💡 المساحة تُقاس بوحدات مربعة مثل سم² أو م²`
+          },
+          {
+            title:'مساحة المستطيل',
+            visual:`<svg viewBox="0 0 100 80" class="slide-anim">
+              ${Array.from({length:18},(_,i)=>`<rect x="${(i%6)*15+5}" y="${Math.floor(i/6)*15+5}" width="14" height="14" fill="${i%2?'#a7f3d0':'#6ee7b7'}" stroke="white" stroke-width="1.5" rx="2"/>`).join('')}
+              <text x="50" y="79" text-anchor="middle" fill="#047857" font-size="9" font-weight="bold">6 × 3 = 18 سم²</text>
+            </svg>`,
+            body:`<ul class="slide-steps">
+              <li><span class="step-num">1</span>عدّ المربعات في الصف الواحد ← هذا الطول</li>
+              <li><span class="step-num">2</span>عدّ عدد الصفوف ← هذا العرض</li>
+              <li><span class="step-num">3</span>المساحة = الطول × العرض</li>
+            </ul>`,
+            fact:``
+          },
+          {
+            title:'قاعدة المساحة',
+            visual:`<div class="slide-formula">المساحة = الطول × العرض<small>Area = Length × Width</small></div>
+            <div class="slide-example-grid">
+              <div class="slide-example" style="min-width:100px"><svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2"/><text x="50" y="56" text-anchor="middle" fill="white" font-size="14" font-weight="bold">5×5</text></svg><div class="ex-name">25 سم²</div></div>
+              <div class="slide-example" style="min-width:100px"><svg viewBox="0 0 100 100"><rect x="5" y="25" width="90" height="50" fill="#8b5cf6" stroke="#5b21b6" stroke-width="2"/><text x="50" y="54" text-anchor="middle" fill="white" font-size="14" font-weight="bold">6×4</text></svg><div class="ex-name">24 سم²</div></div>
+            </div>`,
+            body:`الآن جرّب: مستطيل طوله 8 سم وعرضه 3 سم.<br>المساحة = 8 × 3 = <span class="highlight">24 سم²</span>`,
+            fact:`💡 الفرق بين المحيط والمساحة: المحيط حول الشكل، المساحة داخله!`
+          },
+        ]
+      },
+      {
+        id:'l3_angles', icon:'📐', name:'أنواع الزوايا', desc:'حادة، قائمة، منفرجة', badge:'هندسة متقدمة',
+        gameLink:'g3_angles',
+        slides:[
+          {
+            title:'ما هي الزاوية؟',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <line x1="10" y1="80" x2="90" y2="80" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/>
+              <line x1="10" y1="80" x2="55" y2="15" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/>
+              <path d="M30,80 Q30,62 42,56" fill="none" stroke="#f97316" stroke-width="3"/>
+              <text x="38" y="78" fill="#f97316" font-size="10" font-weight="bold">زاوية</text>
+              <circle cx="10" cy="80" r="4" fill="#f97316"/>
+            </svg>`,
+            body:`الزاوية هي <strong>المساحة بين خطين</strong> يلتقيان في نقطة.<br>كلما كان الفتح أكبر، كانت الزاوية <span class="highlight">أكبر</span>!`,
+            fact:`💡 نقيس الزوايا بوحدة تسمى الدرجة (°)`
+          },
+          {
+            title:'الزاوية الحادة والقائمة',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><line x1="10" y1="85" x2="90" y2="85" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="85" x2="50" y2="20" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/><path d="M28,85 Q28,70 36,64" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="44" y="98" fill="#555" font-size="10">أقل من 90°</text></svg>
+                <div class="ex-name">زاوية حادة</div><div class="ex-sub">Acute</div>
+              </div>
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><line x1="10" y1="85" x2="90" y2="85" stroke="#10b981" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="85" x2="10" y2="15" stroke="#10b981" stroke-width="4" stroke-linecap="round"/><rect x="10" y="70" width="16" height="16" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="44" y="98" fill="#555" font-size="10">= 90°</text></svg>
+                <div class="ex-name">زاوية قائمة</div><div class="ex-sub">Right</div>
+              </div>
+            </div>`,
+            body:`<strong>الزاوية الحادة</strong>: أقل من 90° — كإبرة الساعة<br><strong>الزاوية القائمة</strong>: تساوي 90° بالضبط — كزاوية الكتاب 📚`,
+            fact:`💡 رمز الزاوية القائمة مربع صغير ☐`
+          },
+          {
+            title:'الزاوية المنفرجة والمستقيمة',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><line x1="10" y1="70" x2="90" y2="70" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="70" x2="60" y2="10" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/><path d="M30,70 Q35,60 45,54" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="40" y="90" fill="#555" font-size="10">90°–180°</text></svg>
+                <div class="ex-name">زاوية منفرجة</div><div class="ex-sub">Obtuse</div>
+              </div>
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><line x1="5" y1="55" x2="95" y2="55" stroke="#f97316" stroke-width="4" stroke-linecap="round"/><path d="M30,55 Q50,28 70,55" fill="none" stroke="#3a86ff" stroke-width="2.5"/><text x="44" y="90" fill="#555" font-size="10">= 180°</text></svg>
+                <div class="ex-name">زاوية مستقيمة</div><div class="ex-sub">Straight</div>
+              </div>
+            </div>`,
+            body:`<strong>المنفرجة</strong>: أكبر من 90° وأقل من 180°<br><strong>المستقيمة</strong>: تساوي 180° — خط مستقيم تماماً!`,
+            fact:`💡 مجموع زوايا أي مثلث = 180° دائماً!`
+          },
+        ]
+      },
+      {
+        id:'l3_symmetry', icon:'🪞', name:'التماثل', desc:'محاور التماثل والأشكال المتماثلة', badge:'مفهوم متقدم',
+        gameLink:'g3_symmetry',
+        slides:[
+          {
+            title:'ما هو التماثل؟',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <rect x="15" y="15" width="70" height="70" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2" opacity=".3"/>
+              <rect x="15" y="15" width="35" height="70" fill="#3a86ff" stroke="none"/>
+              <line x1="50" y1="10" x2="50" y2="90" stroke="#f97316" stroke-width="3" stroke-dasharray="5"/>
+              <text x="50" y="106" text-anchor="middle" fill="#f97316" font-size="9" font-weight="bold">محور التماثل</text>
+            </svg>`,
+            body:`التماثل يعني أن <strong>الشكلين نصفين متطابقين</strong> عند الطي.<br>تخيّل طي الورقة — إذا تطابق الجانبان فالشكل <span class="highlight">متماثل!</span>`,
+            fact:`💡 وجه الإنسان متماثل — الجانب الأيمن يشبه الأيسر!`
+          },
+          {
+            title:'عدد محاور التماثل',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" fill="#10b981" stroke="#047857" stroke-width="2"/><line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="2" stroke-dasharray="4"/><line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="2" stroke-dasharray="4"/><line x1="15" y1="15" x2="85" y2="85" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-dasharray="4"/><line x1="85" y1="15" x2="15" y2="85" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-dasharray="4"/></svg><div class="ex-name">مربع</div><div class="ex-sub">4 محاور</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2"/><line x1="50" y1="8" x2="50" y2="92" stroke="white" stroke-width="2" stroke-dasharray="4"/><line x1="8" y1="50" x2="92" y2="50" stroke="white" stroke-width="2" stroke-dasharray="4"/></svg><div class="ex-name">دائرة</div><div class="ex-sub">محاور لا نهائية!</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,5 93,90 7,90" fill="#f97316" stroke="#c2410c" stroke-width="2"/><line x1="50" y1="5" x2="50" y2="90" stroke="white" stroke-width="2" stroke-dasharray="4"/></svg><div class="ex-name">مثلث متساوٍ</div><div class="ex-sub">3 محاور</div></div>
+            </div>`,
+            body:`كل شكل له عدد مختلف من محاور التماثل!`,
+            fact:`💡 المستطيل له محوران فقط (أفقي وعمودي) وليس قطريَّين!`
+          },
+        ]
+      },
+    ],
+  },
+  en: {
+    grade1: [
+      {
+        id:'l1_shapes', icon:'🔷', name:'Basic Shapes', desc:'Learn 8 key shapes', badge:'8 Shapes',
+        gameLink:'g1_identify',
+        slides:[
+          {
+            title:'What are Geometric Shapes?',
+            visual:`<div class="slide-anim" style="font-size:4rem;line-height:1.4">🔵🔺🟦<br>🔶⬡🟣</div>`,
+            body:`Geometric shapes are figures with <strong>clear boundaries and sides</strong>.<br>We see them everywhere around us! 🌍`,
+            fact:`💡 A circle has no sides — it's perfectly round!`
+          },
+          {
+            title:'Circle & Oval',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#3a86ff" stroke="#1d4ed8" stroke-width="3"/></svg><div class="ex-name">Circle</div><div class="ex-sub">0 sides</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="44" ry="26" fill="#ef4444" stroke="#b91c1c" stroke-width="3"/></svg><div class="ex-name">Oval</div><div class="ex-sub">0 sides</div></div>
+            </div>`,
+            body:`Circle and Oval have <strong>no straight sides</strong>.<br>The circle is perfectly round; the oval looks like <span class="highlight">an egg 🥚</span>`,
+            fact:`💡 Examples: a car wheel is a circle, an egg is oval!`
+          },
+          {
+            title:'Triangle',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,6 94,94 6,94" fill="#f97316" stroke="#c2410c" stroke-width="3"/></svg><div class="ex-name">Triangle</div><div class="ex-sub">3 sides • 3 angles</div></div>
+            </div>`,
+            body:`A triangle has <strong>3 sides and 3 angles</strong>.<br>The prefix "tri" means <span class="highlight">three!</span>`,
+            fact:`💡 Road warning signs are triangles!`
+          },
+          {
+            title:'Square & Rectangle',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><rect x="8" y="8" width="84" height="84" fill="#10b981" stroke="#047857" stroke-width="3"/></svg><div class="ex-name">Square</div><div class="ex-sub">4 equal sides</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><rect x="5" y="22" width="90" height="56" fill="#8b5cf6" stroke="#5b21b6" stroke-width="3"/></svg><div class="ex-name">Rectangle</div><div class="ex-sub">4 sides</div></div>
+            </div>`,
+            body:`Square has <strong>4 equal sides</strong>.<br>Rectangle has <strong>4 sides</strong> but two are longer than the others.`,
+            fact:`💡 Every square is a rectangle, but not every rectangle is a square!`
+          },
+          {
+            title:'Diamond, Pentagon & Hexagon',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,5 95,50 50,95 5,50" fill="#f472b6" stroke="#be185d" stroke-width="3"/></svg><div class="ex-name">Diamond</div><div class="ex-sub">4 sides</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,5 95,34 79,90 21,90 5,34" fill="#fbbf24" stroke="#d97706" stroke-width="3"/></svg><div class="ex-name">Pentagon</div><div class="ex-sub">5 sides</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,5 91,27 91,73 50,95 9,73 9,27" fill="#06b6d4" stroke="#0e7490" stroke-width="3"/></svg><div class="ex-name">Hexagon</div><div class="ex-sub">6 sides</div></div>
+            </div>`,
+            body:`<strong>Diamond</strong>: 4 equal sides like a playing card ♦️<br><strong>Pentagon</strong>: 5 sides like a <span class="highlight">starfish ⭐</span><br><strong>Hexagon</strong>: 6 sides like a honeycomb 🍯`,
+            fact:`💡 Honeycombs are hexagonal — the strongest shape in nature!`
+          },
+        ]
+      },
+      {
+        id:'l1_sides', icon:'🔢', name:'Counting Sides', desc:'Count sides of shapes', badge:'Core Skill',
+        gameLink:'g1_count',
+        slides:[
+          {
+            title:'What is a Side?',
+            visual:`<svg viewBox="0 0 200 100" class="slide-anim"><rect x="20" y="15" width="160" height="70" fill="#10b981" stroke="#047857" stroke-width="3" rx="4"/>
+              <text x="100" y="10" text-anchor="middle" fill="#047857" font-size="11" font-weight="bold">Top side</text>
+              <text x="100" y="98" text-anchor="middle" fill="#047857" font-size="11" font-weight="bold">Bottom side</text>
+              <text x="8" y="56" text-anchor="middle" fill="#047857" font-size="9">Left</text>
+              <text x="190" y="56" text-anchor="middle" fill="#047857" font-size="9">Right</text>
+            </svg>`,
+            body:`A side is a <strong>straight line</strong> that forms the boundary of a shape.<br>Count all the lines to find the number of sides!`,
+            fact:`💡 A circle has no straight sides — so it has 0 sides!`
+          },
+          {
+            title:'How to Count Sides',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <polygon points="50,8 92,92 8,92" fill="#f97316" stroke="#c2410c" stroke-width="3"/>
+              <text x="50" y="60" text-anchor="middle" fill="white" font-size="13" font-weight="bold">1</text>
+              <text x="74" y="85" text-anchor="middle" fill="#c2410c" font-size="11" font-weight="bold">2</text>
+              <text x="26" y="85" text-anchor="middle" fill="#c2410c" font-size="11" font-weight="bold">3</text>
+            </svg>`,
+            body:`Start at any side and count in order ↪️<br><ul class="slide-steps"><li><span class="step-num">1</span>Point to a side and say "one"</li><li><span class="step-num">2</span>Move to the next side and say "two"</li><li><span class="step-num">3</span>Continue until you complete the loop</li></ul>`,
+            fact:`💡 Always start from the same point so you don't count twice!`
+          },
+          {
+            title:'Sides Reference Table',
+            visual:`<div style="overflow-x:auto;width:100%"><table style="width:100%;border-collapse:collapse;font-size:.82rem;font-family:'Tajawal',sans-serif">
+              <tr style="background:linear-gradient(135deg,#3a86ff,#8b5cf6);color:white">
+                <th style="padding:7px;border-radius:8px 0 0 0">Shape</th><th style="padding:7px">Icon</th><th style="padding:7px;border-radius:0 8px 0 0">Sides</th>
+              </tr>
+              ${[['Circle','⭕','0'],['Triangle','🔺','3'],['Square','🟦','4'],['Rectangle','▬','4'],['Diamond','♦️','4'],['Pentagon','⬠','5'],['Hexagon','⬡','6']].map((r,i)=>`<tr style="background:${i%2?'#f8f9ff':'white'}"><td style="padding:7px;font-weight:700">${r[0]}</td><td style="padding:7px;text-align:center;font-size:1.1rem">${r[1]}</td><td style="padding:7px;text-align:center;font-weight:900;color:#3a86ff">${r[2]}</td></tr>`).join('')}
+            </table></div>`,
+            body:`Memorize this table — it will help you a lot! 📝`,
+            fact:`💡 A shape with more than 6 sides is called a polygon!`
+          },
+        ]
+      },
+    ],
+    grade2: [
+      {
+        id:'l2_properties', icon:'📐', name:'Shape Properties', desc:'Sides, angles & perimeter', badge:'Level 2',
+        gameLink:'g2_sides',
+        slides:[
+          {
+            title:'Properties of Geometric Shapes',
+            visual:`<div class="slide-anim" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+              <div style="background:#e0f4ff;border-radius:12px;padding:10px 14px;text-align:center;font-weight:800;color:#1d4ed8;font-size:.85rem">📏<br>Sides<br><span style="font-size:1.3rem">Length</span></div>
+              <div style="background:#fce7f3;border-radius:12px;padding:10px 14px;text-align:center;font-weight:800;color:#be185d;font-size:.85rem">📐<br>Angles<br><span style="font-size:1.3rem">Direction</span></div>
+              <div style="background:#d1fae5;border-radius:12px;padding:10px 14px;text-align:center;font-weight:800;color:#047857;font-size:.85rem">🔄<br>Perimeter<br><span style="font-size:1.3rem">Around</span></div>
+            </div>`,
+            body:`Every shape has <strong>three key properties</strong>:<br>• Number of <strong>sides</strong> and their lengths<br>• Number of <strong>angles</strong> and their types<br>• <strong>Perimeter</strong>: the total length around it`,
+            fact:`💡 Number of angles = number of sides, always!`
+          },
+          {
+            title:'Square vs Rectangle',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" fill="#10b981" stroke="#047857" stroke-width="3"/><text x="50" y="54" text-anchor="middle" fill="white" font-size="10" font-weight="bold">All sides</text><text x="50" y="66" text-anchor="middle" fill="white" font-size="10" font-weight="bold">equal ✓</text></svg>
+                <div class="ex-name">Square</div><div class="ex-sub">4 equal sides</div>
+              </div>
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><rect x="5" y="25" width="90" height="50" fill="#8b5cf6" stroke="#5b21b6" stroke-width="3"/><text x="50" y="48" text-anchor="middle" fill="white" font-size="9" font-weight="bold">2 long sides</text><text x="50" y="60" text-anchor="middle" fill="white" font-size="9" font-weight="bold">2 short sides</text></svg>
+                <div class="ex-name">Rectangle</div><div class="ex-sub">2 pairs equal</div>
+              </div>
+            </div>`,
+            body:`<strong>Square</strong>: all 4 sides are <span class="highlight">equal</span><br><strong>Rectangle</strong>: only opposite sides are equal`,
+            fact:`💡 A square is a special type of rectangle!`
+          },
+          {
+            title:'3D Shapes',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><defs><radialGradient id="sg3"><stop offset="20%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#1d4ed8"/></radialGradient></defs><circle cx="50" cy="50" r="42" fill="url(#sg3)"/></svg><div class="ex-name">Sphere</div><div class="ex-sub">Curved face</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="20,35 50,15 80,35 80,70 50,90 20,70" fill="#10b981" stroke="#047857" stroke-width="2"/><polygon points="20,35 50,55 80,35" fill="#34d399" stroke="#047857" stroke-width="2"/><line x1="50" y1="55" x2="50" y2="90" stroke="#047857" stroke-width="2"/></svg><div class="ex-name">Cube</div><div class="ex-sub">6 square faces</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,8 90,86 10,86" fill="#f97316" stroke="#c2410c" stroke-width="2"/><ellipse cx="50" cy="86" rx="40" ry="10" fill="#fb923c" stroke="#c2410c" stroke-width="2"/></svg><div class="ex-name">Cone</div><div class="ex-sub">Circular base</div></div>
+            </div>`,
+            body:`<strong>3D shapes</strong> have length, width, <span class="highlight">and height</span>!<br>We see them in everyday life around us.`,
+            fact:`💡 A sphere has no edges at all — just a curved surface!`
+          },
+        ]
+      },
+      {
+        id:'l2_perimeter', icon:'📏', name:'Perimeter', desc:'Step-by-step calculation', badge:'Math',
+        gameLink:'g2_perimeter',
+        slides:[
+          {
+            title:'What is Perimeter?',
+            visual:`<svg viewBox="0 0 200 100" class="slide-anim">
+              <rect x="20" y="15" width="160" height="70" fill="none" stroke="#3a86ff" stroke-width="4" stroke-dasharray="8"/>
+              <text x="100" y="11" text-anchor="middle" fill="#3a86ff" font-size="11" font-weight="bold">160 cm</text>
+              <text x="100" y="99" text-anchor="middle" fill="#3a86ff" font-size="11" font-weight="bold">160 cm</text>
+              <text x="10" y="56" fill="#f97316" font-size="10" font-weight="bold">70</text>
+              <text x="178" y="56" fill="#f97316" font-size="10" font-weight="bold">70</text>
+              <text x="100" y="58" text-anchor="middle" fill="#1e1b4b" font-size="13" font-weight="900">Rectangle</text>
+            </svg>`,
+            body:`Perimeter is the <strong>distance all the way around a shape</strong>.<br>Imagine walking around it — the distance you walk is the perimeter! 🚶`,
+            fact:`💡 Perimeter = sum of all side lengths`
+          },
+          {
+            title:'Perimeter of a Square',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <rect x="15" y="15" width="70" height="70" fill="#10b981" stroke="#047857" stroke-width="3"/>
+              <text x="50" y="11" text-anchor="middle" fill="#047857" font-size="10" font-weight="bold">5 cm</text>
+              <text x="50" y="99" text-anchor="middle" fill="#047857" font-size="10" font-weight="bold">5 cm</text>
+              <text x="7" y="54" fill="#047857" font-size="10" font-weight="bold">5</text>
+              <text x="90" y="54" fill="#047857" font-size="10" font-weight="bold">5</text>
+              <text x="50" y="54" text-anchor="middle" fill="white" font-size="11" font-weight="bold">5×4</text>
+              <text x="50" y="68" text-anchor="middle" fill="white" font-size="11" font-weight="bold">=20</text>
+            </svg>`,
+            body:`<ul class="slide-steps">
+              <li><span class="step-num">1</span>A square has 4 equal sides</li>
+              <li><span class="step-num">2</span>Each side = 5 cm</li>
+              <li><span class="step-num">3</span>Perimeter = 5 + 5 + 5 + 5</li>
+              <li><span class="step-num">4</span>Or: Perimeter = 4 × 5 = <span class="highlight">20 cm</span></li>
+            </ul>`,
+            fact:`💡 Perimeter of a square = 4 × side`
+          },
+          {
+            title:'Perimeter of a Rectangle',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <rect x="8" y="25" width="84" height="50" fill="#8b5cf6" stroke="#5b21b6" stroke-width="3"/>
+              <text x="50" y="21" text-anchor="middle" fill="#5b21b6" font-size="10" font-weight="bold">6 cm</text>
+              <text x="50" y="97" text-anchor="middle" fill="#5b21b6" font-size="10" font-weight="bold">6 cm</text>
+              <text x="3" y="54" fill="#f97316" font-size="9" font-weight="bold">4</text>
+              <text x="95" y="54" fill="#f97316" font-size="9" font-weight="bold">4</text>
+              <text x="50" y="52" text-anchor="middle" fill="white" font-size="11" font-weight="bold">6+4+6+4</text>
+              <text x="50" y="66" text-anchor="middle" fill="white" font-size="11" font-weight="bold">=20</text>
+            </svg>`,
+            body:`<ul class="slide-steps">
+              <li><span class="step-num">1</span>Length = 6 cm, Width = 4 cm</li>
+              <li><span class="step-num">2</span>Perimeter = 6+4+6+4</li>
+              <li><span class="step-num">3</span>Or: Perimeter = 2×(6+4)</li>
+              <li><span class="step-num">4</span>= 2×10 = <span class="highlight">20 cm</span></li>
+            </ul>`,
+            fact:`💡 Perimeter of rectangle = 2 × (Length + Width)`
+          },
+        ]
+      },
+    ],
+    grade3: [
+      {
+        id:'l3_area', icon:'📊', name:'Area', desc:'Length × Width', badge:'Grade 3',
+        gameLink:'g3_area',
+        slides:[
+          {
+            title:'What is Area?',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              ${Array.from({length:25},(_,i)=>`<rect x="${(i%5)*18+10}" y="${Math.floor(i/5)*18+10}" width="17" height="17" fill="${i%2?'#bfdbfe':'#93c5fd'}" stroke="white" stroke-width="1.5" rx="2"/>`).join('')}
+              <text x="50" y="104" text-anchor="middle" fill="#1d4ed8" font-size="10" font-weight="bold">5×5 = 25 squares</text>
+            </svg>`,
+            body:`Area is the <strong>amount of space inside a shape</strong>.<br>We measure it by counting <span class="highlight">small squares</span> that fill the shape!`,
+            fact:`💡 Area is measured in square units like cm² or m²`
+          },
+          {
+            title:'Area of a Rectangle',
+            visual:`<svg viewBox="0 0 100 80" class="slide-anim">
+              ${Array.from({length:18},(_,i)=>`<rect x="${(i%6)*15+5}" y="${Math.floor(i/6)*15+5}" width="14" height="14" fill="${i%2?'#a7f3d0':'#6ee7b7'}" stroke="white" stroke-width="1.5" rx="2"/>`).join('')}
+              <text x="50" y="79" text-anchor="middle" fill="#047857" font-size="9" font-weight="bold">6 × 3 = 18 cm²</text>
+            </svg>`,
+            body:`<ul class="slide-steps">
+              <li><span class="step-num">1</span>Count squares in one row → this is the Length</li>
+              <li><span class="step-num">2</span>Count the number of rows → this is the Width</li>
+              <li><span class="step-num">3</span>Area = Length × Width</li>
+            </ul>`,
+            fact:``
+          },
+          {
+            title:'The Area Formula',
+            visual:`<div class="slide-formula">Area = Length × Width<small>المساحة = الطول × العرض</small></div>
+            <div class="slide-example-grid">
+              <div class="slide-example" style="min-width:100px"><svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2"/><text x="50" y="56" text-anchor="middle" fill="white" font-size="14" font-weight="bold">5×5</text></svg><div class="ex-name">25 cm²</div></div>
+              <div class="slide-example" style="min-width:100px"><svg viewBox="0 0 100 100"><rect x="5" y="25" width="90" height="50" fill="#8b5cf6" stroke="#5b21b6" stroke-width="2"/><text x="50" y="54" text-anchor="middle" fill="white" font-size="14" font-weight="bold">6×4</text></svg><div class="ex-name">24 cm²</div></div>
+            </div>`,
+            body:`Try this: A rectangle 8 cm long and 3 cm wide.<br>Area = 8 × 3 = <span class="highlight">24 cm²</span>`,
+            fact:`💡 Perimeter goes around the shape; Area is the space inside!`
+          },
+        ]
+      },
+      {
+        id:'l3_angles', icon:'📐', name:'Types of Angles', desc:'Acute, right, obtuse', badge:'Advanced',
+        gameLink:'g3_angles',
+        slides:[
+          {
+            title:'What is an Angle?',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <line x1="10" y1="80" x2="90" y2="80" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/>
+              <line x1="10" y1="80" x2="55" y2="15" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/>
+              <path d="M30,80 Q30,62 42,56" fill="none" stroke="#f97316" stroke-width="3"/>
+              <text x="38" y="76" fill="#f97316" font-size="9" font-weight="bold">angle</text>
+              <circle cx="10" cy="80" r="4" fill="#f97316"/>
+            </svg>`,
+            body:`An angle is the <strong>space between two lines</strong> that meet at a point.<br>The wider the opening, the <span class="highlight">bigger the angle!</span>`,
+            fact:`💡 We measure angles in degrees (°)`
+          },
+          {
+            title:'Acute & Right Angles',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><line x1="10" y1="85" x2="90" y2="85" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="85" x2="50" y2="20" stroke="#3a86ff" stroke-width="4" stroke-linecap="round"/><path d="M28,85 Q28,70 36,64" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="44" y="98" fill="#555" font-size="10">less than 90°</text></svg>
+                <div class="ex-name">Acute Angle</div><div class="ex-sub">الزاوية الحادة</div>
+              </div>
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><line x1="10" y1="85" x2="90" y2="85" stroke="#10b981" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="85" x2="10" y2="15" stroke="#10b981" stroke-width="4" stroke-linecap="round"/><rect x="10" y="70" width="16" height="16" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="44" y="98" fill="#555" font-size="10">= 90°</text></svg>
+                <div class="ex-name">Right Angle</div><div class="ex-sub">الزاوية القائمة</div>
+              </div>
+            </div>`,
+            body:`<strong>Acute angle</strong>: less than 90° — like a clock hand<br><strong>Right angle</strong>: exactly 90° — like the corner of a book 📚`,
+            fact:`💡 The right angle is marked with a small square ☐`
+          },
+          {
+            title:'Obtuse & Straight Angles',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><line x1="10" y1="70" x2="90" y2="70" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="70" x2="60" y2="10" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/><path d="M30,70 Q35,60 45,54" fill="none" stroke="#f97316" stroke-width="2.5"/><text x="40" y="90" fill="#555" font-size="10">90°–180°</text></svg>
+                <div class="ex-name">Obtuse Angle</div><div class="ex-sub">الزاوية المنفرجة</div>
+              </div>
+              <div class="slide-example">
+                <svg viewBox="0 0 100 100"><line x1="5" y1="55" x2="95" y2="55" stroke="#f97316" stroke-width="4" stroke-linecap="round"/><path d="M30,55 Q50,28 70,55" fill="none" stroke="#3a86ff" stroke-width="2.5"/><text x="44" y="90" fill="#555" font-size="10">= 180°</text></svg>
+                <div class="ex-name">Straight Angle</div><div class="ex-sub">الزاوية المستقيمة</div>
+              </div>
+            </div>`,
+            body:`<strong>Obtuse</strong>: greater than 90° and less than 180°<br><strong>Straight</strong>: equals 180° — a perfectly straight line!`,
+            fact:`💡 The angles in any triangle always add up to 180°!`
+          },
+        ]
+      },
+      {
+        id:'l3_symmetry', icon:'🪞', name:'Symmetry', desc:'Lines of symmetry', badge:'Advanced Concept',
+        gameLink:'g3_symmetry',
+        slides:[
+          {
+            title:'What is Symmetry?',
+            visual:`<svg viewBox="0 0 100 100" class="slide-anim">
+              <rect x="15" y="15" width="70" height="70" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2" opacity=".3"/>
+              <rect x="15" y="15" width="35" height="70" fill="#3a86ff" stroke="none"/>
+              <line x1="50" y1="10" x2="50" y2="90" stroke="#f97316" stroke-width="3" stroke-dasharray="5"/>
+              <text x="50" y="106" text-anchor="middle" fill="#f97316" font-size="9" font-weight="bold">Line of symmetry</text>
+            </svg>`,
+            body:`Symmetry means the <strong>two halves match perfectly</strong> when folded.<br>Imagine folding paper — if both sides match, the shape is <span class="highlight">symmetrical!</span>`,
+            fact:`💡 The human face is symmetrical — the right side mirrors the left!`
+          },
+          {
+            title:'Number of Lines of Symmetry',
+            visual:`<div class="slide-example-grid">
+              <div class="slide-example"><svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" fill="#10b981" stroke="#047857" stroke-width="2"/><line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="2" stroke-dasharray="4"/><line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="2" stroke-dasharray="4"/><line x1="15" y1="15" x2="85" y2="85" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-dasharray="4"/><line x1="85" y1="15" x2="15" y2="85" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-dasharray="4"/></svg><div class="ex-name">Square</div><div class="ex-sub">4 lines</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#3a86ff" stroke="#1d4ed8" stroke-width="2"/><line x1="50" y1="8" x2="50" y2="92" stroke="white" stroke-width="2" stroke-dasharray="4"/><line x1="8" y1="50" x2="92" y2="50" stroke="white" stroke-width="2" stroke-dasharray="4"/></svg><div class="ex-name">Circle</div><div class="ex-sub">Infinite lines!</div></div>
+              <div class="slide-example"><svg viewBox="0 0 100 100"><polygon points="50,5 93,90 7,90" fill="#f97316" stroke="#c2410c" stroke-width="2"/><line x1="50" y1="5" x2="50" y2="90" stroke="white" stroke-width="2" stroke-dasharray="4"/></svg><div class="ex-name">Equilateral △</div><div class="ex-sub">3 lines</div></div>
+            </div>`,
+            body:`Each shape has a different number of lines of symmetry!`,
+            fact:`💡 A rectangle only has 2 lines of symmetry — not diagonal ones!`
+          },
+        ]
+      },
+    ],
+  }
+};
+
+// ========== LESSON RENDERING ==========
+let lessonSlideIndex = 0;
+let currentLessonData = null;
+
+function buildLessonCards() {
+  const grades = [1,2,3];
+  const lessTitleIds = {1:'g1les_title', 2:'g2les_title', 3:'g3les_title'};
+  const gridIds = {1:'g1lessons', 2:'g2lessons', 3:'g3lessons'};
+  const lesTitles = {ar:{1:'دروس تعليمية — الصف الأول',2:'دروس تعليمية — الصف الثاني',3:'دروس تعليمية — الصف الثالث'},
+                     en:{1:'Learning Lessons — Grade 1',2:'Learning Lessons — Grade 2',3:'Learning Lessons — Grade 3'}};
+
+  grades.forEach(g => {
+    const titleEl = document.getElementById(lessTitleIds[g]);
+    if (titleEl) titleEl.textContent = lesTitles[lang][g];
+    const grid = document.getElementById(gridIds[g]);
+    if (!grid) return;
+    const lessons = LESSONS[lang]['grade'+g] || [];
+    grid.innerHTML = lessons.map(l => `
+      <div class="lesson-card" onclick="openLesson('grade${g}','${l.id}')">
+        <span class="l-icon">${l.icon}</span>
+        <div class="l-name">${l.name}</div>
+        <div class="l-desc">${l.desc}</div>
+        <div class="l-badge">${l.badge}</div>
+      </div>`).join('');
+  });
+}
+
+function openLesson(grade, lessonId) {
+  soundClick();
+  const lessons = LESSONS[lang][grade] || [];
+  const lesson = lessons.find(l => l.id === lessonId);
+  if (!lesson) return;
+  currentLessonData = lesson;
+  lessonSlideIndex = 0;
+  document.getElementById('modalTitle').textContent = lesson.icon + ' ' + lesson.name;
+  document.getElementById('modalOverlay').classList.add('open');
+  renderLessonSlide();
+}
+
+function renderLessonSlide() {
+  const body = document.getElementById('modalBody');
+  const lesson = currentLessonData;
+  const slides = lesson.slides;
+  const slide = slides[lessonSlideIndex];
+  const total = slides.length;
+  const isLast = lessonSlideIndex === total - 1;
+  const isAr = lang === 'ar';
+
+  const dotsHTML = slides.map((_,i) =>
+    `<div class="lesson-dot ${i===lessonSlideIndex?'active':''}" onclick="goLessonSlide(${i})"></div>`
+  ).join('');
+
+  const prevLabel = isAr ? '◀ السابق' : '◀ Prev';
+  const nextLabel = isAr ? 'التالي ▶' : 'Next ▶';
+  const doneLabel = isAr ? '🎉 اكتمل الدرس!' : '🎉 Lesson Complete!';
+
+  body.innerHTML = `
+    <div class="progress-wrap" style="margin-bottom:16px">
+      <div class="progress-fill" style="width:${Math.round(((lessonSlideIndex+1)/total)*100)}%"></div>
+    </div>
+    <div class="lesson-slides">
+      <div class="lesson-slide active">
+        <div class="slide-visual">${slide.visual}</div>
+        <div class="slide-title">${slide.title}</div>
+        <div class="slide-body">${slide.body}</div>
+        ${slide.fact ? `<div class="slide-fact">${slide.fact}</div>` : ''}
+      </div>
+    </div>
+    <div class="lesson-nav">
+      <button class="lesson-nav-btn" onclick="prevSlide()" ${lessonSlideIndex===0?'disabled':''}>${prevLabel}</button>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <div class="lesson-dots">${dotsHTML}</div>
+        <span class="lesson-progress-label">${lessonSlideIndex+1} / ${total}</span>
+      </div>
+      <button class="lesson-nav-btn" onclick="${isLast?'showLessonComplete()':'nextSlide()'}">${isLast?doneLabel:nextLabel}</button>
+    </div>`;
+  soundNext();
+}
+
+function nextSlide() {
+  if (!currentLessonData) return;
+  if (lessonSlideIndex < currentLessonData.slides.length - 1) {
+    lessonSlideIndex++;
+    renderLessonSlide();
+  }
+}
+function prevSlide() {
+  if (lessonSlideIndex > 0) { lessonSlideIndex--; renderLessonSlide(); }
+}
+function goLessonSlide(i) { lessonSlideIndex = i; renderLessonSlide(); }
+
+function showLessonComplete() {
+  soundWin();
+  confetti();
+  const body = document.getElementById('modalBody');
+  const lesson = currentLessonData;
+  const isAr = lang === 'ar';
+  body.innerHTML = `
+    <div class="lesson-complete">
+      <div class="lc-emoji">🏆</div>
+      <div class="lc-title">${isAr?'أحسنت! أكملت الدرس!':'Great job! Lesson Complete!'}</div>
+      <div class="lc-msg">
+        ${isAr?`لقد تعلمت: <strong>${lesson.name}</strong><br>هل أنت مستعد للعب وتطبيق ما تعلمته؟`
+               :`You learned: <strong>${lesson.name}</strong><br>Ready to play and practice what you learned?`}
+      </div>
+      <div class="lc-btns">
+        <button class="lc-btn-again" onclick="lessonSlideIndex=0;renderLessonSlide()">${isAr?'🔄 راجع الدرس':'🔄 Review Lesson'}</button>
+        <button class="lc-btn-play" onclick="closeModal();openGame('${lesson.gameLink}')">${isAr?'🎮 العب الآن!':'🎮 Play Now!'}</button>
+      </div>
+    </div>`;
+}
+
+// Rebuild lesson cards when language changes
+const _origToggleLang = toggleLang;
+toggleLang = function() {
+  _origToggleLang();
+  buildLessonCards();
+};
+
+// Inject sound toggle button into header
+document.querySelector('header').insertAdjacentHTML('beforeend',
+  `<button id="soundToggle" onclick="toggleSound()" title="Mute/Unmute sounds"
+    style="position:absolute;top:14px;${lang==='ar'?'left':'right'}:14px;
+    background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.45);
+    color:white;border-radius:12px;padding:6px 12px;font-size:1.1rem;
+    cursor:pointer;transition:all .2s;z-index:20;">🔊</button>`
+);
+
+// Hook sounds into existing functions by patching key interactions
+document.addEventListener('click', function(e) {
+  // Game cards
+  if (e.target.closest('.game-card')) { soundClick(); return; }
+  // Grade tabs
+  if (e.target.closest('.grade-tab')) { soundTab(); return; }
+  // Start button
+  if (e.target.id === 'btnStart') { soundStart(); return; }
+  // Next question buttons
+  if (e.target.classList.contains('next-btn') && e.target.classList.contains('show')) { soundNext(); return; }
+  // Restart
+  if (e.target.classList.contains('restart-btn')) { soundStart(); return; }
+  // Check match button
+  if (e.target.textContent.includes('✓') || e.target.textContent.includes('Check')) { soundClick(); return; }
+});
+
+// Patch checkOpt & checkNum to play sounds
+const _origCheckOpt = checkOpt;
+checkOpt = function(btn, chosen, correct, type) {
+  const isCorrect = chosen === correct;
+  _origCheckOpt(btn, chosen, correct, type);
+  if (isCorrect) soundCorrect(); else soundWrong();
+};
+const _origCheckNum = checkNum;
+checkNum = function(btn, chosen, correct, type) {
+  const isCorrect = chosen === correct;
+  _origCheckNum(btn, chosen, correct, type);
+  if (isCorrect) soundCorrect(); else soundWrong();
+};
+const _origCheckSym = checkSym;
+checkSym = function(btn, chosen, correct) {
+  const isCorrect = chosen === correct;
+  _origCheckSym(btn, chosen, correct);
+  if (isCorrect) soundCorrect(); else soundWrong();
+};
+
+// Win sound on results
+const _origShowResults = showResults;
+showResults = function(body) {
+  _origShowResults(body);
+  const pct = total ? Math.round((score/total)*100) : 0;
+  if (pct >= 60) setTimeout(soundWin, 300); else soundWrong();
+};
+
+// Draw sound on canvas
+document.addEventListener('mousedown', e => { if(e.target.id==='shapeCanvas') soundDraw(); });
+document.addEventListener('touchstart', e => { if(e.target.id==='shapeCanvas') soundDraw(); }, {passive:true});
+
+// Match/connect sound
+const _origCheckAllMatch = checkAllMatch;
+checkAllMatch = function() {
+  _origCheckAllMatch();
+  soundMatch();
+};
+
+// ========== PAGE INIT ==========
+applyLang();
+buildLessonCards();
+</script>
+</body>
+</html>
