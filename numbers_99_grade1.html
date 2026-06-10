@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Numbers to 99 – Grade 1 | Teacher Manal Bazzi</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&family=Cairo:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF7ED; --card:#FFFFFF;
+  --orange:#EA580C; --amber:#D97706; --yellow:#EAB308;
+  --green:#059669; --blue:#0284C7; --purple:#7C3AED;
+  --pink:#DB2777; --red:#DC2626; --teal:#0891B2;
+  --text:#1C1917; --muted:#78716C;
+  --shadow:0 8px 32px rgba(234,88,12,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* BG */
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.13;animation:blobF ease-in-out infinite;}
+@keyframes blobF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-28px) scale(1.07)}}
+
+/* LANG */
+.lang-toggle{position:fixed;top:14px;left:14px;z-index:200;display:flex;border-radius:100px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.15);background:rgba(255,255,255,.9);}
+.lang-btn{padding:7px 14px;border:none;background:transparent;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .2s;}
+.lang-btn.active{background:var(--orange);color:#fff;}
+
+/* HEADER */
+header{position:relative;z-index:10;text-align:center;padding:26px 1rem 18px;
+  background:linear-gradient(135deg,#FEF3C7,#FFF7ED,#DCFCE7);
+  border-bottom:2px solid rgba(234,88,12,.1);}
+.teacher-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(234,88,12,.1);border:1.5px solid rgba(234,88,12,.25);border-radius:30px;padding:5px 16px;font-size:.78rem;color:#7C2D12;margin-bottom:12px;font-family:'Cairo',sans-serif;font-weight:700;}
+.main-title{font-family:'Fredoka One',cursive;font-size:clamp(1.6rem,5vw,2.6rem);background:linear-gradient(135deg,#EA580C,#D97706,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:3px;}
+.main-title .ar{font-family:'Cairo',sans-serif;font-size:.58em;-webkit-text-fill-color:var(--muted);display:block;}
+.main-sub{font-size:.85rem;color:var(--muted);margin-bottom:16px;}
+.name-row{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;}
+.name-input{background:#fff;border:1.5px solid #FED7AA;border-radius:12px;padding:8px 16px;font-family:'Nunito',sans-serif;font-size:.95rem;color:var(--text);outline:none;width:200px;transition:border-color .2s;}
+.name-input:focus{border-color:var(--orange);}
+.name-input::placeholder{color:#A8A29E;}
+
+/* NAV TABS */
+.nav-tabs{display:flex;gap:8px;max-width:760px;margin:.8rem auto;padding:0 1rem;flex-wrap:wrap;}
+.nav-tab{flex:1;min-width:110px;padding:10px 8px;border-radius:14px;border:1.5px solid #FED7AA;background:#fff;font-family:'Fredoka One',cursive;font-size:.88rem;color:var(--muted);cursor:pointer;transition:all .22s;text-align:center;line-height:1.3;}
+.nav-tab .ar{font-family:'Cairo',sans-serif;font-size:.72em;display:block;margin-top:1px;}
+.nav-tab.active{border-color:var(--orange);background:rgba(234,88,12,.07);color:var(--orange);}
+.nav-tab:hover:not(.active){border-color:#FDBA74;color:var(--text);}
+
+/* MAIN */
+main{position:relative;z-index:5;max-width:760px;margin:0 auto;padding:.5rem 1rem 5rem;}
+.screen{display:none;}
+.screen.active{display:block;}
+.gc{background:#fff;border:1.5px solid #FED7AA;border-radius:22px;padding:1.6rem;box-shadow:var(--shadow);margin-bottom:1rem;}
+
+/* ══ LESSON ══ */
+.ls-title{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--orange);margin-bottom:.5rem;display:flex;align-items:center;gap:8px;}
+.ls-title .ar{font-family:'Cairo',sans-serif;font-size:.72em;color:var(--muted);}
+.ls-desc{font-size:.88rem;color:var(--muted);margin-bottom:.8rem;line-height:1.7;}
+.ls-desc .ar{font-family:'Cairo',sans-serif;display:block;font-size:.9em;margin-top:3px;}
+
+/* Tens & Ones table */
+.tu-table{width:100%;border-collapse:collapse;margin:.6rem 0;}
+.tu-table th{padding:9px;font-family:'Fredoka One',cursive;font-size:.95rem;color:#fff;}
+.tu-table th.tens-h{background:linear-gradient(135deg,#0284C7,#38BDF8);}
+.tu-table th.ones-h{background:linear-gradient(135deg,#059669,#34D399);}
+.tu-table th.num-h{background:linear-gradient(135deg,#EA580C,#FB923C);}
+.tu-table th.word-h{background:linear-gradient(135deg,#7C3AED,#A78BFA);}
+.tu-table th:first-child{border-radius:12px 0 0 0;}
+.tu-table th:last-child{border-radius:0 12px 0 0;}
+.tu-table td{padding:9px;text-align:center;border:1px solid #FEF3C7;font-weight:700;}
+.tu-table tr:nth-child(even) td{background:#FFFBEB;}
+.t-dig{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--blue);}
+.u-dig{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--green);}
+.n-dig{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--orange);}
+.w-word{font-size:.8rem;font-weight:700;color:var(--purple);}
+
+/* EXPLORER */
+.explorer-wrap{background:linear-gradient(135deg,#FEF3C7,#FFF7ED);border:1.5px solid #FCD34D;border-radius:18px;padding:1.2rem;margin:.7rem 0;}
+.exp-title{font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--amber);text-align:center;margin-bottom:.8rem;}
+.exp-title .ar{font-family:'Cairo',sans-serif;font-size:.75em;color:rgba(217,119,6,.6);}
+.exp-dials{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:.7rem;}
+.exp-dial{text-align:center;background:#fff;border-radius:14px;padding:.7rem 1.1rem;box-shadow:0 2px 10px rgba(0,0,0,.07);min-width:100px;}
+.exp-dial label{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:3px;}
+.exp-dial.tens-d label{color:var(--blue);}
+.exp-dial.tens-d .dv{color:var(--blue);}
+.exp-dial.tens-d input{accent-color:var(--blue);}
+.exp-dial.ones-d label{color:var(--green);}
+.exp-dial.ones-d .dv{color:var(--green);}
+.exp-dial.ones-d input{accent-color:var(--green);}
+.exp-dial .dv{font-family:'Fredoka One',cursive;font-size:2.2rem;display:block;margin-top:2px;}
+.exp-dial input[type=range]{width:80px;display:block;margin:.3rem auto;}
+.exp-result{text-align:center;}
+.exp-number{font-family:'Fredoka One',cursive;font-size:4rem;color:var(--orange);line-height:1;}
+.exp-word{font-family:'Nunito',sans-serif;font-size:1.15rem;font-weight:800;color:var(--purple);margin-top:3px;}
+.exp-expanded{font-size:.82rem;color:var(--muted);margin-top:4px;}
+.exp-dots{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:.6rem 0;max-height:90px;overflow:hidden;}
+.dot-tens{width:18px;height:18px;background:var(--blue);border-radius:4px;opacity:.8;}
+.dot-ones{width:18px;height:18px;background:var(--green);border-radius:50%;opacity:.8;}
+.speak-btn{display:inline-flex;align-items:center;gap:6px;margin-top:9px;background:linear-gradient(135deg,var(--orange),var(--amber));color:#fff;border:none;border-radius:100px;padding:9px 22px;font-family:'Fredoka One',cursive;font-size:.95rem;cursor:pointer;transition:transform .2s;box-shadow:0 4px 14px rgba(234,88,12,.3);}
+.speak-btn:hover{transform:scale(1.05);}
+
+/* EXAMPLES */
+.examples-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;margin:.7rem 0;}
+.ex-card{background:#fff;border:1.5px solid #FED7AA;border-radius:13px;padding:.8rem;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.ex-card:hover{border-color:var(--orange);transform:translateY(-3px);box-shadow:0 6px 18px rgba(234,88,12,.15);}
+.ex-num{font-family:'Fredoka One',cursive;font-size:1.9rem;color:var(--orange);display:block;}
+.ex-word{font-size:.74rem;font-weight:700;color:var(--purple);margin-top:1px;}
+.ex-spk{font-size:1rem;margin-top:3px;}
+
+/* Lesson nav */
+.lesson-nav{display:flex;gap:10px;justify-content:center;margin-top:1.1rem;flex-wrap:wrap;}
+.ln-btn{padding:11px 28px;border-radius:100px;border:none;font-family:'Fredoka One',cursive;font-size:1rem;cursor:pointer;transition:all .2s;}
+.ln-btn.primary{background:linear-gradient(135deg,var(--orange),var(--amber));color:#fff;box-shadow:0 5px 18px rgba(234,88,12,.3);}
+.ln-btn:hover{transform:translateY(-2px);}
+.ln-btn .ar{font-family:'Cairo',sans-serif;font-size:.7em;display:block;opacity:.85;}
+
+/* ══ GAME SELECT ══ */
+.game-modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;}
+.gm-card{background:#fff;border:1.5px solid #FED7AA;border-radius:18px;padding:1.2rem 1rem;text-align:center;cursor:pointer;transition:all .25s;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.gm-card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(234,88,12,.15);}
+.gm-emoji{font-size:2.8rem;display:block;margin-bottom:.5rem;}
+.gm-name{font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--text);}
+.gm-name .ar{font-family:'Cairo',sans-serif;font-size:.75em;color:var(--muted);display:block;}
+.gm-desc{font-size:.74rem;color:var(--muted);margin-top:4px;line-height:1.4;}
+.gm-card.m-listen{border-color:rgba(124,58,237,.3);}
+.gm-card.m-listen:hover{border-color:var(--purple);box-shadow:0 10px 24px rgba(124,58,237,.18);}
+.gm-card.m-read{border-color:rgba(2,132,199,.3);}
+.gm-card.m-read:hover{border-color:var(--blue);}
+.gm-card.m-write{border-color:rgba(5,150,105,.3);}
+.gm-card.m-write:hover{border-color:var(--green);}
+.gm-card.m-expand{border-color:rgba(217,119,6,.3);}
+.gm-card.m-expand:hover{border-color:var(--amber);}
+
+/* ══ GAME HUD ══ */
+.hud-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;flex-wrap:wrap;gap:8px;}
+.hud-pill{display:flex;align-items:center;gap:5px;background:#fff;border:1.5px solid #FED7AA;border-radius:100px;padding:6px 13px;font-weight:800;font-size:.85rem;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.hud-pill.coins{color:var(--amber);}
+.hud-pill.streak{color:var(--orange);}
+.mode-tag{background:rgba(234,88,12,.1);border:1px solid rgba(234,88,12,.2);border-radius:100px;padding:5px 14px;font-size:.78rem;font-weight:800;color:var(--orange);}
+
+/* TIMER */
+.timer-wrap{margin-bottom:.7rem;}
+.timer-track{height:10px;background:#FEF3C7;border-radius:10px;overflow:hidden;}
+.timer-fill{height:100%;border-radius:10px;transition:width .15s linear,background .4s;background:linear-gradient(90deg,var(--orange),var(--yellow));}
+.timer-label{font-size:.72rem;color:var(--muted);font-weight:700;margin-top:3px;display:flex;justify-content:space-between;}
+
+/* QUESTION CARD */
+.q-card{background:#fff;border:1.5px solid #FED7AA;border-radius:20px;padding:1.4rem;box-shadow:var(--shadow);margin-bottom:.8rem;text-align:center;}
+.q-badge{display:inline-block;background:linear-gradient(135deg,var(--orange),var(--amber));color:#fff;border-radius:100px;padding:3px 14px;font-size:.72rem;font-weight:800;margin-bottom:.7rem;}
+
+/* LISTEN ZONE */
+.listen-zone{display:flex;flex-direction:column;align-items:center;gap:.6rem;margin:.8rem 0;}
+.listen-btn{width:100px;height:100px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;font-size:2.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(124,58,237,.4);transition:all .2s;}
+.listen-btn:hover{transform:scale(1.08);}
+.listen-btn.speaking{animation:spkPulse .6s ease-in-out infinite alternate;}
+@keyframes spkPulse{from{box-shadow:0 8px 28px rgba(124,58,237,.35),0 0 0 0 rgba(124,58,237,.25)}to{box-shadow:0 8px 28px rgba(124,58,237,.35),0 0 0 18px rgba(124,58,237,0)}}
+.listen-hint{font-size:.82rem;color:var(--muted);font-weight:700;}
+.listen-hint .ar{font-family:'Cairo',sans-serif;display:block;font-size:.9em;margin-top:2px;}
+
+/* DISPLAY ZONES */
+.disp-num{font-family:'Fredoka One',cursive;font-size:5.5rem;color:var(--orange);line-height:1;margin:.8rem 0;}
+.disp-word{font-family:'Nunito',sans-serif;font-size:1.4rem;font-weight:900;color:var(--purple);margin:.5rem 0;}
+.disp-sub-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--orange),var(--amber));color:#fff;border:none;border-radius:100px;padding:8px 20px;font-family:'Fredoka One',cursive;font-size:.88rem;cursor:pointer;transition:transform .2s;box-shadow:0 3px 12px rgba(234,88,12,.3);margin-top:.3rem;}
+.disp-sub-btn:hover{transform:scale(1.04);}
+
+/* CHOICES */
+.choices-label{font-size:.78rem;color:var(--muted);font-weight:700;margin-bottom:.5rem;}
+.choices-label .ar{font-family:'Cairo',sans-serif;}
+.choices-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
+.ch-btn{background:#FFFBEB;border:2px solid #FED7AA;border-radius:14px;padding:13px 8px;font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--text);cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.ch-btn .ch-sub{font-family:'Nunito',sans-serif;font-size:.68rem;font-weight:700;color:var(--muted);}
+.ch-btn:hover{border-color:var(--orange);background:#FEF3C7;transform:translateY(-3px);}
+.ch-btn.correct{background:#DCFCE7;border-color:var(--green);color:var(--green);animation:popUp .35s ease;}
+.ch-btn.wrong{background:#FEE2E2;border-color:var(--red);color:var(--red);animation:shakeX .35s ease;}
+@keyframes popUp{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
+@keyframes shakeX{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+/* FEEDBACK */
+.fb-bar{border-radius:13px;padding:10px 14px;min-height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .3s;margin-top:.6rem;}
+.fb-en{font-size:.88rem;font-weight:800;}
+.fb-ar{font-family:'Cairo',sans-serif;font-size:.8rem;opacity:.75;}
+.fb-bar.neutral{background:#FFFBEB;border:1px solid #FED7AA;color:var(--muted);}
+.fb-bar.ok{background:#DCFCE7;border:1.5px solid #86EFAC;color:#15803D;}
+.fb-bar.bad{background:#FEE2E2;border:1.5px solid #FCA5A5;color:#B91C1C;}
+
+/* PROGRESS */
+.prog-wrap{margin-top:.7rem;}
+.prog-track{background:#FEF3C7;border-radius:10px;height:8px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--purple));border-radius:10px;transition:width .5s ease;}
+.prog-label{display:flex;justify-content:space-between;margin-top:3px;font-size:.7rem;color:var(--muted);font-weight:700;}
+.prog-label .ar{font-family:'Cairo',sans-serif;}
+
+/* RESULT */
+.res-trophy{font-size:5rem;display:block;text-align:center;margin-bottom:.3rem;animation:bounce 1.8s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.res-title{font-family:'Fredoka One',cursive;font-size:1.65rem;text-align:center;color:var(--orange);margin-bottom:2px;}
+.res-title .ar{font-family:'Cairo',sans-serif;font-size:.62em;color:var(--muted);display:block;}
+.res-msg{font-size:.88rem;color:var(--muted);text-align:center;margin-bottom:3px;}
+.res-msg .ar{font-family:'Cairo',sans-serif;display:block;font-size:.9em;margin-top:2px;}
+.star-row{display:flex;justify-content:center;gap:5px;font-size:2.3rem;margin:.7rem 0;}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.2rem;}
+.rs-box{background:#FFFBEB;border:1px solid #FED7AA;border-radius:13px;padding:.8rem .4rem;text-align:center;}
+.rs-val{font-family:'Fredoka One',cursive;font-size:1.6rem;color:var(--orange);display:block;}
+.rs-lbl{font-size:.68rem;color:var(--muted);font-weight:700;}
+.rs-lbl .ar{font-family:'Cairo',sans-serif;display:block;}
+.res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.ra-btn{padding:10px 22px;border-radius:100px;border:none;font-family:'Fredoka One',cursive;font-size:.92rem;cursor:pointer;transition:all .2s;}
+.ra-btn.primary{background:linear-gradient(135deg,var(--orange),var(--amber));color:#fff;box-shadow:0 5px 16px rgba(234,88,12,.3);}
+.ra-btn.secondary{background:#fff;border:1.5px solid #FED7AA;color:var(--muted);}
+.ra-btn:hover{transform:translateY(-2px);}
+.ra-btn .ar{font-family:'Cairo',sans-serif;font-size:.7em;display:block;opacity:.85;}
+
+/* VFX */
+.cp{position:fixed;border-radius:2px;pointer-events:none;z-index:9999;animation:cFall linear forwards;}
+@keyframes cFall{0%{opacity:1;transform:translateY(-10px) rotate(0)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+.sp{position:fixed;pointer-events:none;z-index:9998;font-family:'Fredoka One',cursive;font-size:1.5rem;animation:sPop 1s ease forwards;}
+@keyframes sPop{0%{opacity:1;transform:translateY(0) scale(1)}80%{opacity:1;transform:translateY(-55px) scale(1.2)}100%{opacity:0;transform:translateY(-70px) scale(.8)}}
+
+.teacher-badge{position:fixed;bottom:14px;right:14px;z-index:20;background:rgba(255,255,255,.92);border:1.5px solid #FED7AA;border-radius:100px;padding:6px 14px;font-size:.73rem;font-weight:700;color:var(--orange);line-height:1.5;text-align:center;box-shadow:0 2px 10px rgba(234,88,12,.1);}
+.teacher-badge .ar{font-family:'Cairo',sans-serif;display:block;font-size:.9em;color:var(--muted);}
+
+@media(max-width:480px){
+  .choices-grid{grid-template-columns:repeat(2,1fr);}
+  .examples-grid{grid-template-columns:repeat(3,1fr);}
+  .game-modes{grid-template-columns:repeat(2,1fr);}
+  .exp-dials{gap:8px;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob" style="width:450px;height:450px;background:#FB923C;top:-80px;right:-80px;animation-duration:9s;"></div>
+  <div class="blob" style="width:380px;height:380px;background:#A78BFA;bottom:60px;left:-70px;animation-duration:12s;animation-delay:3s;"></div>
+  <div class="blob" style="width:280px;height:280px;background:#34D399;top:45%;right:8%;animation-duration:10s;animation-delay:1.5s;"></div>
+</div>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+  <button class="lang-btn" id="btnAR" onclick="setLang('ar')">عر</button>
+</div>
+
+<header>
+  <div class="teacher-tag">👩‍🏫 Teacher Manal Bazzi &nbsp;|&nbsp; Grade 1 — المعلمة منال بزي</div>
+  <div class="main-title">
+    Numbers to 99 🔢
+    <span class="ar">الأعداد حتى ٩٩</span>
+  </div>
+  <p class="main-sub">Listen · Read · Play | اسمع · اقرأ · العب</p>
+  <div class="name-row">
+    <span style="font-size:.85rem;color:var(--muted);font-weight:700;">👤 Name / الاسم:</span>
+    <input class="name-input" id="studentName" type="text" placeholder="Your name / اسمك" maxlength="20">
+  </div>
+</header>
+
+<div class="nav-tabs" id="navTabs">
+  <div class="nav-tab active" id="tabLesson" onclick="switchTab('lesson')">
+    📖 Lesson
+    <span class="ar">الدرس</span>
+  </div>
+  <div class="nav-tab" id="tabGame" onclick="switchTab('game')">
+    🎮 Games
+    <span class="ar">الألعاب</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- ══ LESSON ══ -->
+  <div class="screen active" id="lessonScreen">
+
+    <!-- Tens & Ones concept -->
+    <div class="gc">
+      <div class="ls-title">🏛️ Tens & Ones <span class="ar">/ العشرات والآحاد</span></div>
+      <div class="ls-desc">
+        Every number up to 99 has two places: <strong style="color:var(--blue)">Tens</strong> and <strong style="color:var(--green)">Ones</strong>!
+        <span class="ar">كل عدد حتى ٩٩ له خانتان: <strong style="color:var(--blue)">العشرات</strong> و<strong style="color:var(--green)">الآحاد</strong>!</span>
+      </div>
+      <table class="tu-table">
+        <tr>
+          <th class="tens-h">Tens / العشرات</th>
+          <th class="ones-h">Ones / الآحاد</th>
+          <th class="num-h">Number</th>
+          <th class="word-h">In Words</th>
+        </tr>
+        <tr>
+          <td><span class="t-dig">2</span></td>
+          <td><span class="u-dig">5</span></td>
+          <td><span class="n-dig">25</span></td>
+          <td><span class="w-word">twenty five</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-dig">4</span></td>
+          <td><span class="u-dig">0</span></td>
+          <td><span class="n-dig">40</span></td>
+          <td><span class="w-word">forty</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-dig">7</span></td>
+          <td><span class="u-dig">8</span></td>
+          <td><span class="n-dig">78</span></td>
+          <td><span class="w-word">seventy eight</span></td>
+        </tr>
+        <tr>
+          <td><span class="t-dig">9</span></td>
+          <td><span class="u-dig">9</span></td>
+          <td><span class="n-dig">99</span></td>
+          <td><span class="w-word">ninety nine</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Interactive Explorer -->
+    <div class="gc">
+      <div class="ls-title">🎛️ Number Explorer <span class="ar">/ مستكشف الأعداد</span></div>
+      <div class="ls-desc">
+        Move the sliders to build any number — tap 🔊 to hear it!
+        <span class="ar">حرّك المزلقات لتبني أي عدد — اضغط 🔊 لتسمعه!</span>
+      </div>
+      <div class="explorer-wrap">
+        <div class="exp-title">Build Your Number 🔨 <span class="ar">/ ابنِ عددك</span></div>
+        <div class="exp-dials">
+          <div class="exp-dial tens-d">
+            <label>Tens / عشرات</label>
+            <span class="dv" id="dTens">2</span>
+            <input type="range" min="0" max="9" value="2" id="slTens" oninput="updateExplorer()">
+          </div>
+          <div class="exp-dial ones-d">
+            <label>Ones / آحاد</label>
+            <span class="dv" id="dOnes">5</span>
+            <input type="range" min="0" max="9" value="5" id="slOnes" oninput="updateExplorer()">
+          </div>
+        </div>
+        <div class="exp-result">
+          <div class="exp-number" id="expNum">25</div>
+          <div class="exp-word" id="expWord">twenty five</div>
+          <div class="exp-expanded" id="expExpanded">20 + 5</div>
+          <div class="exp-dots" id="expDots"></div>
+          <button class="speak-btn" onclick="speakExplorer()">🔊 Listen / اسمع</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tap & Hear -->
+    <div class="gc">
+      <div class="ls-title">🔊 Tap & Hear <span class="ar">/ انقر واسمع</span></div>
+      <div class="ls-desc">
+        Tap any number to hear how it sounds!
+        <span class="ar">انقر على أي عدد لتسمع كيف يُنطق!</span>
+      </div>
+      <div class="examples-grid" id="examplesGrid"></div>
+    </div>
+
+    <div class="lesson-nav">
+      <button class="ln-btn primary" onclick="switchTab('game')">
+        🎮 Play Games!
+        <span class="ar">العب الألعاب!</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ GAME SELECT ══ -->
+  <div class="screen" id="gameSelectScreen">
+    <div class="gc">
+      <div style="font-family:'Fredoka One',cursive;font-size:1.15rem;color:var(--orange);text-align:center;margin-bottom:3px;">
+        Choose a Game 🎮
+        <div style="font-family:'Cairo',sans-serif;font-size:.65em;color:var(--muted);margin-top:2px;">اختر لعبتك</div>
+      </div>
+      <p style="font-size:.78rem;color:var(--muted);text-align:center;margin-bottom:1.1rem;">4 fun games · Each trains a skill | ٤ ألعاب ممتعة</p>
+      <div class="game-modes">
+        <div class="gm-card m-listen" onclick="startGame('listen')">
+          <span class="gm-emoji">🎙️</span>
+          <div class="gm-name">Listen & Pick <span class="ar">اسمع واختر</span></div>
+          <div class="gm-desc">Hear the number → pick it<br>اسمع الرقم ← اختره</div>
+        </div>
+        <div class="gm-card m-read" onclick="startGame('read')">
+          <span class="gm-emoji">👀</span>
+          <div class="gm-name">Read & Pick <span class="ar">اقرأ واختر</span></div>
+          <div class="gm-desc">See the word → pick the number<br>اقرأ الكلمة ← اختر العدد</div>
+        </div>
+        <div class="gm-card m-write" onclick="startGame('write')">
+          <span class="gm-emoji">🔢</span>
+          <div class="gm-name">See & Spell <span class="ar">شاهد وتهجّأ</span></div>
+          <div class="gm-desc">See the number → pick the word<br>شاهد العدد ← اختر الكلمة</div>
+        </div>
+        <div class="gm-card m-expand" onclick="startGame('expand')">
+          <span class="gm-emoji">📐</span>
+          <div class="gm-name">Expanded Form <span class="ar">الصورة التمدّدية</span></div>
+          <div class="gm-desc">Pick the expanded form<br>اختر الصورة التمدّدية</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GAME ══ -->
+  <div class="screen" id="gameScreen">
+    <div class="hud-row">
+      <div class="hud-pill coins">🪙 <span id="coinsVal">0</span></div>
+      <div class="mode-tag" id="modeTag">🎙️ Listen & Pick</div>
+      <div class="hud-pill streak">🔥 <span id="streakVal">0</span></div>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-track"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
+      <div class="timer-label">
+        <span id="timerLeft">15s</span>
+        <span>⏱️ Time / الوقت</span>
+      </div>
+    </div>
+    <div class="q-card">
+      <div class="q-badge" id="qBadge">Question 1 of 10</div>
+      <!-- Listen -->
+      <div id="listenZone" class="listen-zone" style="display:none;">
+        <button class="listen-btn" id="listenBtn" onclick="speakQuestion()">🔊</button>
+        <div class="listen-hint">Tap 🔊 to hear the number! <span class="ar">انقر 🔊 لتسمع العدد!</span></div>
+      </div>
+      <!-- Read (word → number) -->
+      <div id="readZone" style="display:none;">
+        <div class="disp-word" id="dispWord">twenty five</div>
+        <button class="disp-sub-btn" onclick="speakQuestion()">🔊 Hear it / اسمعه</button>
+      </div>
+      <!-- Write (number → word) -->
+      <div id="writeZone" style="display:none;">
+        <div class="disp-num" id="dispNum">25</div>
+        <button class="disp-sub-btn" onclick="speakQuestion()">🔊 Hear it / اسمعه</button>
+      </div>
+      <!-- Expand -->
+      <div id="expandZone" style="display:none;">
+        <div class="disp-num" id="dispExpNum" style="font-size:4rem;">25</div>
+        <div style="font-size:.82rem;color:var(--muted);margin-bottom:.4rem;font-weight:700;">
+          What is the expanded form? / ما هي الصورة التمدّدية؟
+        </div>
+      </div>
+      <div class="choices-label">Choose the correct answer: <span class="ar">/ اختر الجواب الصحيح</span></div>
+      <div class="choices-grid" id="choicesGrid"></div>
+      <div class="fb-bar neutral" id="fbBar">
+        <span class="fb-en" id="fbEN">Tap 🔊 first, then choose!</span>
+        <span class="fb-ar" id="fbAR">انقر 🔊 أولاً ثم اختر!</span>
+      </div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <div class="prog-label">
+        <span id="progEN">0 / 10</span>
+        <span class="ar" id="progAR">٠ / ١٠</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RESULT ══ -->
+  <div class="screen" id="resultScreen">
+    <div class="gc" style="text-align:center;">
+      <span class="res-trophy" id="resTrophy">🏆</span>
+      <div class="res-title"><span id="resTitleEN"></span><span class="ar" id="resTitleAR"></span></div>
+      <p class="res-msg"><span id="resMsgEN"></span><span class="ar" id="resMsgAR"></span></p>
+      <div class="star-row" id="starRow"></div>
+      <div class="res-stats">
+        <div class="rs-box"><span class="rs-val" id="rsScore">0</span><span class="rs-lbl">Points<span class="ar">نقطة</span></span></div>
+        <div class="rs-box"><span class="rs-val" id="rsCorrect">0</span><span class="rs-lbl">Correct<span class="ar">صحيح</span></span></div>
+        <div class="rs-box"><span class="rs-val" id="rsCoins">0</span><span class="rs-lbl">Coins<span class="ar">عملة</span></span></div>
+      </div>
+      <div class="res-actions">
+        <button class="ra-btn primary" onclick="retryGame()">🔄 Play Again <span class="ar">العب مجدداً</span></button>
+        <button class="ra-btn secondary" onclick="switchTab('game')">🎮 Modes <span class="ar">الأوضاع</span></button>
+        <button class="ra-btn secondary" onclick="switchTab('lesson')">📖 Lesson <span class="ar">الدرس</span></button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="teacher-badge">
+  👩‍🏫 Teacher Manal Bazzi
+  <span class="ar">المعلمة منال بزي</span>
+</div>
+
+<script>
+// ── NUMBER → WORDS (no 'and') ──
+var ones=['','one','two','three','four','five','six','seven','eight','nine',
+  'ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+var tens_w=['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+
+function numToWords(n){
+  if(n===0) return 'zero';
+  if(n<20) return ones[n];
+  var t=Math.floor(n/10), u=n%10;
+  return tens_w[t]+(u?' '+ones[u]:'');
+}
+
+function expandedForm(n){
+  var t=Math.floor(n/10)*10, u=n%10;
+  if(t===0) return String(u);
+  if(u===0) return String(t);
+  return t+' + '+u;
+}
+
+// ── SPEECH ──
+var speechAvailable='speechSynthesis' in window;
+var voices=[];
+function loadVoices(){
+  if(!speechAvailable) return;
+  voices=window.speechSynthesis.getVoices();
+  if(!voices.length) setTimeout(loadVoices,300);
+}
+if(speechAvailable){
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged=loadVoices;
+}
+function speak(text,onEnd){
+  if(!speechAvailable){ if(onEnd) onEnd(); return; }
+  window.speechSynthesis.cancel();
+  var utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-US'; utt.rate=0.78; utt.pitch=1.1;
+  var en=voices.find(function(v){return v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1;})
+    ||voices.find(function(v){return v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0;})
+    ||voices.find(function(v){return v.lang.startsWith('en');})||null;
+  if(en) utt.voice=en;
+  if(onEnd) utt.onend=onEnd;
+  window.speechSynthesis.speak(utt);
+}
+
+// ── STATE ──
+var playerName='Student', coins=0, streak=0;
+var currentMode='listen', questions=[], qIdx=0;
+var timeLeft=15, maxTime=15, timerInt=null;
+var sessionScore=0, sessionCorrect=0, sessionCoins=0;
+var questionLocked=false, gameEnded=false, currentQ=null;
+
+var ARAB=['0','1','2','3','4','5','6','7','8','9'];
+function toAr(n){ return String(n).split('').map(function(d){return ARAB[+d];}).join(''); }
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function shuffle(a){return[].concat(a).sort(function(){return Math.random()-.5;});}
+
+// ── LANG & SCREEN ──
+function setLang(l){
+  document.getElementById('btnEN').classList.toggle('active',l==='en');
+  document.getElementById('btnAR').classList.toggle('active',l==='ar');
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+}
+function switchTab(tab){
+  document.getElementById('tabLesson').classList.toggle('active',tab==='lesson');
+  document.getElementById('tabGame').classList.toggle('active',tab==='game');
+  clearInterval(timerInt);
+  if(tab==='lesson') showScreen('lessonScreen');
+  else showScreen('gameSelectScreen');
+}
+
+// ── EXPLORER ──
+function updateExplorer(){
+  var t=+document.getElementById('slTens').value;
+  var u=+document.getElementById('slOnes').value;
+  var n=t*10+u;
+  document.getElementById('dTens').textContent=t;
+  document.getElementById('dOnes').textContent=u;
+  document.getElementById('expNum').textContent=n;
+  document.getElementById('expWord').textContent=numToWords(n);
+  document.getElementById('expExpanded').textContent=expandedForm(n);
+  // dots
+  var dots=document.getElementById('expDots');
+  dots.innerHTML='';
+  for(var i=0;i<Math.min(t,9);i++){
+    var d=document.createElement('div');
+    d.className='dot-tens';
+    dots.appendChild(d);
+  }
+  for(var j=0;j<u;j++){
+    var d2=document.createElement('div');
+    d2.className='dot-ones';
+    dots.appendChild(d2);
+  }
+}
+updateExplorer();
+
+function speakExplorer(){
+  var n=+document.getElementById('expNum').textContent;
+  var btn=document.querySelector('.speak-btn');
+  btn.textContent='🔊 Speaking...';
+  speak(numToWords(n),function(){btn.textContent='🔊 Listen / اسمع';});
+}
+
+// ── EXAMPLES ──
+var EXAMPLE_NUMS=[10,11,12,15,20,25,30,45,50,60,70,75,80,90,99];
+function buildExamples(){
+  var grid=document.getElementById('examplesGrid');
+  EXAMPLE_NUMS.forEach(function(n){
+    var d=document.createElement('div');
+    d.className='ex-card';
+    d.innerHTML='<span class="ex-num">'+n+'</span>'
+      +'<div class="ex-word">'+numToWords(n)+'</div>'
+      +'<div class="ex-spk">🔊</div>';
+    d.addEventListener('click',function(){
+      speak(numToWords(n));
+      d.style.background='#FEF3C7';
+      setTimeout(function(){d.style.background='';},1200);
+    });
+    grid.appendChild(d);
+  });
+}
+buildExamples();
+
+// ── GENERATE NUMBERS ──
+function genNumbers(count){
+  var set=new Set();
+  while(set.size<Math.floor(count/3)) set.add(rnd(10,19));
+  while(set.size<Math.floor(count*2/3)) set.add(rnd(20,59));
+  while(set.size<count) set.add(rnd(60,99));
+  return shuffle(Array.from(set));
+}
+
+function makeWrong3(correct,pool){
+  var set=new Set([correct]);
+  var c=correct;
+  [c+1,c-1,c+10,c-10,c+11,c-11,c+9,c-9].forEach(function(x){
+    if(x>0&&x<100&&x!==c) set.add(x);
+  });
+  pool.forEach(function(x){if(x!==c) set.add(x);});
+  while(set.size<4){ var w=rnd(10,99); if(w!==c) set.add(w); }
+  return shuffle(Array.from(set).filter(function(x){return x!==c;})).slice(0,3);
+}
+
+// ── GAME START ──
+var MODE_LABELS={listen:'🎙️ Listen & Pick',read:'👀 Read & Pick',write:'🔢 See & Spell',expand:'📐 Expanded Form'};
+var MODE_TIME={listen:15,read:12,write:12,expand:13};
+
+function startGame(mode){
+  currentMode=mode;
+  playerName=document.getElementById('studentName').value.trim()||'Student';
+  var nums=genNumbers(10);
+  questions=nums.map(function(n){return{n:n};});
+  qIdx=0; sessionScore=0; sessionCorrect=0; sessionCoins=0;
+  streak=0; gameEnded=false; coins=0;
+  maxTime=MODE_TIME[mode];
+  document.getElementById('coinsVal').textContent=0;
+  document.getElementById('streakVal').textContent=0;
+  document.getElementById('modeTag').textContent=MODE_LABELS[mode];
+  showScreen('gameScreen');
+  loadQ();
+}
+
+// ── LOAD QUESTION ──
+function loadQ(){
+  if(qIdx>=questions.length){endGame();return;}
+  questionLocked=false;
+  currentQ=questions[qIdx];
+  var n=currentQ.n;
+  var pool=questions.map(function(q){return q.n;});
+  var wrongNums=makeWrong3(n,pool);
+
+  document.getElementById('qBadge').textContent='Question '+(qIdx+1)+' of '+questions.length;
+
+  ['listenZone','readZone','writeZone','expandZone'].forEach(function(id){
+    document.getElementById(id).style.display='none';
+  });
+
+  var lb=document.getElementById('listenBtn');
+  lb.classList.remove('speaking'); lb.textContent='🔊';
+
+  var grid=document.getElementById('choicesGrid');
+  grid.innerHTML='';
+
+  function addBtn(display,val,subLabel){
+    var btn=document.createElement('button');
+    btn.className='ch-btn';
+    btn.setAttribute('data-val',String(val));
+    var inner='<span style="font-size:1.4rem;font-family:\'Fredoka One\',cursive;">'+display+'</span>';
+    if(subLabel) inner+='<span class="ch-sub">'+subLabel+'</span>';
+    btn.innerHTML=inner;
+    btn.addEventListener('click',function(){handleAnswer(btn);});
+    grid.appendChild(btn);
+  }
+
+  if(currentMode==='listen'){
+    document.getElementById('listenZone').style.display='flex';
+    shuffle([n].concat(wrongNums)).forEach(function(v){
+      addBtn(v,v,numToWords(v));
+    });
+    setFb('neutral','Tap 🔊 to hear the number!','انقر 🔊 لتسمع العدد!');
+    setTimeout(speakQuestion,400);
+  }
+  else if(currentMode==='read'){
+    document.getElementById('readZone').style.display='block';
+    document.getElementById('dispWord').textContent=numToWords(n);
+    shuffle([n].concat(wrongNums)).forEach(function(v){
+      addBtn(v,v,numToWords(v));
+    });
+    setFb('neutral','Read the word, choose the number!','اقرأ الكلمة، اختر العدد!');
+    setTimeout(speakQuestion,300);
+  }
+  else if(currentMode==='write'){
+    document.getElementById('writeZone').style.display='block';
+    document.getElementById('dispNum').textContent=n;
+    var correctWord=numToWords(n);
+    var wrongWords=wrongNums.map(function(w){return numToWords(w);});
+    shuffle([correctWord].concat(wrongWords)).forEach(function(w){
+      addBtn(w,w,'');
+    });
+    setFb('neutral','See the number, choose the word!','شاهد العدد، اختر الكلمة!');
+    setTimeout(speakQuestion,300);
+  }
+  else{
+    document.getElementById('expandZone').style.display='block';
+    document.getElementById('dispExpNum').textContent=n;
+    var correctExp=expandedForm(n);
+    var wrongExps=wrongNums.map(function(w){return expandedForm(w);});
+    shuffle([correctExp].concat(wrongExps)).forEach(function(e){
+      addBtn(e,e,'');
+    });
+    setFb('neutral','Choose the expanded form!','اختر الصورة التمدّدية!');
+  }
+
+  document.getElementById('progFill').style.width=(qIdx/questions.length*100)+'%';
+  document.getElementById('progEN').textContent=qIdx+' / '+questions.length;
+  document.getElementById('progAR').textContent=toAr(qIdx)+' / '+toAr(questions.length);
+  startTimer();
+}
+
+// ── SPEAK ──
+function speakQuestion(){
+  if(!currentQ) return;
+  var lb=document.getElementById('listenBtn');
+  lb.classList.add('speaking');
+  speak(numToWords(currentQ.n),function(){lb.classList.remove('speaking');});
+}
+
+// ── HANDLE ANSWER ──
+function handleAnswer(btn){
+  if(questionLocked) return;
+  questionLocked=true;
+  clearInterval(timerInt);
+  var n=currentQ.n;
+  var val=btn.getAttribute('data-val');
+  var correct=false;
+  if(currentMode==='listen'||currentMode==='read') correct=(parseInt(val)===n);
+  else if(currentMode==='write') correct=(val===numToWords(n));
+  else correct=(val===expandedForm(n));
+
+  if(correct){
+    btn.classList.add('correct');
+    streak++; sessionCorrect++;
+    document.getElementById('streakVal').textContent=streak;
+    var bonus=streak>=3?5:0;
+    var spBonus=timeLeft>maxTime*.6?5:timeLeft>maxTime*.3?2:0;
+    var earned=10+bonus+spBonus;
+    coins+=earned; sessionCoins+=earned; sessionScore+=earned;
+    document.getElementById('coinsVal').textContent=coins;
+    setFb('ok','Correct! '+n+' = '+numToWords(n)+' ✅','صحيح! '+n+' = '+numToWords(n)+' ✅');
+    showScorePop('+'+earned+'🪙',true);
+    launchConfetti(8);
+    playSoundCorrect();
+    speak(numToWords(n));
+  } else {
+    btn.classList.add('wrong');
+    streak=0; document.getElementById('streakVal').textContent=0;
+    setFb('bad','The answer is '+n+' = '+numToWords(n),'الجواب هو '+n+' = '+numToWords(n));
+    document.querySelectorAll('#choicesGrid .ch-btn').forEach(function(b){
+      var bv=b.getAttribute('data-val');
+      var isC=false;
+      if(currentMode==='listen'||currentMode==='read') isC=(parseInt(bv)===n);
+      else if(currentMode==='write') isC=(bv===numToWords(n));
+      else isC=(bv===expandedForm(n));
+      if(isC) b.classList.add('correct');
+    });
+    playSoundWrong();
+    speak(numToWords(n));
+  }
+  document.querySelectorAll('#choicesGrid .ch-btn').forEach(function(b){b.disabled=true;});
+  var ni=qIdx+1;
+  setTimeout(function(){qIdx=ni;loadQ();},1500);
+}
+
+// ── TIMER ──
+function startTimer(){
+  clearInterval(timerInt);
+  timeLeft=maxTime;
+  updateTimerUI();
+  timerInt=setInterval(function(){
+    timeLeft--;
+    updateTimerUI();
+    if(timeLeft<=0){clearInterval(timerInt);if(!questionLocked)timeOut();}
+  },1000);
+}
+function updateTimerUI(){
+  var p=timeLeft/maxTime;
+  document.getElementById('timerFill').style.width=(p*100)+'%';
+  document.getElementById('timerFill').style.background=
+    p>.5?'linear-gradient(90deg,#EA580C,#EAB308)':
+    p>.25?'linear-gradient(90deg,#D97706,#EAB308)':
+    'linear-gradient(90deg,#DC2626,#EA580C)';
+  document.getElementById('timerLeft').textContent=timeLeft+'s';
+}
+function timeOut(){
+  if(questionLocked) return;
+  questionLocked=true;
+  var n=currentQ.n;
+  setFb('bad','Time\'s up! The answer is '+n+' = '+numToWords(n),'انتهى الوقت! الجواب '+n+' = '+numToWords(n));
+  document.querySelectorAll('#choicesGrid .ch-btn').forEach(function(b){
+    b.disabled=true;
+    var bv=b.getAttribute('data-val');
+    var isC=false;
+    if(currentMode==='listen'||currentMode==='read') isC=(parseInt(bv)===n);
+    else if(currentMode==='write') isC=(bv===numToWords(n));
+    else isC=(bv===expandedForm(n));
+    if(isC) b.classList.add('correct');
+  });
+  streak=0; document.getElementById('streakVal').textContent=0;
+  speak(numToWords(n)); playSoundWrong();
+  var ni=qIdx+1;
+  setTimeout(function(){qIdx=ni;loadQ();},2000);
+}
+
+// ── FEEDBACK ──
+function setFb(type,en,ar){
+  document.getElementById('fbBar').className='fb-bar '+type;
+  document.getElementById('fbEN').textContent=en;
+  document.getElementById('fbAR').textContent=ar;
+}
+
+// ── END GAME ──
+function endGame(){
+  if(gameEnded) return; gameEnded=true;
+  clearInterval(timerInt);
+  var pct=sessionCorrect/questions.length;
+  var trophy,enT,arT,enM,arM,stars;
+  if(pct===1){trophy='🏆';enT='Perfect, '+playerName+'!';arT='مثالي يا '+playerName+'!';enM='Every number correct! You\'re a star!';arM='كل الأعداد صحيحة! أنت نجم!';stars='⭐⭐⭐';}
+  else if(pct>=.7){trophy='🥇';enT='Excellent, '+playerName+'!';arT='ممتاز يا '+playerName+'!';enM='Great job! Keep practising!';arM='عمل رائع! واصل التمرين!';stars='⭐⭐';}
+  else if(pct>=.4){trophy='🥈';enT='Good try, '+playerName+'!';arT='محاولة جيدة يا '+playerName+'!';enM='Listen to the lesson and try again!';arM='استمع للدرس وحاول مجدداً!';stars='⭐';}
+  else{trophy='🎯';enT='Keep going, '+playerName+'!';arT='استمر يا '+playerName+'!';enM='Review the lesson first!';arM='راجع الدرس أولاً!';stars='';}
+  document.getElementById('resTrophy').textContent=trophy;
+  document.getElementById('resTitleEN').textContent=enT;
+  document.getElementById('resTitleAR').textContent=arT;
+  document.getElementById('resMsgEN').textContent=enM;
+  document.getElementById('resMsgAR').textContent=arM;
+  document.getElementById('starRow').textContent=stars;
+  document.getElementById('rsScore').textContent=sessionScore;
+  document.getElementById('rsCorrect').textContent=sessionCorrect+'/'+questions.length;
+  document.getElementById('rsCoins').textContent=sessionCoins;
+  if(pct>=.7){launchConfetti(25);playSoundWin();}
+  showScreen('resultScreen');
+}
+function retryGame(){startGame(currentMode);}
+
+// ── VFX ──
+function launchConfetti(n){
+  var cols=['#FB923C','#34D399','#A78BFA','#FCD34D','#F472B6','#60A5FA','#4ADE80'];
+  for(var i=0;i<n;i++){
+    var el=document.createElement('div'); el.className='cp';
+    el.style.cssText='left:'+Math.random()*100+'vw;top:-10px;'
+      +'width:'+(7+Math.random()*7)+'px;height:'+(7+Math.random()*7)+'px;'
+      +'background:'+cols[~~(Math.random()*cols.length)]+';'
+      +'animation-duration:'+(1+Math.random()*1.5)+'s;'
+      +'animation-delay:'+Math.random()*.4+'s;'
+      +'border-radius:'+(Math.random()>.5?'50%':'2px')+';';
+    document.body.appendChild(el);
+    setTimeout(function(){el.remove();},2500);
+  }
+}
+function showScorePop(txt,good){
+  var el=document.createElement('div'); el.className='sp';
+  el.textContent=txt;
+  el.style.cssText='color:'+(good?'#059669':'#DC2626')+';left:'+(38+Math.random()*24)+'%;top:45%;';
+  document.body.appendChild(el);
+  setTimeout(function(){el.remove();},1100);
+}
+
+// ── SOUNDS ──
+var actx=null;
+function ga(){if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended') actx.resume();return actx;}
+function pt(f,t,d,v,dl){
+  v=v||.25;dl=dl||0;
+  var c=ga(),o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);o.type=t;o.frequency.value=f;
+  g.gain.setValueAtTime(0,c.currentTime+dl);
+  g.gain.linearRampToValueAtTime(v,c.currentTime+dl+.01);
+  g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dl+d);
+  o.start(c.currentTime+dl);o.stop(c.currentTime+dl+d+.05);
+}
+function playSoundCorrect(){pt(523,'sine',.12,.25,0);pt(659,'sine',.12,.25,.1);pt(784,'sine',.18,.25,.2);}
+function playSoundWrong(){pt(280,'sawtooth',.1,.2,0);pt(200,'sawtooth',.14,.18,.11);}
+function playSoundWin(){[523,659,784,1047,1319].forEach(function(f,i){pt(f,'sine',.2,.25,i*.09);});}
+
+document.getElementById('studentName').addEventListener('keydown',function(e){
+  if(e.key==='Enter') switchTab('game');
+});
+</script>
+</body>
+</html>

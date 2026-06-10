@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Measurement Magic 📏</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap');
+
+    :root {
+      --purple: #7c3aed;
+      --pink:   #ec4899;
+      --amber:  #f59e0b;
+      --green:  #10b981;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+      background: #f3f0ff;
+    }
+
+    /* ── APP SHELL ── */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      height: 100dvh;
+      background: #f3f0ff;
+    }
+
+    /* ── TOP HEADER ── */
+    #topbar {
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
+      padding: 10px 16px 10px;
+      padding-top: calc(10px + env(safe-area-inset-top, 0px));
+      box-shadow: 0 4px 20px rgba(124,58,237,0.35);
+    }
+    #topbar .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    #topbar h1 {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+    }
+    #topbar .sub {
+      font-size: .7rem;
+      color: rgba(255,255,255,.75);
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .teacher-tag {
+      background: rgba(255,255,255,.18);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: .65rem;
+      font-weight: 800;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    /* ── NAME BANNER ── */
+    #nameBanner {
+      flex-shrink: 0;
+      background: rgba(255,255,255,.95);
+      border-bottom: 2px solid #e9d5ff;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #nameBanner input {
+      flex: 1;
+      border: 2.5px solid #c4b5fd;
+      border-radius: 14px;
+      padding: 9px 12px;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 700;
+      color: #5b21b6;
+      background: #faf5ff;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    #nameBanner input::placeholder { color: #c4b5fd; }
+    #nameBanner input:focus { border-color: #7c3aed; }
+    #goBtn {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: .9rem;
+      border: none;
+      border-radius: 14px;
+      padding: 9px 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(124,58,237,.4);
+      active-scale: .95;
+      transition: transform .12s;
+    }
+    #goBtn:active { transform: scale(.93); }
+    #welcomeMsg {
+      display: none;
+      flex: 1;
+      font-size: .85rem;
+      font-weight: 800;
+      color: #059669;
+      background: #d1fae5;
+      border-radius: 12px;
+      padding: 8px 12px;
+      text-align: center;
+    }
+    #studentChip {
+      background: #fdf4ff;
+      border: 2px solid #e9d5ff;
+      border-radius: 12px;
+      padding: 5px 10px;
+      font-size: .7rem;
+      font-weight: 800;
+      color: #7c3aed;
+      white-space: nowrap;
+      display: none;
+    }
+
+    /* ── SCROLL AREA ── */
+    #scrollArea {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: 14px 12px 20px;
+    }
+
+    /* ── BOTTOM NAV ── */
+    #bottomNav {
+      flex-shrink: 0;
+      background: #fff;
+      border-top: 2px solid #f3f0ff;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding-bottom: calc(6px + var(--safe-bottom));
+      box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 4px 6px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      gap: 2px;
+      transition: transform .12s;
+      position: relative;
+    }
+    .nav-item:active { transform: scale(.9); }
+    .nav-item .nav-icon { font-size: 1.45rem; line-height: 1; }
+    .nav-item .nav-label {
+      font-size: .58rem;
+      font-weight: 800;
+      color: #9ca3af;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+    .nav-item.active .nav-label { color: #7c3aed; }
+    .nav-item .nav-dot {
+      position: absolute;
+      top: 6px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #ede9fe;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .nav-item.active .nav-dot { opacity: 1; }
+
+    /* ── PAGES ── */
+    .page { display: none; animation: slideUp .3s ease; }
+    .page.active { display: block; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .card-body { padding: 16px; }
+    .card-header {
+      padding: 13px 16px;
+      font-size: .95rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── STEP PILLS ── */
+    .step-pills {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .step-pills::-webkit-scrollbar { display: none; }
+    .pill {
+      flex-shrink: 0;
+      border: 2.5px solid transparent;
+      border-radius: 30px;
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: .8rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+      background: #f3f0ff;
+      color: #9ca3af;
+    }
+    .pill.active-p  { background: #7c3aed; color: #fff; border-color: #7c3aed; }
+    .pill.active-pk { background: #ec4899; color: #fff; border-color: #ec4899; }
+    .pill.active-am { background: #f59e0b; color: #fff; border-color: #f59e0b; }
+    .pill:active { transform: scale(.95); }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .info-box .emoji { font-size: 2rem; flex-shrink: 0; }
+    .info-box h2 { font-size: .95rem; font-weight: 900; margin-bottom: 4px; }
+    .info-box p  { font-size: .82rem; font-weight: 600; color: #374151; line-height: 1.5; }
+
+    /* ── FORMULA BANNER ── */
+    .formula-banner {
+      border-radius: 16px;
+      padding: 12px 14px;
+      text-align: center;
+      margin-top: 4px;
+    }
+    .formula-banner .label { font-size: .7rem; font-weight: 800; opacity: .75; margin-bottom: 2px; }
+    .formula-banner .main  { font-size: 1.05rem; font-weight: 900; color: #fff; }
+    .formula-banner .example { font-size: .72rem; font-weight: 700; opacity: .8; margin-top: 3px; }
+
+    /* ── SLIDER ── */
+    .slider-label {
+      text-align: center;
+      font-size: .75rem;
+      font-weight: 800;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 12px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, #7c3aed, #ec4899);
+      outline: none;
+      cursor: pointer;
+      margin-bottom: 14px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid #7c3aed;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(124,58,237,.35);
+    }
+
+    /* ── RESULT BOX ── */
+    .result-box {
+      background: linear-gradient(135deg, #f5f3ff, #fdf4ff);
+      border: 2.5px solid #ddd6fe;
+      border-radius: 18px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .result-box .big { font-size: 2.4rem; font-weight: 900; line-height: 1; }
+    .result-box .unit { font-size: 1.2rem; font-weight: 800; color: #6b7280; margin: 0 4px; }
+    .result-box .eq   { font-size: 1.4rem; color: #9ca3af; margin: 0 6px; }
+    .result-box .caption { font-size: .72rem; font-weight: 700; color: #a78bfa; margin-top: 6px; }
+
+    /* ── BLOCKS GRID ── */
+    #mBlocks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: center;
+      padding: 8px 4px;
+    }
+    .block {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: .6rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      animation: popBlock .2s ease;
+    }
+    @keyframes popBlock {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    /* ── RULER CANVAS ── */
+    #rulerCanvas {
+      width: 100%;
+      border-radius: 14px;
+      display: block;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .prog-track {
+      height: 22px;
+      background: #f3f4f6;
+      border-radius: 99px;
+      overflow: hidden;
+      border: 2px solid #e5e7eb;
+      margin: 6px 0;
+    }
+    .prog-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #ec4899, #7c3aed);
+      transition: width .5s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── CONVERTER PAGE ── */
+    .conv-input-wrap {
+      display: flex;
+      gap: 0;
+      border: 3px solid #c4b5fd;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #faf5ff;
+      margin-bottom: 14px;
+    }
+    #convInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 14px 16px;
+      font-family: inherit;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #5b21b6;
+      outline: none;
+      min-width: 0;
+    }
+    #convInput::placeholder { color: #c4b5fd; font-size: 1rem; }
+    .conv-unit-badge {
+      background: #ede9fe;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 14px;
+      font-size: .85rem;
+      font-weight: 900;
+      color: #7c3aed;
+      min-width: 48px;
+    }
+
+    .conv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .conv-btn {
+      border: 3px solid transparent;
+      border-radius: 16px;
+      padding: 13px 10px;
+      font-family: inherit;
+      font-size: .82rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all .18s;
+      line-height: 1.3;
+    }
+    .conv-btn:active { transform: scale(.95); }
+    .conv-btn .op-tag {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 900;
+      margin-top: 3px;
+      padding: 1px 7px;
+      border-radius: 99px;
+    }
+    .conv-btn.cb-p  { background:#f5f3ff; border-color:#ddd6fe; color:#7c3aed; }
+    .conv-btn.cb-pk { background:#fdf2f8; border-color:#fbcfe8; color:#db2777; }
+    .conv-btn.cb-am { background:#fffbeb; border-color:#fde68a; color:#b45309; }
+    .conv-btn.cb-g  { background:#f0fdf4; border-color:#bbf7d0; color:#15803d; }
+    .conv-btn.sel   { transform: scale(1.04); box-shadow: 0 6px 20px rgba(124,58,237,.22); }
+    .conv-btn.sel.cb-p  { background:#7c3aed; color:#fff; border-color:#7c3aed; }
+    .conv-btn.sel.cb-pk { background:#ec4899; color:#fff; border-color:#ec4899; }
+    .conv-btn.sel.cb-am { background:#f59e0b; color:#fff; border-color:#f59e0b; }
+    .conv-btn.sel.cb-g  { background:#10b981; color:#fff; border-color:#10b981; }
+    .conv-btn.sel .op-tag { background: rgba(255,255,255,.25); color: #fff; }
+
+    .conv-result {
+      border-radius: 18px;
+      background: linear-gradient(135deg,#f5f3ff,#fdf4ff);
+      border: 2.5px solid #ddd6fe;
+      padding: 18px 16px;
+      text-align: center;
+      margin-bottom: 12px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .conv-result .big-answer {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #7c3aed;
+    }
+    .conv-result .arrow-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .conv-steps {
+      background: linear-gradient(135deg,#eef2ff,#f5f3ff);
+      border: 2px solid #c7d2fe;
+      border-radius: 16px;
+      padding: 14px;
+      display: none;
+    }
+    .conv-steps h3 { font-size:.82rem; font-weight:900; color:#4338ca; margin-bottom:8px; }
+    .step-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+    .step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: #7c3aed; color: #fff;
+      font-size: .7rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step-text { font-size: .82rem; font-weight: 700; color: #374151; line-height: 1.4; }
+    .step-text b { color: #7c3aed; }
+
+    /* ── QUIZ PAGE ── */
+    .quiz-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 8px;
+    }
+    .quiz-header h2 { font-size: 1rem; font-weight: 900; color: #7c3aed; }
+    .score-badge {
+      background: #ede9fe;
+      border-radius: 12px;
+      padding: 5px 12px;
+      font-size: .9rem;
+      font-weight: 900;
+      color: #7c3aed;
+    }
+    .q-prog-track {
+      height: 8px;
+      background: #f3f4f6;
+      margin: 0 16px 14px;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .q-prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #7c3aed, #ec4899);
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+    .q-card {
+      background: linear-gradient(135deg,#f5f3ff,#eef2ff);
+      border: 2px solid #ddd6fe;
+      border-radius: 18px;
+      padding: 18px 16px;
+      margin: 0 16px 16px;
+    }
+    .q-text { font-size: 1rem; font-weight: 900; color: #4c1d95; line-height: 1.4; }
+    .opts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 16px 14px;
+    }
+    .opt-btn {
+      border: 3px solid #ddd6fe;
+      border-radius: 16px;
+      background: #faf5ff;
+      padding: 14px 10px;
+      font-family: inherit;
+      font-size: .88rem;
+      font-weight: 800;
+      color: #5b21b6;
+      cursor: pointer;
+      text-align: center;
+      transition: all .18s;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .opt-btn:active { transform: scale(.94); }
+    .opt-btn.correct { background: #d1fae5; border-color: #10b981; color: #065f46; }
+    .opt-btn.wrong   { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+    .opt-btn.disabled { pointer-events: none; }
+
+    .hint-box {
+      background: #fffbeb;
+      border: 2px solid #fde68a;
+      border-radius: 14px;
+      padding: 11px 14px;
+      margin: 0 16px 12px;
+      font-size: .82rem;
+      font-weight: 800;
+      color: #92400e;
+      display: none;
+      text-align: center;
+    }
+
+    .feedback-box {
+      margin: 0 16px 12px;
+      border-radius: 14px;
+      padding: 12px 14px;
+      text-align: center;
+      font-size: .95rem;
+      font-weight: 900;
+      display: none;
+    }
+    .feedback-box.ok  { background:#d1fae5; color:#065f46; border: 2px solid #6ee7b7; }
+    .feedback-box.bad { background:#fee2e2; color:#991b1b; border: 2px solid #fca5a5; }
+
+    /* ── QUIZ START / END screens ── */
+    .quiz-center {
+      text-align: center;
+      padding: 30px 20px;
+    }
+    .quiz-center .big-emoji { font-size: 4.5rem; margin-bottom: 10px; }
+    .quiz-center h2 { font-size: 1.2rem; font-weight: 900; color: #4c1d95; margin-bottom: 6px; }
+    .quiz-center p  { font-size: .85rem; font-weight: 700; color: #6b7280; margin-bottom: 20px; }
+    .start-btn {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 1rem;
+      border: none;
+      border-radius: 18px;
+      padding: 15px 36px;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(124,58,237,.4);
+      transition: transform .12s;
+    }
+    .start-btn:active { transform: scale(.95); }
+
+    /* ── SUMMARY PAGE ── */
+    .sum-card {
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .sum-card .emoji { font-size: 1.8rem; flex-shrink: 0; }
+    .sum-card h3 { font-size: .9rem; font-weight: 900; margin-bottom: 3px; }
+    .sum-card p  { font-size: .75rem; font-weight: 700; color: #6b7280; margin-bottom: 5px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag {
+      border-radius: 99px;
+      padding: 3px 10px;
+      font-size: .68rem;
+      font-weight: 800;
+    }
+    .ladder-box {
+      background: linear-gradient(160deg,#7c3aed,#a855f7,#ec4899);
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .ladder-box h3 { font-size: .85rem; font-weight: 900; margin-bottom: 12px; opacity: .9; }
+    .ladder-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .unit-box {
+      background: rgba(255,255,255,.2);
+      border-radius: 14px;
+      padding: 10px 14px;
+      min-width: 62px;
+    }
+    .unit-box .u { font-size: 1.3rem; font-weight: 900; }
+    .unit-box .ul{ font-size: .6rem; opacity: .8; font-weight: 700; }
+    .arrow-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .arrow-tag {
+      background: rgba(255,255,255,.2);
+      border-radius: 99px;
+      padding: 2px 8px;
+      font-size: .6rem;
+      font-weight: 900;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .real-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .real-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 11px 10px;
+      text-align: center;
+      font-size: .75rem;
+      font-weight: 800;
+      color: #374151;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .final-score-box {
+      background: linear-gradient(135deg,#7c3aed,#ec4899);
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .final-score-box h3 { font-size: .85rem; font-weight: 800; opacity: .85; margin-bottom: 4px; }
+    .final-score-box .score { font-size: 2.4rem; font-weight: 900; }
+    .final-score-box .msg { font-size: .78rem; font-weight: 700; opacity: .8; margin-top: 4px; }
+
+    /* ── CONFETTI ── */
+    .confetti-piece {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 3px;
+      animation: cfFall linear forwards;
+    }
+    @keyframes cfFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(105vh) rotate(800deg); opacity: 0; }
+    }
+
+    /* ── BOUNCE ── */
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    .bounce { animation: bounce .7s ease infinite; }
+
+    /* ── POP IN ── */
+    @keyframes popIn { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+    .pop { animation: popIn .25s ease; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══ TOP BAR ══ -->
+  <div id="topbar">
+    <div class="title-row">
+      <div>
+        <h1>📏 Measurement Magic!</h1>
+        <div class="sub">metres · centimetres · millimetres</div>
+      </div>
+      <div class="teacher-tag">👩‍🏫 Manal Bazzi</div>
+    </div>
+  </div>
+
+  <!-- ══ NAME BANNER ══ -->
+  <div id="nameBanner">
+    <input id="studentNameInput" type="text" placeholder="✏️ Your name…" maxlength="22" autocomplete="off"/>
+    <button id="goBtn" onclick="setName()">GO!</button>
+    <div id="welcomeMsg"></div>
+    <div id="studentChip"></div>
+  </div>
+
+  <!-- ══ SCROLL AREA ══ -->
+  <div id="scrollArea">
+
+    <!-- ══ PAGE: LEARN ══ -->
+    <div id="page-learn" class="page active">
+
+      <!-- Step pills -->
+      <div class="step-pills">
+        <button class="pill active-p" id="pill0" onclick="showStep(0)">① m → cm</button>
+        <button class="pill" id="pill1" onclick="showStep(1)">② cm → mm</button>
+        <button class="pill" id="pill2" onclick="showStep(2)">③ cm → m</button>
+      </div>
+
+      <!-- ─ STEP 0: m → cm ─ -->
+      <div id="step0" style="padding:14px 12px 4px">
+        <div class="info-box" style="background:#f5f3ff;border:2px solid #ddd6fe">
+          <div class="emoji">🚪</div>
+          <div>
+            <h2 style="color:#7c3aed">Metres → Centimetres</h2>
+            <p>A <strong style="color:#7c3aed">metre (m)</strong> is as tall as a door!<br>
+               1 metre = <strong style="color:#ec4899">100 centimetres</strong>.<br>
+               To convert, <strong>multiply by 100</strong>.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="slider-label">👆 Drag to change metres</div>
+            <input type="range" id="mSlider" min="1" max="5" value="1" oninput="updateMeter()"/>
+            <div class="result-box pop" id="mResultBox">
+              <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px">
+                <span class="big" style="color:#7c3aed" id="mVal">1</span>
+                <span class="unit">m</span>
+                <span class="eq">=</span>
+                <span class="big" style="color:#ec4899" id="cmFromM">100</span>
+                <span class="unit">cm</span>
+              </div>
+              <div class="caption">Each metre has 100 centimetres inside!</div>
+            </div>
+            <div id="mBlocks"></div>
+            <div style="text-align:center;font-size:.72rem;font-weight:800;color:#a78bfa;margin-top:4px" id="mBlocksLabel">10 blocks × 10 cm = 100 cm</div>
+          </div>
+        </div>
+
+        <div class="formula-banner" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+          <div class="label" style="color:rgba(255,255,255,.8)">✨ FORMULA</div>
+          <div class="main">metres × 100 = centimetres</div>
+          <div class="example" style="color:rgba(255,255,255,.75)">Example: 3 m × 100 = <strong>300 cm</strong></div>
+        </div>
+      </div>
+
+      <!-- ─ STEP 1: cm → mm ─ -->
+      <div id="step1" style="padding:14px 12px 4px;display:none">
+        <div class="info-box" style="background:#fdf2f8;border:2px solid #fbcfe8">
+          <div class="emoji">💅</div>
+          <div>
+            <h2 style="color:#db2777">Centimetres → Millimetres</h2>
+            <p>A <strong style="color:#db2777">centimetre (cm)</strong> is as wide as a fingernail!<br>
+               1 centimetre = <strong style="color:#f59e0b">10 millimetres</strong>.<br>
+               To convert, <strong>multiply by 10</strong>.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="slider-label">👆 Drag to change centimetres</div>
+            <input type="range" id="cmSlider" min="1" max="10" value="1" oninput="updateCm()"/>
+            <div class="result-box">
+              <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px">
+                <span class="big" style="color:#db2777" id="cmVal">1</span>
+                <span class="unit">cm</span>
+                <span class="eq">=</span>
+                <span class="big" style="color:#f59e0b" id="mmFromCm">10</span>
+                <span class="unit">mm</span>
+              </div>
+              <div class="caption">Each centimetre has 10 millimetres inside!</div>
+            </div>
+            <canvas id="rulerCanvas" height="80" style="border-radius:14px;margin-top:6px"></canvas>
+          </div>
+        </div>
+
+        <div class="formula-banner" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">
+          <div class="label" style="color:rgba(255,255,255,.8)">✨ FORMULA</div>
+          <div class="main">centimetres × 10 = millimetres</div>
+          <div class="example" style="color:rgba(255,255,255,.75)">Example: 5 cm × 10 = <strong>50 mm</strong></div>
+        </div>
+      </div>
+
+      <!-- ─ STEP 2: cm → m ─ -->
+      <div id="step2" style="padding:14px 12px 4px;display:none">
+        <div class="info-box" style="background:#fffbeb;border:2px solid #fde68a">
+          <div class="emoji">🏠</div>
+          <div>
+            <h2 style="color:#b45309">Centimetres → Metres</h2>
+            <p>We already know <strong>100 cm = 1 m</strong>.<br>
+               So to go back to metres, we do the opposite!<br>
+               To convert, <strong>divide by 100</strong>.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <div class="slider-label">👆 Drag to change centimetres</div>
+            <input type="range" id="cm2mSlider" min="100" max="500" value="100" step="50" oninput="updateCm2m()"/>
+            <div class="result-box">
+              <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px">
+                <span class="big" style="color:#ec4899" id="cm2mVal">100</span>
+                <span class="unit">cm</span>
+                <span class="eq">=</span>
+                <span class="big" style="color:#7c3aed" id="mFromCm">1</span>
+                <span class="unit">m</span>
+              </div>
+              <div class="caption">Divide centimetres by 100 to get metres!</div>
+            </div>
+            <div style="margin-top:8px">
+              <div style="display:flex;justify-content:space-between;font-size:.7rem;font-weight:800;color:#9ca3af;margin-bottom:4px">
+                <span>0 cm</span><span>500 cm</span>
+              </div>
+              <div class="prog-track">
+                <div class="prog-fill" id="cm2mBar" style="width:20%"></div>
+              </div>
+              <div style="text-align:center;font-size:.8rem;font-weight:900;color:#7c3aed;margin-top:4px" id="cm2mCaption">100 cm = 1 m</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="formula-banner" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">
+          <div class="label" style="color:rgba(255,255,255,.8)">✨ FORMULA</div>
+          <div class="main">centimetres ÷ 100 = metres</div>
+          <div class="example" style="color:rgba(255,255,255,.75)">Example: 200 cm ÷ 100 = <strong>2 m</strong></div>
+        </div>
+      </div>
+
+    </div><!-- /learn -->
+
+    <!-- ══ PAGE: CONVERT ══ -->
+    <div id="page-convert" class="page" style="padding:14px 12px">
+
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-header" style="background:#f5f3ff;color:#7c3aed">🔄 Try the Converter!</div>
+        <div class="card-body" style="padding-top:8px">
+          <div class="slider-label" style="margin-bottom:6px">Type a number below 👇</div>
+          <div class="conv-input-wrap">
+            <input id="convInput" type="number" inputmode="decimal" min="0" placeholder="0" oninput="doConvert()"/>
+            <div class="conv-unit-badge" id="convUnitLabel">m</div>
+          </div>
+          <div class="conv-grid">
+            <button class="conv-btn cb-p sel" id="ct-m2cm" onclick="setConvType('m2cm','m','cb-p')">
+              📏 m → cm<br><span class="op-tag" style="background:rgba(255,255,255,.2)">× 100</span>
+            </button>
+            <button class="conv-btn cb-pk" id="ct-cm2mm" onclick="setConvType('cm2mm','cm','cb-pk')">
+              📐 cm → mm<br><span class="op-tag" style="background:#ede9fe;color:#7c3aed">× 10</span>
+            </button>
+            <button class="conv-btn cb-am" id="ct-cm2m" onclick="setConvType('cm2m','cm','cb-am')">
+              🔻 cm → m<br><span class="op-tag" style="background:#ede9fe;color:#7c3aed">÷ 100</span>
+            </button>
+            <button class="conv-btn cb-g" id="ct-mm2cm" onclick="setConvType('mm2cm','mm','cb-g')">
+              🔬 mm → cm<br><span class="op-tag" style="background:#ede9fe;color:#7c3aed">÷ 10</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="conv-result pop" id="convResult">
+        <div style="color:#c4b5fd;font-size:.85rem;font-weight:800">Enter a number above ☝️</div>
+      </div>
+
+      <div class="conv-steps" id="convSteps">
+        <h3>🧠 Step by Step</h3>
+        <div id="convStepsInner"></div>
+      </div>
+
+    </div><!-- /convert -->
+
+    <!-- ══ PAGE: QUIZ ══ -->
+    <div id="page-quiz" class="page">
+      <div class="quiz-header">
+        <h2>🧩 Quiz Time!</h2>
+        <div class="score-badge">⭐ <span id="qScore">0</span> / <span id="qTotal">8</span></div>
+      </div>
+      <div class="q-prog-track">
+        <div class="q-prog-fill" id="qBar" style="width:0%"></div>
+      </div>
+      <div id="quizMain">
+        <div class="quiz-center">
+          <div class="big-emoji bounce">🎯</div>
+          <h2>Ready to play?</h2>
+          <p>Answer 8 questions to earn your gold star!</p>
+          <button class="start-btn" onclick="startQuiz()">🚀 Start Quiz!</button>
+        </div>
+      </div>
+      <div class="hint-box" id="hintBox"></div>
+      <div class="feedback-box" id="feedbackBox"></div>
+    </div><!-- /quiz -->
+
+    <!-- ══ PAGE: SUMMARY ══ -->
+    <div id="page-summary" class="page" style="padding:14px 12px">
+
+      <div style="text-align:center;margin-bottom:14px">
+        <div style="font-size:2.5rem">⭐</div>
+        <div style="font-size:1.1rem;font-weight:900;color:#7c3aed">Key Takeaways</div>
+        <div style="font-size:.72rem;font-weight:700;color:#9ca3af">Everything you need to remember!</div>
+      </div>
+
+      <!-- 3 Rules -->
+      <div class="sum-card" style="background:#f5f3ff;border:2px solid #ddd6fe">
+        <div class="emoji">📏</div>
+        <div>
+          <h3 style="color:#7c3aed">1 metre = 100 centimetres</h3>
+          <p>m → cm: multiply by 100</p>
+          <div class="tag-row">
+            <span class="tag" style="background:#ede9fe;color:#7c3aed">2 m → 200 cm</span>
+            <span class="tag" style="background:#ede9fe;color:#7c3aed">5 m → 500 cm</span>
+          </div>
+        </div>
+      </div>
+      <div class="sum-card" style="background:#fdf2f8;border:2px solid #fbcfe8">
+        <div class="emoji">📐</div>
+        <div>
+          <h3 style="color:#db2777">1 centimetre = 10 millimetres</h3>
+          <p>cm → mm: multiply by 10</p>
+          <div class="tag-row">
+            <span class="tag" style="background:#fce7f3;color:#db2777">3 cm → 30 mm</span>
+            <span class="tag" style="background:#fce7f3;color:#db2777">7 cm → 70 mm</span>
+          </div>
+        </div>
+      </div>
+      <div class="sum-card" style="background:#fffbeb;border:2px solid #fde68a">
+        <div class="emoji">🔻</div>
+        <div>
+          <h3 style="color:#b45309">100 centimetres = 1 metre</h3>
+          <p>cm → m: divide by 100</p>
+          <div class="tag-row">
+            <span class="tag" style="background:#fef3c7;color:#b45309">300 cm → 3 m</span>
+            <span class="tag" style="background:#fef3c7;color:#b45309">450 cm → 4.5 m</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ladder -->
+      <div class="ladder-box">
+        <h3>📊 Unit Ladder</h3>
+        <div class="ladder-row">
+          <div class="unit-box">
+            <div class="u">m</div>
+            <div class="ul">metre</div>
+          </div>
+          <div class="arrow-col">
+            <div class="arrow-tag">×100 →</div>
+            <div style="height:2px;width:30px;background:rgba(255,255,255,.3);margin:2px 0"></div>
+            <div class="arrow-tag">← ÷100</div>
+          </div>
+          <div class="unit-box">
+            <div class="u">cm</div>
+            <div class="ul">centimetre</div>
+          </div>
+          <div class="arrow-col">
+            <div class="arrow-tag">×10 →</div>
+            <div style="height:2px;width:30px;background:rgba(255,255,255,.3);margin:2px 0"></div>
+            <div class="arrow-tag">← ÷10</div>
+          </div>
+          <div class="unit-box">
+            <div class="u">mm</div>
+            <div class="ul">millimetre</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real life -->
+      <div class="card">
+        <div class="card-header" style="background:#f0fdf4;color:#15803d">🌍 Real-Life Examples</div>
+        <div class="card-body" style="padding-top:4px">
+          <div class="real-grid">
+            <div class="real-card">🚪<br>Door<br><strong>~2 m = 200 cm</strong></div>
+            <div class="real-card">✏️<br>Pencil<br><strong>~15 cm = 150 mm</strong></div>
+            <div class="real-card">📓<br>Notebook<br><strong>~28 cm = 280 mm</strong></div>
+            <div class="real-card">🧒<br>Child<br><strong>~1.2 m = 120 cm</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz score -->
+      <div class="final-score-box" id="finalScoreBox" style="display:none">
+        <h3>🏆 Your Quiz Score</h3>
+        <div class="score" id="finalScoreText">—</div>
+        <div class="msg" id="finalMsg">—</div>
+      </div>
+
+      <div style="text-align:center;font-size:.7rem;font-weight:800;color:#9ca3af;padding:6px 0 16px">
+        👩‍🏫 Teacher: <strong style="color:#7c3aed">Manal Bazzi</strong> &nbsp;|&nbsp; Grade 3 Maths
+      </div>
+    </div><!-- /summary -->
+
+  </div><!-- /scrollArea -->
+
+  <!-- ══ BOTTOM NAV ══ -->
+  <nav id="bottomNav">
+    <button class="nav-item active" id="nav-learn" onclick="showPage('learn')">
+      <div class="nav-dot"></div>
+      <div class="nav-icon">📖</div>
+      <div class="nav-label">Learn</div>
+    </button>
+    <button class="nav-item" id="nav-convert" onclick="showPage('convert')">
+      <div class="nav-dot"></div>
+      <div class="nav-icon">🔄</div>
+      <div class="nav-label">Convert</div>
+    </button>
+    <button class="nav-item" id="nav-quiz" onclick="showPage('quiz')">
+      <div class="nav-dot"></div>
+      <div class="nav-icon">🧩</div>
+      <div class="nav-label">Quiz</div>
+    </button>
+    <button class="nav-item" id="nav-summary" onclick="showPage('summary')">
+      <div class="nav-dot"></div>
+      <div class="nav-icon">⭐</div>
+      <div class="nav-label">Summary</div>
+    </button>
+  </nav>
+
+</div><!-- /app -->
+
+<script>
+/* ════════════════════════════════════════
+   STUDENT NAME
+════════════════════════════════════════ */
+function setName() {
+  const v = document.getElementById('studentNameInput').value.trim();
+  if (!v) { shakeInput(); return; }
+  document.getElementById('studentNameInput').style.display = 'none';
+  document.getElementById('goBtn').style.display = 'none';
+  document.getElementById('welcomeMsg').style.display = 'block';
+  document.getElementById('welcomeMsg').textContent = `🎉 Welcome, ${v}! Let's learn!`;
+  const chip = document.getElementById('studentChip');
+  chip.style.display = 'block';
+  chip.textContent = `🎒 ${v}`;
+  confetti();
+}
+function shakeInput() {
+  const el = document.getElementById('studentNameInput');
+  el.style.borderColor = '#ef4444';
+  el.placeholder = '⚠️ Please type your name!';
+  setTimeout(() => { el.style.borderColor = '#c4b5fd'; el.placeholder = '✏️ Your name…'; }, 1500);
+}
+document.getElementById('studentNameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') setName();
+});
+
+/* ════════════════════════════════════════
+   PAGE NAVIGATION
+════════════════════════════════════════ */
+const pages = ['learn','convert','quiz','summary'];
+function showPage(id) {
+  pages.forEach(p => {
+    document.getElementById('page-'+p).classList.toggle('active', p === id);
+    document.getElementById('nav-'+p).classList.toggle('active', p === id);
+  });
+  document.getElementById('scrollArea').scrollTo({ top: 0, behavior: 'smooth' });
+  if (id === 'learn') {
+    setTimeout(() => { updateMeter(); if (!document.getElementById('step1').style.display || document.getElementById('step1').style.display !== 'none') { updateCm(); } }, 80);
+  }
+  if (id === 'summary') updateFinalScore();
+}
+
+/* ════════════════════════════════════════
+   LEARN – STEP NAVIGATION
+════════════════════════════════════════ */
+let currentStep = 0;
+const pillClasses = ['active-p','active-pk','active-am'];
+function showStep(n) {
+  [0,1,2].forEach(i => {
+    document.getElementById('step'+i).style.display = i === n ? 'block' : 'none';
+    const pill = document.getElementById('pill'+i);
+    pill.className = 'pill ' + (i === n ? pillClasses[i] : '');
+  });
+  currentStep = n;
+  if (n === 0) { setTimeout(updateMeter, 60); }
+  if (n === 1) { setTimeout(() => { updateCm(); drawRuler(parseInt(document.getElementById('cmSlider').value)); }, 80); }
+  if (n === 2) { setTimeout(updateCm2m, 60); }
+  document.getElementById('scrollArea').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════════
+   STEP 0 – metres → cm
+════════════════════════════════════════ */
+const blockColors = ['#7c3aed','#8b5cf6','#a855f7','#c026d3','#7c3aed'];
+function updateMeter() {
+  const v = +document.getElementById('mSlider').value;
+  document.getElementById('mVal').textContent = v;
+  document.getElementById('cmFromM').textContent = v * 100;
+  const wrap = document.getElementById('mBlocks');
+  wrap.innerHTML = '';
+  const count = v * 10; // each block = 10 cm
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'block';
+    d.style.background = blockColors[Math.floor(i/10) % blockColors.length];
+    d.style.animationDelay = (i * 0.02) + 's';
+    d.textContent = '10';
+    wrap.appendChild(d);
+  }
+  document.getElementById('mBlocksLabel').textContent = `${count} blocks × 10 cm = ${v*100} cm`;
+}
+updateMeter();
+
+/* ════════════════════════════════════════
+   STEP 1 – cm → mm ruler
+════════════════════════════════════════ */
+function updateCm() {
+  const v = +document.getElementById('cmSlider').value;
+  document.getElementById('cmVal').textContent = v;
+  document.getElementById('mmFromCm').textContent = v * 10;
+  drawRuler(v);
+}
+function drawRuler(cm) {
+  const canvas = document.getElementById('rulerCanvas');
+  if (!canvas) return;
+  const W = canvas.parentElement ? canvas.parentElement.clientWidth - 32 : 300;
+  canvas.width = W < 50 ? 300 : W;
+  const H = 80;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  const pad = 12;
+  const totalMm = 100; // 10 cm shown
+  const mmPx = (W - pad*2) / totalMm;
+
+  // Ruler body
+  ctx.fillStyle = '#fdf4ff';
+  roundRect(ctx, pad, 14, W - pad*2, H - 28, 10, '#fdf4ff', '#ddd6fe', 2);
+
+  // Ticks
+  for (let mm = 0; mm <= totalMm; mm++) {
+    const x = pad + mm * mmPx;
+    const isCm = mm % 10 === 0;
+    const isHalf = mm % 5 === 0;
+    const tickH = isCm ? 20 : isHalf ? 13 : 7;
+    ctx.strokeStyle = isCm ? '#7c3aed' : isHalf ? '#c084fc' : '#e9d5ff';
+    ctx.lineWidth = isCm ? 2 : 1;
+    ctx.beginPath(); ctx.moveTo(x, 16); ctx.lineTo(x, 16 + tickH); ctx.stroke();
+    if (isCm) {
+      ctx.fillStyle = '#6d28d9';
+      ctx.font = `bold ${Math.max(8, Math.min(10, W/40))}px Nunito,sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText(mm/10, x, H - 8);
+    }
+  }
+
+  // Highlight
+  const hw = cm * 10 * mmPx;
+  ctx.fillStyle = 'rgba(236,72,153,0.15)';
+  ctx.fillRect(pad, 14, hw, H - 28);
+  ctx.strokeStyle = '#ec4899';
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(pad, 14, hw, H - 28);
+
+  // Label
+  if (hw > 28) {
+    ctx.fillStyle = '#db2777';
+    ctx.font = `bold ${Math.max(9,Math.min(12, W/30))}px Nunito,sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText(`${cm} cm = ${cm*10} mm`, pad + hw/2, H/2 + 4);
+  }
+}
+function roundRect(ctx, x, y, w, h, r, fill, stroke, lw) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
+}
+window.addEventListener('resize', () => {
+  if (currentStep === 1) drawRuler(+document.getElementById('cmSlider').value);
+});
+setTimeout(() => { updateCm(); }, 120);
+
+/* ════════════════════════════════════════
+   STEP 2 – cm → m
+════════════════════════════════════════ */
+function updateCm2m() {
+  const v = +document.getElementById('cm2mSlider').value;
+  document.getElementById('cm2mVal').textContent = v;
+  const m = parseFloat((v/100).toFixed(v % 100 === 0 ? 0 : 2));
+  document.getElementById('mFromCm').textContent = m;
+  document.getElementById('cm2mBar').style.width = ((v/500)*100) + '%';
+  document.getElementById('cm2mCaption').textContent = `${v} cm = ${m} m`;
+}
+
+/* ════════════════════════════════════════
+   CONVERTER
+════════════════════════════════════════ */
+let convType = 'm2cm';
+let convClass = 'cb-p';
+const convBtns = ['ct-m2cm','ct-cm2mm','ct-cm2m','ct-mm2cm'];
+const convBtnClasses = ['cb-p','cb-pk','cb-am','cb-g'];
+
+function setConvType(type, unit, cls) {
+  convType = type;
+  convClass = cls;
+  convBtns.forEach((id, i) => {
+    const b = document.getElementById(id);
+    b.classList.remove('sel');
+    // reset op-tag style
+    const tag = b.querySelector('.op-tag');
+    tag.style.background = '#ede9fe';
+    tag.style.color = '#7c3aed';
+  });
+  const active = document.getElementById('ct-'+type);
+  active.classList.add('sel');
+  const activeTag = active.querySelector('.op-tag');
+  activeTag.style.background = 'rgba(255,255,255,.22)';
+  activeTag.style.color = '#fff';
+  document.getElementById('convUnitLabel').textContent = unit;
+  doConvert();
+}
+
+function doConvert() {
+  const raw = document.getElementById('convInput').value;
+  const num = parseFloat(raw);
+  const res = document.getElementById('convResult');
+  const steps = document.getElementById('convSteps');
+  const stepsIn = document.getElementById('convStepsInner');
+
+  if (raw === '' || isNaN(num) || num < 0) {
+    res.innerHTML = '<div style="color:#c4b5fd;font-size:.85rem;font-weight:800">Enter a number above ☝️</div>';
+    steps.style.display = 'none';
+    return;
+  }
+
+  let result, fromU, toU, op, s1, s2, s3, reason, resColor;
+  if (convType === 'm2cm') {
+    result = num*100; fromU='m'; toU='cm'; op='× 100'; resColor='#7c3aed';
+    reason='because 1 m = 100 cm';
+    s1=`<b>${num} m</b>`; s2=`${num} × 100`; s3=`<b style="color:#7c3aed">${result} cm</b>`;
+  } else if (convType === 'cm2mm') {
+    result = num*10; fromU='cm'; toU='mm'; op='× 10'; resColor='#db2777';
+    reason='because 1 cm = 10 mm';
+    s1=`<b>${num} cm</b>`; s2=`${num} × 10`; s3=`<b style="color:#db2777">${result} mm</b>`;
+  } else if (convType === 'cm2m') {
+    result = parseFloat((num/100).toFixed(4)); fromU='cm'; toU='m'; op='÷ 100'; resColor='#b45309';
+    reason='because 100 cm = 1 m';
+    s1=`<b>${num} cm</b>`; s2=`${num} ÷ 100`; s3=`<b style="color:#b45309">${result} m</b>`;
+  } else {
+    result = parseFloat((num/10).toFixed(4)); fromU='mm'; toU='cm'; op='÷ 10'; resColor='#15803d';
+    reason='because 10 mm = 1 cm';
+    s1=`<b>${num} mm</b>`; s2=`${num} ÷ 10`; s3=`<b style="color:#15803d">${result} cm</b>`;
+  }
+
+  res.innerHTML = `
+    <div style="font-size:.72rem;font-weight:800;color:#a78bfa;margin-bottom:6px">${op}</div>
+    <div class="arrow-row">
+      <span style="font-size:2rem;font-weight:900;color:${resColor}">${num}</span>
+      <span style="font-size:1rem;font-weight:800;color:#9ca3af">${fromU}</span>
+      <span style="font-size:1.5rem;color:#c4b5fd">→</span>
+      <span style="font-size:2rem;font-weight:900;color:${resColor}">${result}</span>
+      <span style="font-size:1rem;font-weight:800;color:#9ca3af">${toU}</span>
+    </div>`;
+  res.classList.remove('pop');
+  void res.offsetWidth;
+  res.classList.add('pop');
+
+  stepsIn.innerHTML = `
+    <div class="step-row"><div class="step-num">1</div><div class="step-text">Start with ${s1}</div></div>
+    <div class="step-row"><div class="step-num">2</div><div class="step-text">Calculate: <b>${s2}</b></div></div>
+    <div class="step-row"><div class="step-num">3</div><div class="step-text">Answer: ${s3} 🎉</div></div>
+    <div style="font-size:.72rem;color:#6b7280;font-weight:700;margin-top:6px;padding-left:34px">We ${op.includes('×')?'multiply':'divide'} ${reason}.</div>`;
+  steps.style.display = 'block';
+}
+
+/* ════════════════════════════════════════
+   QUIZ
+════════════════════════════════════════ */
+const Qs = [
+  { q:'How many centimetres are in 1 metre?', opts:['10 cm','50 cm','100 cm','1 000 cm'], ans:2, hint:'1 m = ___ cm → multiply by 100!' },
+  { q:'Convert 3 m into centimetres.', opts:['3 cm','30 cm','300 cm','3 000 cm'], ans:2, hint:'3 × 100 = 300 cm ✅' },
+  { q:'How many millimetres make 1 centimetre?', opts:['1 mm','5 mm','10 mm','100 mm'], ans:2, hint:'1 cm = ___ mm → multiply by 10!' },
+  { q:'Convert 5 cm into millimetres.', opts:['5 mm','15 mm','50 mm','500 mm'], ans:2, hint:'5 × 10 = 50 mm ✅' },
+  { q:'200 cm equals how many metres?', opts:['0.2 m','2 m','20 m','200 m'], ans:1, hint:'200 ÷ 100 = 2 m ✅' },
+  { q:'Convert 7 m into centimetres.', opts:['7 cm','70 cm','700 cm','7 000 cm'], ans:2, hint:'7 × 100 = 700 cm ✅' },
+  { q:'A pencil is 15 cm. How many mm?', opts:['15 mm','150 mm','1 500 mm','1.5 mm'], ans:1, hint:'15 × 10 = 150 mm ✅' },
+  { q:'Which unit is the BIGGEST?', opts:['1 mm','1 cm','1 m','All equal'], ans:2, hint:'m > cm > mm — metre is biggest! 🏆' },
+];
+
+let qIdx=0, qScore=0, qStarted=false, qDone=false, qAnswered=false;
+
+function startQuiz() {
+  qIdx=0; qScore=0; qStarted=true; qDone=false;
+  document.getElementById('qScore').textContent = '0';
+  document.getElementById('qTotal').textContent = Qs.length;
+  document.getElementById('qBar').style.width = '0%';
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('hintBox').style.display = 'none';
+  renderQ();
+}
+
+function renderQ() {
+  qAnswered = false;
+  const q = Qs[qIdx];
+  document.getElementById('qBar').style.width = ((qIdx/Qs.length)*100)+'%';
+  document.getElementById('quizMain').innerHTML = `
+    <div class="q-card">
+      <div style="font-size:.72rem;font-weight:800;color:#a78bfa;margin-bottom:6px">Question ${qIdx+1} of ${Qs.length}</div>
+      <div class="q-text">${q.q}</div>
+    </div>
+    <div class="opts-grid">
+      ${q.opts.map((o,i)=>`<button class="opt-btn" id="opt${i}" onclick="pick(${i})">${o}</button>`).join('')}
+    </div>`;
+  document.getElementById('hintBox').style.display = 'none';
+  document.getElementById('feedbackBox').style.display = 'none';
+}
+
+function pick(i) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const q = Qs[qIdx];
+  // Disable all
+  for(let k=0;k<4;k++){
+    const b = document.getElementById('opt'+k);
+    if(b){ b.classList.add('disabled'); if(k===q.ans) b.classList.add('correct'); else if(k===i) b.classList.add('wrong'); }
+  }
+  const fb = document.getElementById('feedbackBox');
+  const hint = document.getElementById('hintBox');
+  hint.textContent = '💡 ' + q.hint;
+  hint.style.display = 'block';
+
+  if (i === q.ans) {
+    qScore++;
+    document.getElementById('qScore').textContent = qScore;
+    fb.className = 'feedback-box ok';
+    fb.textContent = ['🎉 Amazing!','✅ Correct!','🌟 Superstar!','🏆 Perfect!'][Math.floor(Math.random()*4)];
+    confetti();
+  } else {
+    fb.className = 'feedback-box bad';
+    fb.textContent = `❌ Not this time! Answer: "${q.opts[q.ans]}"`;
+  }
+  fb.style.display = 'block';
+
+  setTimeout(() => {
+    qIdx++;
+    if (qIdx < Qs.length) { renderQ(); }
+    else { endQuiz(); }
+  }, 2200);
+}
+
+function endQuiz() {
+  qDone = true;
+  const pct = Math.round((qScore/Qs.length)*100);
+  const emoji = pct===100?'🏆':pct>=75?'🌟':pct>=50?'😊':'💪';
+  const msg = pct===100?'Perfect! You are a measurement genius!':
+              pct>=75?'Great job! Keep it up!':
+              pct>=50?'Good work! Practise a bit more!':'Keep going — you\'ll get it!';
+  document.getElementById('quizMain').innerHTML = `
+    <div class="quiz-center">
+      <div class="big-emoji">${emoji}</div>
+      <h2>${qScore} / ${Qs.length}</h2>
+      <p>${msg}</p>
+      <button class="start-btn" onclick="startQuiz()">🔄 Try Again!</button>
+    </div>`;
+  document.getElementById('hintBox').style.display = 'none';
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('qBar').style.width = '100%';
+  if (pct===100) confetti();
+  updateFinalScore();
+}
+
+function updateFinalScore() {
+  if (!qDone) return;
+  const pct = Math.round((qScore/Qs.length)*100);
+  const box = document.getElementById('finalScoreBox');
+  box.style.display = 'block';
+  document.getElementById('finalScoreText').textContent = `${qScore} / ${Qs.length}  (${pct}%)`;
+  document.getElementById('finalMsg').textContent =
+    pct===100?'🏆 Perfect! Measurement master!':
+    pct>=75?'🌟 Excellent work!':
+    pct>=50?'😊 Good effort! Keep practising!':'💪 Don\'t give up!';
+}
+
+/* ════════════════════════════════════════
+   CONFETTI
+════════════════════════════════════════ */
+function confetti() {
+  const cols = ['#7c3aed','#ec4899','#f59e0b','#10b981','#3b82f6','#ef4444','#fff'];
+  for (let i=0;i<50;i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const sz = Math.random()*9+4;
+    el.style.cssText = `
+      left:${Math.random()*100}vw; top:-15px;
+      width:${sz}px; height:${sz}px;
+      background:${cols[Math.floor(Math.random()*cols.length)]};
+      border-radius:${Math.random()>.5?'50%':'3px'};
+      animation-duration:${Math.random()*1.4+1}s;
+      animation-delay:${Math.random()*0.6}s;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 3000);
+  }
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  updateMeter();
+  setTimeout(() => { updateCm(); updateCm2m(); }, 150);
+});
+</script>
+</body>
+</html>

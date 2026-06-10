@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Learning Length — Teacher Manal Bazzi</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   DESIGN SYSTEM
+═══════════════════════════════════════ */
+:root {
+  --bg:       #f5f0ff;
+  --white:    #ffffff;
+  --dark:     #1e1b4b;
+  --muted:    #6b7280;
+
+  --purple:   #7c3aed;
+  --purple-l: #ede9fe;
+  --blue:     #2563eb;
+  --blue-l:   #dbeafe;
+  --green:    #16a34a;
+  --green-l:  #dcfce7;
+  --orange:   #ea580c;
+  --orange-l: #ffedd5;
+  --pink:     #db2777;
+  --pink-l:   #fce7f3;
+  --yellow:   #ca8a04;
+  --yellow-l: #fef9c3;
+  --red:      #dc2626;
+  --red-l:    #fee2e2;
+
+  --radius:   20px;
+  --shadow:   0 4px 24px rgba(124,58,237,.12);
+  --shadow-lg:0 12px 40px rgba(124,58,237,.18);
+}
+
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  min-height:100vh;
+  overflow-x:hidden;
+  touch-action:pan-y;
+  position:relative;
+}
+
+/* ── PASTEL BG ── */
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 5% 0%,   rgba(167,139,250,.2) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 95% 5%,  rgba(251,191,36,.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 50% 100%,rgba(110,231,183,.15) 0%, transparent 60%);
+}
+
+/* ── HEADER ── */
+header {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(124,58,237,.1);
+  padding:12px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+  box-shadow:0 2px 16px rgba(124,58,237,.08);
+}
+.header-left { display:flex; align-items:center; gap:12px; }
+.header-icon {
+  width:42px; height:42px;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem;
+  box-shadow:0 4px 12px rgba(124,58,237,.3);
+}
+.header-title {
+  font-family:'Fredoka One',cursive;
+  font-size:1.2rem; color:var(--purple); line-height:1.1;
+}
+.header-sub {
+  font-size:.72rem; color:var(--muted); font-weight:700; letter-spacing:.03em;
+}
+.student-badge {
+  display:none;
+  align-items:center; gap:8px;
+  background:var(--purple-l);
+  border:1.5px solid rgba(124,58,237,.2);
+  border-radius:30px; padding:6px 14px;
+}
+.student-badge.show { display:flex; }
+.badge-avatar { font-size:1.3rem; }
+.badge-name { font-size:.82rem; font-weight:800; color:var(--purple); }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap {
+  position:fixed; top:66px; left:0; right:0; z-index:99;
+  height:4px; background:rgba(124,58,237,.1);
+}
+.progress-fill {
+  height:100%;
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+  transition:width .5s ease;
+  border-radius:0 2px 2px 0;
+}
+
+/* ── SCREEN WRAPPER ── */
+.app-wrap {
+  position:relative; z-index:10;
+  max-width:800px; margin:0 auto;
+  padding:90px 16px 32px;
+}
+
+.screen {
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  animation:fadeUp .45s ease both;
+}
+.screen.active { display:flex; }
+@keyframes fadeUp {
+  from{opacity:0;transform:translateY(18px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ── CARDS ── */
+.card {
+  background:var(--white);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  border:1.5px solid rgba(124,58,237,.08);
+  padding:28px 24px;
+  width:100%;
+}
+.card-color {
+  border-radius:var(--radius);
+  padding:22px 20px;
+}
+.card-green  { background:var(--green-l);  border:1.5px solid #86efac; }
+.card-orange { background:var(--orange-l); border:1.5px solid #fdba74; }
+.card-blue   { background:var(--blue-l);   border:1.5px solid #93c5fd; }
+.card-purple { background:var(--purple-l); border:1.5px solid #c4b5fd; }
+.card-yellow { background:var(--yellow-l); border:1.5px solid #fde68a; }
+
+/* ── SECTION TITLE ── */
+.screen-title {
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.6rem,5vw,2.2rem);
+  color:var(--dark); text-align:center;
+  margin-bottom:6px; line-height:1.2;
+}
+.screen-sub {
+  font-size:.95rem; color:var(--muted); text-align:center;
+  margin-bottom:20px; max-width:520px; line-height:1.6;
+}
+
+/* ── STEP BADGE ── */
+.step-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:white; font-size:.65rem; font-weight:900;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:4px 14px; border-radius:20px;
+  margin-bottom:20px;
+  box-shadow:0 3px 10px rgba(124,58,237,.25);
+}
+
+/* ── FORM ELEMENTS ── */
+.form-label {
+  display:block; font-weight:800; color:var(--dark);
+  font-size:.88rem; margin-bottom:8px;
+  letter-spacing:.02em;
+}
+.form-input {
+  width:100%; padding:12px 18px;
+  border:2px solid #e0d9ff; border-radius:14px;
+  font-family:'Nunito',sans-serif; font-size:1rem;
+  font-weight:700; color:var(--dark);
+  outline:none; transition:all .2s;
+  background:white;
+}
+.form-input:focus { border-color:var(--purple); box-shadow:0 0 0 3px rgba(124,58,237,.12); }
+.form-input.error { border-color:var(--red); animation:shake .3s ease; }
+@keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
+
+/* ── AVATAR DRAG ── */
+.avatars-row {
+  display:flex; justify-content:center; gap:20px; margin-bottom:16px;
+}
+.avatar-card {
+  display:flex; flex-direction:column; align-items:center;
+  padding:18px 24px; border-radius:18px;
+  cursor:grab; transition:all .2s;
+  user-select:none;
+}
+.avatar-card:active { cursor:grabbing; transform:scale(1.08); }
+.avatar-card.boy  { background:var(--blue-l);  border:2px solid #93c5fd; }
+.avatar-card.girl { background:var(--pink-l);  border:2px solid #f9a8d4; }
+.avatar-emoji { font-size:3.5rem; pointer-events:none; }
+.avatar-label { font-weight:800; font-size:.85rem; margin-top:8px; pointer-events:none; }
+.avatar-card.boy  .avatar-label { color:var(--blue); }
+.avatar-card.girl .avatar-label { color:var(--pink); }
+
+.avatar-card.selected {
+  transform:scale(1.08);
+  box-shadow:0 0 0 3px var(--purple), 0 6px 18px rgba(124,58,237,.25);
+}
+.avatar-card.boy.selected  { border-color:var(--blue); }
+.avatar-card.girl.selected { border-color:var(--pink); }
+  border:3px dashed rgba(124,58,237,.3);
+  border-radius:18px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:8px; background:var(--purple-l);
+  transition:all .2s;
+}
+.drop-zone.drag-over { border-color:var(--green); background:var(--green-l); }
+.drop-zone .dz-icon { font-size:2rem; }
+.drop-zone .dz-text { font-weight:700; color:rgba(124,58,237,.5); font-size:.9rem; }
+
+/* ── DRAGGING GHOST ── */
+.drag-ghost {
+  position:fixed; z-index:9999; pointer-events:none;
+  transform:scale(1.12); opacity:.88;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  font-family:'Fredoka One',cursive;
+  border:none; cursor:pointer;
+  border-radius:14px; transition:all .18s;
+  display:inline-flex; align-items:center;
+  justify-content:center; gap:8px;
+  touch-action:manipulation;
+  letter-spacing:.03em;
+}
+.btn:active { transform:scale(.96); }
+.btn:disabled { opacity:.5; cursor:not-allowed; }
+
+.btn-primary {
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:white; font-size:1rem;
+  padding:14px 32px;
+  box-shadow:0 6px 20px rgba(124,58,237,.3);
+  width:100%; max-width:360px;
+}
+.btn-primary:hover { box-shadow:0 8px 28px rgba(124,58,237,.4); transform:translateY(-2px); }
+
+.btn-green {
+  background:linear-gradient(135deg,#16a34a,#059669);
+  color:white; font-size:.95rem;
+  padding:11px 24px;
+  box-shadow:0 4px 14px rgba(22,163,74,.28);
+}
+.btn-green:hover { transform:translateY(-1px); }
+
+.btn-sm {
+  background:var(--purple-l);
+  color:var(--purple); font-size:.85rem;
+  padding:9px 18px; border-radius:10px;
+  font-family:'Nunito',sans-serif;
+  font-weight:800; border:1.5px solid rgba(124,58,237,.2);
+}
+.btn-sm:hover { background:#ddd6fe; }
+
+.btn-pulse {
+  animation:btnPulse 2s ease-in-out infinite;
+}
+@keyframes btnPulse {
+  0%,100%{box-shadow:0 6px 20px rgba(124,58,237,.3);}
+  50%{box-shadow:0 6px 28px rgba(124,58,237,.55);}
+}
+
+/* ── SLIDER ── */
+.slider-wrap { position:relative; margin:16px 0; }
+input[type=range] {
+  -webkit-appearance:none; appearance:none;
+  width:100%; height:8px;
+  border-radius:4px;
+  background:linear-gradient(90deg, var(--purple) calc(var(--pct,0) * 1%), #e2e8f0 calc(var(--pct,0) * 1%));
+  outline:none; cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; appearance:none;
+  width:24px; height:24px; border-radius:50%;
+  background:white; border:3px solid var(--purple);
+  box-shadow:0 2px 8px rgba(124,58,237,.3);
+  cursor:pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width:24px; height:24px; border-radius:50%;
+  background:white; border:3px solid var(--purple);
+  box-shadow:0 2px 8px rgba(124,58,237,.3);
+  cursor:pointer;
+}
+
+/* Slider result boxes */
+.slider-result {
+  display:flex; align-items:center; justify-content:center;
+  gap:16px; flex-wrap:wrap; margin-top:16px;
+}
+.result-box {
+  flex:1; min-width:120px;
+  border-radius:16px; padding:14px 18px;
+  text-align:center; transition:all .3s;
+}
+.result-num {
+  font-family:'Fredoka One',cursive;
+  font-size:2rem; line-height:1;
+}
+.result-unit { font-size:.78rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; margin-top:4px; }
+
+.result-cm  { background:var(--blue-l);   border:2px solid #93c5fd; }
+.result-cm  .result-num { color:var(--blue); }
+.result-cm  .result-unit { color:rgba(37,99,235,.6); }
+
+.result-m   { background:var(--orange-l); border:2px solid #fdba74; }
+.result-m   .result-num { color:var(--orange); }
+.result-m   .result-unit { color:rgba(234,88,12,.6); }
+.result-m.glow { background:var(--green-l); border-color:#86efac; }
+.result-m.glow .result-num { color:var(--green); }
+.result-m.glow .result-unit { color:rgba(22,163,74,.6); }
+
+/* ── RULER AREA ── */
+.ruler-scene {
+  position:relative;
+  width:100%; height:240px;
+  background:linear-gradient(180deg,#e0f2fe,#f0f9ff);
+  border-radius:16px; border:1.5px solid #bae6fd;
+  overflow:hidden; margin-bottom:14px;
+}
+.pencil-svg { position:absolute; top:60px; left:80px; }
+.interactive-ruler {
+  position:absolute;
+  bottom:24px; left:20px;
+  width:320px; height:54px;
+  background:linear-gradient(180deg,#fef08a,#fde047);
+  border:2px solid #ca8a04;
+  border-radius:8px;
+  cursor:grab; user-select:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  display:flex; flex-direction:column;
+  justify-content:flex-end; padding:0 4px 3px;
+}
+.interactive-ruler:active { cursor:grabbing; }
+.ruler-label { position:absolute; top:3px; left:5px; font-size:.6rem; font-weight:900; color:#92400e; }
+.ruler-nums {
+  display:flex; justify-content:space-between;
+  font-size:.65rem; font-weight:900; color:#1c1917;
+  padding:0 2px; margin-bottom:1px;
+}
+.ruler-ticks { display:flex; justify-content:space-between; padding:0 2px; }
+.ruler-tick { width:1.5px; background:#1c1917; }
+.ruler-tick.big { height:14px; }
+.ruler-tick.small { height:8px; }
+
+/* ── MEASURE INPUT ROW ── */
+.measure-row {
+  display:flex; align-items:center; gap:10px;
+  justify-content:center; flex-wrap:wrap;
+  margin:12px 0;
+}
+.measure-label { font-weight:800; color:var(--dark); font-size:1rem; }
+.measure-input {
+  width:80px; padding:10px;
+  border:2.5px solid #e0d9ff; border-radius:12px;
+  font-family:'Fredoka One',cursive;
+  font-size:1.5rem; color:var(--dark);
+  text-align:center; outline:none; transition:all .2s;
+  background:white;
+}
+.measure-input:focus { border-color:var(--purple); box-shadow:0 0 0 3px rgba(124,58,237,.12); }
+.measure-feedback { text-align:center; min-height:28px; font-weight:800; font-size:.95rem; }
+
+/* ── CONCEPT CARDS GRID ── */
+.concept-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; width:100%; margin-bottom:16px; }
+@media(max-width:480px){ .concept-grid { grid-template-columns:1fr; } }
+.concept-card { border-radius:16px; padding:18px 16px; text-align:center; }
+.concept-icon { font-size:2.5rem; display:block; margin-bottom:8px; }
+.concept-title { font-family:'Fredoka One',cursive; font-size:1.1rem; margin-bottom:6px; }
+.concept-desc  { font-size:.82rem; font-weight:600; line-height:1.5; }
+
+/* ── MEMORY GAME ── */
+.memory-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px; width:100%;
+  margin-bottom:16px;
+}
+@media(max-width:500px){ .memory-grid{ grid-template-columns:repeat(2,1fr); } }
+
+.memory-card {
+  perspective:1000px;
+  height:88px; cursor:pointer;
+}
+.memory-card-inner {
+  position:relative; width:100%; height:100%;
+  transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  transform-style:preserve-3d;
+}
+.memory-card.flipped .memory-card-inner { transform:rotateY(180deg); }
+
+.card-face {
+  position:absolute; inset:0;
+  border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  -webkit-backface-visibility:hidden; backface-visibility:hidden;
+  font-weight:700; padding:8px;
+  border:2px solid;
+}
+.card-front {
+  background:linear-gradient(135deg,#7c3aed,#4f46e5);
+  color:white; font-size:1.6rem;
+  border-color:#a78bfa;
+  box-shadow:0 4px 12px rgba(124,58,237,.22);
+}
+.card-back {
+  background:white; transform:rotateY(180deg);
+  color:var(--purple); font-size:.78rem;
+  text-align:center; line-height:1.3;
+  border-color:#c4b5fd;
+  box-shadow:0 4px 12px rgba(0,0,0,.07);
+}
+.card-back.matched { background:var(--green-l); border-color:#86efac; color:var(--green); }
+
+.memory-feedback { text-align:center; min-height:28px; font-weight:800; font-size:.95rem; }
+
+/* ── CERTIFICATE ── */
+.cert-wrap {
+  background:white;
+  border-radius:24px;
+  border:4px solid #fde68a;
+  padding:32px 28px;
+  width:100%; max-width:580px;
+  position:relative; text-align:center;
+  box-shadow:0 12px 40px rgba(0,0,0,.12);
+}
+.cert-ribbon {
+  position:absolute; top:-18px; left:50%; transform:translateX(-50%);
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  color:#1c1917; font-family:'Fredoka One',cursive;
+  font-size:.9rem; padding:6px 24px;
+  border-radius:30px; border:2px solid #fde68a;
+  box-shadow:0 4px 12px rgba(245,158,11,.3);
+  white-space:nowrap;
+}
+.cert-title {
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.4rem,4vw,2rem);
+  color:var(--purple); margin:16px 0 12px;
+}
+.cert-student-row {
+  display:flex; align-items:center; justify-content:center;
+  gap:14px; margin-bottom:16px;
+}
+.cert-avatar { font-size:3rem; background:var(--purple-l); padding:12px; border-radius:50%; border:3px solid #c4b5fd; }
+.cert-name { font-family:'Fredoka One',cursive; font-size:1.6rem; color:var(--dark); border-bottom:3px solid var(--purple); padding-bottom:4px; }
+.cert-body { font-size:.88rem; color:var(--muted); margin-bottom:16px; line-height:1.6; }
+
+.key-points { text-align:left; margin-bottom:20px; }
+.key-point {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 16px; border-radius:14px; margin-bottom:10px;
+  font-size:.88rem; font-weight:700;
+}
+.key-point.p1 { background:var(--blue-l);  color:#1d4ed8; border:1.5px solid #93c5fd; }
+.key-point.p2 { background:var(--green-l); color:#15803d; border:1.5px solid #86efac; }
+.key-point.p3 { background:var(--yellow-l);color:#92400e; border:1.5px solid #fde68a; font-weight:900; font-size:.95rem; }
+.key-point-icon { font-size:1.4rem; flex-shrink:0; }
+
+.cert-footer {
+  display:flex; justify-content:space-between; align-items:end;
+  border-top:2px solid #f1f5f9; padding-top:16px;
+}
+.cert-sig { font-size:.78rem; color:var(--muted); font-weight:700; }
+.cert-sig-name { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; color:var(--dark); font-style:italic; font-weight:700; }
+.cert-seal {
+  width:60px; height:60px; background:var(--yellow-l);
+  border:3px solid #fde68a; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.8rem; box-shadow:inset 0 2px 6px rgba(0,0,0,.08);
+}
+.btn-restart { font-size:.88rem; color:var(--purple); font-weight:800; text-decoration:underline; cursor:pointer; background:none; border:none; margin-top:12px; }
+
+/* ── INFO BOX ── */
+.info-box {
+  display:flex; align-items:flex-start; gap:12px;
+  background:var(--yellow-l); border:1.5px solid #fde68a;
+  border-radius:14px; padding:14px 16px; margin-bottom:14px;
+}
+.info-icon { font-size:1.3rem; flex-shrink:0; margin-top:1px; }
+.info-text { font-size:.84rem; font-weight:700; color:#92400e; line-height:1.5; }
+
+/* ── DIVIDER ── */
+.divider { width:100%; height:1px; background:rgba(124,58,237,.1); margin:16px 0; }
+
+/* ── CONFETTI ── */
+.confetti-piece {
+  position:fixed; pointer-events:none; z-index:9999;
+  animation:confettiFall linear forwards;
+  border-radius:2px;
+}
+@keyframes confettiFall {
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0;}
+}
+
+/* ── BOUNCE ANIM ── */
+.bounce { animation:bounce 2.2s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+
+/* ── STAGES PREVIEW ── */
+.stages-row {
+  display:flex; align-items:flex-start;
+  justify-content:center; gap:0;
+  background:white; border-radius:20px;
+  border:1.5px solid rgba(124,58,237,.1);
+  padding:20px 14px 16px;
+  box-shadow:var(--shadow);
+  overflow-x:auto;
+}
+.stage-step {
+  display:flex; flex-direction:column; align-items:center;
+  flex:1; min-width:70px; position:relative;
+  text-align:center; cursor:pointer;
+  border-radius:14px; padding:8px 4px 6px;
+  transition:all .2s;
+}
+.stage-step:hover { background:var(--purple-l); }
+.stage-step.locked { cursor:not-allowed; opacity:.5; }
+.stage-step.locked:hover { background:transparent; }
+.stage-step.active-stage .stage-icon {
+  box-shadow:0 0 0 3px white, 0 0 0 5px var(--purple), 0 4px 16px rgba(124,58,237,.35) !important;
+  transform:scale(1.1);
+}
+.stage-step.done-stage .stage-icon {
+  box-shadow:0 0 0 3px white, 0 0 0 5px var(--green), 0 4px 14px rgba(22,163,74,.25) !important;
+}
+/* Connecting line between steps */
+.stage-step:not(:last-child)::after {
+  content:'';
+  position:absolute; top:30px;
+  left:calc(50% + 22px); right:calc(-50% + 22px);
+  height:2px;
+  background:linear-gradient(90deg,rgba(124,58,237,.2),rgba(124,58,237,.06));
+  z-index:0;
+}
+.stage-step.done-stage:not(:last-child)::after {
+  background:linear-gradient(90deg,var(--green),rgba(22,163,74,.2));
+}
+.stage-icon {
+  width:46px; height:46px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.3rem; margin-bottom:6px;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
+  position:relative; z-index:1;
+  flex-shrink:0; transition:all .2s;
+}
+.stage-lock {
+  font-size:.75rem; margin-bottom:4px;
+  line-height:1; height:14px;
+}
+.stage-num {
+  font-family:'Fredoka One',cursive;
+  font-size:.7rem; color:white;
+  background:var(--purple); border-radius:20px;
+  padding:1px 7px; margin-bottom:4px;
+  display:inline-block;
+}
+.stage-step.done-stage .stage-num { background:var(--green); }
+.stage-title {
+  font-family:'Fredoka One',cursive;
+  font-size:.72rem; color:var(--dark);
+  line-height:1.2; margin-bottom:2px;
+}
+.stage-desc { font-size:.62rem; color:var(--muted); font-weight:700; line-height:1.3; }
+
+@media(max-width:400px){
+  .stage-icon { width:36px; height:36px; font-size:1.1rem; border-radius:10px; }
+  .stage-title { font-size:.65rem; }
+  .stage-desc { display:none; }
+  .stages-row { padding:14px 6px 12px; }
+  .stage-step { min-width:58px; }
+}
+
+/* ── SORT GAME ── */
+.sort-score-chip {
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:white; border-radius:20px; padding:6px 16px;
+  font-family:'Fredoka One',cursive; font-size:.9rem;
+  white-space:nowrap;
+  box-shadow:0 3px 10px rgba(124,58,237,.25);
+}
+.sort-bank {
+  display:flex; flex-wrap:wrap; gap:10px;
+  justify-content:center;
+  background:white; border:1.5px solid rgba(124,58,237,.12);
+  border-radius:18px; padding:18px 14px;
+  width:100%; max-width:560px;
+  min-height:90px;
+  box-shadow:var(--shadow);
+}
+.sort-obj {
+  display:flex; flex-direction:column; align-items:center;
+  gap:4px; background:white;
+  border:2px solid #e0d9ff; border-radius:14px;
+  padding:10px 14px; cursor:grab;
+  transition:all .18s; user-select:none;
+  box-shadow:0 2px 8px rgba(124,58,237,.08);
+}
+.sort-obj:hover { border-color:var(--purple); transform:translateY(-3px) scale(1.04); box-shadow:0 6px 18px rgba(124,58,237,.18); }
+.sort-obj:active { cursor:grabbing; transform:scale(1.08); }
+.sort-obj.dragging-now { opacity:.35; transform:scale(.95); }
+.sort-obj .obj-emoji { font-size:2rem; line-height:1; }
+.sort-obj .obj-name  { font-size:.72rem; font-weight:800; color:var(--dark); }
+.sort-obj.correct-flash { animation:correctFlash .45s ease; }
+.sort-obj.wrong-flash   { animation:wrongFlash .45s ease; }
+@keyframes correctFlash { 0%,100%{background:white;} 50%{background:#dcfce7;border-color:#86efac;} }
+@keyframes wrongFlash   { 0%,100%{background:white;} 50%{background:#fee2e2;border-color:#fca5a5;} }
+
+.sort-zones {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:14px; width:100%; max-width:560px;
+}
+@media(max-width:420px){ .sort-zones{grid-template-columns:1fr;} }
+
+.sort-zone {
+  border-radius:18px; padding:16px 12px;
+  border:3px dashed; min-height:180px;
+  display:flex; flex-direction:column; align-items:center;
+  transition:all .2s; position:relative;
+}
+.zone-cm { background:var(--blue-l); border-color:#93c5fd; }
+.zone-m  { background:var(--orange-l); border-color:#fdba74; }
+.sort-zone.zone-hover { transform:scale(1.02); }
+.zone-cm.zone-hover { background:#bfdbfe; border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.15); }
+.zone-m.zone-hover  { background:#fed7aa; border-color:var(--orange); box-shadow:0 0 0 3px rgba(234,88,12,.15); }
+.zone-icon  { font-size:1.8rem; margin-bottom:4px; }
+.zone-title { font-family:'Fredoka One',cursive; font-size:1rem; color:var(--dark); }
+.zone-unit  { font-family:'Fredoka One',cursive; font-size:1.6rem; color:var(--dark); }
+.zone-cm .zone-unit { color:var(--blue); }
+.zone-m  .zone-unit { color:var(--orange); }
+.zone-hint  { font-size:.7rem; font-weight:700; color:var(--muted); margin-bottom:8px; }
+.zone-items { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; }
+.zone-placed {
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  background:white; border-radius:10px; padding:6px 8px;
+  font-size:1.3rem; border:2px solid;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  animation:placeIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes placeIn { from{transform:scale(.4);opacity:0;} to{transform:scale(1);opacity:1;} }
+.zone-placed .placed-name { font-size:.6rem; font-weight:800; color:var(--muted); }
+.zone-cm .zone-placed { border-color:#93c5fd; }
+.zone-m  .zone-placed { border-color:#fdba74; }
+
+/* ── MOBILE ── */
+@media(max-width:480px){
+  .app-wrap { padding-top:80px; padding-left:12px; padding-right:12px; }
+  .card { padding:20px 16px; }
+  .cert-wrap { padding:24px 16px; }
+  .hud-chip { min-width:76px; padding:7px 10px; }
+  .hud-value { font-size:.95rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="header-icon">📏</div>
+    <div>
+      <div class="header-title">Math Adventure</div>
+      <div class="header-sub">Teacher: Manal Bazzi</div>
+    </div>
+  </div>
+  <div class="student-badge" id="studentBadge">
+    <span class="badge-avatar" id="badgeAvatar"></span>
+    <span class="badge-name" id="badgeName"></span>
+  </div>
+</header>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap">
+  <div class="progress-fill" id="progressFill" style="width:0%"></div>
+</div>
+<!-- HOME BUTTON (visible on screens 2-6) -->
+<div id="homeBtn" style="display:none;position:fixed;top:70px;right:16px;z-index:98">
+  <button onclick="goHome()" style="background:white;border:1.5px solid rgba(124,58,237,.2);border-radius:12px;padding:6px 14px;font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--purple);cursor:pointer;box-shadow:var(--shadow);display:flex;align-items:center;gap:6px;transition:all .2s" onmouseover="this.style.background='var(--purple-l)'" onmouseout="this.style.background='white'">
+    🗺️ Stages
+  </button>
+</div>
+
+<!-- APP WRAP -->
+<div class="app-wrap">
+
+<!-- ══════════════════════════════
+     SCREEN 1: WELCOME
+══════════════════════════════ -->
+<section id="screen-1" class="screen active" style="gap:18px">
+  <div class="step-badge">📚 Getting Started</div>
+  <h1 class="screen-title bounce">Welcome to<br>Math Class! 🎉</h1>
+  <p class="screen-sub">Today we'll learn about measuring length. Let's get you set up first!</p>
+
+  <!-- STAGES PREVIEW -->
+  <div style="width:100%;max-width:560px">
+    <div style="font-family:'Fredoka One',cursive;font-size:.85rem;color:var(--muted);text-align:center;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px">Your Journey Today 🗺️</div>
+    <div class="stages-row">
+      <div class="stage-step" id="stage-btn-2" onclick="jumpToStage(2)">
+        <div class="stage-icon" style="background:linear-gradient(135deg,#6d28d9,#4f46e5)">📖</div>
+        <div class="stage-lock" id="stage-lock-2">🔓</div>
+        <div class="stage-num">1</div>
+        <div class="stage-title">What is Length?</div>
+        <div class="stage-desc">cm vs m</div>
+      </div>
+      <div class="stage-step" id="stage-btn-3" onclick="jumpToStage(3)">
+        <div class="stage-icon" style="background:linear-gradient(135deg,#0284c7,#0891b2)">📏</div>
+        <div class="stage-lock" id="stage-lock-3">🔒</div>
+        <div class="stage-num">2</div>
+        <div class="stage-title">Use the Ruler</div>
+        <div class="stage-desc">Measure a pencil</div>
+      </div>
+      <div class="stage-step" id="stage-btn-4" onclick="jumpToStage(4)">
+        <div class="stage-icon" style="background:linear-gradient(135deg,#16a34a,#059669)">🗂️</div>
+        <div class="stage-lock" id="stage-lock-4">🔒</div>
+        <div class="stage-num">3</div>
+        <div class="stage-title">Sort It!</div>
+        <div class="stage-desc">Drag & drop game</div>
+      </div>
+      <div class="stage-step" id="stage-btn-5" onclick="jumpToStage(5)">
+        <div class="stage-icon" style="background:linear-gradient(135deg,#a21caf,#7c3aed)">🧠</div>
+        <div class="stage-lock" id="stage-lock-5">🔒</div>
+        <div class="stage-num">4</div>
+        <div class="stage-title">Memory Match</div>
+        <div class="stage-desc">Find the pairs</div>
+      </div>
+      <div class="stage-step" id="stage-btn-6" onclick="jumpToStage(6)">
+        <div class="stage-icon" style="background:linear-gradient(135deg,#ca8a04,#d97706)">🎓</div>
+        <div class="stage-lock" id="stage-lock-6">🔒</div>
+        <div class="stage-num">5</div>
+        <div class="stage-title">Certificate</div>
+        <div class="stage-desc">You're an expert!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="max-width:440px">
+
+    <!-- Name -->
+    <label class="form-label">1. Write your name:</label>
+    <input type="text" id="studentName" class="form-input" placeholder="My name is..." autocomplete="off">
+
+    <div class="divider"></div>
+
+    <!-- Avatar pick -->
+    <label class="form-label">2. Who are you?</label>
+    <div class="avatars-row" style="margin-bottom:0">
+      <div class="avatar-card boy" id="avatarBoy" onclick="pickAvatar('boy')" style="cursor:pointer">
+        <span class="avatar-emoji">👦</span>
+        <span class="avatar-label">Boy</span>
+      </div>
+      <div class="avatar-card girl" id="avatarGirl" onclick="pickAvatar('girl')" style="cursor:pointer">
+        <span class="avatar-emoji">👧</span>
+        <span class="avatar-label">Girl</span>
+      </div>
+    </div>
+    <p id="avatarHint" style="text-align:center;font-size:.78rem;color:var(--muted);font-weight:700;margin-top:8px">Tap to choose 👆</p>
+
+    <div class="divider"></div>
+
+    <!-- Start button -->
+    <button class="btn btn-primary" onclick="startLesson()" style="margin-top:4px">
+      Let's Start! 🚀
+    </button>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SCREEN 2: WHAT IS LENGTH?
+══════════════════════════════ -->
+<section id="screen-2" class="screen" style="gap:16px">
+  <div class="step-badge">📖 Lesson 1 of 4</div>
+  <h1 class="screen-title">What is Length?</h1>
+  <p class="screen-sub">Length tells us how <strong>long</strong> or <strong>tall</strong> something is.</p>
+
+  <div class="concept-grid">
+    <div class="concept-card card-color card-blue">
+      <span class="concept-icon">🐜 ✏️</span>
+      <div class="concept-title" style="color:#1d4ed8">Centimeters (cm)</div>
+      <div class="concept-desc" style="color:#1e40af">We use <strong>cm</strong> for <em>small</em> things — like a bug, a pencil, or an eraser.</div>
+    </div>
+    <div class="concept-card card-color card-orange">
+      <span class="concept-icon">🚗 🌳</span>
+      <div class="concept-title" style="color:#c2410c">Meters (m)</div>
+      <div class="concept-desc" style="color:#9a3412">We use <strong>m</strong> for <em>BIG</em> things — like a car, a tree, or your classroom.</div>
+    </div>
+  </div>
+
+  <div class="card" style="max-width:560px">
+    <div style="text-align:center;margin-bottom:12px">
+      <span style="font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--dark)">✨ The Magic Rule!</span>
+    </div>
+    <p style="text-align:center;font-weight:700;color:var(--muted);font-size:.88rem;margin-bottom:14px">Slide to see how centimeters turn into meters:</p>
+
+    <input type="range" id="lengthSlider" min="0" max="200" value="0" style="--pct:0">
+
+    <div class="slider-result">
+      <div class="result-box result-cm">
+        <div class="result-num" id="sliderCm">0</div>
+        <div class="result-unit">cm</div>
+      </div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--muted)">=</div>
+      <div class="result-box result-m" id="mBox">
+        <div class="result-num" id="sliderM">0</div>
+        <div class="result-unit">meters</div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:14px;margin-bottom:0">
+      <span class="info-icon">💡</span>
+      <span class="info-text">When you reach <strong>100 cm</strong>, that's exactly <strong>1 meter</strong>! Try sliding to 100 or 200!</span>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="goScreen(3)">Next: Measure It! 📏</button>
+</section>
+
+<!-- ══════════════════════════════
+     SCREEN 3: MEASURE WITH RULER
+══════════════════════════════ -->
+<section id="screen-3" class="screen" style="gap:18px">
+  <div class="step-badge">📏 Lesson 2 of 4</div>
+  <h1 class="screen-title">Use the Ruler! 📏</h1>
+  <p class="screen-sub">Learn how to measure, then try <strong>5 examples</strong> yourself!</p>
+
+  <!-- ── HOW TO USE A RULER (demo) ── -->
+  <div class="card" style="max-width:580px">
+    <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--purple);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      <span style="background:var(--purple);color:white;border-radius:8px;padding:2px 10px;font-size:.78rem">How To</span>
+      How to measure with a ruler
+    </div>
+
+    <!-- Step cards -->
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px;background:var(--blue-l);border-radius:14px;padding:12px 14px;border:1.5px solid #93c5fd">
+        <div style="width:32px;height:32px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Fredoka One',cursive;font-size:.9rem;flex-shrink:0">1</div>
+        <div>
+          <div style="font-weight:900;color:#1d4ed8;font-size:.88rem">Place the 0 at the start</div>
+          <div style="font-size:.76rem;color:#1e40af;font-weight:600">Line up the zero mark with one end of the object.</div>
+        </div>
+        <span style="font-size:1.6rem;margin-right:auto">📍</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;background:var(--green-l);border-radius:14px;padding:12px 14px;border:1.5px solid #86efac">
+        <div style="width:32px;height:32px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Fredoka One',cursive;font-size:.9rem;flex-shrink:0">2</div>
+        <div>
+          <div style="font-weight:900;color:#15803d;font-size:.88rem">Read the number at the other end</div>
+          <div style="font-size:.76rem;color:#166534;font-weight:600">Look where the object ends on the ruler.</div>
+        </div>
+        <span style="font-size:1.6rem;margin-right:auto">👀</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;background:var(--orange-l);border-radius:14px;padding:12px 14px;border:1.5px solid #fdba74">
+        <div style="width:32px;height:32px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-family:'Fredoka One',cursive;font-size:.9rem;flex-shrink:0">3</div>
+        <div>
+          <div style="font-weight:900;color:#c2410c;font-size:.88rem">Write the measurement</div>
+          <div style="font-size:.76rem;color:#9a3412;font-weight:600">Write the number and add "cm" at the end.</div>
+        </div>
+        <span style="font-size:1.6rem;margin-right:auto">✍️</span>
+      </div>
+    </div>
+
+    <!-- DEMO: animated ruler showing measurement -->
+    <div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-radius:16px;padding:16px;border:1.5px solid #bae6fd;margin-bottom:8px">
+      <div style="font-family:'Fredoka One',cursive;font-size:.82rem;color:#0369a1;text-align:center;margin-bottom:10px">👀 Watch: measuring a pencil (6 cm)</div>
+      <!-- Demo scene -->
+      <div style="position:relative;height:110px;background:#f8fafc;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0">
+        <!-- Pencil -->
+        <svg style="position:absolute;top:18px;left:28px" width="192" height="28" viewBox="0 0 192 28">
+          <rect x="0" y="8" width="155" height="12" rx="4" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+          <polygon points="155,8 192,14 155,20" fill="#f97316" stroke="#c2410c" stroke-width="1"/>
+          <rect x="145" y="8" width="12" height="12" fill="#e0e0e0" stroke="#9ca3af" stroke-width="1"/>
+          <rect x="0" y="8" width="10" height="12" rx="2" fill="#9ca3af"/>
+        </svg>
+        <!-- Static demo ruler -->
+        <div style="position:absolute;bottom:14px;left:28px;width:260px;height:44px;background:linear-gradient(180deg,#fef08a,#fde047);border:2px solid #ca8a04;border-radius:6px">
+          <div style="position:absolute;top:2px;left:4px;font-size:.52rem;font-weight:900;color:#92400e">cm</div>
+          <div style="display:flex;justify-content:space-between;padding:0 3px;margin-top:14px;font-size:.6rem;font-weight:900;color:#1c1917">
+            <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 3px">
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#dc2626"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div><div style="width:1px;height:6px;background:#1c1917"></div>
+            <div style="width:1.5px;height:10px;background:#1c1917"></div>
+          </div>
+        </div>
+        <!-- Arrow pointing to 6 -->
+        <div style="position:absolute;bottom:60px;left:180px;font-size:.72rem;font-weight:900;color:#dc2626;text-align:center;line-height:1">6 cm<br>↓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 5 PRACTICE EXAMPLES ── -->
+  <div style="width:100%;max-width:580px">
+    <div style="font-family:'Fredoka One',cursive;font-size:.85rem;color:var(--muted);text-align:center;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px">
+      Now you try! — Example <span id="exNum">1</span> of 5
+    </div>
+
+    <!-- Progress dots -->
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:14px" id="exDots"></div>
+
+    <!-- Example card (rendered by JS) -->
+    <div id="exCard" class="card" style="max-width:580px;transition:all .3s"></div>
+
+    <!-- Navigation -->
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-sm" id="btnPrevEx" onclick="prevExample()" style="display:none">◀ Previous</button>
+      <button class="btn btn-primary btn-pulse" id="btnNextEx" onclick="nextExample()" style="display:none;max-width:220px">Next Example ▶</button>
+      <button class="btn btn-primary btn-pulse" id="btnDoneEx" onclick="goScreen(4)" style="display:none;max-width:260px">🎉 Go to Sort Game!</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     SCREEN 4: SORT IT! DRAG & DROP GAME
+══════════════════════════════ -->
+<section id="screen-4" class="screen" style="gap:16px">
+  <div class="step-badge">🎯 Lesson 3 of 4</div>
+  <h1 class="screen-title">Sort It! 🗂️</h1>
+  <p class="screen-sub">Drag each object into the correct box — <strong style="color:var(--blue)">cm</strong> for small things, <strong style="color:var(--orange)">m</strong> for big things!</p>
+
+  <!-- Score + Progress -->
+  <div style="display:flex;align-items:center;gap:14px;width:100%;max-width:560px">
+    <div class="sort-score-chip" id="sortScoreChip">⭐ 0 / 8</div>
+    <div style="flex:1;height:8px;border-radius:4px;background:#e2e8f0;overflow:hidden">
+      <div id="sortProgress" style="height:100%;width:0%;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:4px;transition:width .4s"></div>
+    </div>
+  </div>
+
+  <!-- Objects bank -->
+  <div class="sort-bank" id="sortBank"></div>
+
+  <!-- Drop zones -->
+  <div class="sort-zones">
+    <div class="sort-zone zone-cm" id="zoneCm"
+         ondragover="event.preventDefault();this.classList.add('zone-hover')"
+         ondragleave="this.classList.remove('zone-hover')"
+         ondrop="dropToZone(event,'cm')">
+      <div class="zone-icon">📏</div>
+      <div class="zone-title">Centimeters</div>
+      <div class="zone-unit">cm</div>
+      <div class="zone-hint">Small things</div>
+      <div class="zone-items" id="zoneItemsCm"></div>
+    </div>
+    <div class="sort-zone zone-m" id="zoneM"
+         ondragover="event.preventDefault();this.classList.add('zone-hover')"
+         ondragleave="this.classList.remove('zone-hover')"
+         ondrop="dropToZone(event,'m')">
+      <div class="zone-icon">🏗️</div>
+      <div class="zone-title">Meters</div>
+      <div class="zone-unit">m</div>
+      <div class="zone-hint">Big things</div>
+      <div class="zone-items" id="zoneItemsM"></div>
+    </div>
+  </div>
+
+  <!-- Feedback -->
+  <div id="sortFeedback" style="min-height:28px;font-weight:800;font-size:.95rem;text-align:center"></div>
+
+  <!-- Next button (hidden) -->
+  <button id="btnNext4" class="btn btn-primary btn-pulse" onclick="goScreen(5)" style="display:none">
+    Play Memory Match! 🧠
+  </button>
+</section>
+
+<!-- ══════════════════════════════
+     SCREEN 5: MEMORY MATCH
+══════════════════════════════ -->
+<section id="screen-5" class="screen" style="gap:16px">
+  <div class="step-badge">🧠 Lesson 4 of 4</div>
+  <h1 class="screen-title">Memory Match! 🧠</h1>
+  <p class="screen-sub">Find the matching pairs. Remember: <strong>100 cm = 1 m</strong></p>
+
+  <div id="memoryBoard" class="memory-grid" style="max-width:560px"></div>
+
+  <div class="memory-feedback" id="memoryFeedback"></div>
+
+  <button id="btnNext5" class="btn btn-primary btn-pulse" onclick="goScreen(6)" style="display:none">
+    See My Certificate! 🎓
+  </button>
+</section>
+
+<!-- ══════════════════════════════
+     SCREEN 6: CERTIFICATE
+══════════════════════════════ -->
+<section id="screen-6" class="screen" style="gap:16px;background:linear-gradient(135deg,var(--purple-l),var(--blue-l));border-radius:var(--radius);padding:32px 16px">
+  <div class="cert-wrap">
+    <div class="cert-ribbon">🏅 Certificate of Achievement</div>
+    <h2 class="cert-title">Congratulations! 🎉</h2>
+
+    <div class="cert-student-row">
+      <span class="cert-avatar" id="certAvatar">🎓</span>
+      <span class="cert-name" id="certName">Star Student</span>
+    </div>
+
+    <p class="cert-body">You are now a <strong>Length Expert!</strong> Here are the Key Points to remember:</p>
+
+    <div class="key-points">
+      <div class="key-point p1"><span class="key-point-icon">📏</span><span><strong>Centimeters (cm)</strong> are for measuring small things.</span></div>
+      <div class="key-point p2"><span class="key-point-icon">🏢</span><span><strong>Meters (m)</strong> are for measuring big things.</span></div>
+      <div class="key-point p3"><span class="key-point-icon">✨</span><span>100 Centimeters = 1 Meter!</span></div>
+    </div>
+
+    <div class="cert-footer">
+      <div>
+        <div class="cert-sig">Teacher</div>
+        <div class="cert-sig-name">Manal Bazzi</div>
+      </div>
+      <div class="cert-seal">🌟</div>
+    </div>
+  </div>
+
+  <button class="btn-restart" onclick="location.reload()">↺ Play Again</button>
+</section>
+
+</div><!-- /app-wrap -->
+
+<script>
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+const state = { name:'', avatar:'👦', screen:1, score:0 };
+const SCREENS = 6;
+// Screens that are unlocked (screen 2 = lesson 1, always open)
+let unlockedScreens = new Set([2]);
+// Screens completed
+let completedScreens = new Set();
+
+/* ═══════════════════════════════════════
+   SOUND ENGINE
+═══════════════════════════════════════ */
+let _actx = null;
+function getCtx(){if(!_actx)_actx=new(window.AudioContext||window.webkitAudioContext)();if(_actx.state==='suspended')_actx.resume();return _actx;}
+function tone(freq,type,dur,vol=.3,delay=0){
+  try{const c=getCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=type;o.frequency.setValueAtTime(freq,c.currentTime+delay);g.gain.setValueAtTime(0,c.currentTime+delay);g.gain.linearRampToValueAtTime(vol,c.currentTime+delay+.01);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+delay+dur);o.start(c.currentTime+delay);o.stop(c.currentTime+delay+dur+.05);}catch(e){}
+}
+function sndPop()    { tone(400,'square',.07,.12); }
+function sndSuccess(){ [523,659,784,1047].forEach((f,i)=>tone(f,'sine',.18,.28,i*.09)); }
+function sndError()  { tone(180,'sawtooth',.18,.25); tone(140,'sawtooth',.12,.2,.15); }
+function sndTada()   { [[440,0],[554,.2],[659,.4],[880,.65]].forEach(([f,d])=>tone(f,'sine',.25,.3,d)); }
+
+/* ═══════════════════════════════════════
+   STAGES NAV
+═══════════════════════════════════════ */
+// Map: stage button id -> screen number
+const STAGE_MAP = { 2:2, 3:3, 4:4, 5:5, 6:6 };
+
+function updateStages() {
+  const cur = state.screen;
+  [2,3,4,5,6].forEach(n => {
+    const btn = document.getElementById('stage-btn-'+n);
+    const lck = document.getElementById('stage-lock-'+n);
+    if(!btn) return;
+    const unlocked = unlockedScreens.has(n);
+    const done     = completedScreens.has(n);
+    const active   = n === cur;
+    btn.classList.toggle('locked',     !unlocked);
+    btn.classList.toggle('done-stage',  done && !active);
+    btn.classList.toggle('active-stage', active);
+    if(lck) lck.textContent = done ? '✅' : unlocked ? '🔓' : '🔒';
+  });
+}
+
+function jumpToStage(n) {
+  // Only allow if student has set up name+avatar AND stage is unlocked
+  if(!state.name) {
+    // Shake the card
+    const card = document.querySelector('#screen-1 .card');
+    if(card){ card.style.animation='none'; void card.offsetWidth; card.style.animation='wrongFlash .4s ease'; }
+    sndError(); return;
+  }
+  if(!unlockedScreens.has(n)) {
+    sndError();
+    // Brief shake on the locked stage
+    const btn = document.getElementById('stage-btn-'+n);
+    if(btn){ btn.style.animation='none'; void btn.offsetWidth; btn.style.animation='wrongFlash .35s ease'; }
+    return;
+  }
+  goScreen(n);
+}
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════ */
+function goScreen(n) {
+  sndPop();
+  // Mark previous screen as completed when moving forward
+  if(n > state.screen && state.screen > 1) completedScreens.add(state.screen);
+  // Unlock the next screen
+  unlockedScreens.add(n);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+n).classList.add('active');
+  document.getElementById('progressFill').style.width=((n-1)/(SCREENS-1)*100)+'%';
+  state.screen = n;
+  // Show/hide home button
+  document.getElementById('homeBtn').style.display = n > 1 ? 'block' : 'none';
+  updateStages();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===2) setTimeout(initSlider, 80);
+  if(n===5) initMemory();
+  if(n===6) setupCert();
+}
+
+function goHome() {
+  sndPop();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-1').classList.add('active');
+  state.screen = 1;
+  document.getElementById('homeBtn').style.display = 'none';
+  document.getElementById('progressFill').style.width = '0%';
+  updateStages();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 1: AVATAR PICK + START
+═══════════════════════════════════════ */
+let selectedGender = null;
+
+function pickAvatar(gender){
+  selectedGender = gender;
+  sndPop();
+  document.getElementById('avatarBoy').classList.toggle('selected',  gender==='boy');
+  document.getElementById('avatarGirl').classList.toggle('selected', gender==='girl');
+  document.getElementById('avatarHint').textContent = gender==='boy' ? '👦 Boy selected!' : '👧 Girl selected!';
+  document.getElementById('avatarHint').style.color = gender==='boy' ? 'var(--blue)' : 'var(--pink)';
+}
+
+function startLesson(){
+  const nameEl = document.getElementById('studentName');
+  const name = nameEl.value.trim();
+  if(!name){
+    nameEl.classList.add('error');
+    setTimeout(()=>nameEl.classList.remove('error'),600);
+    sndError(); return;
+  }
+  if(!selectedGender){
+    document.getElementById('avatarHint').textContent='⬆️ Please choose Boy or Girl first!';
+    document.getElementById('avatarHint').style.color='var(--red)';
+    sndError(); return;
+  }
+  state.name   = name;
+  state.avatar = selectedGender==='boy' ? '👦' : '👧';
+  document.getElementById('badgeAvatar').textContent = state.avatar;
+  document.getElementById('badgeName').textContent   = name;
+  document.getElementById('studentBadge').classList.add('show');
+  updateStages();
+  sndSuccess();
+  setTimeout(()=>goScreen(2), 300);
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 2: SLIDER
+═══════════════════════════════════════ */
+function initSlider(){
+  const slider = document.getElementById('lengthSlider');
+  const cmEl   = document.getElementById('sliderCm');
+  const mEl    = document.getElementById('sliderM');
+  const mBox   = document.getElementById('mBox');
+  if(!slider) return;
+
+  slider.addEventListener('input', e=>{
+    const v = +e.target.value;
+    slider.style.setProperty('--pct', (v/200*100));
+    cmEl.textContent = v;
+    if(v>=100){
+      const m = Math.floor(v/100), rem = v%100;
+      mEl.textContent = rem===0?m:`${m}.${Math.round(rem/10)}`;
+      if(v===100||v===200){ mBox.classList.add('glow'); sndSuccess(); }
+      else mBox.classList.remove('glow');
+    } else {
+      mEl.textContent='0'; mBox.classList.remove('glow');
+    }
+  });
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 3: RULER EXAMPLES
+═══════════════════════════════════════ */
+
+// 5 examples: each has an object, its SVG/emoji, correct answer, and ruler width in px
+const RULER_EXAMPLES = [
+  {
+    emoji:'✏️', name:'Pencil', answer:7,
+    hint:'A pencil is about 7 cm long.',
+    color:'#fbbf24', stroke:'#d97706',
+    // SVG viewBox width matches 7 cm units (7 × 26px per cm ≈ 182px)
+    objWidth:182, objHeight:14, objY:8,
+    draw: (W) => `<rect x="0" y="${8}" width="${W-18}" height="12" rx="4" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+      <polygon points="${W-18},8 ${W},14 ${W-18},20" fill="#f97316" stroke="#c2410c" stroke-width="1"/>
+      <rect x="${W-30}" y="8" width="14" height="12" fill="#e0e0e0" stroke="#9ca3af" stroke-width="1"/>
+      <rect x="0" y="8" width="10" height="12" rx="2" fill="#9ca3af"/>`
+  },
+  {
+    emoji:'🖊️', name:'Pen', answer:5,
+    hint:'A pen is about 5 cm in this example.',
+    color:'#3b82f6', stroke:'#1d4ed8',
+    objWidth:130, objHeight:14, objY:8,
+    draw: (W) => `<rect x="0" y="9" width="${W}" height="10" rx="5" fill="#3b82f6" stroke="#1d4ed8" stroke-width="1.5"/>
+      <rect x="0" y="9" width="14" height="10" rx="5" fill="#93c5fd" stroke="#1d4ed8" stroke-width="1"/>
+      <rect x="${W-16}" y="9" width="16" height="10" rx="5" fill="#1e3a8a" stroke="#1d4ed8" stroke-width="1"/>`
+  },
+  {
+    emoji:'🍃', name:'Leaf', answer:4,
+    hint:'This leaf is 4 cm long.',
+    color:'#22c55e', stroke:'#15803d',
+    objWidth:104, objHeight:24, objY:2,
+    draw: (W) => `<ellipse cx="${W/2}" cy="14" rx="${W/2}" ry="10" fill="#86efac" stroke="#22c55e" stroke-width="1.5"/>
+      <line x1="${W/2}" y1="4" x2="${W/2}" y2="24" stroke="#15803d" stroke-width="1.5"/>`
+  },
+  {
+    emoji:'🦋', name:'Butterfly', answer:6,
+    hint:'This butterfly\'s wingspan is 6 cm.',
+    color:'#a855f7', stroke:'#7c3aed',
+    objWidth:156, objHeight:28, objY:0,
+    draw: (W) => `
+      <ellipse cx="${W*0.28}" cy="10" rx="${W*0.25}" ry="8" fill="#c084fc" stroke="#a855f7" stroke-width="1.5" opacity=".9"/>
+      <ellipse cx="${W*0.72}" cy="10" rx="${W*0.25}" ry="8" fill="#c084fc" stroke="#a855f7" stroke-width="1.5" opacity=".9"/>
+      <ellipse cx="${W*0.28}" cy="20" rx="${W*0.18}" ry="6" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" opacity=".8"/>
+      <ellipse cx="${W*0.72}" cy="20" rx="${W*0.18}" ry="6" fill="#e9d5ff" stroke="#a855f7" stroke-width="1" opacity=".8"/>
+      <rect x="${W/2-2}" y="4" width="4" height="20" rx="2" fill="#6d28d9"/>`
+  },
+  {
+    emoji:'🐟', name:'Fish', answer:9,
+    hint:'This fish is 9 cm long.',
+    color:'#0ea5e9', stroke:'#0369a1',
+    objWidth:234, objHeight:24, objY:2,
+    draw: (W) => `
+      <ellipse cx="${W*0.45}" cy="13" rx="${W*0.4}" ry="9" fill="#7dd3fc" stroke="#0ea5e9" stroke-width="1.5"/>
+      <polygon points="${W},6 ${W*0.82},13 ${W},20" fill="#38bdf8" stroke="#0ea5e9" stroke-width="1"/>
+      <circle cx="${W*0.25}" cy="10" r="3" fill="#0369a1"/>
+      <circle cx="${W*0.25}" cy="10" r="1.5" fill="white"/>`
+  },
+];
+
+let exIndex = 0;
+let exAnswered = [];
+
+function initRulerExamples(){
+  exIndex = 0;
+  exAnswered = Array(RULER_EXAMPLES.length).fill(false);
+  renderExDots();
+  renderExample();
+}
+
+function renderExDots(){
+  const dots = document.getElementById('exDots');
+  if(!dots) return;
+  dots.innerHTML = RULER_EXAMPLES.map((_, i) =>
+    `<div style="width:10px;height:10px;border-radius:50%;background:${
+      exAnswered[i] ? 'var(--green)' :
+      i===exIndex  ? 'var(--purple)' : '#e2e8f0'
+    };transition:all .3s;${i===exIndex?'transform:scale(1.3)':''}"></div>`
+  ).join('');
+  document.getElementById('exNum').textContent = exIndex+1;
+}
+
+function renderExample(){
+  const ex = RULER_EXAMPLES[exIndex];
+  const PX_PER_CM = 26;
+  const RULER_W = 10 * PX_PER_CM + 4;
+  const objPx = ex.answer * PX_PER_CM;
+
+  const card = document.getElementById('exCard');
+  if(!card) return;
+
+  card.innerHTML = `
+    <div style="text-align:center;margin-bottom:10px">
+      <span style="font-size:2rem">${ex.emoji}</span>
+      <span style="font-family:'Fredoka One',cursive;font-size:1rem;color:var(--dark);margin-left:6px">How long is this ${ex.name}?</span>
+    </div>
+
+    <!-- RULER SCENE -->
+    <div style="background:linear-gradient(135deg,#f0f9ff,#f0f4ff);border-radius:16px;padding:12px 10px 10px;border:1.5px solid #e0d9ff;margin-bottom:14px">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-align:center;margin-bottom:8px">
+        👆 Drag the <strong style="color:#ca8a04">yellow ruler</strong> so that <strong style="color:var(--green)">0</strong> lines up with the start of the ${ex.name}!
+      </div>
+      <div id="rulerScene" style="position:relative;height:160px;background:#e0f2fe;border-radius:12px;overflow:hidden;touch-action:none;border:1px solid #bae6fd">
+
+        <!-- Object — fixed, starts at x=20 -->
+        <svg style="position:absolute;top:28px;left:20px;pointer-events:none" width="${objPx}" height="32" viewBox="0 0 ${objPx} 32">
+          ${ex.draw(objPx)}
+        </svg>
+
+        <!-- Start / End labels -->
+        <div style="position:absolute;top:8px;left:16px;font-size:.6rem;font-weight:900;color:var(--green);line-height:1.2;pointer-events:none">Start ↓</div>
+        <div style="position:absolute;top:8px;left:${20+objPx-14}px;font-size:.6rem;font-weight:900;color:var(--red);line-height:1.2;pointer-events:none;white-space:nowrap">End ↓</div>
+
+        <!-- DRAGGABLE RULER -->
+        <div id="dragRuler" style="
+          position:absolute;bottom:18px;left:20px;
+          width:${RULER_W}px;height:52px;
+          background:linear-gradient(180deg,#fef9c3,#fde047);
+          border:2px solid #ca8a04;border-radius:7px;
+          cursor:grab;touch-action:none;user-select:none;
+          box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:10;">
+          <div style="position:absolute;top:2px;left:5px;font-size:.5rem;font-weight:900;color:#92400e;pointer-events:none">cm</div>
+          <div style="display:flex;justify-content:space-between;padding:0 4px;margin-top:14px;font-size:.58rem;font-weight:900;color:#1c1917;pointer-events:none">
+            ${Array.from({length:11},(_,i)=>`<span>${i}</span>`).join('')}
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:0 4px;pointer-events:none">
+            ${Array.from({length:10},(_,i)=>`
+              <div style="width:1.5px;height:10px;background:#1c1917"></div>
+              <div style="width:1px;height:6px;background:#9ca3af"></div>
+              <div style="width:1px;height:6px;background:#9ca3af"></div>
+            `).join('')}
+            <div style="width:1.5px;height:10px;background:#1c1917"></div>
+          </div>
+        </div>
+
+        <!-- Reading bubble (shows live cm reading) -->
+        <div id="readingBubble" style="
+          position:absolute;top:8px;right:8px;
+          background:var(--purple);color:white;
+          border-radius:10px;padding:4px 10px;
+          font-family:'Fredoka One',cursive;font-size:.82rem;
+          box-shadow:0 2px 8px rgba(124,58,237,.3);
+          display:none;pointer-events:none">📏 ? cm</div>
+
+        <!-- Green line at ruler 0 -->
+        <div id="zeroLine" style="
+          position:absolute;bottom:0;left:20px;
+          width:2px;height:100%;
+          background:rgba(22,163,74,.35);
+          pointer-events:none;display:none"></div>
+
+      </div>
+    </div>
+
+    <!-- Answer input -->
+    <div class="measure-row" style="margin-bottom:10px">
+      <span class="measure-label">Length =</span>
+      <input type="number" id="exInput" class="measure-input" placeholder="?" min="1" max="15"
+        ${exAnswered[exIndex]?'disabled':''} value="${exAnswered[exIndex]?ex.answer:''}">
+      <span class="measure-label">cm</span>
+      <button class="btn btn-green" onclick="checkExample()" ${exAnswered[exIndex]?'disabled':''}>Check ✓</button>
+    </div>
+    <div id="exFeedback" style="text-align:center;min-height:24px;font-weight:800;font-size:.92rem">
+      ${exAnswered[exIndex]?`<span style="color:var(--green)">✅ Correct! The ${ex.name} is ${ex.answer} cm long.</span>`:''}
+    </div>
+  `;
+
+  // Show/hide nav buttons
+  document.getElementById('btnPrevEx').style.display = exIndex>0 ? 'flex' : 'none';
+  document.getElementById('btnNextEx').style.display = (exAnswered[exIndex] && exIndex < RULER_EXAMPLES.length-1) ? 'flex' : 'none';
+  document.getElementById('btnDoneEx').style.display = (exAnswered[exIndex] && exIndex === RULER_EXAMPLES.length-1) ? 'flex' : 'none';
+
+  // Attach drag
+  if(!exAnswered[exIndex]) attachRulerDrag(PX_PER_CM, objPx);
+}
+
+/* ── RULER DRAG ENGINE ── */
+function attachRulerDrag(PX_PER_CM, objPx){
+  const ruler   = document.getElementById('dragRuler');
+  const scene   = document.getElementById('rulerScene');
+  const bubble  = document.getElementById('readingBubble');
+  const zLine   = document.getElementById('zeroLine');
+  if(!ruler||!scene) return;
+
+  const OBJ_START_X = 20; // object always starts at x=20px in scene
+
+  let dragging = false, startPointerX = 0, rulerLeft = 20;
+
+  function px(e){ return e.touches ? e.touches[0].clientX : e.clientX; }
+
+  function onDown(e){
+    e.preventDefault();
+    dragging = true;
+    startPointerX = px(e) - rulerLeft;
+    ruler.style.cursor = 'grabbing';
+    ruler.style.boxShadow = '0 6px 24px rgba(202,138,4,.55)';
+  }
+
+  function onMove(e){
+    if(!dragging) return;
+    e.preventDefault();
+    const maxL = scene.offsetWidth - ruler.offsetWidth + 60;
+    rulerLeft = Math.max(-ruler.offsetWidth + 30, Math.min(px(e) - startPointerX, maxL));
+    ruler.style.left = rulerLeft + 'px';
+
+    // Where does "0" sit in scene coords?
+    const zeroX = rulerLeft;
+    const aligned = Math.abs(zeroX - OBJ_START_X) < 12;
+
+    // Live reading: end of object in ruler units
+    const reading = Math.round((OBJ_START_X + objPx - zeroX) / PX_PER_CM);
+
+    // Green zero line
+    zLine.style.left  = zeroX + 'px';
+    zLine.style.background = aligned ? 'rgba(22,163,74,.5)' : 'rgba(202,138,4,.4)';
+    zLine.style.display = 'block';
+
+    // Bubble
+    if(aligned && reading >= 1 && reading <= 15){
+      bubble.textContent = `📏 ${reading} cm`;
+      bubble.style.display = 'block';
+      bubble.style.background = 'var(--green)';
+      // Auto-fill input
+      const inp = document.getElementById('exInput');
+      if(inp && !inp.disabled) inp.value = reading;
+    } else {
+      bubble.textContent = aligned ? '📏 ? cm' : (zeroX < OBJ_START_X ? '→ slide right' : '← slide left');
+      bubble.style.display = 'block';
+      bubble.style.background = aligned ? 'var(--green)' : 'var(--muted)';
+      const inp = document.getElementById('exInput');
+      if(inp && !inp.disabled && !aligned) inp.value = '';
+    }
+  }
+
+  function onUp(){
+    dragging = false;
+    ruler.style.cursor = 'grab';
+    ruler.style.boxShadow = '0 4px 16px rgba(0,0,0,.15)';
+  }
+
+  ruler.addEventListener('mousedown',  onDown);
+  ruler.addEventListener('touchstart', onDown, {passive:false});
+  document.addEventListener('mousemove',  onMove, {passive:false});
+  document.addEventListener('touchmove',  onMove, {passive:false});
+  document.addEventListener('mouseup',  onUp);
+  document.addEventListener('touchend', onUp);
+}
+
+function checkExample(){
+  const ex = RULER_EXAMPLES[exIndex];
+  const val = +document.getElementById('exInput').value;
+  const fb  = document.getElementById('exFeedback');
+  if(val === ex.answer){
+    sndSuccess(); exAnswered[exIndex] = true;
+    fb.innerHTML = `<span style="color:var(--green)">✅ Correct! 🎉 The ${ex.name} is ${ex.answer} cm long.</span>`;
+    document.querySelector('#exCard input').disabled = true;
+    document.querySelector('#exCard .btn-green').disabled = true;
+    renderExDots();
+    // Show next / done button
+    if(exIndex < RULER_EXAMPLES.length-1){
+      document.getElementById('btnNextEx').style.display='flex';
+    } else {
+      sndTada(); confetti();
+      document.getElementById('btnDoneEx').style.display='flex';
+    }
+  } else {
+    sndError();
+    fb.innerHTML = `<span style="color:var(--red)">❌ Not quite! Look carefully at where the ${ex.name} ends on the ruler. (Hint: ${ex.hint})</span>`;
+  }
+}
+
+function nextExample(){
+  if(exIndex < RULER_EXAMPLES.length-1){
+    exIndex++;
+    renderExDots();
+    renderExample();
+    sndPop();
+  }
+}
+
+function prevExample(){
+  if(exIndex > 0){
+    exIndex--;
+    renderExDots();
+    renderExample();
+    sndPop();
+  }
+}
+
+// Init examples when screen 3 is shown — hook into goScreen
+const _goScreen_ruler = goScreen;
+goScreen = function(n){
+  _goScreen_ruler(n);
+  if(n===3) setTimeout(initRulerExamples, 80);
+};
+
+/* ═══════════════════════════════════════
+   SCREEN 4: SORT IT! GAME
+═══════════════════════════════════════ */
+const SORT_OBJECTS = [
+  { emoji:'🐜', name:'Ant',       unit:'cm' },
+  { emoji:'🚗', name:'Car',       unit:'m'  },
+  { emoji:'✏️', name:'Pencil',    unit:'cm' },
+  { emoji:'🌳', name:'Tree',      unit:'m'  },
+  { emoji:'🧽', name:'Eraser',    unit:'cm' },
+  { emoji:'🚌', name:'Bus',       unit:'m'  },
+  { emoji:'📏', name:'Ruler',     unit:'cm' },
+  { emoji:'🏢', name:'Building',  unit:'m'  },
+];
+
+let sortScore=0, sortDone=0, draggedObj=null, _touchObj=null;
+
+function initSortGame(){
+  sortScore=0; sortDone=0;
+  document.getElementById('sortScoreChip').textContent='⭐ 0 / 8';
+  document.getElementById('sortProgress').style.width='0%';
+  document.getElementById('sortFeedback').textContent='';
+  document.getElementById('btnNext4').style.display='none';
+  document.getElementById('zoneItemsCm').innerHTML='';
+  document.getElementById('zoneItemsM').innerHTML='';
+  const bank = document.getElementById('sortBank');
+  bank.innerHTML='';
+  const shuffled = [...SORT_OBJECTS].sort(()=>Math.random()-.5);
+  shuffled.forEach(obj=>{
+    const el = document.createElement('div');
+    el.className='sort-obj';
+    el.draggable=true;
+    el.dataset.unit=obj.unit;
+    el.dataset.emoji=obj.emoji;
+    el.dataset.name=obj.name;
+    el.innerHTML=`<span class="obj-emoji">${obj.emoji}</span><span class="obj-name">${obj.name}</span>`;
+    // Desktop drag
+    el.addEventListener('dragstart', e=>{
+      draggedObj=el; el.classList.add('dragging-now');
+      e.dataTransfer.setData('text/plain', obj.unit+'|'+obj.emoji+'|'+obj.name);
+    });
+    el.addEventListener('dragend', ()=>{ el.classList.remove('dragging-now'); draggedObj=null; });
+    // Touch drag
+    el.addEventListener('touchstart', e=>{ _touchObj=el; e.preventDefault(); }, {passive:false});
+    el.addEventListener('touchend', e=>{
+      if(!_touchObj) return;
+      const t=e.changedTouches[0];
+      const target=document.elementFromPoint(t.clientX,t.clientY);
+      const zone=target?.closest('.sort-zone');
+      if(zone) handleDrop(zone.id==='zoneCm'?'cm':'m', _touchObj.dataset.unit, _touchObj.dataset.emoji, _touchObj.dataset.name, _touchObj);
+      _touchObj=null;
+    });
+    bank.appendChild(el);
+  });
+}
+
+function dropToZone(e, zone){
+  e.currentTarget.classList.remove('zone-hover');
+  const data=e.dataTransfer.getData('text/plain').split('|');
+  const [unit,emoji,name]=data;
+  handleDrop(zone, unit, emoji, name, draggedObj);
+}
+
+function handleDrop(zone, unit, emoji, name, el){
+  if(!el||!el.parentNode) return;
+  const correct = zone===unit;
+  if(correct){
+    sortScore++; sortDone++;
+    sndSuccess();
+    el.classList.add('correct-flash');
+    // Place in zone
+    const placed=document.createElement('div');
+    placed.className='zone-placed';
+    placed.innerHTML=`${emoji}<span class="placed-name">${name}</span>`;
+    document.getElementById(zone==='cm'?'zoneItemsCm':'zoneItemsM').appendChild(placed);
+    setTimeout(()=>el.remove(),300);
+    showSortFeedback(`✅ Correct! ${emoji} ${name} is measured in ${zone}!`, true);
+  } else {
+    sortDone++;
+    sndError();
+    el.classList.add('wrong-flash');
+    setTimeout(()=>el.classList.remove('wrong-flash'),450);
+    showSortFeedback(`❌ Oops! ${emoji} ${name} is measured in ${unit}, not ${zone}!`, false);
+    // Still place it (grayed out) to allow progress
+    setTimeout(()=>el.remove(),500);
+  }
+  // Update score display
+  document.getElementById('sortScoreChip').textContent=`⭐ ${sortScore} / 8`;
+  document.getElementById('sortProgress').style.width=(sortDone/8*100)+'%';
+  // Check complete
+  if(sortDone>=8){
+    setTimeout(()=>{
+      sndTada(); confetti();
+      showSortFeedback(`🎉 Amazing! You scored ${sortScore} out of 8!`, true);
+      document.getElementById('btnNext4').style.display='flex';
+    },600);
+  }
+}
+
+function showSortFeedback(msg, ok){
+  const fb=document.getElementById('sortFeedback');
+  fb.innerHTML=`<span style="color:${ok?'var(--green)':'var(--red)'}">${msg}</span>`;
+  setTimeout(()=>{ if(sortDone<8) fb.textContent=''; },2400);
+}
+
+// Init sort game when screen 4 loads
+const _origGoScreen = goScreen;
+goScreen = function(n){
+  _origGoScreen(n);
+  if(n===4) initSortGame();
+};
+
+/* ═══════════════════════════════════════
+   SCREEN 5: MEMORY MATCH
+═══════════════════════════════════════ */
+const PAIRS=[
+  {id:1,text:"1 Meter"},{id:1,text:"100 Centimeters"},
+  {id:2,text:"Length of a pencil"},{id:2,text:"Centimeters (cm)"},
+  {id:3,text:"Height of a door"},{id:3,text:"Meters (m)"},
+  {id:4,text:"2 Meters"},{id:4,text:"200 Centimeters"},
+];
+let flipped=[], matched=0;
+
+function initMemory(){
+  const board=document.getElementById('memoryBoard');
+  board.innerHTML=''; flipped=[]; matched=0;
+  document.getElementById('btnNext5').style.display='none';
+  document.getElementById('memoryFeedback').textContent='';
+  const shuffled=[...PAIRS].sort(()=>Math.random()-.5);
+  shuffled.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='memory-card'; card.dataset.id=p.id;
+    card.innerHTML=`<div class="memory-card-inner"><div class="card-face card-front">❓</div><div class="card-face card-back">${p.text}</div></div>`;
+    card.addEventListener('click',()=>flipCard(card));
+    board.appendChild(card);
+  });
+}
+
+function flipCard(card){
+  if(flipped.length>=2||card.classList.contains('flipped')) return;
+  card.classList.add('flipped'); flipped.push(card); sndPop();
+  if(flipped.length===2) setTimeout(checkPair,700);
+}
+
+function checkPair(){
+  const [a,b]=flipped;
+  if(a.dataset.id===b.dataset.id){
+    sndSuccess(); matched++;
+    a.querySelector('.card-back').classList.add('matched');
+    b.querySelector('.card-back').classList.add('matched');
+    document.getElementById('memoryFeedback').innerHTML='<span style="color:var(--green)">Match! 🌟</span>';
+    flipped=[];
+    if(matched===4){
+      setTimeout(()=>{
+        sndTada(); confetti();
+        document.getElementById('memoryFeedback').innerHTML='<span style="color:var(--green)">You found all pairs! 🎉</span>';
+        document.getElementById('btnNext5').style.display='flex';
+      },400);
+    }
+  } else {
+    sndError();
+    document.getElementById('memoryFeedback').innerHTML='<span style="color:var(--red)">Try again!</span>';
+    setTimeout(()=>{ a.classList.remove('flipped'); b.classList.remove('flipped'); flipped=[]; document.getElementById('memoryFeedback').textContent=''; },900);
+  }
+}
+
+/* ═══════════════════════════════════════
+   SCREEN 6: CERTIFICATE
+═══════════════════════════════════════ */
+function setupCert(){
+  document.getElementById('certName').textContent=state.name||'Star Student';
+  document.getElementById('certAvatar').textContent=state.avatar||'🎓';
+  sndTada(); confetti();
+}
+
+/* ═══════════════════════════════════════
+   CONFETTI
+═══════════════════════════════════════ */
+function confetti(){
+  const cols=['#7c3aed','#fbbf24','#22c55e','#f472b6','#60a5fa','#fb923c'];
+  for(let i=0;i<36;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.cssText=`left:${Math.random()*100}vw;top:0;width:9px;height:9px;background:${cols[i%cols.length]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.2+Math.random()*.8}s;animation-delay:${Math.random()*.4}s;`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),2200);
+  }
+}
+</script>
+</body>
+</html>
