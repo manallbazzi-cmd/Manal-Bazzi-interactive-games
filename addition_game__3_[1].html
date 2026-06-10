@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Addition Adventure – Grade 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky: #E8F4FD;
+  --sun: #FFD54F;
+  --grass: #43A047;
+  --coral: #FF5722;
+  --blue: #1565C0;
+  --purple: #7C4DFF;
+  --pink: #E91E63;
+  --mint: #00ACC1;
+  --orange: #FB8C00;
+  --card: #FFFFFF;
+  --bg: #EEF6FF;
+  --text: #1A2340;
+  --muted: #607D8B;
+  --radius: 22px;
+  --shadow: 0 6px 24px rgba(0,0,0,0.09);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.13);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse at 10% 0%,rgba(100,180,255,0.13) 0%,transparent 55%),
+    radial-gradient(ellipse at 90% 100%,rgba(124,77,255,0.09) 0%,transparent 50%),
+    radial-gradient(circle,rgba(0,0,0,0.025) 1px,transparent 1px);
+  background-size:auto,auto,26px 26px;
+}
+
+/* ─── SCREENS ─── */
+.screen{display:none;min-height:100vh;flex-direction:column;align-items:center;padding:20px 16px 48px}
+.screen.active{display:flex;animation:fadeUp .45s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── COVER ─── */
+#screen-cover{
+  background:linear-gradient(155deg,#DBEAFE 0%,#EDE9FE 50%,#D1FAE5 100%);
+  justify-content:center;text-align:center;gap:0
+}
+.cover-badge{
+  background:white;
+  border-radius:50px;
+  padding:6px 18px;
+  font-size:13px;font-weight:800;
+  color:var(--purple);
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
+  display:inline-block;
+}
+.cover-icon{font-size:70px;animation:float 2.8s ease-in-out infinite;display:block;margin-bottom:10px}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.cover-title{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(30px,9vw,44px);
+  color:var(--blue);
+  line-height:1.1;
+  margin-bottom:6px;
+  text-shadow:0 2px 12px rgba(21,101,192,0.15);
+}
+.cover-sub{font-size:17px;font-weight:800;color:var(--grass);margin-bottom:22px}
+.cover-stars{font-size:26px;margin-bottom:20px;animation:float 3s ease-in-out infinite;letter-spacing:4px}
+
+.name-card{
+  background:white;
+  border-radius:var(--radius);
+  padding:16px 22px;
+  margin-bottom:22px;
+  box-shadow:var(--shadow);
+  width:100%;max-width:360px;
+  border:2px solid rgba(124,77,255,0.1);
+}
+.name-card p{font-size:13px;color:var(--muted);margin-bottom:2px}
+.name-card h3{font-size:17px;font-weight:800;color:var(--blue)}
+.name-card h3.teacher{color:var(--purple);margin-top:8px}
+
+.name-input-wrap{width:100%;max-width:360px;margin-bottom:18px}
+.name-input-wrap input{
+  width:100%;padding:14px 18px;
+  border-radius:50px;
+  border:2.5px solid #90CAF9;
+  font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;
+  outline:none;color:var(--blue);text-align:center;
+  background:white;
+  transition:border-color .2s;
+  box-shadow:var(--shadow);
+}
+.name-input-wrap input:focus{border-color:var(--purple)}
+
+/* ─── MENU ─── */
+#screen-menu{background:var(--bg);gap:16px;padding-top:28px}
+.menu-header{text-align:center;margin-bottom:8px;width:100%}
+.menu-header h2{font-family:'Fredoka One',cursive;font-size:26px;color:var(--blue)}
+.menu-header p{font-size:14px;color:var(--muted);font-weight:700;margin-top:4px}
+.star-total{
+  display:inline-flex;align-items:center;gap:8px;
+  background:white;border-radius:50px;
+  padding:8px 20px;
+  font-family:'Fredoka One',cursive;font-size:20px;
+  color:var(--orange);
+  box-shadow:var(--shadow);
+  border:2px solid rgba(251,140,0,0.2);
+  margin-bottom:4px;
+}
+
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:420px}
+.menu-card{
+  background:white;
+  border-radius:20px;
+  padding:18px 12px;
+  text-align:center;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  border:2.5px solid transparent;
+  transition:all .25s;
+  position:relative;
+  overflow:hidden;
+}
+.menu-card::before{
+  content:'';position:absolute;inset:0;opacity:0;
+  transition:opacity .25s;
+}
+.menu-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.menu-card:hover::before{opacity:1}
+.menu-card.blue{border-color:rgba(21,101,192,0.2)}
+.menu-card.blue::before{background:rgba(21,101,192,0.04)}
+.menu-card.green{border-color:rgba(67,160,71,0.2)}
+.menu-card.green::before{background:rgba(67,160,71,0.04)}
+.menu-card.purple{border-color:rgba(124,77,255,0.2)}
+.menu-card.purple::before{background:rgba(124,77,255,0.04)}
+.menu-card.coral{border-color:rgba(255,87,34,0.2)}
+.menu-card.coral::before{background:rgba(255,87,34,0.04)}
+.menu-card.pink{border-color:rgba(233,30,99,0.2)}
+.menu-card.pink::before{background:rgba(233,30,99,0.04)}
+.menu-card.mint{border-color:rgba(0,172,193,0.2)}
+.menu-card.mint::before{background:rgba(0,172,193,0.04)}
+.menu-card .mc-icon{font-size:38px;margin-bottom:8px;display:block}
+.menu-card .mc-title{font-family:'Fredoka One',cursive;font-size:16px;margin-bottom:3px}
+.menu-card .mc-sub{font-size:11px;color:var(--muted);font-weight:700}
+.menu-card .mc-badge{
+  position:absolute;top:10px;right:10px;
+  background:var(--orange);color:white;
+  border-radius:50px;font-size:10px;font-weight:800;
+  padding:2px 8px;
+}
+
+/* ─── NAV BAR ─── */
+.nav-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;max-width:440px;margin-bottom:18px;
+  padding-bottom:12px;
+  border-bottom:2px dashed #B3E5FC;
+}
+.nav-left{display:flex;align-items:center;gap:10px}
+.back-btn{
+  background:#E3F2FD;border:none;border-radius:50%;
+  width:38px;height:38px;font-size:18px;cursor:pointer;
+  color:var(--blue);display:flex;align-items:center;justify-content:center;
+  transition:background .2s;flex-shrink:0;
+}
+.back-btn:hover{background:#BBDEFB}
+.nav-title{font-family:'Fredoka One',cursive;font-size:20px;color:var(--blue)}
+.nav-chip{
+  background:#E3F2FD;color:var(--blue);
+  border-radius:20px;padding:4px 14px;
+  font-size:12px;font-weight:800;
+}
+
+/* ─── BUTTONS ─── */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;justify-content:center;
+  border:none;border-radius:50px;
+  font-family:'Fredoka One',cursive;font-size:18px;
+  cursor:pointer;transition:all .15s;
+}
+.btn:active{transform:translateY(3px)}
+.btn-blue{background:var(--blue);color:white;box-shadow:0 5px 0 #0D47A1;padding:14px 28px}
+.btn-blue:active{box-shadow:0 2px 0 #0D47A1}
+.btn-coral{background:var(--coral);color:white;box-shadow:0 5px 0 #BF360C;padding:14px 28px}
+.btn-coral:active{box-shadow:0 2px 0 #BF360C}
+.btn-green{background:var(--grass);color:white;box-shadow:0 5px 0 #1B5E20;padding:14px 28px}
+.btn-green:active{box-shadow:0 2px 0 #1B5E20}
+.btn-purple{background:var(--purple);color:white;box-shadow:0 5px 0 #4527A0;padding:14px 28px}
+.btn-purple:active{box-shadow:0 2px 0 #4527A0}
+.btn-gray{background:#ECEFF1;color:#546E7A;box-shadow:0 5px 0 #CFD8DC;padding:14px 20px}
+.btn-gray:active{box-shadow:0 2px 0 #CFD8DC}
+.btn-sm{font-size:15px;padding:10px 22px}
+.btn-full{width:100%;max-width:420px}
+.btn-row{display:flex;gap:10px;width:100%;max-width:420px;margin-top:auto;padding-top:20px}
+
+/* ─── CARDS ─── */
+.card{
+  background:white;
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--shadow);
+  width:100%;max-width:440px;
+}
+.card h2{font-family:'Fredoka One',cursive;font-size:22px;color:var(--purple);margin-bottom:8px}
+
+/* ─── SCORE BAR ─── */
+.score-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  width:100%;max-width:440px;
+  background:white;border-radius:50px;
+  padding:10px 22px;
+  box-shadow:var(--shadow);
+  border:2px solid rgba(0,0,0,0.05);
+}
+.s-item{text-align:center}
+.s-lbl{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.s-val{font-family:'Fredoka One',cursive;font-size:22px}
+.gold{color:#F9A825}.blue-c{color:var(--blue)}.red{color:#E53935}
+
+/* ─── PROGRESS ─── */
+.prog-wrap{width:100%;max-width:440px;background:#E0E0E0;border-radius:20px;height:12px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--mint),var(--purple));border-radius:20px;transition:width .5s ease}
+
+/* ─── LESSON CARDS ─── */
+.rule-box{
+  background:#E8F5E9;border-left:5px solid var(--grass);
+  border-radius:12px;padding:12px 14px;
+  margin:12px 0;font-size:15px;font-weight:700;color:#1B5E20;
+}
+.eq-visual{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;flex-wrap:wrap;margin:16px 0;
+}
+.eq-num{
+  background:var(--purple);color:white;
+  border-radius:16px;width:60px;height:60px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka One',cursive;font-size:26px;
+  box-shadow:0 4px 0 #4527A0;
+}
+.eq-op{font-family:'Fredoka One',cursive;font-size:32px;color:var(--coral)}
+.eq-res{
+  background:var(--grass);color:white;
+  border-radius:16px;width:60px;height:60px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka One',cursive;font-size:26px;
+  box-shadow:0 4px 0 #1B5E20;
+}
+
+/* ─── COLUMN DEMO ─── */
+.col-demo-wrap{
+  background:#F3E5F5;border-radius:var(--radius);
+  padding:18px;width:100%;max-width:440px;
+  box-shadow:var(--shadow);
+}
+.col-demo-wrap h3{font-family:'Fredoka One',cursive;font-size:18px;color:#6A1B9A;text-align:center;margin-bottom:12px}
+.col-table{margin:0 auto;border-collapse:collapse;font-family:'Fredoka One',cursive;font-size:32px}
+.col-table td{padding:2px 12px;text-align:right}
+.ct{color:#E53935}.co{color:#1E88E5}
+.col-line td{border-top:3px solid #333}
+.ch{font-size:12px;font-weight:800;font-family:'Nunito',sans-serif}
+.col-steps{margin-top:12px;background:white;border-radius:12px;padding:12px 14px;line-height:2;font-weight:700;font-size:14px}
+
+/* ─── COUNTER ─── */
+.counter-wrap{
+  background:white;border-radius:var(--radius);padding:18px;
+  box-shadow:var(--shadow);width:100%;max-width:440px;text-align:center;
+}
+.counter-wrap h3{font-family:'Fredoka One',cursive;font-size:18px;color:var(--purple);margin-bottom:14px}
+.emoji-row{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:40px;margin-bottom:6px;transition:all .3s}
+.emoji-item{font-size:26px;animation:pop .22s ease-out}
+@keyframes pop{from{transform:scale(0) rotate(-20deg)}to{transform:scale(1) rotate(0)}}
+.cnt-ctrl{display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0}
+.cnt-btn{
+  width:50px;height:50px;border-radius:50%;border:none;
+  font-size:26px;font-weight:800;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .1s;
+}
+.cnt-btn:active{transform:translateY(2px)}
+.cnt-minus{background:#FF7043;color:white;box-shadow:0 4px 0 #BF360C}
+.cnt-plus{background:#43A047;color:white;box-shadow:0 4px 0 #1B5E20}
+.cnt-num{font-family:'Fredoka One',cursive;font-size:40px;color:var(--purple);min-width:50px;text-align:center}
+.sum-disp{font-family:'Fredoka One',cursive;font-size:26px;color:var(--coral);margin-top:8px}
+
+/* ─── GAME Q ─── */
+.q-card{
+  background:linear-gradient(135deg,#E3F2FD,#F3E5F5);
+  border-radius:var(--radius);padding:22px 20px;
+  text-align:center;box-shadow:var(--shadow);
+  width:100%;max-width:440px;
+}
+.q-label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.q-eq{font-family:'Fredoka One',cursive;font-size:clamp(36px,12vw,54px);color:#1A237E;margin-bottom:6px}
+.q-hint{font-size:13px;color:var(--muted);min-height:20px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:440px}
+.choice{
+  background:white;border:3px solid #90CAF9;
+  border-radius:18px;padding:18px 10px;
+  font-family:'Fredoka One',cursive;font-size:30px;
+  color:var(--blue);cursor:pointer;
+  box-shadow:0 5px 0 #BBDEFB;
+  transition:transform .12s,box-shadow .12s,background .15s;
+  text-align:center;
+}
+.choice:active{transform:translateY(3px);box-shadow:0 2px 0 #BBDEFB}
+.choice.correct{background:#E8F5E9;border-color:#43A047;color:#1B5E20;box-shadow:0 5px 0 #A5D6A7}
+.choice.wrong{background:#FFEBEE;border-color:#E53935;color:#B71C1C;box-shadow:0 5px 0 #FFCDD2}
+.fb-msg{font-family:'Fredoka One',cursive;font-size:22px;min-height:34px;text-align:center;transition:all .3s}
+.fb-good{color:#2E7D32}.fb-bad{color:#C62828}
+
+/* ─── BALLOON GAME ─── */
+.balloon-area{
+  position:relative;width:100%;max-width:440px;
+  height:340px;background:linear-gradient(180deg,#E3F2FD 0%,#BBDEFB 100%);
+  border-radius:var(--radius);overflow:hidden;
+  box-shadow:var(--shadow);border:2px solid #90CAF9;
+}
+.balloon-q{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  background:white;border-radius:50px;padding:6px 18px;
+  font-family:'Fredoka One',cursive;font-size:22px;
+  color:var(--blue);box-shadow:var(--shadow);white-space:nowrap;z-index:10;
+}
+.balloon{
+  position:absolute;
+  width:64px;height:80px;
+  cursor:pointer;
+  animation:floatBalloon linear infinite;
+  display:flex;flex-direction:column;align-items:center;
+  transition:transform .1s;
+}
+.balloon:active{transform:scale(0.85)}
+.balloon-body{
+  width:64px;height:70px;
+  border-radius:50% 50% 45% 45%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka One',cursive;font-size:22px;color:white;
+  text-shadow:0 1px 3px rgba(0,0,0,0.3);
+  position:relative;
+}
+.balloon-body::after{
+  content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  width:0;height:0;
+  border-left:6px solid transparent;
+  border-right:6px solid transparent;
+  border-top:10px solid inherit;
+}
+.balloon-string{width:1px;height:14px;background:#999;margin-top:2px}
+@keyframes floatBalloon{0%{top:110%}100%{top:-20%}}
+.balloon.pop{animation:popBalloon .3s ease forwards}
+@keyframes popBalloon{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:scale(0);opacity:0}}
+
+/* ─── FILL IN BLANK ─── */
+.blank-eq{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(34px,10vw,48px);
+  color:var(--text);text-align:center;
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;flex-wrap:wrap;margin:12px 0;
+}
+.blank-box{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:70px;height:70px;
+  background:#EDE9FE;border:3px dashed var(--purple);
+  border-radius:14px;color:var(--purple);font-size:22px;
+}
+.num-pad{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:100%;max-width:440px}
+.pad-btn{
+  padding:14px 6px;
+  background:white;border:2.5px solid #B3C5D6;
+  border-radius:12px;color:var(--text);
+  font-family:'Fredoka One',cursive;font-size:22px;
+  cursor:pointer;transition:all .13s;
+  box-shadow:0 3px 0 #CFD8DC;
+}
+.pad-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #CFD8DC}
+.pad-btn:hover{background:#EDE9FE;border-color:var(--purple)}
+
+/* ─── MATCH GAME ─── */
+.match-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:440px}
+.m-card{
+  aspect-ratio:1;background:#E3F2FD;
+  border:2.5px solid #90CAF9;
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka One',cursive;font-size:18px;
+  cursor:pointer;transition:all .22s;
+  user-select:none;box-shadow:0 3px 0 #BBDEFB;color:var(--blue);
+}
+.m-card:hover{background:#BBDEFB;transform:scale(1.05)}
+.m-card.flipped{background:#EDE9FE;border-color:var(--purple);color:var(--purple)}
+.m-card.matched{background:#E8F5E9;border-color:var(--grass);color:var(--grass);cursor:default;transform:scale(1)}
+.m-card.wrong-flip{background:#FFEBEE;border-color:#E53935}
+
+/* ─── FEEDBACK ─── */
+.feedback{
+  text-align:center;padding:12px 16px;border-radius:14px;
+  font-weight:800;font-size:16px;min-height:50px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;width:100%;max-width:440px;
+}
+.fb-success{background:#E8F5E9;color:#1B5E20;border:2px solid #A5D6A7}
+.fb-error{background:#FFEBEE;color:#B71C1C;border:2px solid #FFCDD2}
+.fb-info{background:#FFF9C4;color:#E65100;border:2px solid #FFE082}
+
+/* ─── RESULT ─── */
+#screen-result{
+  background:linear-gradient(155deg,#E8EAF6,#F3E5F5,#E1F5FE);
+  justify-content:center;text-align:center;gap:18px
+}
+.trophy-big{font-size:80px;animation:bounce 1s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.result-title{font-family:'Fredoka One',cursive;font-size:32px;color:var(--blue)}
+.res-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;max-width:360px}
+.stat-box{background:white;border-radius:16px;padding:14px 8px;box-shadow:var(--shadow)}
+.stat-box .sv{font-family:'Fredoka One',cursive;font-size:28px}
+.stat-box .sl{font-size:11px;color:var(--muted);font-weight:700}
+
+/* ─── SUMMARY ─── */
+.sum-card{background:white;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);width:100%;max-width:440px}
+.sum-card h2{font-family:'Fredoka One',cursive;font-size:20px;margin-bottom:12px}
+.key-pt{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px dashed #E0E0E0;font-size:14px;line-height:1.5}
+.key-pt:last-child{border-bottom:none}
+.kp-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;font-weight:800;margin-top:2px}
+
+/* ─── STREAK ─── */
+.streak-row{display:flex;gap:6px;justify-content:center;margin:6px 0}
+.s-dot{width:14px;height:14px;border-radius:50%;background:#E0E0E0;transition:all .3s}
+.s-dot.lit{background:var(--orange);box-shadow:0 0 8px rgba(251,140,0,0.5)}
+
+/* ─── TIMER BAR ─── */
+.timer-bar{width:100%;max-width:440px;height:8px;background:#E0E0E0;border-radius:20px;overflow:hidden}
+.timer-fill{height:100%;background:linear-gradient(90deg,#43A047,#FFD54F,#E53935);border-radius:20px;transition:width .1s linear}
+
+/* ─── CONFETTI ─── */
+#celebrate{display:none;position:fixed;inset:0;pointer-events:none;z-index:999}
+.confetti{position:absolute;animation:fall 1.6s ease-in forwards}
+@keyframes fall{from{transform:translateY(-10px) rotate(0deg);opacity:1}to{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* ─── MISC ─── */
+.no-carry{
+  background:#FFF9C4;border:2px dashed #F9A825;
+  border-radius:14px;padding:12px 14px;
+  font-size:14px;font-weight:700;color:#E65100;
+  display:flex;align-items:center;gap:10px;
+  width:100%;max-width:440px;
+}
+.slide-in{animation:slideIn .32s ease-out}
+@keyframes slideIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div id="celebrate"></div>
+
+<!-- ══════════════════════════════════ COVER -->
+<div id="screen-cover" class="screen active">
+  <span class="cover-icon">🌈</span>
+  <h1 class="cover-title">Adding Without<br>Carrying!</h1>
+  <p class="cover-sub">A Math Adventure for Grade 1 🎒</p>
+  <div class="cover-stars">⭐ ⭐ ⭐ ⭐ ⭐</div>
+
+  <div class="name-card">
+    <p>Student:</p>
+    <h3 id="student-name-display">Your Name Here</h3>
+    <p style="margin-top:8px">Teacher:</p>
+    <h3 class="teacher">Ms. Manal Bazzi</h3>
+  </div>
+
+  <div class="name-input-wrap">
+    <input id="cover-name-input" type="text" placeholder="Type your name here! 😊" maxlength="22">
+  </div>
+
+  <button class="btn btn-coral" onclick="startAdventure()" style="max-width:300px;width:100%">🚀 Start the Adventure!</button>
+  <p style="margin-top:18px;font-size:12px;color:var(--muted)">3 lessons • 4 fun games • certificates</p>
+</div>
+
+<!-- ══════════════════════════════════ MENU -->
+<div id="screen-menu" class="screen">
+  <div class="menu-header">
+    <h2>Hello, <span id="menu-name" style="color:var(--coral)">Explorer</span>! 👋</h2>
+    <p>Choose a lesson or game to play!</p>
+    <div style="margin-top:10px">
+      <span class="star-total">⭐ <span id="total-stars">0</span> Stars</span>
+    </div>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card blue" onclick="goTo('lesson1')">
+      <span class="mc-icon">📚</span>
+      <div class="mc-title" style="color:var(--blue)">Lesson 1</div>
+      <div class="mc-sub">What is Addition?</div>
+    </div>
+    <div class="menu-card green" onclick="goTo('lesson2')">
+      <span class="mc-icon">📐</span>
+      <div class="mc-title" style="color:var(--grass)">Lesson 2</div>
+      <div class="mc-sub">Tens & Ones Columns</div>
+    </div>
+    <div class="menu-card purple" onclick="goTo('lesson3')">
+      <span class="mc-icon">🎯</span>
+      <div class="mc-title" style="color:var(--purple)">Lesson 3</div>
+      <div class="mc-sub">Practice & Counter</div>
+    </div>
+    <div class="menu-card coral" onclick="goTo('quiz')">
+      <span class="mc-icon">🎮</span>
+      <div class="mc-title" style="color:var(--coral)">Quiz Game</div>
+      <div class="mc-sub">10 questions!</div>
+      <span class="mc-badge">+10⭐</span>
+    </div>
+    <div class="menu-card mint" onclick="goTo('balloon')">
+      <span class="mc-icon">🎈</span>
+      <div class="mc-title" style="color:var(--mint)">Balloon Pop</div>
+      <div class="mc-sub">Pop the right answer!</div>
+      <span class="mc-badge">NEW</span>
+    </div>
+    <div class="menu-card pink" onclick="goTo('fill')">
+      <span class="mc-icon">🔢</span>
+      <div class="mc-title" style="color:var(--pink)">Fill the Blank</div>
+      <div class="mc-sub">Find the missing number</div>
+    </div>
+    <div class="menu-card" style="border-color:rgba(251,140,0,0.2)" onclick="goTo('match')">
+      <span class="mc-icon">🃏</span>
+      <div class="mc-title" style="color:var(--orange)">Memory Match</div>
+      <div class="mc-sub">Match equations!</div>
+    </div>
+    <div class="menu-card" style="border-color:rgba(67,160,71,0.2)" onclick="goTo('summary')">
+      <span class="mc-icon">📋</span>
+      <div class="mc-title" style="color:var(--grass)">Summary</div>
+      <div class="mc-sub">Key takeaways</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ LESSON 1 -->
+<div id="screen-lesson1" class="screen">
+  <div class="nav-bar" style="max-width:440px;width:100%">
+    <div class="nav-left"><button class="back-btn" onclick="goTo('menu')">←</button><span class="nav-title">📚 Lesson 1</span></div>
+    <span class="nav-chip">Step 1 of 3</span>
+  </div>
+  <div class="card slide-in">
+    <h2>What is Addition?</h2>
+    <p>Addition means <strong>putting numbers together</strong> to find the total. We use the <strong>+</strong> sign!</p>
+    <div style="text-align:center;margin:14px 0">
+      <span style="font-size:36px">🍎🍎</span>
+      <span style="font-size:28px;color:var(--coral);font-weight:800"> + </span>
+      <span style="font-size:36px">🍎🍎🍎</span>
+      <span style="font-size:28px;color:var(--coral);font-weight:800"> = </span>
+      <span style="font-size:36px">🍎🍎🍎🍎🍎</span>
+    </div>
+    <div class="rule-box">✅ 2 apples + 3 apples = 5 apples</div>
+    <p>We add the <span style="color:#E53935;font-weight:800">ones</span> and we add the <span style="color:#1E88E5;font-weight:800">tens</span> separately — and the answer stays neat!</p>
+  </div>
+  <div style="background:#F3E5F5;border-radius:var(--radius);padding:18px;width:100%;max-width:440px;box-shadow:var(--shadow)" class="slide-in">
+    <h3 style="font-family:'Fredoka One',cursive;font-size:18px;color:#6A1B9A;text-align:center;margin-bottom:12px">Let's see it!</h3>
+    <div class="eq-visual">
+      <div class="eq-num" id="demo-n1">23</div>
+      <div class="eq-op">+</div>
+      <div class="eq-num" id="demo-n2">15</div>
+      <div class="eq-op">=</div>
+      <div class="eq-res" id="demo-ans">38</div>
+    </div>
+    <p style="text-align:center;font-size:13px;color:var(--muted)">Tap to see a new example!</p>
+    <div style="text-align:center;margin-top:10px">
+      <button class="btn btn-purple btn-sm" onclick="newDemoExample()">🔄 New Example</button>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-gray" onclick="goTo('menu')">← Menu</button>
+    <button class="btn btn-blue" style="flex:1" onclick="goTo('lesson2')">Next →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ LESSON 2 -->
+<div id="screen-lesson2" class="screen">
+  <div class="nav-bar" style="max-width:440px;width:100%">
+    <div class="nav-left"><button class="back-btn" onclick="goTo('lesson1')">←</button><span class="nav-title">📐 Lesson 2</span></div>
+    <span class="nav-chip">Step 2 of 3</span>
+  </div>
+  <div class="card slide-in">
+    <h2>Tens and Ones Columns</h2>
+    <p>When we add two-digit numbers, we line them up by their <span style="color:#E53935;font-weight:800">TENS</span> and <span style="color:#1E88E5;font-weight:800">ONES</span>.</p>
+  </div>
+  <div class="col-demo-wrap slide-in">
+    <h3>Column Method</h3>
+    <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap">
+      <table class="col-table">
+        <tr><td class="ch ct">TENS</td><td class="ch co">ONES</td></tr>
+        <tr><td class="ct" id="col-t1">2</td><td class="co" id="col-o1">3</td></tr>
+        <tr><td class="ct" id="col-t2">1</td><td class="co" id="col-o2">4</td></tr>
+        <tr class="col-line"><td class="ct" id="col-ta">3</td><td class="co" id="col-oa">7</td></tr>
+      </table>
+    </div>
+    <div class="col-steps">
+      <span id="col-s1" style="color:#E53935">🟥 Tens: 2 + 1 = 3</span><br>
+      <span id="col-s2" style="color:#1E88E5">🟦 Ones: 3 + 4 = 7</span><br>
+      <span id="col-s3" style="color:#2E7D32">✅ Answer: 37</span>
+    </div>
+    <div style="text-align:center;margin-top:12px">
+      <button class="btn btn-blue btn-sm" onclick="newColExample()">🔄 Try Another</button>
+    </div>
+  </div>
+  <div class="no-carry">
+    <span style="font-size:26px">🚫</span>
+    <div><strong>No Carrying!</strong> Each column's answer must be <strong>0–9</strong>. If ones add up to 10 or more — that's a harder problem for later!</div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-gray" onclick="goTo('lesson1')">← Back</button>
+    <button class="btn btn-blue" style="flex:1" onclick="goTo('lesson3')">Next →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ LESSON 3 -->
+<div id="screen-lesson3" class="screen">
+  <div class="nav-bar" style="max-width:440px;width:100%">
+    <div class="nav-left"><button class="back-btn" onclick="goTo('lesson2')">←</button><span class="nav-title">🎯 Practice</span></div>
+    <span class="nav-chip">Step 3 of 3</span>
+  </div>
+  <div class="counter-wrap slide-in">
+    <h3>🍬 Use the counter to add!</h3>
+    <div style="display:flex;gap:16px;justify-content:center">
+      <div style="flex:1;text-align:center">
+        <p style="font-size:12px;font-weight:800;color:#E53935;margin-bottom:4px">FIRST NUMBER</p>
+        <div class="emoji-row" id="emoji-row-1"></div>
+        <div class="cnt-ctrl">
+          <button class="cnt-btn cnt-minus" onclick="changeCount('A',-1)">−</button>
+          <div class="cnt-num" id="countA">0</div>
+          <button class="cnt-btn cnt-plus" onclick="changeCount('A',1)">+</button>
+        </div>
+      </div>
+      <div style="flex:1;text-align:center">
+        <p style="font-size:12px;font-weight:800;color:#1E88E5;margin-bottom:4px">SECOND NUMBER</p>
+        <div class="emoji-row" id="emoji-row-2"></div>
+        <div class="cnt-ctrl">
+          <button class="cnt-btn cnt-minus" onclick="changeCount('B',-1)">−</button>
+          <div class="cnt-num" id="countB">0</div>
+          <button class="cnt-btn cnt-plus" onclick="changeCount('B',1)">+</button>
+        </div>
+      </div>
+    </div>
+    <div class="sum-disp" id="sumDisplay">0 + 0 = 0</div>
+  </div>
+  <div style="background:#FFF3E0;border-radius:var(--radius);padding:18px;width:100%;max-width:440px;box-shadow:var(--shadow);text-align:center" class="slide-in">
+    <h3 style="font-family:'Fredoka One',cursive;font-size:18px;color:var(--coral);margin-bottom:12px">📝 Solve it in columns!</h3>
+    <table class="col-table" style="margin:0 auto 10px">
+      <tr><td class="ct" id="cp-t1">2</td><td class="co" id="cp-o1">5</td></tr>
+      <tr><td class="ct" id="cp-t2">1</td><td class="co" id="cp-o2">3</td></tr>
+      <tr class="col-line"><td colspan="2" style="padding-top:6px">
+        <input type="number" id="cp-answer" min="0" max="99"
+          style="font-family:'Fredoka One',cursive;font-size:32px;width:90px;
+                 border:none;border-bottom:3px solid var(--grass);background:transparent;
+                 text-align:center;color:var(--grass);outline:none"
+          placeholder="??" oninput="this.value=this.value.slice(0,2)">
+      </td></tr>
+    </table>
+    <button class="btn btn-coral btn-sm" onclick="checkColAnswer()">Check ✔</button>
+    <div id="cp-feedback" style="margin-top:10px;font-family:'Fredoka One',cursive;font-size:18px;min-height:24px;text-align:center"></div>
+    <button class="btn btn-gray btn-sm" style="margin-top:8px" onclick="newColPractice()">New Problem 🔄</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-gray" onclick="goTo('lesson2')">← Back</button>
+    <button class="btn btn-coral" style="flex:1" onclick="goTo('quiz')">🎮 Play Games!</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ QUIZ GAME -->
+<div id="screen-quiz" class="screen">
+  <div class="nav-bar" style="max-width:440px;width:100%">
+    <div class="nav-left"><button class="back-btn" onclick="goTo('menu')">←</button><span class="nav-title" style="color:var(--coral)">🎮 Quiz Game</span></div>
+    <span class="nav-chip" id="q-counter">Q 1 / 10</span>
+  </div>
+  <div class="score-bar">
+    <div class="s-item"><div class="s-lbl">⭐ Score</div><div class="s-val gold" id="quiz-score">0</div></div>
+    <div class="s-item"><div class="s-lbl">✅ Right</div><div class="s-val blue-c" id="quiz-right">0</div></div>
+    <div class="s-item"><div class="s-lbl">🔥 Streak</div><div class="s-val" style="color:var(--orange)" id="quiz-streak">0</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="quiz-prog" style="width:0%"></div></div>
+  <div class="streak-row" id="streak-row"></div>
+  <div class="q-card slide-in">
+    <div class="q-label">What is the answer?</div>
+    <div class="q-eq" id="quiz-eq">23 + 15 = ?</div>
+    <div class="q-hint" id="quiz-hint"></div>
+  </div>
+  <div class="choices" id="quiz-choices"></div>
+  <div class="fb-msg" id="quiz-fb"></div>
+</div>
+
+<!-- ══════════════════════════════════ BALLOON GAME -->
+<div id="screen-balloon" class="screen">
+  <div class="nav-bar" style="max-width:440px;width:100%">
+    <div class="nav-left"><button class="back-btn" onclick="goTo('menu')">←</button><span class="nav-title" style="color:var(--mint)">🎈 Balloon Pop</span></div>
+    <span class="nav-chip" id="balloon-counter">Q 1/10</span>
+  </div>
+  <div class="score-bar">
+    <div class="s-item"><div class="s-lbl">⭐ Score</div><div class="s-val gold" id="b-score">0</div></div>
+    <div class="s-item"><div class="s-lbl">✅ Right</div><div class="s-val blue-c" id="b-right">0</div></div>
+    <div class="s-item"><div class="s-lbl">💥 Popped</div><div class="s-val" style="color:var(--mint)" id="b-popped">0</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="b-prog" style="width:0%"></div></div>
+  <div class="balloon-area" id="balloon-area">
+    <div class="balloon-q" id="balloon-q">? + ? = ?</div>
+  </div>
+  <div class="feedback" id="b-feedback"></div>
+</div>
+
+<!-- ══════════════════════════════════ FILL IN BLANK -->
+<div id="screen-fill" class="screen">
+  <div class="nav-bar" style="max-width:440px;width:100%">
+    <div class="nav-left"><button class="back-btn" onclick="goTo('menu')">←</button><span class="nav-title" style="color:var(--pink)">🔢 Fill the Blank</span></div>
+    <span class="nav-chip" id="fill-counter">Q 1/10</span>
+  </div>
+  <div class="score-bar">
+    <div class="s-item"><div class="s-lbl">⭐ Score</div><div class="s-val gold" id="fill-score">0</div></div>
+    <div class="s-item"><div class="s-lbl">📋 Progress</div><div class="s-val blue-c" id="fill-prog-lbl">0/10</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="fill-prog" style="width:0%"></div></div>
+  <div class="card" style="text-align:center">
+    <p style="color:var(--muted);font-size:13px;font-weight:700;margin-bottom:4px">Tap the missing number!</p>
+    <div class="blank-eq" id="fill-eq"></div>
+  </div>
+  <div class="num-pad" id="fill-pad"></div>
+  <div class="feedback" id="fill-fb"></div>
+</div>
+
+<!-- ══════════════════════════════════ MEMORY MATCH -->
+<div id="screen-match" class="screen">
+  <div class="nav-bar" style="max-width:440px;width:100%">
+    <div class="nav-left"><button class="back-btn" onclick="goTo('menu')">←</button><span class="nav-title" style="color:var(--orange)">🃏 Memory Match</span></div>
+    <span class="nav-chip" id="match-prog-lbl">0/8</span>
+  </div>
+  <div class="score-bar">
+    <div class="s-item"><div class="s-lbl">⭐ Score</div><div class="s-val gold" id="match-score">0</div></div>
+    <div class="s-item"><div class="s-lbl">✅ Matches</div><div class="s-val blue-c" id="match-count">0</div></div>
+    <div class="s-item"><div class="s-lbl">🔄 Tries</div><div class="s-val" style="color:var(--orange)" id="match-tries">0</div></div>
+  </div>
+  <p style="font-size:13px;font-weight:700;color:var(--muted);text-align:center;margin-bottom:8px">Match each equation with its answer!</p>
+  <div class="match-grid" id="match-grid"></div>
+  <div class="feedback" id="match-fb"></div>
+  <button class="btn btn-green btn-sm" style="margin-top:12px" onclick="initMatch()">🔄 New Game</button>
+</div>
+
+<!-- ══════════════════════════════════ RESULT -->
+<div id="screen-result" class="screen">
+  <div class="trophy-big" id="res-trophy">🏆</div>
+  <h1 class="result-title" id="res-title">Amazing Job!</h1>
+  <p id="res-sub" style="font-size:16px;color:var(--muted);font-weight:700"></p>
+  <div class="res-stats">
+    <div class="stat-box"><div class="sv gold" id="res-score">0</div><div class="sl">SCORE</div></div>
+    <div class="stat-box"><div class="sv" style="color:#43A047" id="res-right">0</div><div class="sl">CORRECT</div></div>
+    <div class="stat-box"><div class="sv red" id="res-wrong">0</div><div class="sl">MISSED</div></div>
+  </div>
+  <p id="res-stars" style="font-size:40px;letter-spacing:6px;margin:4px 0"></p>
+  <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px;margin-top:10px">
+    <button class="btn btn-coral btn-full" id="res-play-again" onclick="">🔄 Play Again</button>
+    <button class="btn btn-blue btn-full" onclick="goTo('menu')">🏠 Back to Menu</button>
+    <button class="btn btn-purple btn-full" onclick="goTo('summary')">📋 See Summary</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════ SUMMARY -->
+<div id="screen-summary" class="screen">
+  <div class="nav-bar" style="max-width:440px;width:100%">
+    <div class="nav-left"><button class="back-btn" onclick="goTo('menu')">←</button><span class="nav-title">📋 Summary</span></div>
+    <span class="nav-chip">Review</span>
+  </div>
+  <div class="sum-card">
+    <h2 style="color:var(--blue)">🌟 What We Learned</h2>
+    <div class="key-pt"><div class="kp-dot" style="background:#E3F2FD;color:var(--blue)">1</div><div><strong>Addition joins numbers.</strong> We use <strong>+</strong> to add two groups together and find the total.</div></div>
+    <div class="key-pt"><div class="kp-dot" style="background:#F3E5F5;color:#6A1B9A">2</div><div><strong>Tens and Ones columns.</strong> Line up digits carefully — <span style="color:#E53935;font-weight:800">tens</span> above tens, <span style="color:#1E88E5;font-weight:800">ones</span> above ones.</div></div>
+    <div class="key-pt"><div class="kp-dot" style="background:#E8F5E9;color:#2E7D32">3</div><div><strong>Add each column separately.</strong> Ones + Ones first, then Tens + Tens.</div></div>
+    <div class="key-pt"><div class="kp-dot" style="background:#FFF9C4;color:#F57F17">4</div><div><strong>No carrying needed!</strong> Each column answer is 0–9. Keep it simple! 😊</div></div>
+    <div class="key-pt"><div class="kp-dot" style="background:#FCE4EC;color:#C62828">5</div><div><strong>Practice makes perfect!</strong> The more we practice, the stronger our math skills grow. ⭐</div></div>
+  </div>
+  <div class="sum-card" style="background:#FFF8E1;margin-top:0">
+    <h2 style="color:#E65100">✏️ Remember This!</h2>
+    <div style="text-align:center;padding:10px 0">
+      <div style="font-family:'Fredoka One',cursive;font-size:28px;background:white;border-radius:14px;padding:14px;border:2px dashed #FF9800">
+        <span style="color:#E53935">3</span><span style="color:#1E88E5">4</span>
+        <span style="color:#666"> + </span>
+        <span style="color:#E53935">2</span><span style="color:#1E88E5">5</span>
+        <span style="color:#666"> = </span>
+        <span style="color:#2E7D32">59</span>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--muted);font-weight:700">
+        <span style="color:#E53935">3+2=5 tens</span> &nbsp;|&nbsp; <span style="color:#1E88E5">4+5=9 ones</span>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;text-align:center;color:var(--muted);font-weight:700;padding:4px 0">
+    🎓 Taught by <span style="color:#6A1B9A">Ms. Manal Bazzi</span> &nbsp;|&nbsp; Grade 1
+  </p>
+  <button class="btn btn-blue btn-sm" style="margin-top:4px" onclick="goTo('menu')">🏠 Back to Menu</button>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────
+// GLOBALS
+// ─────────────────────────────────────────────────────────
+let studentName = 'Explorer';
+let totalStars = 0;
+let countA = 0, countB = 0;
+let cpN1 = 25, cpN2 = 13;
+
+const EMOJIS = ['🍎','🌟','🍬','🦋','🐸','🌸','🎈','🍭','⚽','🐥'];
+const BCOLORS = ['#FF5722','#7C4DFF','#00ACC1','#E91E63','#FB8C00','#43A047','#1565C0','#AB47BC'];
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+
+function noCarry(){
+  let a,b;
+  do{
+    if(Math.random()<0.5){a=Math.floor(Math.random()*9)+1;b=Math.floor(Math.random()*9)+1}
+    else{a=Math.floor(Math.random()*40)+10;b=Math.floor(Math.random()*40)+10}
+  }while((a+b)>99||((a%10)+(b%10)>9)||(a>9&&b>9&&(Math.floor(a/10)+Math.floor(b/10))>9));
+  return{a,b,ans:a+b}
+}
+
+// ─────────────────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────────────────
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+screen).classList.add('active');
+  window.scrollTo(0,0);
+  document.getElementById('total-stars').textContent = totalStars;
+  if(screen==='quiz') initQuiz();
+  if(screen==='balloon') initBalloon();
+  if(screen==='fill') initFill();
+  if(screen==='match') initMatch();
+}
+
+function startAdventure(){
+  const n = document.getElementById('cover-name-input').value.trim() || 'Superstar';
+  studentName = n;
+  document.getElementById('student-name-display').textContent = n;
+  document.getElementById('menu-name').textContent = n;
+  goTo('menu');
+}
+
+function addStars(n){
+  totalStars += n;
+  document.getElementById('total-stars').textContent = totalStars;
+}
+
+// ─────────────────────────────────────────────────────────
+// CONFETTI
+// ─────────────────────────────────────────────────────────
+function fireConfetti(big=false){
+  const cel=document.getElementById('celebrate');
+  cel.style.display='block';cel.innerHTML='';
+  const colors=['#FFD54F','#FF7043','#42A5F5','#66BB6A','#EC407A','#AB47BC','#26C6DA'];
+  const n=big?55:22;
+  for(let i=0;i<n;i++){
+    const c=document.createElement('div');c.className='confetti';
+    c.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*-20}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>.5?'50%':'2px'};
+      animation-delay:${Math.random()*.4}s;animation-duration:${1+Math.random()*.8}s`;
+    cel.appendChild(c);
+  }
+  setTimeout(()=>{cel.style.display='none'},big?2600:1900);
+}
+
+// ─────────────────────────────────────────────────────────
+// LESSON 1 DEMO
+// ─────────────────────────────────────────────────────────
+const demoEx=[[23,15],[31,24],[42,12],[50,37],[14,23],[63,21],[24,35],[11,46]];
+let demoIdx=0;
+function newDemoExample(){
+  demoIdx=(demoIdx+1)%demoEx.length;
+  const[a,b]=demoEx[demoIdx];
+  document.getElementById('demo-n1').textContent=a;
+  document.getElementById('demo-n2').textContent=b;
+  document.getElementById('demo-ans').textContent=a+b;
+}
+
+// ─────────────────────────────────────────────────────────
+// LESSON 2 COLUMN
+// ─────────────────────────────────────────────────────────
+const colEx=[[23,14],[31,25],[42,12],[50,37],[14,23],[63,21],[22,31],[41,16]];
+let colIdx=0;
+function newColExample(){
+  colIdx=(colIdx+1)%colEx.length;
+  const[a,b]=colEx[colIdx];
+  const t1=Math.floor(a/10),o1=a%10,t2=Math.floor(b/10),o2=b%10;
+  document.getElementById('col-t1').textContent=t1;document.getElementById('col-o1').textContent=o1;
+  document.getElementById('col-t2').textContent=t2;document.getElementById('col-o2').textContent=o2;
+  document.getElementById('col-ta').textContent=t1+t2;document.getElementById('col-oa').textContent=o1+o2;
+  document.getElementById('col-s1').textContent=`🟥 Tens: ${t1} + ${t2} = ${t1+t2}`;
+  document.getElementById('col-s2').textContent=`🟦 Ones: ${o1} + ${o2} = ${o1+o2}`;
+  document.getElementById('col-s3').textContent=`✅ Answer: ${a+b}`;
+}
+
+// ─────────────────────────────────────────────────────────
+// LESSON 3 COUNTER
+// ─────────────────────────────────────────────────────────
+function changeCount(w,d){
+  if(w==='A')countA=Math.max(0,Math.min(9,countA+d));
+  else countB=Math.max(0,Math.min(9,countB+d));
+  document.getElementById('countA').textContent=countA;
+  document.getElementById('countB').textContent=countB;
+  document.getElementById('sumDisplay').textContent=`${countA} + ${countB} = ${countA+countB}`;
+  renderEmoji('emoji-row-1',countA);renderEmoji('emoji-row-2',countB);
+}
+function renderEmoji(id,n){
+  const r=document.getElementById(id);r.innerHTML='';
+  for(let i=0;i<n;i++){const s=document.createElement('span');s.className='emoji-item';s.textContent=EMOJIS[i%EMOJIS.length];r.appendChild(s);}
+}
+function newColPractice(){
+  let a,b;
+  do{a=Math.floor(Math.random()*50)+10;b=Math.floor(Math.random()*30)+10;}
+  while((a%10)+(b%10)>9||(Math.floor(a/10)+Math.floor(b/10))>9);
+  cpN1=a;cpN2=b;
+  document.getElementById('cp-t1').textContent=Math.floor(a/10);document.getElementById('cp-o1').textContent=a%10;
+  document.getElementById('cp-t2').textContent=Math.floor(b/10);document.getElementById('cp-o2').textContent=b%10;
+  document.getElementById('cp-answer').value='';document.getElementById('cp-feedback').textContent='';
+}
+function checkColAnswer(){
+  const ans=parseInt(document.getElementById('cp-answer').value);
+  const fb=document.getElementById('cp-feedback');
+  if(isNaN(ans)){fb.textContent='Please type a number! 🔢';fb.style.color='#E65100';return}
+  if(ans===cpN1+cpN2){
+    fb.textContent='🎉 Correct! Amazing!';fb.style.color='#2E7D32';
+    addStars(1);fireConfetti();
+    setTimeout(newColPractice,2000);
+  }else{
+    fb.textContent=`❌ Oops! The answer is ${cpN1+cpN2}. Try again!`;fb.style.color='#C62828';
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// QUIZ GAME
+// ─────────────────────────────────────────────────────────
+let qIdx=0,qScore=0,qRight=0,qWrong=0,qStreak=0,qAns=0,qCanAns=true;
+
+function initQuiz(){
+  qIdx=0;qScore=0;qRight=0;qWrong=0;qStreak=0;qCanAns=true;
+  updateQuizUI();renderStreak();renderQuizQ();
+}
+function updateQuizUI(){
+  document.getElementById('quiz-score').textContent=qScore;
+  document.getElementById('quiz-right').textContent=qRight;
+  document.getElementById('quiz-streak').textContent=qStreak;
+}
+function renderStreak(){
+  const r=document.getElementById('streak-row');r.innerHTML='';
+  for(let i=0;i<5;i++){const d=document.createElement('div');d.className='s-dot'+(i<qStreak?' lit':'');r.appendChild(d);}
+}
+function renderQuizQ(){
+  if(qIdx>=10){endQuiz();return}
+  qCanAns=true;
+  const{a,b,ans}=noCarry();qAns=ans;
+  document.getElementById('quiz-eq').textContent=`${a} + ${b} = ?`;
+  document.getElementById('q-counter').textContent=`Q ${qIdx+1}/10`;
+  document.getElementById('quiz-prog').style.width=`${qIdx/10*100}%`;
+  document.getElementById('quiz-hint').textContent=a>9?`Hint: tens ${Math.floor(a/10)}+${Math.floor(b/10)}, ones ${a%10}+${b%10}`:'';
+  document.getElementById('quiz-fb').textContent='';document.getElementById('quiz-fb').className='fb-msg';
+  const opts=new Set([ans]);
+  while(opts.size<4){let w=ans+(Math.floor(Math.random()*10)-5);if(w>0&&w!==ans)opts.add(w)}
+  const arr=shuffle([...opts]);
+  const grid=document.getElementById('quiz-choices');grid.innerHTML='';
+  arr.forEach(c=>{const btn=document.createElement('button');btn.className='choice';btn.textContent=c;btn.onclick=()=>answerQuiz(c,btn);grid.appendChild(btn);});
+}
+function answerQuiz(chosen,btn){
+  if(!qCanAns)return;qCanAns=false;
+  const fb=document.getElementById('quiz-fb');
+  document.querySelectorAll('.choice').forEach(b=>{b.disabled=true;if(parseInt(b.textContent)===qAns)b.classList.add('correct');});
+  if(chosen===qAns){
+    btn.classList.add('correct');qRight++;
+    qStreak=Math.min(qStreak+1,5);
+    const bonus=qStreak>=3?2:1;qScore+=bonus*10;
+    addStars(bonus);
+    fb.textContent=qStreak>=3?`🔥 ${bonus} Bonus Stars! On fire!`:'⭐ Correct! +1 Star!';fb.className='fb-msg fb-good';
+    if(qStreak===5)fireConfetti(true);else fireConfetti();
+  }else{
+    btn.classList.add('wrong');qWrong++;qStreak=0;qScore=Math.max(0,qScore-5);
+    fb.textContent=`❌ The answer was ${qAns}`;fb.className='fb-msg fb-bad';
+  }
+  updateQuizUI();renderStreak();
+  setTimeout(()=>{qIdx++;renderQuizQ();},1500);
+}
+function endQuiz(){
+  document.getElementById('quiz-prog').style.width='100%';
+  const pct=Math.round(qRight/10*100);
+  let trophy='🏆',title,sub,stars;
+  if(pct===100){title='Perfect Score! 🌟';sub='You got every answer right!';stars='⭐⭐⭐⭐⭐';}
+  else if(pct>=80){title='Amazing Work! 🎉';sub='You are a math superstar!';stars='⭐⭐⭐⭐';}
+  else if(pct>=60){title='Good Job! 😊';sub='Keep practicing!';stars='⭐⭐⭐';}
+  else if(pct>=40){title='Nice Try! 💪';sub='Practice more and you will be amazing!';stars='⭐⭐';}
+  else{title='Keep Trying! 🌱';sub='Review the lessons and play again!';stars='⭐';}
+  document.getElementById('res-trophy').textContent=trophy;
+  document.getElementById('res-title').textContent=title;
+  document.getElementById('res-sub').textContent=sub;
+  document.getElementById('res-stars').textContent=stars;
+  document.getElementById('res-score').textContent=qScore;
+  document.getElementById('res-right').textContent=qRight;
+  document.getElementById('res-wrong').textContent=qWrong;
+  document.getElementById('res-play-again').onclick=()=>goTo('quiz');
+  goTo('result');
+  if(pct>=80)fireConfetti(true);
+}
+
+// ─────────────────────────────────────────────────────────
+// BALLOON POP GAME
+// ─────────────────────────────────────────────────────────
+let bIdx=0,bScore=0,bRight=0,bPopped=0,bAns=0,bCanAns=true,bTimers=[];
+
+function initBalloon(){
+  bIdx=0;bScore=0;bRight=0;bPopped=0;bCanAns=true;
+  bTimers.forEach(t=>clearTimeout(t));bTimers=[];
+  updateBalloonUI();
+  renderBalloonQ();
+}
+function updateBalloonUI(){
+  document.getElementById('b-score').textContent=bScore;
+  document.getElementById('b-right').textContent=bRight;
+  document.getElementById('b-popped').textContent=bPopped;
+  document.getElementById('balloon-counter').textContent=`Q ${bIdx+1}/10`;
+  document.getElementById('b-prog').style.width=`${bIdx/10*100}%`;
+}
+function renderBalloonQ(){
+  if(bIdx>=10){endBalloon();return}
+  bCanAns=true;
+  const{a,b,ans}=noCarry();bAns=ans;
+  document.getElementById('balloon-q').textContent=`${a} + ${b} = ?`;
+  document.getElementById('b-feedback').textContent='';document.getElementById('b-feedback').className='feedback';
+
+  const area=document.getElementById('balloon-area');
+  // Remove old balloons
+  area.querySelectorAll('.balloon').forEach(el=>el.remove());
+
+  const opts=new Set([ans]);
+  while(opts.size<4){let w=ans+(Math.floor(Math.random()*10)-5);if(w>0&&w!==ans)opts.add(w)}
+  const arr=shuffle([...opts]);
+  arr.forEach((num,i)=>{
+    const balloon=document.createElement('div');balloon.className='balloon';
+    const col=BCOLORS[i%BCOLORS.length];
+    const leftPct=10+i*22;
+    const dur=4+Math.random()*3;
+    const delay=-(Math.random()*dur);
+    balloon.style.cssText=`left:${leftPct}%;animation-duration:${dur}s;animation-delay:${delay}s`;
+    balloon.innerHTML=`<div class="balloon-body" style="background:${col}">${num}</div><div class="balloon-string"></div>`;
+    balloon.onclick=()=>popBalloon(num,balloon,col);
+    area.appendChild(balloon);
+  });
+}
+function popBalloon(chosen,el,color){
+  if(!bCanAns)return;bCanAns=false;
+  el.style.animationPlayState='paused';
+  const fb=document.getElementById('b-feedback');
+  if(chosen===bAns){
+    el.style.transform='scale(1.3)';
+    setTimeout(()=>{el.style.transform='scale(0)';el.style.opacity='0'},200);
+    bRight++;bPopped++;bScore+=15;addStars(1);
+    fb.textContent='💥 POP! Correct! +1 Star!';fb.className='feedback fb-success';
+    fireConfetti();
+  }else{
+    el.style.filter='grayscale(1)';
+    bScore=Math.max(0,bScore-5);
+    fb.textContent=`❌ Wrong balloon! The answer was ${bAns}`;fb.className='feedback fb-error';
+  }
+  updateBalloonUI();
+  const t=setTimeout(()=>{bIdx++;renderBalloonQ();},1600);bTimers.push(t);
+}
+function endBalloon(){
+  document.getElementById('b-prog').style.width='100%';
+  const pct=Math.round(bRight/10*100);
+  let title,sub,stars;
+  if(pct===100){title='Balloon Master! 🎈';sub='You popped every right balloon!';stars='⭐⭐⭐⭐⭐';}
+  else if(pct>=80){title='Great Popper! 💥';sub='Awesome balloon popping!';stars='⭐⭐⭐⭐';}
+  else if(pct>=60){title='Good Aim! 🎯';sub='Keep practicing!';stars='⭐⭐⭐';}
+  else{title='Keep Trying! 🌱';sub='Play again to get better!';stars='⭐⭐';}
+  document.getElementById('res-trophy').textContent='🎈';
+  document.getElementById('res-title').textContent=title;
+  document.getElementById('res-sub').textContent=sub;
+  document.getElementById('res-stars').textContent=stars;
+  document.getElementById('res-score').textContent=bScore;
+  document.getElementById('res-right').textContent=bRight;
+  document.getElementById('res-wrong').textContent=10-bRight;
+  document.getElementById('res-play-again').onclick=()=>goTo('balloon');
+  goTo('result');
+  if(pct>=80)fireConfetti(true);
+}
+
+// ─────────────────────────────────────────────────────────
+// FILL IN BLANK GAME
+// ─────────────────────────────────────────────────────────
+let fIdx=0,fScore=0,fAns=0,fCanAns=true;
+
+function initFill(){
+  fIdx=0;fScore=0;fCanAns=true;
+  document.getElementById('fill-score').textContent=0;
+  document.getElementById('fill-prog').style.width='0%';
+  renderFillQ();
+}
+function renderFillQ(){
+  if(fIdx>=10){endFill();return}
+  fCanAns=true;
+  const{a,b,ans}=noCarry();
+  const type=Math.floor(Math.random()*3);
+  let eqHTML,answer;
+  if(type===0){answer=a;fAns=a;eqHTML=`<span class="blank-box">?</span><span class="eq-op">+</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${b}</span><span class="eq-op">=</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px);color:var(--grass)">${ans}</span>`;}
+  else if(type===1){answer=b;fAns=b;eqHTML=`<span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${a}</span><span class="eq-op">+</span><span class="blank-box">?</span><span class="eq-op">=</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px);color:var(--grass)">${ans}</span>`;}
+  else{answer=ans;fAns=ans;eqHTML=`<span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${a}</span><span class="eq-op">+</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${b}</span><span class="eq-op">=</span><span class="blank-box">?</span>`;}
+
+  document.getElementById('fill-eq').innerHTML=eqHTML;
+  document.getElementById('fill-counter').textContent=`Q ${fIdx+1}/10`;
+  document.getElementById('fill-prog-lbl').textContent=`${fIdx}/10`;
+  document.getElementById('fill-prog').style.width=`${fIdx/10*100}%`;
+  document.getElementById('fill-fb').textContent='';document.getElementById('fill-fb').className='feedback';
+
+  const opts=new Set([answer]);
+  while(opts.size<8){let w=answer+(Math.floor(Math.random()*8)-4);if(w>0&&w!==answer)opts.add(w);}
+  const arr=shuffle([...opts]).slice(0,8);if(!arr.includes(answer))arr[0]=answer;
+
+  const pad=document.getElementById('fill-pad');pad.innerHTML='';
+  shuffle(arr).forEach(num=>{
+    const btn=document.createElement('button');btn.className='pad-btn';btn.textContent=num;
+    btn.onclick=()=>answerFill(num,btn);pad.appendChild(btn);
+  });
+}
+function answerFill(chosen,btn){
+  if(!fCanAns)return;fCanAns=false;
+  document.querySelectorAll('.pad-btn').forEach(b=>b.disabled=true);
+  const fb=document.getElementById('fill-fb');
+  if(chosen===fAns){
+    btn.style.background='#E8F5E9';btn.style.borderColor='#43A047';btn.style.color='#1B5E20';
+    fScore++;addStars(1);
+    fb.textContent='✅ Correct! Well done! +1 Star!';fb.className='feedback fb-success';
+    fireConfetti();
+  }else{
+    btn.style.background='#FFEBEE';btn.style.borderColor='#E53935';btn.style.color='#B71C1C';
+    fb.textContent=`❌ The answer was ${fAns}. Keep going!`;fb.className='feedback fb-error';
+  }
+  document.getElementById('fill-score').textContent=fScore;
+  setTimeout(()=>{fIdx++;renderFillQ();},1500);
+}
+function endFill(){
+  document.getElementById('fill-prog').style.width='100%';
+  const pct=Math.round(fScore/10*100);
+  document.getElementById('res-trophy').textContent=pct>=80?'🏅':'💪';
+  document.getElementById('res-title').textContent=pct>=80?'Number Detective! 🔢':'Good Effort! 💪';
+  document.getElementById('res-sub').textContent=pct>=80?'You found every missing number!':'Practice finding missing numbers!';
+  document.getElementById('res-stars').textContent='⭐'.repeat(Math.max(1,Math.ceil(pct/20)));
+  document.getElementById('res-score').textContent=fScore*10;
+  document.getElementById('res-right').textContent=fScore;
+  document.getElementById('res-wrong').textContent=10-fScore;
+  document.getElementById('res-play-again').onclick=()=>goTo('fill');
+  goTo('result');
+  if(pct>=80)fireConfetti(true);
+}
+
+// ─────────────────────────────────────────────────────────
+// MEMORY MATCH GAME
+// ─────────────────────────────────────────────────────────
+let mPairs=[],mFlipped=[],mMatched=[],mTries=0,mScore=0;
+
+function initMatch(){
+  const pool=[];
+  for(let i=0;i<8;i++){const{a,b,ans}=noCarry();pool.push({id:i,a,b,ans});}
+  mPairs=[];
+  pool.forEach(({id,a,b,ans})=>{
+    mPairs.push({id,type:'eq',text:`${a}+${b}`,answer:ans});
+    mPairs.push({id,type:'ans',text:`${ans}`,answer:ans});
+  });
+  mPairs=shuffle(mPairs);mFlipped=[];mMatched=[];mTries=0;mScore=0;
+  document.getElementById('match-score').textContent=0;
+  document.getElementById('match-count').textContent=0;
+  document.getElementById('match-tries').textContent=0;
+  document.getElementById('match-prog-lbl').textContent='0/8';
+  document.getElementById('match-fb').textContent='';document.getElementById('match-fb').className='feedback';
+  renderMatch();
+}
+function renderMatch(){
+  const grid=document.getElementById('match-grid');grid.innerHTML='';
+  mPairs.forEach((card,idx)=>{
+    const el=document.createElement('div');el.className='m-card';
+    if(mMatched.includes(idx)){el.classList.add('matched');el.textContent=card.text;}
+    else if(mFlipped.includes(idx)){el.classList.add('flipped');el.textContent=card.text;}
+    else{el.textContent='❓';el.onclick=()=>flipMatch(idx);}
+    grid.appendChild(el);
+  });
+}
+function flipMatch(idx){
+  if(mFlipped.length>=2||mFlipped.includes(idx)||mMatched.includes(idx))return;
+  mFlipped.push(idx);renderMatch();
+  if(mFlipped.length===2){
+    mTries++;document.getElementById('match-tries').textContent=mTries;
+    const[ia,ib]=mFlipped,ca=mPairs[ia],cb=mPairs[ib];
+    if(ca.id===cb.id&&ca.type!==cb.type){
+      setTimeout(()=>{
+        mMatched.push(ia,ib);mFlipped=[];
+        mScore+=20;addStars(2);
+        document.getElementById('match-score').textContent=mScore;
+        const mc=mMatched.length/2;
+        document.getElementById('match-count').textContent=mc;
+        document.getElementById('match-prog-lbl').textContent=`${mc}/8`;
+        document.getElementById('match-fb').textContent='✅ Match! +2 Stars!';document.getElementById('match-fb').className='feedback fb-success';
+        renderMatch();
+        if(mMatched.length===16){fireConfetti(true);setTimeout(()=>{
+          document.getElementById('res-trophy').textContent='🃏';
+          document.getElementById('res-title').textContent='Memory Master! 🃏';
+          document.getElementById('res-sub').textContent=`Matched all pairs in ${mTries} tries!`;
+          document.getElementById('res-stars').textContent=mTries<=10?'⭐⭐⭐⭐⭐':mTries<=14?'⭐⭐⭐⭐':'⭐⭐⭐';
+          document.getElementById('res-score').textContent=mScore;
+          document.getElementById('res-right').textContent=8;
+          document.getElementById('res-wrong').textContent=mTries-8;
+          document.getElementById('res-play-again').onclick=()=>goTo('match');
+          goTo('result');
+        },1500);}
+      },600);
+    }else{
+      document.getElementById('match-fb').textContent='❌ Not a match, try again!';document.getElementById('match-fb').className='feedback fb-error';
+      setTimeout(()=>{mFlipped=[];document.getElementById('match-fb').textContent='';document.getElementById('match-fb').className='feedback';renderMatch();},900);
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────
+window.onload=()=>{
+  renderEmoji('emoji-row-1',0);renderEmoji('emoji-row-2',0);
+  newColPractice();
+  document.getElementById('cover-name-input').addEventListener('keydown',e=>{if(e.key==='Enter')startAdventure();});
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft Math Quest – Perimeter Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dirt:   #7B5E3A;
+  --wood:   #A0522D;
+  --grass:  #5BA83F;
+  --stone:  #888888;
+  --coal:   #2A2A2A;
+  --gold:   #FFD700;
+  --gem:    #00E5FF;
+  --diamond:#5AE6FF;
+  --sky:    #A8D8EA;
+  --sky2:   #D4EAF7;
+  --panel:  rgba(28,42,22,0.88);
+  --border: #5B3A1F;
+  --green:  #3CB55A;
+  --red:    #E03030;
+  --white:  #F0EBDF;
+  --pink:   #FF79C6;
+  --glow:   0 0 20px rgba(0,229,255,0.5);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:linear-gradient(180deg,#D4EAF7 0%,#A8D8EA 40%,#C8E6B0 100%);
+  min-height:100vh;
+  color:#1E2D14;
+  overflow-x:hidden;
+}
+
+/* ─── STARS BACKGROUND ─── */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0;}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle var(--d,3s) infinite ease-in-out;}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1);}50%{opacity:1;transform:scale(1.4);}}
+
+/* ─── LAYOUT ─── */
+.container{max-width:860px;margin:0 auto;padding:12px;position:relative;z-index:1;}
+
+/* ─── PIXEL BUTTON BASE ─── */
+.px-btn{
+  font-family:'Press Start 2P',monospace;
+  font-size:11px;
+  cursor:pointer;
+  border:none;
+  outline:none;
+  position:relative;
+  transition:transform .08s,box-shadow .08s;
+  image-rendering:pixelated;
+}
+.px-btn:active{transform:translateY(3px);}
+
+/* ─── HEADER ─── */
+.header{
+  background:linear-gradient(135deg,#2E5A18,#4A8A28);
+  border:4px solid #8BC34A;
+  box-shadow:0 6px 0 #1A3A0A, 0 10px 30px rgba(0,0,0,.2);
+  padding:18px 20px 14px;
+  margin-bottom:16px;
+  text-align:center;
+}
+.game-title{
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(13px,3vw,20px);
+  color:var(--gold);
+  text-shadow:3px 3px 0 #000, 0 0 20px rgba(255,215,0,.4);
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+.teacher-tag{
+  font-family:'Press Start 2P',monospace;
+  font-size:9px;
+  color:#aed680;
+  text-shadow:1px 1px 0 #000;
+}
+
+/* ─── WELCOME SCREEN ─── */
+#welcomeScreen{
+  background:linear-gradient(160deg,#F5EDD8,#EAD9B8);
+  border:5px solid #A07840;
+  box-shadow:0 12px 40px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.5);
+  padding:40px 30px;
+  text-align:center;
+  max-width:480px;
+  margin:40px auto;
+  border-radius:4px;
+}
+#welcomeScreen h2{
+  font-family:'Press Start 2P',monospace;
+  font-size:clamp(14px,4vw,20px);
+  color:#4A2800;
+  text-shadow:2px 2px 0 rgba(0,0,0,.15);
+  margin-bottom:10px;
+}
+.welcome-sub{color:#6A4820;font-size:15px;line-height:1.6;margin:16px 0 24px;}
+.name-input{
+  width:100%;
+  max-width:320px;
+  padding:14px 18px;
+  font-size:18px;
+  font-family:'Nunito',sans-serif;
+  font-weight:800;
+  border:4px solid #A07840;
+  background:#FFF8EC;
+  color:#3A2000;
+  text-align:center;
+  margin-bottom:22px;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  border-radius:3px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.name-input:focus{border-color:#5B9A35;box-shadow:0 0 12px rgba(91,154,53,.3);}
+.name-input::placeholder{color:#B09060;font-family:'Nunito',sans-serif;}
+.start-btn{
+  background:linear-gradient(180deg,#5CB55A,#3A8A38);
+  color:#fff;
+  padding:16px 44px;
+  font-size:13px;
+  border:4px solid #1F5E1D;
+  box-shadow:0 7px 0 #1F5E1D;
+  text-shadow:2px 2px 0 #000;
+  border-radius:3px;
+}
+.start-btn:active{box-shadow:0 2px 0 #1F5E1D;}
+.welcome-diamonds{font-size:36px;margin-bottom:20px;animation:float-gem 3s ease-in-out infinite;}
+@keyframes float-gem{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+
+/* ─── HUD ─── */
+.hud{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+  background:rgba(255,255,255,0.75);
+  border:3px solid #8BC34A;
+  box-shadow:0 4px 0 rgba(0,0,0,.1);
+  padding:12px 16px;
+  margin-bottom:12px;
+  border-radius:4px;
+}
+.player-badge{
+  font-family:'Press Start 2P',monospace;
+  font-size:9px;
+  color:#2E5A18;
+  text-shadow:none;
+  display:flex;align-items:center;gap:8px;
+}
+.hud-stats{display:flex;gap:10px;flex-wrap:wrap;}
+.hud-stat{
+  background:rgba(46,90,24,0.12);
+  border:2px solid #8BC34A;
+  border-radius:3px;
+  padding:6px 12px;
+  display:flex;align-items:center;gap:6px;
+  font-weight:800;
+  font-size:14px;
+  white-space:nowrap;
+  color:#1E3A0A;
+}
+.hud-stat .icon{font-size:18px;}
+.sound-btn{
+  background:rgba(46,90,24,0.1);
+  border:2px solid #8BC34A;
+  padding:8px 12px;
+  border-radius:3px;
+  cursor:pointer;
+  font-size:18px;
+  transition:background .2s;
+  margin-left:8px;
+}
+.sound-btn:hover{background:rgba(46,90,24,0.2);}
+
+/* ─── STREAK BANNER ─── */
+.streak-bar{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  background:linear-gradient(90deg,transparent,rgba(255,180,0,.12),transparent);
+  border:2px solid rgba(200,140,0,.25);
+  padding:8px 16px;
+  margin-bottom:10px;
+  border-radius:3px;
+  font-weight:800;font-size:13px;
+  color:#7A5200;
+  min-height:38px;
+  transition:all .3s;
+}
+.streak-bar .flame{font-size:20px;}
+.streak-bar.active{background:linear-gradient(90deg,transparent,rgba(255,150,0,.2),transparent);border-color:rgba(220,140,0,.45);}
+
+/* ─── PROGRESS ─── */
+.progress-wrap{
+  background:rgba(255,255,255,0.72);
+  border:3px solid #8BC34A;
+  padding:12px 16px;
+  margin-bottom:12px;
+  border-radius:4px;
+}
+.progress-label{
+  color:#2E5A18;
+  font-weight:800;
+  margin-bottom:8px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'Press Start 2P',monospace;font-size:8px;
+}
+.progress-track{height:22px;background:#D4CAAA;border:3px solid #8B6520;border-radius:2px;overflow:hidden;position:relative;}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--grass),#8BC34A);
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+  position:relative;
+}
+.progress-fill::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:8px;
+  background:rgba(255,255,255,.4);
+  animation:prog-shine 1.5s infinite;
+}
+@keyframes prog-shine{0%,100%{opacity:0;}50%{opacity:1;}}
+.progress-pct{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  color:#1E3A0A;font-weight:900;font-size:12px;text-shadow:none;
+}
+
+/* ─── SCENE ─── */
+.scene{
+  background:linear-gradient(180deg,#87CEEB 0%,#B0DCEF 55%,#5BAA34 55%,#3D7A20 100%);
+  border:5px solid #4A8A28;
+  height:180px;
+  position:relative;
+  overflow:hidden;
+  margin-bottom:12px;
+  border-radius:4px;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.15);
+}
+/* Pixelated ground blocks */
+.ground-strip{
+  position:absolute;bottom:0;left:0;width:100%;height:55px;
+  background:repeating-linear-gradient(90deg,#4A7A2A 0,#4A7A2A 48px,#5B9A35 48px,#5B9A35 96px);
+  border-top:4px solid #3A6020;
+}
+.ground-strip::before{
+  content:'';position:absolute;top:12px;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(90deg,#7B5E3A 0,#7B5E3A 48px,#8B6E4A 48px,#8B6E4A 96px);
+}
+/* Sun */
+.scene-moon{
+  position:absolute;top:14px;right:40px;width:44px;height:44px;
+  background:radial-gradient(circle,#FFE066 60%,#FFD700 100%);
+  border-radius:50%;
+  box-shadow:0 0 24px 10px rgba(255,220,80,.45);
+}
+
+/* ─── CHARACTER (SVG-style CSS) ─── */
+#character{
+  position:absolute;bottom:55px;left:50%;
+  transform:translateX(-50%);
+  width:44px;
+  transition:bottom .3s cubic-bezier(.4,0,.2,1);
+  z-index:10;
+}
+#character.jump{animation:char-jump .5s ease;}
+@keyframes char-jump{
+  0%{bottom:55px;}30%{bottom:105px;}70%{bottom:105px;}100%{bottom:55px;}
+}
+#character.shake{animation:char-shake .4s ease;}
+@keyframes char-shake{
+  0%,100%{transform:translateX(-50%);}
+  25%{transform:translateX(calc(-50% - 8px));}
+  75%{transform:translateX(calc(-50% + 8px));}
+}
+.char-head{
+  width:32px;height:32px;
+  background:#FFA07A;border:3px solid #000;
+  margin:0 auto 3px;position:relative;
+  image-rendering:pixelated;
+}
+.char-eyes{display:flex;justify-content:space-around;padding:10px 6px 0;}
+.char-eye{width:7px;height:7px;background:#000;}
+.char-body{
+  width:40px;height:28px;
+  background:#4169E1;border:3px solid #000;
+  margin:0 auto;position:relative;
+}
+.char-arms{display:flex;justify-content:space-between;margin:0 auto;width:56px;margin-top:-25px;}
+.char-arm{width:10px;height:24px;background:#4169E1;border:2px solid #000;}
+.char-legs{display:flex;justify-content:center;gap:4px;margin-top:3px;}
+.char-leg{width:13px;height:18px;background:#191970;border:2px solid #000;}
+/* walking anim */
+.walking .char-leg:first-child{animation:leg-l .5s infinite alternate;}
+.walking .char-leg:last-child{animation:leg-r .5s infinite alternate;}
+@keyframes leg-l{from{transform:rotate(-15deg);}to{transform:rotate(15deg);}}
+@keyframes leg-r{from{transform:rotate(15deg);}to{transform:rotate(-15deg);}}
+
+/* Pickaxe tool icon */
+.char-tool{
+  position:absolute;right:-18px;top:4px;
+  font-size:20px;
+  animation:tool-swing 0.8s infinite ease-in-out;
+  transform-origin:bottom left;
+}
+@keyframes tool-swing{
+  0%,100%{transform:rotate(-20deg);}
+  50%{transform:rotate(20deg);}
+}
+
+/* Gem node in scene */
+.scene-gem{
+  position:absolute;
+  font-size:28px;
+  bottom:58px;right:80px;
+  animation:gem-float 2.5s ease-in-out infinite;
+  filter:drop-shadow(0 0 8px #00E5FF);
+  cursor:pointer;
+}
+@keyframes gem-float{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-10px) rotate(5deg);}}
+.scene-gem.mined{animation:gem-mined .4s forwards;}
+@keyframes gem-mined{to{transform:translateY(-60px) scale(0);opacity:0;}}
+
+/* Clouds */
+.cloud{
+  position:absolute;background:#D0E8FF;border-radius:30px;opacity:.6;
+  animation:cloud-move var(--speed,25s) linear infinite;
+}
+@keyframes cloud-move{from{left:-200px;}to{left:110%;}}
+
+/* ─── MAIN PANEL ─── */
+.main-panel{
+  background:rgba(255,252,240,0.92);
+  border:4px solid #8B6520;
+  box-shadow:0 8px 30px rgba(0,0,0,.15);
+  border-radius:4px;
+  overflow:hidden;
+  margin-bottom:14px;
+}
+.panel-header{
+  background:linear-gradient(135deg,#7B5E3A,#A0784A);
+  padding:14px 20px;
+  border-bottom:3px solid #5B3E1A;
+  display:flex;align-items:center;gap:10px;
+}
+.panel-header h2{
+  font-family:'Press Start 2P',monospace;
+  font-size:11px;
+  color:var(--gold);
+  text-shadow:2px 2px 0 #000;
+  flex:1;
+}
+.panel-body{padding:20px;color:#1E2D14;}
+
+/* ─── SHAPE DISPLAY ─── */
+.shape-area{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:200px;
+  padding:30px 20px;
+  position:relative;
+}
+.rect-svg-wrap{
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.5));
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+}
+.dim-label{
+  font-family:'Press Start 2P',monospace;
+  font-size:9px;
+  fill:#000;
+  paint-order:stroke;
+  stroke:#000;stroke-width:0;
+}
+.dim-badge{fill:#FFD700;}
+.rect-fill{fill:url(#grassPat);stroke:#2E7D32;stroke-width:4;}
+.side-line{stroke:#FFD700;stroke-width:2.5;stroke-dasharray:6,4;opacity:.7;}
+
+/* Formula bar */
+.formula-bar{
+  background:rgba(46,90,24,0.1);
+  border:2px solid #8BC34A;
+  border-radius:3px;
+  padding:12px 16px;
+  margin:12px 0;
+  font-size:15px;
+  font-weight:800;
+  text-align:center;
+  color:#2E5A18;
+  letter-spacing:.5px;
+  transition:all .3s;
+}
+.formula-bar span{color:#5B3A00;}
+.formula-bar .ans{color:#007A5E;font-size:18px;}
+
+/* ─── ANSWERS ─── */
+.answers-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:16px;
+}
+.ans-btn{
+  background:linear-gradient(180deg,#1E3A7A,#122760);
+  color:#fff;
+  padding:18px 10px;
+  font-size:20px;
+  font-weight:900;
+  border:3px solid #0D1F50;
+  box-shadow:0 6px 0 #0D1F50;
+  border-radius:4px;
+  cursor:pointer;
+  transition:transform .08s,box-shadow .08s,background .15s;
+  text-shadow:1px 1px 0 rgba(0,0,0,.5);
+}
+.ans-btn:hover:not(:disabled){
+  background:linear-gradient(180deg,#2E5ABA,#1E3A9A);
+  transform:translateY(-2px);box-shadow:0 8px 0 #0D1F50;
+}
+.ans-btn:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 #0D1F50;}
+.ans-btn:disabled{cursor:default;}
+.ans-btn.correct{
+  background:linear-gradient(180deg,#3CB55A,#2A8A40)!important;
+  border-color:#1A5A28!important;box-shadow:0 6px 0 #1A5A28!important;
+  animation:ans-correct .5s ease;
+}
+.ans-btn.wrong{
+  background:linear-gradient(180deg,#B53030,#8A2020)!important;
+  border-color:#5A1010!important;box-shadow:0 6px 0 #5A1010!important;
+  animation:ans-wrong .5s ease;
+}
+@keyframes ans-correct{0%,100%{transform:scale(1);}40%{transform:scale(1.08);}}
+@keyframes ans-wrong{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+
+/* ─── HINT ─── */
+.hint-btn{
+  background:linear-gradient(180deg,#B5358A,#8A1A65);
+  color:#fff;padding:11px 22px;font-size:11px;
+  border:3px solid #5A0A3A;box-shadow:0 5px 0 #5A0A3A;
+  border-radius:3px;cursor:pointer;font-weight:800;
+  display:block;margin:14px auto 0;
+  font-family:'Nunito',sans-serif;
+}
+.hint-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #5A0A3A;}
+.hint-box{
+  background:rgba(255,248,180,0.9);
+  border:3px solid #C8A000;
+  border-radius:3px;
+  padding:14px 16px;
+  margin-top:12px;
+  font-size:14px;
+  line-height:1.7;
+  color:#5A4000;
+  display:none;
+  animation:hint-drop .3s ease;
+}
+.hint-box.show{display:block;}
+.hint-box strong{color:#7A5500;}
+.hint-steps{margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+.hint-step{
+  background:rgba(0,0,0,.06);border-left:3px solid #C8A000;
+  padding:5px 10px;border-radius:0 3px 3px 0;
+  font-size:13px;color:#4A3400;
+}
+
+/* ─── PARTICLES ─── */
+.particle{
+  position:fixed;pointer-events:none;z-index:999;
+  font-size:22px;
+  animation:particle-fly var(--dur,1.2s) ease-out forwards;
+}
+@keyframes particle-fly{
+  from{opacity:1;transform:translate(0,0) rotate(0deg) scale(1);}
+  to{opacity:0;transform:translate(var(--tx,0px),var(--ty,-120px)) rotate(var(--rot,180deg)) scale(.3);}
+}
+
+/* ─── TOAST ─── */
+.toast{
+  position:fixed;top:20px;left:50%;transform:translate(-50%,-80px);
+  background:rgba(10,8,5,.95);border:3px solid var(--gold);border-radius:4px;
+  padding:12px 28px;font-size:15px;font-weight:800;
+  color:var(--gold);white-space:nowrap;z-index:9999;
+  transition:transform .4s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 8px 30px rgba(0,0,0,.6);
+  pointer-events:none;
+}
+.toast.show{transform:translate(-50%,0);}
+.toast.correct-toast{border-color:var(--green);color:#6FE891;}
+.toast.wrong-toast{border-color:var(--red);color:#FF7070;}
+
+/* ─── REWARD MODAL ─── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  display:flex;align-items:center;justify-content:center;
+  z-index:500;opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.modal-overlay.show{opacity:1;pointer-events:all;}
+.reward-modal{
+  background:linear-gradient(160deg,#302000,#504010);
+  border:6px solid var(--gold);
+  box-shadow:0 0 60px rgba(255,215,0,.4),0 20px 60px rgba(0,0,0,.8);
+  padding:40px 32px;text-align:center;
+  border-radius:4px;max-width:400px;width:90%;
+  transform:scale(.7);transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.show .reward-modal{transform:scale(1);}
+.reward-icon{font-size:72px;margin-bottom:14px;display:block;animation:bounce .9s ease infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);}}
+.reward-title{
+  font-family:'Press Start 2P',monospace;
+  font-size:14px;color:var(--gold);
+  text-shadow:3px 3px 0 #000;margin-bottom:10px;
+}
+.reward-body{color:#D4B896;font-size:15px;line-height:1.7;margin-bottom:20px;}
+.stars-row{font-size:48px;margin:10px 0;letter-spacing:4px;}
+.continue-btn{
+  background:linear-gradient(180deg,#5CB55A,#3A8A38);
+  color:#fff;padding:14px 36px;font-size:13px;
+  border:4px solid #1F5E1D;box-shadow:0 6px 0 #1F5E1D;
+  border-radius:3px;cursor:pointer;font-weight:800;
+  font-family:'Press Start 2P',monospace;
+}
+.continue-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #1F5E1D;}
+
+/* ─── INVENTORY ─── */
+.inventory{
+  background:rgba(255,252,240,0.88);
+  border:3px solid #8B6520;
+  border-radius:4px;
+  padding:14px 16px;
+  margin-bottom:14px;
+}
+.inv-title{
+  font-family:'Press Start 2P',monospace;font-size:9px;
+  color:#4A3010;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.inv-grid{display:flex;gap:10px;flex-wrap:wrap;}
+.inv-slot{
+  width:58px;height:58px;
+  background:#E8DCC8;
+  border:3px solid #8B6520;
+  border-radius:3px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;position:relative;
+  transition:border-color .2s,box-shadow .2s;
+}
+.inv-slot:hover{border-color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,.4);}
+.inv-count{
+  position:absolute;bottom:2px;right:4px;
+  background:#4A3010;color:#fff;
+  font-size:11px;font-weight:900;
+  padding:1px 4px;border-radius:2px;
+}
+.inv-label{
+  position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+  font-size:8px;font-family:'Press Start 2P',monospace;
+  color:#6A5030;white-space:nowrap;
+}
+
+/* ─── VOICE FAB ─── */
+.voice-fab{
+  position:fixed;bottom:20px;right:20px;
+  width:54px;height:54px;
+  background:linear-gradient(135deg,#1E7A3A,#145528);
+  border:3px solid #0A3A1A;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;cursor:pointer;z-index:200;
+  box-shadow:0 4px 16px rgba(0,0,0,.4);
+  transition:transform .2s;
+}
+.voice-fab:hover{transform:scale(1.1);}
+.voice-fab.speaking{animation:voice-pulse .6s infinite;}
+@keyframes voice-pulse{0%,100%{box-shadow:0 0 0 0 rgba(92,181,90,.4);}50%{box-shadow:0 0 0 12px rgba(92,181,90,0);}}
+
+/* ─── SCORE POP ─── */
+.score-pop{
+  position:fixed;pointer-events:none;
+  font-family:'Press Start 2P',monospace;
+  font-size:16px;color:var(--gold);
+  text-shadow:2px 2px 0 #000;
+  z-index:998;
+  animation:score-pop 1s ease-out forwards;
+}
+@keyframes score-pop{from{opacity:1;transform:translateY(0);}to{opacity:0;transform:translateY(-60px);}}
+
+.hidden{display:none!important;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:600px){
+  .hud{grid-template-columns:1fr;}
+  .hud-stats{justify-content:flex-start;}
+  .answers-grid{grid-template-columns:repeat(2,1fr);}
+  .scene{height:140px;}
+  .panel-body{padding:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- Starfield -->
+<canvas id="stars"></canvas>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="game-title">⛏️ MINECRAFT MATH QUEST ⛏️</div>
+    <div class="teacher-tag">👩‍🏫 Teacher: Manal Bazzi</div>
+  </div>
+
+  <!-- WELCOME SCREEN -->
+  <div id="welcomeScreen">
+    <div class="welcome-diamonds">💎 ⛏️ 💎</div>
+    <h2>Welcome, Adventurer!</h2>
+    <p class="welcome-sub">Enter your name and start your<br><strong style="color:#FFD700">Perimeter Mining Adventure!</strong><br>Solve math problems to earn gems & level up!</p>
+    <input type="text" id="nameInput" class="name-input" placeholder="Your name here..." maxlength="20" autocomplete="off">
+    <button class="start-btn px-btn" onclick="startGame()">⚡ START ADVENTURE</button>
+  </div>
+
+  <!-- MAIN GAME -->
+  <div id="mainGame" class="hidden">
+
+    <!-- HUD -->
+    <div class="hud">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <div class="player-badge">👤 <span id="hudName">Player</span></div>
+        <div class="hud-stats">
+          <div class="hud-stat"><span class="icon">💎</span><span id="hudGems">0</span></div>
+          <div class="hud-stat"><span class="icon">⭐</span><span id="hudScore">0</span> pts</div>
+          <div class="hud-stat"><span class="icon">📊</span>Lv <span id="hudLevel">1</span></div>
+        </div>
+      </div>
+      <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="Toggle sound">🔊</button>
+    </div>
+
+    <!-- STREAK -->
+    <div class="streak-bar" id="streakBar">
+      <span class="flame">🔥</span>
+      <span id="streakText">Answer correctly to start a streak!</span>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>🏆 QUEST PROGRESS</span>
+        <span id="progressLabel">0 / 10</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        <div class="progress-pct" id="progressPct">0%</div>
+      </div>
+    </div>
+
+    <!-- SCENE -->
+    <div class="scene" id="scene">
+      <div class="scene-moon"></div>
+      <!-- Clouds added by JS -->
+      <!-- Character -->
+      <div id="character">
+        <div class="char-head">
+          <div class="char-eyes">
+            <div class="char-eye"></div>
+            <div class="char-eye"></div>
+          </div>
+        </div>
+        <div style="position:relative;">
+          <div class="char-arms">
+            <div class="char-arm"></div>
+            <div class="char-arm"></div>
+          </div>
+          <div class="char-body">
+            <div class="char-tool" id="charTool">⛏️</div>
+          </div>
+        </div>
+        <div class="char-legs">
+          <div class="char-leg"></div>
+          <div class="char-leg"></div>
+        </div>
+      </div>
+      <!-- Gem -->
+      <div class="scene-gem" id="sceneGem">💎</div>
+      <!-- Ground -->
+      <div class="ground-strip"></div>
+    </div>
+
+    <!-- QUESTION PANEL -->
+    <div class="main-panel">
+      <div class="panel-header">
+        <h2>🎯 PERIMETER CHALLENGE</h2>
+        <span id="qNum" style="font-family:'Press Start 2P',monospace;font-size:8px;color:#aaa;">Q 1/10</span>
+      </div>
+      <div class="panel-body">
+
+        <!-- Shape -->
+        <div class="shape-area" id="shapeArea">
+          <!-- SVG injected by JS -->
+        </div>
+
+        <!-- Formula breakdown -->
+        <div class="formula-bar" id="formulaBar">
+          P = L + W + L + W = <span>?</span>
+        </div>
+
+        <!-- Hint -->
+        <button class="hint-btn" onclick="toggleHint()">💡 Need a Hint?</button>
+        <div class="hint-box" id="hintBox">
+          <strong>🧠 Remember:</strong> Perimeter = the total distance around the shape!
+          <div class="hint-steps" id="hintSteps"></div>
+        </div>
+
+        <!-- Answers -->
+        <div class="answers-grid" id="answersGrid"></div>
+      </div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div class="inventory">
+      <div class="inv-title">🎒 INVENTORY</div>
+      <div class="inv-grid">
+        <div class="inv-slot">
+          <div class="inv-label">DIAMONDS</div>
+          💎
+          <div class="inv-count" id="invDiamonds">0</div>
+        </div>
+        <div class="inv-slot">
+          <div class="inv-label">TROPHIES</div>
+          🏆
+          <div class="inv-count" id="invTrophies">0</div>
+        </div>
+        <div class="inv-slot">
+          <div class="inv-label">STARS</div>
+          ⭐
+          <div class="inv-count" id="invStars">0</div>
+        </div>
+        <div class="inv-slot" id="chestSlot" onclick="openTreasure()" title="Open when you have 5 gems!" style="cursor:pointer">
+          <div class="inv-label">CHEST (5💎)</div>
+          🗝️
+          <div class="inv-count" id="invChest">5💎</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /mainGame -->
+</div><!-- /container -->
+
+<!-- Voice FAB -->
+<div class="voice-fab" id="voiceFab" onclick="readQuestion()" title="Read question aloud">🔊</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Reward Modal -->
+<div class="modal-overlay" id="rewardModal">
+  <div class="reward-modal">
+    <span class="reward-icon" id="rewardIcon">🎉</span>
+    <div class="reward-title" id="rewardTitle">LEVEL COMPLETE!</div>
+    <div class="stars-row" id="rewardStars">⭐⭐⭐</div>
+    <div class="reward-body" id="rewardBody"></div>
+    <button class="continue-btn" onclick="closeModal()">CONTINUE ▶</button>
+  </div>
+</div>
+
+<script>
+/* ── STARS BG ── */
+(function(){
+  const c=document.getElementById('stars'),ctx=c.getContext('2d');
+  function resize(){c.width=innerWidth;c.height=innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const stars=Array.from({length:120},()=>({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    r:Math.random()*1.5+.3,speed:Math.random()*.4+.1,
+    phase:Math.random()*Math.PI*2
+  }));
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    t+=.02;
+    stars.forEach(s=>{
+      const a=.3+.7*(.5+.5*Math.sin(t+s.phase));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(200,220,255,${a})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── CLOUDS ── */
+function addClouds(){
+  const scene=document.getElementById('scene');
+  [[80,30,20,'25s'],[120,20,12,'32s'],[60,45,8,'19s']].forEach(([w,h,top,speed])=>{
+    const d=document.createElement('div');
+    d.className='cloud';
+    Object.assign(d.style,{width:w+'px',height:h+'px',top:top+'px','--speed':speed,left:'-200px'});
+    scene.appendChild(d);
+  });
+}
+
+/* ── GAME STATE ── */
+let gs={
+  playerName:'',level:1,score:0,gems:0,
+  diamonds:0,trophies:0,stars:0,
+  streak:0,questionsAnswered:0,totalQ:10,
+  soundOn:true,currentQ:null,hintsUsed:0
+};
+
+/* ── SOUND ── */
+function toggleSound(){
+  gs.soundOn=!gs.soundOn;
+  document.getElementById('soundBtn').textContent=gs.soundOn?'🔊':'🔇';
+  if(gs.soundOn) speak('Sound is on!');
+}
+let synthReady=false;
+function speak(text){
+  if(!gs.soundOn||!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=0.92;u.pitch=1.05;
+  const vFab=document.getElementById('voiceFab');
+  vFab.classList.add('speaking');
+  u.onend=()=>vFab.classList.remove('speaking');
+  window.speechSynthesis.speak(u);
+}
+
+/* ── START ── */
+function startGame(){
+  const name=document.getElementById('nameInput').value.trim();
+  if(!name){showToast('Please enter your name!','');return;}
+  gs.playerName=name;
+  document.getElementById('hudName').textContent=name;
+  document.getElementById('welcomeScreen').classList.add('hidden');
+  document.getElementById('mainGame').classList.remove('hidden');
+  addClouds();
+  startWalk();
+  speak(`Welcome ${name}! Solve perimeter problems to mine gems and level up!`);
+  nextQuestion();
+}
+
+/* ── WALKING ANIM ── */
+let walkInterval;
+function startWalk(){
+  const ch=document.getElementById('character');
+  ch.classList.add('walking');
+}
+
+/* ── QUESTION ── */
+function nextQuestion(){
+  const maxSide=4+(gs.level*2);
+  const L=Math.floor(Math.random()*(maxSide-2))+3;
+  const W=Math.floor(Math.random()*(maxSide-2))+3;
+  const ans=2*(L+W);
+  gs.currentQ={L,W,ans};
+
+  // Reset gem
+  const gem=document.getElementById('sceneGem');
+  gem.classList.remove('mined');
+  gem.style.opacity='1';
+
+  // Update Q counter
+  document.getElementById('qNum').textContent=`Q ${gs.questionsAnswered+1}/${gs.totalQ}`;
+
+  // Draw shape
+  drawShape(L,W);
+
+  // Formula bar
+  document.getElementById('formulaBar').innerHTML=
+    `P = <span>${L}</span> + <span>${W}</span> + <span>${L}</span> + <span>${W}</span> = <span class="ans">?</span>`;
+
+  // Hint
+  document.getElementById('hintBox').classList.remove('show');
+  document.getElementById('hintSteps').innerHTML=`
+    <div class="hint-step">Side 1 (Length) = ${L} cm</div>
+    <div class="hint-step">Side 2 (Width) = ${W} cm</div>
+    <div class="hint-step">Side 3 (Length) = ${L} cm</div>
+    <div class="hint-step">Side 4 (Width) = ${W} cm</div>
+    <div class="hint-step"><strong>${L} + ${W} + ${L} + ${W} = ${ans} cm</strong></div>
+  `;
+
+  // Build options
+  buildOptions(ans);
+
+  speak(`Find the perimeter of a rectangle with length ${L} cm and width ${W} cm.`);
+}
+
+/* ── DRAW SHAPE ── */
+function drawShape(L,W){
+  const scale=18;
+  const pw=W*scale,ph=L*scale;
+  const svgW=pw+120,svgH=ph+100;
+  const ox=60,oy=40;
+
+  const html=`
+  <svg viewBox="0 0 ${svgW} ${svgH}" width="${Math.min(svgW,380)}" height="${Math.min(svgH,260)}"
+       xmlns="http://www.w3.org/2000/svg" class="rect-svg-wrap" style="overflow:visible">
+    <defs>
+      <pattern id="grassPat" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+        <rect width="12" height="12" fill="#2E7D32"/>
+        <rect x="1" y="1" width="5" height="5" fill="#388E3C" opacity=".5"/>
+        <rect x="7" y="7" width="4" height="4" fill="#4CAF50" opacity=".4"/>
+      </pattern>
+    </defs>
+    <!-- Rectangle -->
+    <rect x="${ox}" y="${oy}" width="${pw}" height="${ph}" class="rect-fill" rx="2"/>
+    <!-- Dashed side indicators -->
+    <line x1="${ox}" y1="${oy+ph/2}" x2="${ox+pw}" y2="${oy+ph/2}" class="side-line"/>
+    <line x1="${ox+pw/2}" y1="${oy}" x2="${ox+pw/2}" y2="${oy+ph}" class="side-line"/>
+    <!-- TOP label -->
+    <rect x="${ox+pw/2-28}" y="${oy-30}" width="56" height="22" rx="4" class="dim-badge"/>
+    <text x="${ox+pw/2}" y="${oy-14}" text-anchor="middle" class="dim-label" font-size="11" fill="#000" font-family="'Press Start 2P',monospace"> cm</text>
+    <!-- BOTTOM label -->
+    <rect x="${ox+pw/2-28}" y="${oy+ph+8}" width="56" height="22" rx="4" class="dim-badge"/>
+    <text x="${ox+pw/2}" y="${oy+ph+23}" text-anchor="middle" class="dim-label" font-size="11" fill="#000" font-family="'Press Start 2P',monospace"> cm</text>
+    <!-- LEFT label -->
+    <rect x="${ox-54}" y="${oy+ph/2-11}" width="50" height="22" rx="4" class="dim-badge"/>
+    <text x="${ox-29}" y="${oy+ph/2+4}" text-anchor="middle" class="dim-label" font-size="11" fill="#000" font-family="'Press Start 2P',monospace"> cm</text>
+    <!-- RIGHT label -->
+    <rect x="${ox+pw+4}" y="${oy+ph/2-11}" width="50" height="22" rx="4" class="dim-badge"/>
+    <text x="${ox+pw+29}" y="${oy+ph/2+4}" text-anchor="middle" class="dim-label" font-size="11" fill="#000" font-family="'Press Start 2P',monospace"> cm</text>
+    <!-- Corner dots -->
+    <circle cx="${ox}" cy="${oy}" r="4" fill="#FFD700"/>
+    <circle cx="${ox+pw}" cy="${oy}" r="4" fill="#FFD700"/>
+    <circle cx="${ox}" cy="${oy+ph}" r="4" fill="#FFD700"/>
+    <circle cx="${ox+pw}" cy="${oy+ph}" r="4" fill="#FFD700"/>
+  </svg>`;
+  document.getElementById('shapeArea').innerHTML=html;
+}
+
+/* ── OPTIONS ── */
+function buildOptions(correct){
+  const opts=new Set([correct]);
+  while(opts.size<4){
+    const off=Math.floor(Math.random()*12)-6;
+    const w=correct+off;
+    if(w>0&&w!==correct) opts.add(w);
+  }
+  const arr=[...opts].sort(()=>Math.random()-.5);
+  const grid=document.getElementById('answersGrid');
+  grid.innerHTML='';
+  arr.forEach(v=>{
+    const b=document.createElement('button');
+    b.className='ans-btn';
+    b.textContent=v+' cm';
+    b.onclick=()=>checkAnswer(v,b);
+    grid.appendChild(b);
+  });
+}
+
+/* ── CHECK ── */
+function checkAnswer(val,btn){
+  const correct=gs.currentQ.ans;
+  document.querySelectorAll('.ans-btn').forEach(b=>b.disabled=true);
+
+  if(val===correct){
+    btn.classList.add('correct');
+    gs.score+=10*(gs.streak>=3?2:1);
+    gs.gems++;gs.diamonds++;
+    gs.streak++;gs.questionsAnswered++;
+
+    // Mine gem animation
+    const gem=document.getElementById('sceneGem');
+    gem.classList.add('mined');
+
+    // Jump character
+    const ch=document.getElementById('character');
+    ch.classList.remove('walking');
+    ch.classList.add('jump');
+    ch.addEventListener('animationend',()=>{ch.classList.remove('jump');ch.classList.add('walking');},{once:true});
+
+    // Particles
+    spawnParticles(btn,['💎','⭐','✨','🌟']);
+
+    // Score pop
+    spawnScorePop(btn,`+${gs.streak>=3?20:10}`);
+
+    // Formula reveal
+    const {L,W,ans}=gs.currentQ;
+    document.getElementById('formulaBar').innerHTML=
+      `P = <span>${L}</span> + <span>${W}</span> + <span>${L}</span> + <span>${W}</span> = <span class="ans">${ans} ✓</span>`;
+
+    updateStreak();
+    showToast(gs.streak>=3?`🔥 ${gs.streak}x COMBO! +${10*2} pts`:'✅ Correct! +10 pts','correct-toast');
+    speak(gs.streak>=3?`Amazing! ${gs.streak} in a row! Bonus points!`:'Correct! You mined a gem!');
+
+    setTimeout(()=>{
+      updateHUD();
+      if(gs.questionsAnswered>=gs.totalQ) levelComplete();
+      else nextQuestion();
+    },1600);
+
+  } else {
+    btn.classList.add('wrong');
+    gs.streak=0;
+    updateStreak();
+    showToast(`❌ Not quite! Answer: ${correct} cm`,'wrong-toast');
+    speak(`Oops! The answer was ${correct} cm. Keep going!`);
+
+    // Shake character
+    const ch=document.getElementById('character');
+    ch.classList.add('shake');
+    ch.addEventListener('animationend',()=>ch.classList.remove('shake'),{once:true});
+
+    // Show correct
+    document.querySelectorAll('.ans-btn').forEach(b=>{
+      if(parseInt(b.textContent)===correct) b.classList.add('correct');
+    });
+
+    const {L,W,ans}=gs.currentQ;
+    document.getElementById('formulaBar').innerHTML=
+      `P = <span>${L}</span> + <span>${W}</span> + <span>${L}</span> + <span>${W}</span> = <span style="color:#FF7070">${ans} ✗</span>`;
+
+    setTimeout(()=>nextQuestion(),2000);
+  }
+
+  document.getElementById('hintBox').classList.remove('show');
+}
+
+/* ── STREAK DISPLAY ── */
+function updateStreak(){
+  const bar=document.getElementById('streakBar');
+  const txt=document.getElementById('streakText');
+  if(gs.streak===0){
+    bar.classList.remove('active');
+    txt.textContent='Answer correctly to start a streak!';
+  } else if(gs.streak===1){
+    bar.classList.add('active');
+    txt.textContent='Streak started! Keep going!';
+  } else {
+    bar.classList.add('active');
+    txt.textContent=`🔥 ${gs.streak}x STREAK! ${gs.streak>=3?'DOUBLE POINTS!':'Keep it up!'}`;
+  }
+}
+
+/* ── HUD UPDATE ── */
+function updateHUD(){
+  document.getElementById('hudGems').textContent=gs.gems;
+  document.getElementById('hudScore').textContent=gs.score;
+  document.getElementById('hudLevel').textContent=gs.level;
+  document.getElementById('invDiamonds').textContent=gs.diamonds;
+  document.getElementById('invTrophies').textContent=gs.trophies;
+  document.getElementById('invStars').textContent=gs.stars;
+  document.getElementById('invChest').textContent=(gs.gems>=5?'OPEN!':gs.gems+'/5💎');
+  document.getElementById('chestSlot').style.borderColor=gs.gems>=5?'var(--gold)':'';
+
+  const pct=Math.round((gs.questionsAnswered/gs.totalQ)*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+'%';
+  document.getElementById('progressLabel').textContent=`${gs.questionsAnswered} / ${gs.totalQ}`;
+  localStorage.setItem('mcMathQuest',JSON.stringify(gs));
+}
+
+/* ── LEVEL COMPLETE ── */
+function levelComplete(){
+  gs.trophies++;gs.stars+=3;gs.level++;gs.questionsAnswered=0;
+  updateHUD();
+  spawnParticles(document.body,['🎉','⭐','💎','🏆','✨'],20);
+  showModal('🎊','LEVEL COMPLETE!','⭐⭐⭐',`You completed Level ${gs.level-1}!<br>You earned a <strong>Trophy 🏆</strong> and <strong>3 Stars ⭐!</strong><br>Get ready for Level ${gs.level}!`);
+  speak(`Incredible! You completed level ${gs.level-1}! You earned a trophy and three stars!`);
+}
+
+/* ── TREASURE ── */
+function openTreasure(){
+  if(gs.gems<5){showToast(`Need ${5-gs.gems} more gems 💎`,'');return;}
+  gs.gems-=5;gs.score+=50;gs.stars+=5;
+  updateHUD();
+  spawnParticles(document.getElementById('chestSlot'),['💰','⭐','✨'],12);
+  showModal('💰','TREASURE!','⭐⭐⭐⭐⭐','You opened the chest!<br>+5 Stars and +50 Bonus Points!');
+  speak('Treasure unlocked! Five bonus stars and fifty extra points!');
+}
+
+/* ── HINT ── */
+function toggleHint(){
+  const h=document.getElementById('hintBox');
+  h.classList.toggle('show');
+  if(h.classList.contains('show')){gs.hintsUsed++;speak("Here's a hint to help you!");}
+}
+
+/* ── READ QUESTION ── */
+function readQuestion(){
+  if(!gs.currentQ) return;
+  const{L,W}=gs.currentQ;
+  speak(`Find the perimeter of a rectangle with length ${L} cm and width ${W} cm.`);
+}
+
+/* ── MODAL ── */
+function showModal(icon,title,stars,body){
+  document.getElementById('rewardIcon').textContent=icon;
+  document.getElementById('rewardTitle').textContent=title;
+  document.getElementById('rewardStars').textContent=stars;
+  document.getElementById('rewardBody').innerHTML=body;
+  document.getElementById('rewardModal').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('rewardModal').classList.remove('show');
+  nextQuestion();
+}
+
+/* ── TOAST ── */
+let toastTimer;
+function showToast(msg,cls){
+  const t=document.getElementById('toast');
+  t.className='toast '+(cls||'');
+  t.textContent=msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+/* ── PARTICLES ── */
+function spawnParticles(el,emojis,count=10){
+  const rect=typeof el.getBoundingClientRect==='function'?el.getBoundingClientRect():{left:innerWidth/2,top:innerHeight/2,width:0,height:0};
+  const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    const angle=Math.random()*Math.PI*2;
+    const dist=60+Math.random()*100;
+    const tx=Math.cos(angle)*dist, ty=Math.sin(angle)*dist-60;
+    const dur=(0.8+Math.random()*0.6)+'s';
+    const rot=(Math.random()*360-180)+'deg';
+    Object.assign(p.style,{
+      left:(cx+Math.random()*30-15)+'px',
+      top:(cy+Math.random()*20-10)+'px',
+      '--tx':tx+'px','--ty':ty+'px','--dur':dur,'--rot':rot,
+      animationDuration:dur,
+    });
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),(parseFloat(dur)*1000+100));
+  }
+}
+
+/* ── SCORE POP ── */
+function spawnScorePop(el,text){
+  const rect=el.getBoundingClientRect();
+  const p=document.createElement('div');
+  p.className='score-pop';
+  p.textContent=text;
+  Object.assign(p.style,{left:(rect.left+rect.width/2-20)+'px',top:(rect.top-10)+'px'});
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(),1100);
+}
+
+/* ── KEY SUPPORT ── */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&document.getElementById('welcomeScreen').style.display!=='none'){
+    startGame();
+  }
+});
+document.getElementById('nameInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter') startGame();
+});
+</script>
+</body>
+</html>
