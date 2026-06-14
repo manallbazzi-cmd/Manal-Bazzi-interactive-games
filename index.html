@@ -576,6 +576,19 @@ function filterSubject(s) {
   renderGames();
 }
 
+
+
+
+const bgMusic = new Audio('school_music.mp3');
+bgMusic.loop = true;
+
+function toggleMusic() {
+    if (bgMusic.paused) {
+        bgMusic.play();
+    } else {
+        bgMusic.pause();
+    }
+}
 renderGames();
 
 </script>
