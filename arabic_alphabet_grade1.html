@@ -807,7 +807,9 @@ function pt(f,t,d,v,dl){
 function playSoundCorrect(){ pt(523,'sine',.12,.25,0);pt(659,'sine',.12,.25,.1);pt(784,'sine',.18,.25,.2); }
 function playSoundWrong(){ pt(280,'sawtooth',.1,.2,0);pt(200,'sawtooth',.14,.18,.11); }
 function playSoundWin(){ [523,659,784,1047,1319].forEach((f,i)=>pt(f,'sine',.2,.25,i*.09)); }
-
+document.addEventListener('click', function () {
+    ga();
+}, { once: true });
 document.getElementById('studentName').addEventListener('keydown',e=>{ if(e.key==='Enter') switchTab('game'); });
 </script>
 </body>
