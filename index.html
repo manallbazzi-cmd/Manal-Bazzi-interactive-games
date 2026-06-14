@@ -577,6 +577,44 @@ function filterSubject(s) {
 }
 
 renderGames();
+  <audio id="bgMusic" loop>
+  <source src="gemini_music (3).mp3.mpeg" type="audio/mpeg">
+</audio>
+
+<button id="musicBtn" onclick="toggleMusic()">
+🎵 تشغيل الموسيقى
+</button>
+
+<style>
+#musicBtn{
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  z-index:9999;
+  padding:12px 18px;
+  border:none;
+  border-radius:12px;
+  background:#6c63ff;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+</style>
+
+<script>
+function toggleMusic(){
+  const music = document.getElementById('bgMusic');
+  const btn = document.getElementById('musicBtn');
+
+  if(music.paused){
+    music.play();
+    btn.innerHTML='⏸ إيقاف الموسيقى';
+  }else{
+    music.pause();
+    btn.innerHTML='🎵 تشغيل الموسيقى';
+  }
+}
 </script>
 </body>
 </html>
