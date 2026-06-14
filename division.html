@@ -360,7 +360,15 @@ input[type=range]::-webkit-slider-thumb:active{transform:scale(1.3);}
     <h1>🍕 Division Adventure</h1>
     <p>Grade 3 · Interactive Learning Game</p>
   </div>
-  <div class="teacher-badge">👩‍🏫 Ms. Manal Bazzi<br>Your Math Teacher</div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+    <div class="teacher-badge">👩‍🏫 Ms. Manal Bazzi<br>Your Math Teacher</div>
+    <button id="muteBtn" onclick="toggleSound()" title="Mute sounds"
+      style="background:rgba(255,255,255,0.25);border:1px solid rgba(255,255,255,0.4);
+             border-radius:50px;padding:4px 10px;cursor:pointer;font-size:1rem;
+             color:#fff;font-weight:700;font-family:'Nunito',sans-serif;backdrop-filter:blur(6px);">
+      🔊
+    </button>
+  </div>
 </header>
 
 <!-- ══ SCORE BAR ══ -->
@@ -408,14 +416,14 @@ input[type=range]::-webkit-slider-thumb:active{transform:scale(1.3);}
         <span>🍕 Total pizza slices:</span>
         <span class="slider-val" id="totalSlicesVal">12</span>
       </div>
-      <input type="range" id="totalSlices" min="2" max="24" value="12" step="1" oninput="updatePizza()">
+      <input type="range" id="totalSlices" min="2" max="24" value="12" step="1" oninput="updatePizza();soundSlider()">
     </div>
     <div class="slider-wrap">
       <div class="slider-label">
         <span>👫 Number of friends:</span>
         <span class="slider-val" id="numFriendsVal">3</span>
       </div>
-      <input type="range" id="numFriends" min="1" max="6" value="3" step="1" oninput="updatePizza()">
+      <input type="range" id="numFriends" min="1" max="6" value="3" step="1" oninput="updatePizza();soundSlider()">
     </div>
 
     <div class="pizza-scene" id="pizzaScene"></div>
@@ -480,14 +488,14 @@ input[type=range]::-webkit-slider-thumb:active{transform:scale(1.3);}
         <span>🍬 Total candies:</span>
         <span class="slider-val" id="buildTotalVal">15</span>
       </div>
-      <input type="range" id="buildTotal" min="4" max="30" value="15" step="1" oninput="resetBuilder()">
+      <input type="range" id="buildTotal" min="4" max="30" value="15" step="1" oninput="resetBuilder();soundSlider()">
     </div>
     <div class="slider-wrap">
       <div class="slider-label">
         <span>🪣 Groups:</span>
         <span class="slider-val" id="buildGroupsVal">3</span>
       </div>
-      <input type="range" id="buildGroups" min="2" max="6" value="3" step="1" oninput="resetBuilder()">
+      <input type="range" id="buildGroups" min="2" max="6" value="3" step="1" oninput="resetBuilder();soundSlider()">
     </div>
 
     <div class="formula-box" id="buildFormula"></div>
@@ -619,6 +627,7 @@ let tableQuizActive = false;
    NAVIGATION
 ═══════════════════════════════════════════════ */
 function goStep(n){
+  soundStep();
   document.querySelectorAll('.step-section').forEach((s,i)=>{
     s.classList.toggle('active', i===n);
   });
@@ -767,12 +776,14 @@ function checkVocabNum(v,btn){
     return;
   }
   if(vocabSelected.word===v.word){
+    soundCorrect();
     document.getElementById('vocabFeedback').className='feedback ok';
     document.getElementById('vocabFeedback').textContent=`✅ Correct! "${vocabSelected.word}" = ${v.num} in 12 ÷ 4 = 3`;
     btn.style.background='linear-gradient(135deg,#06d6a0,#34d399)';btn.style.color='#fff';
     addScore(5);
     setTimeout(initVocabQuiz,1800);
   } else {
+    soundWrong();
     document.getElementById('vocabFeedback').className='feedback bad';
     document.getElementById('vocabFeedback').textContent=`❌ Hmm! "${vocabSelected.word}" is NOT ${v.num}. Try again!`;
     btn.style.animation='shake .4s ease';
@@ -843,6 +854,7 @@ function addToGroup(g){
     if(el.style.opacity!=='0.3'){
       el.style.opacity='0.3';el.style.transform='scale(0.8)';el.onclick=null;
       groupCounts[g]++;
+      soundCoin();
       const box=document.getElementById('group'+g);
       const span=document.createElement('span');
       span.style.cssText='font-size:1.3rem;animation:popIn .25s ease;';
@@ -889,8 +901,10 @@ function checkBuilder(){
       `<div class="f-num dividend">${total}</div><div class="f-op">÷</div><div class="f-num divisor">${groups}</div><div class="f-eq">=</div><div class="f-num quotient">${q}</div>`;
     fb.className='feedback ok';
     fb.textContent=`🎉 Amazing! ${total} ÷ ${groups} = ${q}. Every group has exactly ${q} items!`;
+    soundCelebration();
     addScore(10);launchConfetti();
   } else {
+    soundWrong();
     fb.className='feedback bad';
     fb.textContent=`❌ Groups aren't equal! Groups have: ${groupCounts.join(', ')}. Try again!`;
   }
@@ -962,10 +976,12 @@ function answerQuiz(chosen,btn,q){
     fb.textContent=`⭐ Correct! ${stars===3?'Perfect! First try!':stars===2?'Well done!':'Got it!'}`;
     addScore(stars*5);correctCount++;document.getElementById('correctVal').textContent=correctCount;
     showStars(stars);
-    if(stars===3)launchConfetti();
+    if(stars===3){soundPerfect();launchConfetti();}
+    else soundCorrect();
     document.getElementById('nextQBtn').style.display='flex';
     document.getElementById('quizProgressLbl').textContent=`Question ${quizIndex+1} of ${quizQuestions.length}`;
   } else {
+    soundWrong();
     btn.classList.add('wrong');
     fb.className='feedback bad';
     if(questionAttempts<3){
@@ -1008,6 +1024,8 @@ function showQuizComplete(){
   document.getElementById('nextQBtn').textContent='See Division Table →';
   document.getElementById('nextQBtn').style.display='flex';
   document.getElementById('nextQBtn').onclick=()=>goStep(4);
+  soundCelebration();
+  setTimeout(soundCelebration,700);
   launchConfetti();
 }
 
@@ -1060,11 +1078,13 @@ function startTableQuiz(a,b,c){
     btn.onclick=()=>{
       choicesEl.querySelectorAll('.choice-btn').forEach(b=>b.onclick=null);
       if(o===c){
+        soundCorrect();
         btn.classList.add('correct');
         fb.style.display='block';fb.className='feedback ok';
         fb.textContent=`✅ Yes! ${a} ÷ ${b} = ${c}`;
         addScore(5);launchConfetti();
       } else {
+        soundWrong();
         btn.classList.add('wrong');
         fb.style.display='block';fb.className='feedback bad';
         fb.textContent=`❌ Not quite. ${a} ÷ ${b} = ${c}`;
@@ -1091,10 +1111,14 @@ function showSummary(){
     finalStars.appendChild(s);
   }
   document.getElementById('summaryCard').scrollIntoView({behavior:'smooth',block:'start'});
+  soundCelebration();
+  setTimeout(soundCelebration,500);
+  setTimeout(soundCelebration,1000);
   launchConfetti();
 }
 
 function restartGame(){
+  soundStep();
   score=0;correctCount=0;
   document.getElementById('scoreVal').textContent=0;
   document.getElementById('correctVal').textContent=0;
@@ -1108,6 +1132,7 @@ function restartGame(){
 ═══════════════════════════════════════════════ */
 function addScore(n){
   score+=n;
+  soundCoin();
   document.getElementById('scoreVal').textContent=score;
   document.getElementById('scoreVal').parentElement.style.transform='scale(1.15)';
   setTimeout(()=>document.getElementById('scoreVal').parentElement.style.transform='',300);
@@ -1130,14 +1155,127 @@ function launchConfetti(){
 }
 
 /* ═══════════════════════════════════════════════
+   🔊 SOUND ENGINE (Web Audio API — no files needed)
+═══════════════════════════════════════════════ */
+let audioCtx = null;
+let soundEnabled = true;
+
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==='suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+/* Generic tone player */
+function playTone(freq, type='sine', duration=0.18, gainVal=0.35, startDelay=0){
+  if(!soundEnabled) return;
+  try{
+    const ctx=getAudioCtx();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type=type; osc.frequency.setValueAtTime(freq, ctx.currentTime+startDelay);
+    gain.gain.setValueAtTime(gainVal, ctx.currentTime+startDelay);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+startDelay+duration);
+    osc.start(ctx.currentTime+startDelay);
+    osc.stop(ctx.currentTime+startDelay+duration+0.05);
+  }catch(e){}
+}
+
+/* 🎵 Welcome jingle — plays on page load */
+function soundWelcome(){
+  if(!soundEnabled) return;
+  const notes=[261,329,392,523,659,784];
+  notes.forEach((f,i)=>playTone(f,'sine',0.22,0.28,i*0.13));
+}
+
+/* ✅ Correct answer — happy ascending chord */
+function soundCorrect(){
+  [523,659,784,1046].forEach((f,i)=>playTone(f,'sine',0.2,0.3,i*0.08));
+}
+
+/* ⭐ Perfect (3 stars) — fanfare */
+function soundPerfect(){
+  const seq=[523,523,523,415,523,659,784];
+  const dur=[0.12,0.12,0.12,0.09,0.12,0.12,0.35];
+  let t=0;
+  seq.forEach((f,i)=>{playTone(f,'square',dur[i],0.22,t); t+=dur[i]+0.02;});
+}
+
+/* ❌ Wrong answer — low buzz */
+function soundWrong(){
+  playTone(180,'sawtooth',0.25,0.3);
+  setTimeout(()=>playTone(150,'sawtooth',0.2,0.25),120);
+}
+
+/* 🔘 Button click — soft tick */
+function soundClick(){
+  playTone(800,'sine',0.07,0.2);
+}
+
+/* ➡️ Step navigation — whoosh-like sweep */
+function soundStep(){
+  if(!soundEnabled) return;
+  try{
+    const ctx=getAudioCtx();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type='sine';
+    osc.frequency.setValueAtTime(300,ctx.currentTime);
+    osc.frequency.linearRampToValueAtTime(700,ctx.currentTime+0.18);
+    gain.gain.setValueAtTime(0.25,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.22);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime+0.25);
+  }catch(e){}
+}
+
+/* 🎊 Confetti celebration — ascending sparkle */
+function soundCelebration(){
+  const chord=[523,659,784,1046,1318];
+  chord.forEach((f,i)=>{
+    playTone(f,'sine',0.3,0.2,i*0.06);
+    playTone(f*2,'triangle',0.15,0.08,i*0.06+0.15);
+  });
+}
+
+/* 🎯 Score added — coin-like pop */
+function soundCoin(){
+  playTone(1200,'sine',0.08,0.25);
+  setTimeout(()=>playTone(1600,'sine',0.1,0.2),80);
+}
+
+/* 🔊 Slider move — subtle sweep */
+function soundSlider(){
+  if(!soundEnabled) return;
+  playTone(500,'sine',0.06,0.1);
+}
+
+/* ═══════════════════════════════════════════════
+   🔇 MUTE BUTTON
+═══════════════════════════════════════════════ */
+function toggleSound(){
+  soundEnabled=!soundEnabled;
+  const btn=document.getElementById('muteBtn');
+  btn.textContent=soundEnabled?'🔊':'🔇';
+  btn.title=soundEnabled?'Mute sounds':'Enable sounds';
+  if(soundEnabled) soundClick();
+}
+
+/* ═══════════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded',()=>{
   updatePizza();
   initVocabGrid();
-  // init slider gradients
   document.getElementById('totalSlices').style.setProperty('--pct','45%');
   document.getElementById('numFriends').style.setProperty('--pct','40%');
+
+  // Play welcome jingle after short delay
+  setTimeout(soundWelcome, 600);
+
+  // Unlock AudioContext on first touch (iOS requirement)
+  document.body.addEventListener('touchstart', ()=>getAudioCtx(), {once:true});
 });
 </script>
 </body>
