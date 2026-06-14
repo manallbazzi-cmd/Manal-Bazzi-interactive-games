@@ -592,5 +592,24 @@ function toggleMusic() {
 renderGames();
 
 </script>
+  <button id="musicBtn" onclick="toggleMusic()">
+🎵 تشغيل / إيقاف الموسيقى
+</button>
+
+<style>
+#musicBtn{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 30px;
+    background: #6c4cff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 9999;
+}
+</style>
 </body>
 </html>
