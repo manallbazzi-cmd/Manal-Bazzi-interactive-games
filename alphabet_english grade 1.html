@@ -377,6 +377,109 @@ footer span{color:var(--coral);}
 </div>
 <footer>🍎 Created with ❤️ by Teacher <span>Manal Bazzi</span> · ABC Adventure</footer>
 <script>
+/* ===== SOUND ENGINE ===== */
+const AC=(()=>{try{return new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}})();
+function resume(){if(AC&&AC.state==='suspended')AC.resume();}
+
+/* Core oscillator helper */
+function osc(type,freq,gain,start,dur,dest){
+  if(!AC)return;
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.setValueAtTime(freq,start);
+  g.gain.setValueAtTime(gain,start);g.gain.exponentialRampToValueAtTime(0.001,start+dur);
+  o.connect(g);g.connect(dest||AC.destination);
+  o.start(start);o.stop(start+dur+.01);
+}
+function noise(gain,start,dur,dest){
+  if(!AC)return;
+  const buf=AC.createBuffer(1,AC.sampleRate*.15,AC.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  const src=AC.createBufferSource(),g=AC.createGain();
+  src.buffer=buf;src.loop=true;
+  g.gain.setValueAtTime(gain,start);g.gain.exponentialRampToValueAtTime(0.001,start+dur);
+  src.connect(g);g.connect(dest||AC.destination);
+  src.start(start);src.stop(start+dur+.01);
+}
+
+/* 🔊 Sounds */
+function sndClick(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  osc('sine',880,.12,t,.05);osc('sine',660,.08,t+.03,.04);
+}
+function sndCorrect(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  // happy ascending arpeggio C-E-G-C
+  [[523,.18],[659,.18],[784,.18],[1047,.22]].forEach(([f,v],i)=>{
+    osc('sine',f,v,t+i*.1,.2);
+  });
+  // sparkle shimmer on top
+  [1760,2093,2637].forEach((f,i)=>osc('triangle',f,.06,t+.35+i*.07,.15));
+}
+function sndWrong(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  osc('sawtooth',180,.2,t,.12);
+  osc('sawtooth',140,.2,t+.1,.15);
+  noise(.04,t,.25);
+}
+function sndTap(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  osc('sine',600,.1,t,.06);osc('sine',400,.07,t+.04,.05);
+}
+function sndLetterReveal(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  // playful bounce up
+  osc('sine',440,.15,t,.08);
+  osc('sine',550,.15,t+.07,.08);
+  osc('sine',660,.18,t+.14,.12);
+  osc('triangle',880,.10,t+.24,.14);
+}
+function sndFlip(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  osc('sine',700,.12,t,.04);osc('sine',500,.1,t+.03,.05);
+}
+function sndMatch(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  [523,659,784].forEach((f,i)=>osc('sine',f,.18,t+i*.09,.18));
+  osc('triangle',1046,.12,t+.27,.2);
+}
+function sndDrop(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  osc('sine',300,.15,t,.04);osc('sine',500,.15,t+.03,.06);
+}
+function sndCelebration(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  // Big fanfare: C major chord + rising scale
+  [[523,659,784,1047],[587,740,880,1175]].forEach(([a,b,c,d],gi)=>{
+    [a,b,c,d].forEach(f=>osc('sine',f,.15,t+gi*.32,.28));
+  });
+  // Trumpet-like burst
+  [523,659,784,1047,1568].forEach((f,i)=>osc('square',f,.06,t+.65+i*.07,.15));
+  // Shimmer
+  for(let i=0;i<6;i++){
+    osc('triangle',1200+Math.random()*1400,.05,t+.5+Math.random()*.6,.1);
+  }
+}
+function sndStar(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  [880,1108,1320,1760].forEach((f,i)=>osc('triangle',f,.12,t+i*.08,.18));
+}
+function sndTrace(){
+  if(!AC)return;resume();
+  const t=AC.currentTime;
+  osc('sine',440,.06,t,.04);
+}
+/* ===== END SOUND ENGINE ===== */
+
 const ABC=[
   {L:'A',w:'Apple',e:'🍎'},{L:'B',w:'Ball',e:'⚽'},{L:'C',w:'Cat',e:'🐱'},
   {L:'D',w:'Dog',e:'🐶'},{L:'E',w:'Egg',e:'🥚'},{L:'F',w:'Fish',e:'🐟'},
@@ -428,6 +531,7 @@ function renderExplore(){
   });
 }
 function exploreL(d,tile,i){
+  sndLetterReveal();
   document.querySelectorAll('.lt').forEach(t=>t.classList.remove('atile'));
   tile.classList.add('atile','vis'); visited.add(d.L); curL=d;
   const isV=VW.has(d.L);
@@ -441,7 +545,7 @@ function exploreL(d,tile,i){
   const pct=Math.round(visited.size/26*100);
   document.getElementById('PF').style.width=pct+'%';
   document.getElementById('PL').textContent=visited.size+' / 26 letters explored';
-  if(visited.size===26){pop('🎊','You found ALL 26 letters!');confetti();}
+  if(visited.size===26){pop('🎊','You found ALL 26 letters!');confetti();sndCelebration();}
 }
 
 /* 2 ORDER */
@@ -451,13 +555,13 @@ function renderOrder(){
     const t=document.createElement('div');
     t.className='ot '+(VW.has(d.L)?'vot':'cot');
     t.textContent=d.L;t.style.animationDelay=(i*.02)+'s';
-    t.onclick=()=>pop(d.e,d.L+' — '+d.w);r.appendChild(t);
+    t.onclick=()=>{sndTap();pop(d.e,d.L+' — '+d.w);};r.appendChild(t);
   });
   const g=document.getElementById('ULG');g.innerHTML='';
   ABC.forEach((d,i)=>{
     const c=document.createElement('div');c.className='ulc';
     c.innerHTML=`<div class="ulb ${TC[i%6]}">${d.L}</div><div class="uls">${d.L.toLowerCase()}</div><div class="ule">${d.e}</div>`;
-    c.onclick=()=>pop(d.e,d.L+' / '+d.L.toLowerCase()+' — '+d.w);g.appendChild(c);
+    c.onclick=()=>{sndTap();pop(d.e,d.L+' / '+d.L.toLowerCase()+' — '+d.w);};g.appendChild(c);
   });
 }
 
@@ -488,11 +592,13 @@ function pickM(el,role,letter){
   const prev=mSel;mSel=null;prev.el.classList.remove('sel');
   if(prev.letter===letter){
     prev.el.classList.add('ok');el.classList.add('ok');
+    sndMatch();
     document.getElementById('MSR').textContent='✅ Great match! Keep going!';
     if([...document.querySelectorAll('.mi')].every(x=>x.classList.contains('ok'))){
-      setTimeout(()=>{pop('🌟','All matched! Amazing!');confetti();},200);
+      setTimeout(()=>{pop('🌟','All matched! Amazing!');confetti();sndCelebration();},200);
     }
   } else {
+    sndWrong();
     prev.el.classList.add('bad');el.classList.add('bad');
     document.getElementById('MINSTR').textContent='❌ Not quite — try again!';
     setTimeout(()=>{prev.el.classList.remove('bad');el.classList.remove('bad');document.getElementById('MINSTR').textContent='Tap a letter, then tap the matching picture! 🎯';},800);
@@ -538,13 +644,15 @@ function doDrop(zi,letter,si){
   z.innerHTML=`<span style="font-family:'Times New Roman',Times,serif">${letter}</span>`;
   if(ok){
     z.classList.add('dok');s.placed[zi]=letter;
+    sndDrop();
     const src=document.getElementById('DT'+si);if(src)src.classList.add('used');
     if(s.placed.every((p,i)=>p===s.word[i])){
       s.done=true;
       document.getElementById('DFB').innerHTML=`<span style="color:var(--mint)">🎉 You spelled ${s.word}! ${s.e}</span>`;
-      confetti();pop(s.e,'You spelled '+s.word+'!');
+      confetti();pop(s.e,'You spelled '+s.word+'!');sndCelebration();
     }
   } else {
+    sndWrong();
     z.classList.add('derr');
     document.getElementById('DFB').innerHTML=`<span style="color:#FF4B6E">❌ Try another spot!</span>`;
     setTimeout(()=>{z.classList.remove('derr');z.innerHTML=`<span class="dzn">${zi+1}</span>`;s.placed[zi]=null;document.getElementById('DFB').textContent='';},700);
@@ -587,16 +695,19 @@ function setupMemory(){
 }
 function flipMem(card,c){
   if(mLock||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+  sndFlip();
   card.classList.add('flipped');mFlip.push({card,c});
   if(mFlip.length===2){
     mLock=true;mTries++;document.getElementById('MT').textContent=mTries;
     const[a,b]=mFlip;
     if(a.c.id===b.c.id&&a.c.type!==b.c.type){
+      sndMatch();
       a.card.classList.add('matched');b.card.classList.add('matched');
       mMat++;document.getElementById('MP2').textContent=mMat;
       mFlip=[];mLock=false;
-      if(mMat===+document.getElementById('MTOT').textContent)setTimeout(()=>{pop('🏆','All pairs found!');confetti();},300);
+      if(mMat===+document.getElementById('MTOT').textContent)setTimeout(()=>{pop('🏆','All pairs found!');confetti();sndCelebration();},300);
     } else {
+      sndWrong();
       a.card.classList.add('wf');b.card.classList.add('wf');
       setTimeout(()=>{a.card.classList.remove('flipped','wf');b.card.classList.remove('flipped','wf');mFlip=[];mLock=false;},900);
     }
@@ -631,12 +742,14 @@ function placeBucket(letter,bucket){
   const tile=[...document.querySelectorAll('.stile')].find(t=>t.dataset.L===letter&&!t.classList.contains('used'));
   if(!tile)return;
   if(ok){
+    sndCorrect();
     tile.classList.add('used');
     const ch=document.createElement('div');ch.className='bchip '+(isV?'c0':'c1');ch.textContent=letter;
     document.getElementById(isV?'BVI':'BCI').appendChild(ch);
     document.getElementById('SFB').innerHTML=`<span style="color:var(--mint)">✅ Correct! ${letter} is a ${isV?'vowel':'consonant'}!</span>`;
-    if([...document.querySelectorAll('.stile')].every(t=>t.classList.contains('used')))setTimeout(()=>{pop('🌟','All sorted! You\'re a star!');confetti();},300);
+    if([...document.querySelectorAll('.stile')].every(t=>t.classList.contains('used')))setTimeout(()=>{pop('🌟','All sorted! You\'re a star!');confetti();sndCelebration();},300);
   } else {
+    sndWrong();
     tile.style.animation='sh .3s';setTimeout(()=>tile.style.animation='',400);
     document.getElementById('SFB').innerHTML=`<span style="color:#FF4B6E">❌ ${letter} is a ${isV?'vowel':'consonant'} — other box!</span>`;
   }
@@ -674,13 +787,15 @@ function setupFindMiss(){
     b.onclick=()=>{
       document.querySelectorAll('.fmopt').forEach(x=>x.style.pointerEvents='none');
       if(d.L===correct.L){
+        sndCorrect();
         b.classList.add('fmok');
         document.getElementById('FMFB').innerHTML=`<span style="color:var(--mint)">🎉 Correct! The missing letter is ${correct.L} for ${correct.w}! ${correct.e}</span>`;
         // Fill blank
         const blank=document.querySelector('.fmblank');
         if(blank){blank.textContent=correct.L;blank.className='fmtile '+CL[fmBlankIdx%6];blank.style.animation='pi .35s cubic-bezier(.34,1.56,.64,1)';}
-        confetti();
+        confetti();sndStar();
       } else {
+        sndWrong();
         b.classList.add('fmbad');
         document.getElementById('FMFB').innerHTML=`<span style="color:#FF4B6E">❌ Not quite! The answer was ${correct.L} for ${correct.w} ${correct.e}</span>`;
         setTimeout(()=>{document.querySelectorAll('.fmopt').forEach(x=>x.style.pointerEvents='');b.classList.remove('fmbad');},800);
@@ -719,9 +834,11 @@ function checkQ(chosen,correct,container){
     if(b.textContent.includes(chosen.w)&&chosen.L!==correct.L)b.classList.add('wrong');
   });
   if(chosen.L===correct.L){
+    sndCorrect();
     qS++;document.getElementById('QS').textContent='⭐ '+qS;
     document.getElementById('QFB').innerHTML=`<span style="color:var(--mint)">🎉 Yes! ${correct.L} is for ${correct.w}!</span>`;
   } else {
+    sndWrong();
     document.getElementById('QFB').innerHTML=`<span style="color:#FF4B6E">❌ It was ${correct.e} ${correct.w}!</span>`;
   }
   document.getElementById('QNXT').classList.add('show');
@@ -734,7 +851,7 @@ function endQ(){
   document.getElementById('QOPTS').innerHTML='';
   document.getElementById('QFB').innerHTML=`<span style="color:var(--lav)">${pct}% correct! ${pct===100?'Perfect!':pct>=70?'Great job!':'Keep practicing!'}</span>`;
   const nb=document.getElementById('QNXT');nb.textContent='🔄 Play Again';nb.classList.add('show');nb.onclick=setupQuiz;
-  if(pct>=70)confetti();
+  if(pct>=70){confetti();sndCelebration();}
 }
 
 /* 9 TRACE */
@@ -745,7 +862,7 @@ function initTrace(){
   if(sel.children.length===0){
     TLS.forEach((l,i)=>{
       const btn=document.createElement('div');btn.className='tpick '+CL[i%6];btn.textContent=l;btn.dataset.li=i;
-      btn.onclick=()=>{document.querySelectorAll('.tpick').forEach(b=>b.classList.remove('ap'));btn.classList.add('ap');tLI=i;drawGuide();};
+      btn.onclick=()=>{sndTap();document.querySelectorAll('.tpick').forEach(b=>b.classList.remove('ap'));btn.classList.add('ap');tLI=i;drawGuide();};
       sel.appendChild(btn);
     });
     sel.children[0].classList.add('ap');
@@ -762,7 +879,9 @@ function setupCanvas(){
   cv.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const r=cv.getBoundingClientRect();stroke(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);},{passive:false});
   cv.addEventListener('touchend',()=>{drawing=false;},{passive:false});
 }
+let _tSndT=0;
 function stroke(x,y){
+  const now=Date.now();if(now-_tSndT>120){sndTrace();_tSndT=now;}
   const cv=document.getElementById('TCV'),ctx=cv.getContext('2d');
   ctx.strokeStyle='#FF7B5B';ctx.lineWidth=Math.max(8,cv.width*.024);ctx.lineCap='round';ctx.lineJoin='round';
   ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(x,y);ctx.stroke();lx=x;ly=y;
@@ -789,7 +908,7 @@ function genCert(){
   if(!name){document.getElementById('CI').style.borderColor='#FF4B6E';return;}
   document.getElementById('CI').style.borderColor='#D0D0E8';
   document.getElementById('CN').textContent='🎉 Congratulations, '+name+'! 🎉';
-  document.getElementById('CR').classList.add('show');confetti();
+  document.getElementById('CR').classList.add('show');confetti();sndCelebration();
 }
 
 /* POPUP */
