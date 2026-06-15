@@ -1,816 +1,901 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الحروف الهجائية – الصف الأول | Arabic Letters Grade 1</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@400;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>مغامرة الحروف - المعلمة منال بزي</title>
 <style>
-:root{
-  --bg:#F0FDF4; --card:#FFFFFF;
-  --green:#059669; --mint:#34D399; --teal:#0891B2;
-  --gold:#D97706; --amber:#F59E0B;
-  --purple:#7C3AED; --blue:#2563EB;
-  --red:#DC2626; --text:#052e16; --muted:#6B7280;
-  --shadow:0 8px 32px rgba(5,150,105,.13);
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Times New Roman',Times,serif;background:linear-gradient(135deg,#FFF5F0,#FFF0F8,#F0F8FF);min-height:100vh;color:#3A3A5C;overflow-x:hidden;direction:rtl;}
 
-/* BG */
-.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.10;animation:blobFloat ease-in-out infinite;}
-@keyframes blobFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.08)}}
+header{background:linear-gradient(90deg,#FF7B5B,#9B8FD4);color:#fff;text-align:center;padding:18px 16px 14px;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;background:rgba(255,255,255,.1);border-radius:50%;}
+header::after{content:'';position:absolute;bottom:-30px;left:-20px;width:90px;height:90px;background:rgba(255,255,255,.08);border-radius:50%;}
+.ht{font-family:'Times New Roman',Times,serif;font-size:clamp(1.6rem,5vw,2.5rem);font-weight:900;letter-spacing:1px;text-shadow:2px 3px 0 rgba(0,0,0,.15);}
+.hs{font-size:.85rem;opacity:.92;margin-top:5px;font-weight:700;}
+.sr{font-size:1.1rem;margin-top:6px;letter-spacing:4px;}
 
-/* HEADER */
-header{position:relative;z-index:10;text-align:center;padding:24px 1rem 16px;background:linear-gradient(135deg,#D1FAE5,#ECFDF5,#DBEAFE);border-bottom:2px solid rgba(5,150,105,.12);}
-.teacher-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(5,150,105,.1);border:1.5px solid rgba(5,150,105,.3);border-radius:30px;padding:5px 16px;font-size:.8rem;color:#065F46;margin-bottom:12px;font-family:'Cairo',sans-serif;font-weight:800;}
-.main-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:clamp(1.8rem,6vw,2.8rem);background:linear-gradient(135deg,#059669,#2563EB,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;line-height:1.2;}
-.main-title .sub{font-size:.52em;-webkit-text-fill-color:var(--muted);display:block;font-weight:700;}
-.main-sub{font-size:.88rem;color:var(--muted);margin-bottom:16px;font-weight:700;}
-.name-row{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;}
-.name-input{background:#fff;border:1.5px solid #A7F3D0;border-radius:12px;padding:9px 16px;font-family:'Cairo',sans-serif;font-size:.95rem;color:var(--text);outline:none;width:200px;transition:border-color .2s;text-align:right;}
-.name-input:focus{border-color:var(--green);}
-.name-input::placeholder{color:#9CA3AF;}
+nav.tabs{display:flex;overflow-x:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:0 4px;gap:2px;scrollbar-width:none;direction:rtl;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tb{flex:0 0 auto;padding:12px 12px;border:none;background:transparent;font-family:'Times New Roman',Times,serif;font-weight:700;font-size:.75rem;color:#6B6B8A;cursor:pointer;border-bottom:3px solid transparent;transition:all .25s;white-space:nowrap;}
+.tb.on{color:#FF7B5B;border-bottom-color:#FF7B5B;}
 
-/* TABS */
-.nav-tabs{display:flex;gap:8px;max-width:860px;margin:.8rem auto;padding:0 1rem;flex-wrap:wrap;}
-.nav-tab{flex:1;min-width:120px;padding:10px 8px;border-radius:14px;border:1.5px solid #D1FAE5;background:#fff;font-family:'Cairo',sans-serif;font-size:.9rem;font-weight:800;color:var(--muted);cursor:pointer;transition:all .22s;text-align:center;line-height:1.3;}
-.nav-tab.active{border-color:var(--green);background:rgba(5,150,105,.08);color:var(--green);}
-.nav-tab:hover:not(.active){border-color:var(--mint);color:var(--text);}
+.main{max-width:700px;margin:0 auto;padding:16px 12px 80px;}
+.sec{display:none;}
+.sec.on{display:block;animation:fu .4s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pi{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes sh{0%,100%{transform:translateX(0);}25%{transform:translateX(6px);}75%{transform:translateX(-6px);}}
+@keyframes bounce{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
 
-/* MAIN */
-main{position:relative;z-index:5;max-width:860px;margin:0 auto;padding:.5rem 1rem 5rem;}
-.screen{display:none;}
-.screen.active{display:block;}
-.gc{background:#fff;border:1.5px solid #D1FAE5;border-radius:24px;padding:1.8rem;box-shadow:var(--shadow);margin-bottom:1rem;}
+.card{background:#fff;border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,.09);padding:20px;margin-bottom:18px;}
+.ct{font-family:'Times New Roman',Times,serif;font-size:1.15rem;font-weight:900;color:#9B8FD4;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 
-/* LESSON */
-.ls-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:1.15rem;color:var(--green);margin-bottom:.5rem;display:flex;align-items:center;gap:8px;}
-.ls-desc{font-size:.9rem;color:var(--muted);margin-bottom:.8rem;line-height:1.9;font-weight:700;}
+/* colors */
+.c0{background:linear-gradient(135deg,#FF7B5B,#FF9A80);}
+.c1{background:linear-gradient(135deg,#9B8FD4,#B8AFEB);}
+.c2{background:linear-gradient(135deg,#5EC4A0,#80D9BE);}
+.c3{background:linear-gradient(135deg,#FFD166,#FFE09A);}
+.c4{background:linear-gradient(135deg,#FF8CB3,#FFAACB);}
+.c5{background:linear-gradient(135deg,#56CCF2,#85DFFF);}
+.t0{color:#FF7B5B;}.t1{color:#9B8FD4;}.t2{color:#5EC4A0;}.t3{color:#E6A000;}.t4{color:#FF8CB3;}.t5{color:#56CCF2;}
+.bg0{background:linear-gradient(135deg,#FFF0ED,#FFE8E0);}
+.bg1{background:linear-gradient(135deg,#F0EEFF,#E8E4FF);}
+.bg2{background:linear-gradient(135deg,#EDFFF8,#E0FFF4);}
+.bg3{background:linear-gradient(135deg,#FFFAED,#FFF5D6);}
+.bg4{background:linear-gradient(135deg,#FFF0F5,#FFE4EE);}
+.bg5{background:linear-gradient(135deg,#F0FBFF,#E0F8FF);}
 
-/* ARABIC LETTERS GRID */
-.arabic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;margin:.8rem 0;}
-.ar-card{background:linear-gradient(135deg,#F0FDF4,#ECFDF5);border:1.5px solid #A7F3D0;border-radius:16px;padding:.8rem .4rem;text-align:center;cursor:pointer;transition:all .22s;box-shadow:0 2px 8px rgba(5,150,105,.07);}
-.ar-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(5,150,105,.2);border-color:var(--green);}
-.ar-card.speaking{background:linear-gradient(135deg,#059669,#2563EB);border-color:var(--blue);}
-.ar-card.speaking .ar-letter,.ar-card.speaking .ar-name,.ar-card.speaking .ar-word{color:#fff !important;}
-.ar-letter{font-family:'Cairo',sans-serif;font-size:2.2rem;font-weight:900;display:block;line-height:1;}
-.ar-name{font-size:.65rem;font-weight:800;color:var(--teal);letter-spacing:.3px;margin-top:3px;display:block;}
-.ar-word{font-size:.62rem;color:var(--muted);font-weight:700;margin-top:2px;}
+.bp{border:none;border-radius:50px;padding:11px 26px;font-family:'Times New Roman',Times,serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:transform .15s;color:#fff;}
+.bp:active{transform:scale(.95);}
+.bcoral{background:#FF7B5B;}.bmint{background:#5EC4A0;}.blav{background:#9B8FD4;}.bsun{background:#FFD166;color:#5A4000;}
 
-/* FORMS PANEL */
-.forms-box{background:linear-gradient(135deg,#EDE9FE,#D1FAE5);border:1.5px solid #A7F3D0;border-radius:18px;padding:1.2rem;margin:.8rem 0;}
-.forms-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:1rem;color:var(--purple);margin-bottom:.8rem;text-align:center;}
-.forms-table{width:100%;border-collapse:collapse;}
-.forms-table th{background:linear-gradient(135deg,var(--green),var(--teal));color:#fff;padding:9px 6px;font-family:'Cairo',sans-serif;font-weight:800;font-size:.82rem;}
-.forms-table th:first-child{border-radius:0 12px 0 0;}
-.forms-table th:last-child{border-radius:12px 0 0 0;}
-.forms-table td{padding:9px 6px;text-align:center;border:1px solid #D1FAE5;font-family:'Cairo',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);}
-.forms-table tr:nth-child(even) td{background:#F0FDF4;}
-.forms-table .lname{font-size:.85rem;color:var(--green);}
+/* EXPLORE */
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;}
+.lt{aspect-ratio:1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s;border:3px solid transparent;user-select:none;}
+.lt:active{transform:scale(1.1);}
+.lt.atile{border-color:#FFD166!important;box-shadow:0 0 0 3px #FFD166;transform:scale(1.14);}
+.lt.vis{opacity:.65;}
+.ltb{font-size:1.7rem;color:#fff;line-height:1;font-family:'Times New Roman',Times,serif;font-weight:900;}
+.lts{font-size:.5rem;color:rgba(255,255,255,.88);font-family:'Times New Roman',Times,serif;font-weight:700;margin-top:2px;}
 
-/* SUN/MOON letters */
-.sun-moon{display:flex;gap:12px;flex-wrap:wrap;margin:.8rem 0;}
-.sm-group{flex:1;min-width:180px;background:#fff;border-radius:14px;padding:.9rem;border:1.5px solid #D1FAE5;}
-.sm-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:.9rem;margin-bottom:.5rem;}
-.sm-letters{font-family:'Cairo',sans-serif;font-size:1.4rem;font-weight:900;line-height:2;letter-spacing:6px;color:var(--purple);}
+.lp{border-radius:18px;padding:22px 14px;text-align:center;margin-bottom:14px;transition:all .3s;}
+.lpl{font-size:clamp(4rem,17vw,8rem);line-height:1;animation:pi .35s cubic-bezier(.34,1.56,.64,1);font-family:'Times New Roman',Times,serif;font-weight:900;}
+.lpe{font-size:clamp(2rem,8vw,3rem);margin:8px 0;}
+.lpw{font-size:clamp(1.1rem,4vw,1.6rem);font-weight:900;margin:4px 0;font-family:'Times New Roman',Times,serif;}
+.lpb{display:inline-block;padding:4px 14px;border-radius:50px;font-size:.78rem;font-weight:700;margin-top:8px;font-family:'Times New Roman',Times,serif;}
+.lpforms{display:flex;justify-content:center;gap:14px;margin-top:10px;flex-wrap:wrap;}
+.form-pill{background:rgba(255,255,255,.7);border-radius:12px;padding:8px 14px;text-align:center;}
+.form-pill .fl{font-size:1.6rem;font-weight:900;display:block;font-family:'Times New Roman',Times,serif;}
+.form-pill .fn{font-size:.62rem;color:#6B6B8A;font-weight:700;}
 
-/* GAME MODES */
-.game-modes{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:1rem;}
-.gm-card{background:#fff;border:1.5px solid #D1FAE5;border-radius:18px;padding:1.2rem 1rem;text-align:center;cursor:pointer;transition:all .25s;box-shadow:0 2px 10px rgba(0,0,0,.06);}
-.gm-card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(5,150,105,.18);}
-.gm-emoji{font-size:2.8rem;display:block;margin-bottom:.5rem;}
-.gm-name{font-family:'Cairo',sans-serif;font-weight:900;font-size:.95rem;color:var(--text);}
-.gm-desc{font-size:.75rem;color:var(--muted);margin-top:4px;line-height:1.6;font-weight:700;}
-.gm-card.mode-listen{border-color:rgba(124,58,237,.25);}
-.gm-card.mode-listen:hover{border-color:var(--purple);}
-.gm-card.mode-shape{border-color:rgba(5,150,105,.25);}
-.gm-card.mode-shape:hover{border-color:var(--green);}
-.gm-card.mode-word{border-color:rgba(8,145,178,.25);}
-.gm-card.mode-word:hover{border-color:var(--teal);}
-.gm-card.mode-form{border-color:rgba(217,119,6,.25);}
-.gm-card.mode-form:hover{border-color:var(--gold);}
+.pw{background:#F0F0F5;border-radius:50px;height:10px;margin-top:12px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,#5EC4A0,#9B8FD4);border-radius:50px;transition:width .4s ease;}
+.pl{font-size:.75rem;color:#6B6B8A;margin-top:5px;text-align:left;}
 
-/* HUD */
-.hud-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;flex-wrap:wrap;gap:8px;}
-.hud-pill{display:flex;align-items:center;gap:5px;background:#fff;border:1.5px solid #D1FAE5;border-radius:100px;padding:6px 14px;font-weight:800;font-size:.88rem;box-shadow:0 2px 8px rgba(0,0,0,.06);font-family:'Cairo',sans-serif;}
-.hud-pill.coins{color:var(--gold);}
-.hud-pill.streak{color:#EA580C;}
-.mode-tag{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.2);border-radius:100px;padding:5px 14px;font-size:.82rem;font-weight:800;color:var(--green);font-family:'Cairo',sans-serif;}
+/* ORDER */
+.orow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:14px;direction:rtl;}
+.ot{width:clamp(36px,8vw,48px);height:clamp(40px,9vw,52px);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Times New Roman',Times,serif;font-size:clamp(1.1rem,3.5vw,1.5rem);font-weight:900;color:#fff;cursor:pointer;transition:transform .15s;user-select:none;}
+.ot:active{transform:scale(1.2);}
+.legrow{display:flex;gap:14px;justify-content:center;margin-bottom:12px;flex-wrap:wrap;}
+.legp{display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;color:#6B6B8A;}
+.legd{width:13px;height:13px;border-radius:50%;}
+.ulgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;}
+.ulc{background:#fff;border:2px solid #E8E8F0;border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .2s;}
+.ulc:hover{transform:scale(1.08);border-color:#9B8FD4;}
+.ulb{font-size:1.5rem;font-weight:900;font-family:'Times New Roman',Times,serif;}
+.ule{font-size:.9rem;}
+.ulnames{font-size:.62rem;color:#9B8FD4;font-weight:700;margin-top:2px;}
 
-/* TIMER */
-.timer-wrap{margin-bottom:.8rem;}
-.timer-track{height:10px;background:#D1FAE5;border-radius:10px;overflow:hidden;}
-.timer-fill{height:100%;border-radius:10px;transition:width .15s linear,background .4s;background:linear-gradient(90deg,var(--green),var(--teal));}
-.timer-label{font-size:.75rem;color:var(--muted);font-weight:700;margin-top:3px;display:flex;justify-content:space-between;font-family:'Cairo',sans-serif;}
+/* MATCH */
+.minstr{background:linear-gradient(135deg,#FFF0F5,#F0F8FF);border-radius:14px;padding:14px;text-align:center;font-weight:700;color:#9B8FD4;margin-bottom:16px;font-size:.88rem;font-family:'Times New Roman',Times,serif;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.mct{font-family:'Times New Roman',Times,serif;font-size:1rem;font-weight:900;color:#FF7B5B;text-align:center;margin-bottom:8px;}
+.mcol{display:flex;flex-direction:column;gap:8px;}
+.mi{border:3px solid #E8E8F0;border-radius:14px;padding:13px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Times New Roman',Times,serif;user-select:none;background:#fff;}
+.mi:active{transform:scale(1.06);}
+.mi.sel{border-color:#FF7B5B;background:#FFF0ED;transform:scale(1.05);}
+.mi.ok{border-color:#5EC4A0;background:#EDFFF8;pointer-events:none;animation:pi .3s ease;}
+.mi.bad{border-color:#FF4B6E;background:#FFF0F3;animation:sh .3s;}
+.msr{text-align:center;font-family:'Times New Roman',Times,serif;font-size:1rem;font-weight:700;color:#5EC4A0;margin-top:10px;min-height:24px;}
 
-/* Q CARD */
-.q-card{background:#fff;border:1.5px solid #D1FAE5;border-radius:22px;padding:1.5rem;box-shadow:var(--shadow);margin-bottom:.9rem;text-align:center;}
-.q-num-badge{display:inline-block;background:linear-gradient(135deg,var(--green),var(--teal));color:#fff;border-radius:100px;padding:3px 14px;font-size:.78rem;font-weight:800;margin-bottom:.8rem;font-family:'Cairo',sans-serif;}
+/* DRAG SPELL */
+.dinstr{text-align:center;font-weight:700;color:#9B8FD4;margin-bottom:14px;font-size:.88rem;background:linear-gradient(135deg,#F0EEFF,#FFF5F0);padding:12px;border-radius:12px;font-family:'Times New Roman',Times,serif;}
+.deb{text-align:center;font-size:clamp(2.5rem,10vw,4rem);margin-bottom:8px;}
+.dzones{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:18px;direction:ltr;}
+.dz{width:clamp(52px,12vw,70px);height:clamp(56px,13vw,74px);border:3px dashed #C0C0D8;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Times New Roman',Times,serif;font-size:clamp(1.4rem,5vw,2rem);font-weight:900;transition:all .2s;background:#fff;position:relative;}
+.dz.dov{border-color:#FF7B5B;background:#FFF0ED;transform:scale(1.08);}
+.dz.dok{border-color:#5EC4A0;border-style:solid;background:#EDFFF8;color:#5EC4A0;}
+.dz.derr{border-color:#FF4B6E;border-style:solid;background:#FFF0F3;color:#FF4B6E;animation:sh .3s;}
+.dz .dzn{color:#D0D0E0;font-size:.8rem;position:absolute;font-family:'Times New Roman',Times,serif;}
+.dpool{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:12px;background:#F5F5FA;border-radius:14px;min-height:60px;}
+.dtile{width:clamp(52px,12vw,68px);height:clamp(56px,13vw,72px);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Times New Roman',Times,serif;font-size:clamp(1.4rem,5vw,2rem);font-weight:900;cursor:grab;transition:transform .15s,opacity .2s;box-shadow:0 4px 12px rgba(0,0,0,.12);user-select:none;-webkit-user-select:none;touch-action:none;color:#fff;}
+.dtile:active{transform:scale(1.2) rotate(-4deg);}
+.dtile.used{opacity:.2;pointer-events:none;}
+.dfb{text-align:center;font-family:'Times New Roman',Times,serif;font-size:1rem;font-weight:700;margin-top:12px;min-height:26px;}
+.dctl{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
 
-/* LISTEN BTN */
-.listen-zone{display:flex;flex-direction:column;align-items:center;gap:.7rem;margin:1rem 0;}
-.listen-btn{width:110px;height:110px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--green),var(--teal));color:#fff;font-size:3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(5,150,105,.4);transition:all .2s;}
-.listen-btn:hover{transform:scale(1.08);}
-.listen-btn.speaking{animation:speakPulse .6s ease-in-out infinite alternate;}
-@keyframes speakPulse{from{box-shadow:0 8px 28px rgba(5,150,105,.4),0 0 0 0 rgba(5,150,105,.3)}to{box-shadow:0 8px 28px rgba(5,150,105,.4),0 0 0 20px rgba(5,150,105,0)}}
-.listen-hint{font-size:.9rem;color:var(--muted);font-weight:800;font-family:'Cairo',sans-serif;}
+/* MEMORY */
+.meminfo{text-align:center;color:#6B6B8A;font-size:.85rem;margin-bottom:12px;font-family:'Times New Roman',Times,serif;}
+.memstats{display:flex;justify-content:center;gap:20px;margin-bottom:14px;font-weight:700;font-size:.88rem;}
+.memstat{background:#fff;border-radius:50px;padding:6px 18px;box-shadow:0 2px 8px rgba(0,0,0,.07);font-family:'Times New Roman',Times,serif;}
+.memgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.mc{aspect-ratio:.9;border-radius:14px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .4s;user-select:none;}
+.mc.flipped{transform:rotateY(180deg);}
+.mc.matched{transform:rotateY(180deg);pointer-events:none;}
+.mf,.mb{position:absolute;inset:0;border-radius:14px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.mf{background:linear-gradient(135deg,#9B8FD4,#B8AFEB);font-family:'Times New Roman',Times,serif;font-size:clamp(1.5rem,5vw,2.2rem);font-weight:900;color:#fff;}
+.mb{background:#fff;border:3px solid #E8E8F0;transform:rotateY(180deg);font-size:clamp(1.3rem,5vw,2rem);}
+.mc.matched .mb{border-color:#5EC4A0;background:#EDFFF8;}
+.mc.wf .mb{border-color:#FF4B6E;background:#FFF0F3;}
 
-/* BIG LETTER */
-.display-letter-big{font-family:'Cairo',sans-serif;font-size:7rem;font-weight:900;color:var(--green);line-height:1;margin:.8rem 0;display:block;}
-.display-name{font-size:1.3rem;font-weight:900;color:var(--purple);margin-bottom:.4rem;}
-.display-word-hint{font-size:.95rem;font-weight:800;color:var(--teal);margin-bottom:.3rem;}
-.display-emoji-big{font-size:3.5rem;display:block;margin:.4rem 0;}
-.speak-sub-btn{display:inline-flex;align-items:center;gap:6px;margin:.4rem auto;background:linear-gradient(135deg,var(--green),var(--teal));color:#fff;border:none;border-radius:100px;padding:8px 20px;font-family:'Cairo',sans-serif;font-weight:800;font-size:.88rem;cursor:pointer;transition:transform .2s;}
-.speak-sub-btn:hover{transform:scale(1.05);}
+/* SORT */
+.sortinstr{text-align:center;font-weight:700;color:#9B8FD4;margin-bottom:14px;background:linear-gradient(135deg,#F0EEFF,#FFF5F0);padding:12px;border-radius:12px;font-size:.88rem;font-family:'Times New Roman',Times,serif;}
+.sbucks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.sbuck{border-radius:16px;min-height:90px;padding:12px 8px;border:3px dashed #D0D0E8;transition:all .2s;cursor:pointer;}
+.sbuck.bv{border-color:#FF7B5B;background:#FFF5F3;}
+.sbuck.bc{border-color:#9B8FD4;background:#F5F0FF;}
+.sbuck.dov2{transform:scale(1.03);box-shadow:0 0 0 3px #FFD166;}
+.bkt{font-family:'Times New Roman',Times,serif;font-size:.9rem;font-weight:900;text-align:center;margin-bottom:8px;}
+.bki{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:38px;}
+.bchip{font-family:'Times New Roman',Times,serif;font-size:1.2rem;font-weight:900;padding:6px 14px;border-radius:50px;color:#fff;animation:pi .25s ease;}
+.spool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:14px;background:#F5F5FA;border-radius:14px;min-height:56px;}
+.stile{font-family:'Times New Roman',Times,serif;font-size:1.4rem;font-weight:900;padding:10px 16px;border-radius:12px;color:#fff;cursor:pointer;transition:transform .15s;user-select:none;}
+.stile:active{transform:scale(1.2);}
+.stile.used{opacity:.2;pointer-events:none;}
+.sfb{text-align:center;font-family:'Times New Roman',Times,serif;font-size:.95rem;font-weight:700;margin-top:10px;min-height:26px;}
 
-/* CHOICES */
-.choices-label{font-size:.85rem;color:var(--muted);font-weight:800;margin-bottom:.6rem;font-family:'Cairo',sans-serif;}
-.choices-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-.ch-btn{background:#F0FDF4;border:2px solid #A7F3D0;border-radius:14px;padding:14px 10px;font-family:'Cairo',sans-serif;font-size:2rem;font-weight:900;color:var(--text);cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:3px;}
-.ch-btn .ch-sub{font-family:'Cairo',sans-serif;font-size:.7rem;font-weight:700;color:var(--muted);text-align:center;}
-.ch-btn:hover{border-color:var(--green);background:#D1FAE5;transform:translateY(-3px);}
-.ch-btn.correct{background:#DCFCE7;border-color:var(--green);color:var(--green);animation:popUp .35s ease;}
-.ch-btn.wrong{background:#FEE2E2;border-color:var(--red);color:var(--red);animation:shake .35s ease;}
-@keyframes popUp{0%{transform:scale(1)}50%{transform:scale(1.12)}100%{transform:scale(1)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+/* FIND MISSING */
+.fminstr{text-align:center;font-weight:700;color:#9B8FD4;margin-bottom:14px;background:linear-gradient(135deg,#F0EEFF,#FFF5F0);padding:12px;border-radius:12px;font-size:.88rem;font-family:'Times New Roman',Times,serif;}
+.fmrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;direction:rtl;}
+.fmtile{width:clamp(44px,10vw,58px);height:clamp(48px,11vw,62px);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Times New Roman',Times,serif;font-size:clamp(1.1rem,4vw,1.5rem);font-weight:900;color:#fff;}
+.fmblank{border:3px dashed #C0C0D8;background:#F5F5FA;color:#D0D0E0;cursor:pointer;}
+.fmopts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:12px;}
+.fmopt{font-family:'Times New Roman',Times,serif;font-size:1.3rem;font-weight:900;padding:10px 18px;border-radius:12px;color:#fff;cursor:pointer;transition:transform .15s;border:3px solid transparent;}
+.fmopt:active{transform:scale(1.15);}
+.fmopt.fmok{border-color:#5EC4A0;animation:bounce .4s ease;}
+.fmopt.fmbad{border-color:#FF4B6E;animation:sh .3s;}
+.fmfb{text-align:center;font-family:'Times New Roman',Times,serif;font-size:.95rem;font-weight:700;margin-top:8px;min-height:26px;}
 
-/* FEEDBACK */
-.fb-bar{border-radius:14px;padding:11px 16px;min-height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transition:all .3s;margin-top:.7rem;font-family:'Cairo',sans-serif;}
-.fb-text{font-size:.92rem;font-weight:800;}
-.fb-bar.neutral{background:#F0FDF4;border:1px solid #D1FAE5;color:var(--muted);}
-.fb-bar.ok{background:#DCFCE7;border:1.5px solid #86EFAC;color:#15803D;}
-.fb-bar.bad{background:#FEE2E2;border:1.5px solid #FCA5A5;color:#B91C1C;}
+/* QUIZ */
+.qctr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-weight:700;font-size:.84rem;color:#6B6B8A;}
+.qspill{background:linear-gradient(135deg,#FFD166,#FF7B5B);color:#fff;border-radius:50px;padding:4px 16px;font-family:'Times New Roman',Times,serif;font-size:.95rem;font-weight:700;}
+.qq{text-align:center;font-family:'Times New Roman',Times,serif;font-size:clamp(1rem,4vw,1.4rem);font-weight:900;color:#3A3A5C;margin-bottom:8px;}
+.ql{font-family:'Times New Roman',Times,serif;font-size:clamp(3.5rem,14vw,6.5rem);font-weight:900;text-align:center;margin:8px 0;animation:pi .3s cubic-bezier(.34,1.56,.64,1);}
+.qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.qo{background:#fff;border:3px solid #E8E8F0;border-radius:16px;padding:15px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Times New Roman',Times,serif;font-weight:700;font-size:clamp(.82rem,2.7vw,.98rem);}
+.qo:hover{border-color:#9B8FD4;transform:scale(1.03);}
+.qe{font-size:1.5rem;display:block;margin-bottom:4px;}
+.qo.correct{background:#EDFFF8;border-color:#5EC4A0;}
+.qo.wrong{background:#FFF0F3;border-color:#FF4B6E;}
+.qo.dis{pointer-events:none;}
+.qfb{text-align:center;font-family:'Times New Roman',Times,serif;font-size:1rem;font-weight:700;margin-top:12px;min-height:28px;}
+.qnxt{display:none;margin:14px auto 0;background:#FF7B5B;color:#fff;border:none;border-radius:50px;padding:12px 36px;font-family:'Times New Roman',Times,serif;font-size:.95rem;font-weight:700;cursor:pointer;transition:transform .15s;}
+.qnxt.show{display:block;animation:fu .3s ease;}
+.qnxt:active{transform:scale(.95);}
 
-/* PROGRESS */
-.prog-wrap{margin-top:.8rem;}
-.prog-track{background:#D1FAE5;border-radius:10px;height:8px;overflow:hidden;}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--teal));border-radius:10px;transition:width .5s ease;}
-.prog-label{display:flex;justify-content:space-between;margin-top:3px;font-size:.75rem;color:var(--muted);font-weight:800;font-family:'Cairo',sans-serif;}
+/* TRACE */
+.tinstr{text-align:center;font-weight:700;color:#9B8FD4;margin-bottom:12px;font-size:.88rem;background:linear-gradient(135deg,#F0EEFF,#FFF5F0);padding:12px;border-radius:12px;font-family:'Times New Roman',Times,serif;}
+.tsel{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px;}
+.tpick{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Times New Roman',Times,serif;font-size:1.5rem;font-weight:900;color:#fff;cursor:pointer;transition:transform .15s;user-select:none;}
+.tpick:active{transform:scale(1.15);}
+.tpick.ap{box-shadow:0 0 0 3px #FFD166;transform:scale(1.12);}
+.tcwrap{position:relative;border-radius:18px;overflow:hidden;background:#FAFAFF;border:2px solid #E8E8F0;margin-bottom:12px;}
+.tc{display:block;width:100%;touch-action:none;}
+.tctl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
 
-/* RESULT */
-.res-trophy{font-size:5rem;display:block;text-align:center;margin-bottom:.4rem;animation:bounce 1.8s ease-in-out infinite;}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-.res-title{font-family:'Cairo',sans-serif;font-weight:900;font-size:1.7rem;text-align:center;color:var(--green);margin-bottom:4px;}
-.res-msg{font-size:.9rem;color:var(--muted);text-align:center;margin-bottom:.5rem;font-weight:700;font-family:'Cairo',sans-serif;}
-.star-row{display:flex;justify-content:center;gap:6px;font-size:2.4rem;margin:.8rem 0;}
-.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.3rem;}
-.rs-box{background:#F0FDF4;border:1px solid #D1FAE5;border-radius:14px;padding:.8rem .5rem;text-align:center;}
-.rs-val{font-family:'Cairo',sans-serif;font-weight:900;font-size:1.6rem;color:var(--green);display:block;}
-.rs-lbl{font-size:.72rem;color:var(--muted);font-weight:800;font-family:'Cairo',sans-serif;}
-.res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-.ra-btn{padding:11px 24px;border-radius:100px;border:none;font-family:'Cairo',sans-serif;font-weight:900;font-size:.95rem;cursor:pointer;transition:all .2s;}
-.ra-btn.primary{background:linear-gradient(135deg,var(--green),var(--teal));color:#fff;box-shadow:0 5px 16px rgba(5,150,105,.3);}
-.ra-btn.secondary{background:#fff;border:1.5px solid #D1FAE5;color:var(--muted);}
-.ra-btn:hover{transform:translateY(-2px);}
+/* TAKEAWAY */
+.tkhero{text-align:center;padding:22px 12px 16px;background:linear-gradient(135deg,#FF7B5B,#9B8FD4);border-radius:18px;color:#fff;margin-bottom:18px;}
+.tkhero h2{font-family:'Times New Roman',Times,serif;font-size:1.6rem;font-weight:900;margin:8px 0 4px;}
+.tkl{list-style:none;}
+.tkl li{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:14px;margin-bottom:10px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.07);animation:fu .4s ease both;}
+.tki{font-size:1.5rem;flex-shrink:0;margin-top:2px;}
+.tkt strong{display:block;font-size:.93rem;color:#3A3A5C;font-family:'Times New Roman',Times,serif;font-weight:900;}
+.tkt span{font-size:.8rem;color:#6B6B8A;font-family:'Times New Roman',Times,serif;}
+.cert{background:linear-gradient(135deg,#FFF5F0,#F0EEFF);border:3px dashed #9B8FD4;border-radius:18px;text-align:center;padding:22px 16px;margin-top:8px;}
+.certttl{font-family:'Times New Roman',Times,serif;font-size:1.2rem;font-weight:900;color:#9B8FD4;}
+.cinput{border:2px solid #D0D0E8;border-radius:50px;padding:10px 20px;font-family:'Times New Roman',Times,serif;font-size:1rem;width:100%;max-width:280px;text-align:center;margin:10px auto;outline:none;transition:border-color .2s;display:block;direction:rtl;}
+.cinput:focus{border-color:#9B8FD4;}
+.cres{display:none;margin-top:14px;animation:fu .4s ease;}
+.cres.show{display:block;}
 
-/* VFX */
-.cp{position:fixed;border-radius:2px;pointer-events:none;z-index:9999;animation:cFall linear forwards;}
-@keyframes cFall{0%{opacity:1;transform:translateY(-10px) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
-.sp{position:fixed;pointer-events:none;z-index:9998;font-family:'Cairo',sans-serif;font-size:1.5rem;font-weight:900;animation:sPop 1s ease forwards;}
-@keyframes sPop{0%{opacity:1;transform:translateY(0) scale(1)}80%{opacity:1;transform:translateY(-55px) scale(1.2)}100%{opacity:0;transform:translateY(-70px) scale(.8)}}
-
-.teacher-badge{position:fixed;bottom:14px;left:14px;z-index:20;background:rgba(255,255,255,.93);backdrop-filter:blur(8px);border:1.5px solid #A7F3D0;border-radius:100px;padding:6px 14px;font-size:.75rem;font-weight:800;color:var(--green);line-height:1.5;text-align:center;box-shadow:0 2px 10px rgba(5,150,105,.12);font-family:'Cairo',sans-serif;}
-
-.ln-btn{padding:11px 28px;border-radius:100px;border:none;font-family:'Cairo',sans-serif;font-weight:900;font-size:1rem;cursor:pointer;transition:all .2s;}
-.ln-btn.primary{background:linear-gradient(135deg,var(--green),var(--teal));color:#fff;box-shadow:0 5px 18px rgba(5,150,105,.3);}
-.ln-btn:hover{transform:translateY(-2px);}
-.lesson-nav{display:flex;gap:10px;justify-content:center;margin-top:1.2rem;}
-
-@media(max-width:480px){
-  .choices-grid{grid-template-columns:repeat(2,1fr);}
-  .arabic-grid{grid-template-columns:repeat(auto-fill,minmax(68px,1fr));}
-  .game-modes{grid-template-columns:repeat(2,1fr);}
-  .display-letter-big{font-size:5rem;}
-}
+/* popup & confetti */
+.cnv{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+.fpop{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) scale(.5);background:#fff;border-radius:20px;padding:20px 28px;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center;z-index:1000;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);direction:rtl;}
+.fpop.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.fpe{font-size:2.3rem;}.fpt{font-family:'Times New Roman',Times,serif;font-size:1.1rem;font-weight:700;margin-top:6px;}
+footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #F0F0F8;text-align:center;padding:8px;font-size:.72rem;color:#6B6B8A;font-weight:700;z-index:100;font-family:'Times New Roman',Times,serif;}
+footer span{color:#FF7B5B;}
 </style>
 </head>
 <body>
-
-<div class="bg-blobs">
-  <div class="blob" style="width:500px;height:500px;background:#34D399;top:-100px;left:-100px;animation-duration:9s;"></div>
-  <div class="blob" style="width:400px;height:400px;background:#A78BFA;bottom:50px;right:-80px;animation-duration:12s;animation-delay:3s;"></div>
-  <div class="blob" style="width:300px;height:300px;background:#67E8F9;top:40%;left:10%;animation-duration:10s;animation-delay:1.5s;"></div>
-</div>
+<canvas class="cnv" id="CC"></canvas>
+<div class="fpop" id="FP"><div class="fpe" id="FPE">🎉</div><div class="fpt" id="FPT">رائع!</div></div>
 
 <header>
-  <div class="teacher-tag">👩‍🏫 المعلمة منال بزي — الصف الأول</div>
-  <div class="main-title">
-    الحروف الهجائية 🌙
-    <span class="sub">Arabic Letters | Grade 1</span>
-  </div>
-  <p class="main-sub">اسمع · تعلّم · العب</p>
-  <div class="name-row">
-    <span style="font-size:.88rem;color:var(--muted);font-weight:800;">👤 اسمك:</span>
-    <input class="name-input" id="studentName" type="text" placeholder="اكتب اسمك هنا" maxlength="20">
-  </div>
+  <div class="ht">🔤 مغامرة الحروف!</div>
+  <div class="hs">تعلّم الحروف الأبجدية العربية · المعلمة منال بزي</div>
+  <div class="sr">⭐ ⭐ ⭐ ⭐ ⭐</div>
 </header>
 
-<div class="nav-tabs">
-  <div class="nav-tab active" id="tabLesson" onclick="switchTab('lesson')">📖 الدرس</div>
-  <div class="nav-tab" id="tabGame" onclick="switchTab('game')">🎮 الألعاب</div>
-</div>
+<nav class="tabs">
+  <button class="tb on"  onclick="S('explore',this)">🔍 استكشاف</button>
+  <button class="tb"     onclick="S('order',this)">📋 الترتيب</button>
+  <button class="tb"     onclick="S('match',this)">🔗 صل</button>
+  <button class="tb"     onclick="S('drag',this)">✏️ هجّي</button>
+  <button class="tb"     onclick="S('memory',this)">🃏 الذاكرة</button>
+  <button class="tb"     onclick="S('sort',this)">🔠 صنّف</button>
+  <button class="tb"     onclick="S('findmiss',this)">🔎 الحرف الناقص</button>
+  <button class="tb"     onclick="S('quiz',this)">❓ اختبار</button>
+  <button class="tb"     onclick="S('trace',this)">🖊️ تتبّع</button>
+  <button class="tb"     onclick="S('takeaway',this)">🌟 ملخّص</button>
+</nav>
 
-<main>
+<div class="main">
 
-<!-- ══ LESSON ══ -->
-<div class="screen active" id="lessonScreen">
-
-  <div class="gc">
-    <div class="ls-title">🔤 الحروف الهجائية العربية</div>
-    <div class="ls-desc">اللغة العربية تحتوي على <strong style="color:var(--purple)">٢٨ حرفاً</strong>. انقر على أي حرف لتسمع اسمه وكلمة تبدأ به! 🎵</div>
-    <div class="arabic-grid" id="arabicGrid"></div>
-  </div>
-
-  <div class="gc">
-    <div class="ls-title">✍️ أشكال الحرف</div>
-    <div class="ls-desc">كل حرف له أشكال مختلفة حسب موقعه في الكلمة: <strong style="color:var(--green)">أول الكلمة</strong> — <strong style="color:var(--teal)">وسط الكلمة</strong> — <strong style="color:var(--purple)">آخر الكلمة</strong> — <strong style="color:var(--gold)">منفرداً</strong></div>
-    <div class="forms-box">
-      <div class="forms-title">🖊️ أشكال بعض الحروف — انقر لتسمع</div>
-      <div style="overflow-x:auto;">
-      <table class="forms-table">
-        <tr>
-          <th>الحرف</th><th>منفرد</th><th>أول</th><th>وسط</th><th>آخر</th>
-        </tr>
-        <tr onclick="speakAr('أَلِف')"><td class="lname" style="color:var(--green);cursor:pointer;">أ - ألف</td><td>أ</td><td>أَ</td><td>ـأ</td><td>ـا</td></tr>
-        <tr onclick="speakAr('باء')"><td class="lname" style="color:var(--green);cursor:pointer;">ب - باء</td><td>ب</td><td>بَ</td><td>ـبـ</td><td>ـب</td></tr>
-        <tr onclick="speakAr('تاء')"><td class="lname" style="color:var(--green);cursor:pointer;">ت - تاء</td><td>ت</td><td>تَ</td><td>ـتـ</td><td>ـت</td></tr>
-        <tr onclick="speakAr('ميم')"><td class="lname" style="color:var(--green);cursor:pointer;">م - ميم</td><td>م</td><td>مَ</td><td>ـمـ</td><td>ـم</td></tr>
-        <tr onclick="speakAr('نون')"><td class="lname" style="color:var(--green);cursor:pointer;">ن - نون</td><td>ن</td><td>نَ</td><td>ـنـ</td><td>ـن</td></tr>
-        <tr onclick="speakAr('عين')"><td class="lname" style="color:var(--green);cursor:pointer;">ع - عين</td><td>ع</td><td>عَ</td><td>ـعـ</td><td>ـع</td></tr>
-      </table>
-      </div>
+<!-- 1 EXPLORE -->
+<div class="sec on" id="sec-explore">
+  <div class="card">
+    <div class="ct">🔍 اضغط على حرف لاستكشافه!</div>
+    <div class="lp bg1" id="LP">
+      <div class="lpe">👆</div>
+      <div class="lpw t1">اضغط على أي حرف أدناه!</div>
     </div>
+    <div class="pw"><div class="pf" id="PF" style="width:0%"></div></div>
+    <div class="pl" id="PL">٠ / ٢٨ حرف تمّ استكشافه</div>
   </div>
-
-  <div class="gc">
-    <div class="ls-title">☀️🌙 الحروف الشمسية والقمرية</div>
-    <div class="ls-desc">الحروف الشمسية تُدغم مع "ال" — الحروف القمرية لا تُدغم.</div>
-    <div class="sun-moon">
-      <div class="sm-group">
-        <div class="sm-title" style="color:#EA580C;">☀️ الحروف الشمسية (١٤)</div>
-        <div class="sm-letters" style="color:#EA580C;">ت ث د ذ ر ز س ش ص ض ط ظ ل ن</div>
-      </div>
-      <div class="sm-group">
-        <div class="sm-title" style="color:var(--teal);">🌙 الحروف القمرية (١٤)</div>
-        <div class="sm-letters" style="color:var(--teal);">أ ب ج ح خ ع غ ف ق ك م و ه ي</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="lesson-nav">
-    <button class="ln-btn primary" onclick="switchTab('game')">🎮 العب الآن!</button>
+  <div class="card">
+    <div class="ct">🔤 الحروف الأبجدية</div>
+    <div class="agrid" id="AG"></div>
   </div>
 </div>
 
-<!-- ══ GAME SELECT ══ -->
-<div class="screen" id="gameSelectScreen">
-  <div class="gc">
-    <div class="ls-title">🎮 اختر وضع اللعبة</div>
-    <div class="game-modes">
-      <div class="gm-card mode-listen" onclick="startGame('listen')">
-        <span class="gm-emoji">🔊</span>
-        <div class="gm-name">اسمع واختر</div>
-        <div class="gm-desc">اسمع اسم الحرف ← اختر الحرف الصحيح</div>
-      </div>
-      <div class="gm-card mode-shape" onclick="startGame('shape')">
-        <span class="gm-emoji">🔤</span>
-        <div class="gm-name">شاهد وسمِّ</div>
-        <div class="gm-desc">شاهد الحرف ← اختر اسمه الصحيح</div>
-      </div>
-      <div class="gm-card mode-word" onclick="startGame('word')">
-        <span class="gm-emoji">🖼️</span>
-        <div class="gm-name">صورة وحرف</div>
-        <div class="gm-desc">شاهد الصورة ← اختر الحرف الأول</div>
-      </div>
-      <div class="gm-card mode-form" onclick="startGame('form')">
-        <span class="gm-emoji">✍️</span>
-        <div class="gm-name">اسم الحرف</div>
-        <div class="gm-desc">شاهد الحرف ← اكتب اسمه الكامل</div>
-      </div>
+<!-- 2 ORDER -->
+<div class="sec" id="sec-order">
+  <div class="card">
+    <div class="ct">📋 الحروف الـ٢٨ بالترتيب</div>
+    <div style="text-align:center;color:#6B6B8A;font-size:.85rem;margin-bottom:12px;font-family:'Times New Roman',Times,serif;">الأبجدية العربية تحتوي على <strong>٢٨ حرفاً</strong> — اضغط على أي حرف!</div>
+    <div class="orow" id="OR"></div>
+  </div>
+  <div class="card">
+    <div class="ct">🔡 الحرف وأشكاله</div>
+    <div style="text-align:center;color:#6B6B8A;font-size:.85rem;margin-bottom:12px;font-family:'Times New Roman',Times,serif;">لكل حرف أشكال مختلفة حسب موقعه في الكلمة — اضغط!</div>
+    <div class="ulgrid" id="ULG"></div>
+  </div>
+</div>
+
+<!-- 3 MATCH -->
+<div class="sec" id="sec-match">
+  <div class="card">
+    <div class="ct">🔗 صل الحرف بالصورة!</div>
+    <div class="minstr" id="MINSTR">اضغط على حرف ثم اضغط على الصورة المناسبة! 🎯</div>
+    <div class="mgrid">
+      <div><div class="mct">الحروف</div><div class="mcol" id="ML"></div></div>
+      <div><div class="mct">الصور</div><div class="mcol" id="MP"></div></div>
+    </div>
+    <div class="msr" id="MSR"></div>
+    <div style="text-align:center;margin-top:10px;"><button class="bp blav" onclick="setupMatch()">🔄 جولة جديدة!</button></div>
+  </div>
+</div>
+
+<!-- 4 DRAG SPELL -->
+<div class="sec" id="sec-drag">
+  <div class="card">
+    <div class="ct">✏️ هجّي الكلمة!</div>
+    <div class="dinstr">اسحب الحروف إلى المربّعات الصحيحة! 🧩</div>
+    <div class="deb" id="DE">🍎</div>
+    <div id="DH" style="text-align:center;font-family:'Times New Roman',Times,serif;font-size:.85rem;color:#C0C0D8;letter-spacing:2px;margin-bottom:8px;"></div>
+    <div class="dzones" id="DZ"></div>
+    <div class="dpool" id="DP"></div>
+    <div class="dfb" id="DFB"></div>
+    <div class="dctl">
+      <button class="bp bsun" onclick="dragHint()">💡 تلميح</button>
+      <button class="bp" style="background:#CCC;color:#444" onclick="setupDrag()">🔄 مسح</button>
+      <button class="bp bmint" onclick="nextDW()">⏭ التالي</button>
     </div>
   </div>
 </div>
 
-<!-- ══ GAME SCREEN ══ -->
-<div class="screen" id="gameScreen">
-  <div class="hud-row">
-    <div class="hud-pill coins">🪙 <span id="coinsVal">0</span></div>
-    <div class="mode-tag" id="modeTag">🔊 اسمع واختر</div>
-    <div class="hud-pill streak">🔥 <span id="streakVal">0</span></div>
+<!-- 5 MEMORY -->
+<div class="sec" id="sec-memory">
+  <div class="card">
+    <div class="ct">🃏 لعبة الذاكرة!</div>
+    <div class="meminfo">ابحث عن أزواج الحروف والصور! اضغط على بطاقتين.</div>
+    <div class="memstats">
+      <div class="memstat">🔄 المحاولات: <span id="MT">٠</span></div>
+      <div class="memstat">✅ الأزواج: <span id="MP2">٠</span> / <span id="MTOT">٦</span></div>
+    </div>
+    <div class="memgrid" id="MG"></div>
+    <div style="text-align:center;margin-top:14px;"><button class="bp blav" onclick="setupMemory()">🔄 لعبة جديدة</button></div>
   </div>
+</div>
 
-  <div class="timer-wrap">
-    <div class="timer-track"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
-    <div class="timer-label">
-      <span id="timerLeft">١٥ث</span>
-      <span>⏱️ الوقت</span>
+<!-- 6 SORT -->
+<div class="sec" id="sec-sort">
+  <div class="card">
+    <div class="ct">🔠 صنّف الحروف!</div>
+    <div class="sortinstr">اضغط على حرف ثم ضعه في المجموعة الصحيحة! 🎯</div>
+    <div class="sbucks">
+      <div class="sbuck bv" id="BV" onclick="bucketTap('شمسية')">
+        <div class="bkt" style="color:#FF7B5B">☀️ شمسية<br><small style="font-size:.62rem;font-weight:600">ت ث د ذ ر ز س ش ص ض ط ظ ل ن</small></div>
+        <div class="bki" id="BVI"></div>
+      </div>
+      <div class="sbuck bc" id="BC" onclick="bucketTap('قمرية')">
+        <div class="bkt" style="color:#9B8FD4">🌙 قمرية<br><small style="font-size:.62rem;font-weight:600">أ ب ج ح خ ع غ ف ق ك م ه و ي</small></div>
+        <div class="bki" id="BCI"></div>
+      </div>
     </div>
+    <div class="spool" id="SP"></div>
+    <div class="sfb" id="SFB"></div>
+    <div style="text-align:center;margin-top:12px;"><button class="bp bcoral" onclick="setupSort()">🔄 جولة جديدة</button></div>
   </div>
+</div>
 
-  <div class="q-card">
-    <div class="q-num-badge" id="qBadge">السؤال ١ من ١٠</div>
-
-    <!-- LISTEN -->
-    <div id="listenZone" class="listen-zone" style="display:none;">
-      <button class="listen-btn" id="listenBtn" onclick="speakQuestion()">🔊</button>
-      <div class="listen-hint">انقر 🔊 لتسمع الحرف!</div>
-    </div>
-
-    <!-- SHAPE: see letter, choose its name -->
-    <div id="shapeZone" style="display:none;">
-      <span class="display-letter-big" id="displayLetter">أ</span>
-      <button class="speak-sub-btn" onclick="speakQuestion()">🔊 اسمعه</button>
-    </div>
-
-    <!-- WORD: see emoji, choose starting letter -->
-    <div id="wordZone" style="display:none;">
-      <span class="display-emoji-big" id="wordEmoji">🍎</span>
-      <div class="display-word-hint" id="wordHint">تفاحة</div>
-      <div style="font-size:.82rem;color:var(--muted);font-weight:800;margin-bottom:.3rem;">بأي حرف تبدأ هذه الكلمة؟</div>
-    </div>
-
-    <!-- FORM: see letter, choose full name -->
-    <div id="formZone" style="display:none;">
-      <span class="display-letter-big" id="displayFormLetter">ب</span>
-      <div style="font-size:.82rem;color:var(--muted);font-weight:800;margin-bottom:.3rem;">ما اسم هذا الحرف؟</div>
-      <button class="speak-sub-btn" onclick="speakQuestion()">🔊 اسمعه</button>
-    </div>
-
-    <div class="choices-label">اختر الجواب الصحيح:</div>
-    <div class="choices-grid" id="choicesGrid"></div>
-
-    <div class="fb-bar neutral" id="fbBar">
-      <span class="fb-text" id="fbText">انقر 🔊 أولاً ثم اختر جوابك!</span>
-    </div>
+<!-- 7 FIND MISSING -->
+<div class="sec" id="sec-findmiss">
+  <div class="card">
+    <div class="ct">🔎 الحرف الناقص!</div>
+    <div class="fminstr" id="FMINSTR">حرف مفقود من السلسلة! اضغط على الحرف الصحيح. 🕵️</div>
+    <div class="fmrow" id="FMR"></div>
+    <div style="text-align:center;font-family:'Times New Roman',Times,serif;font-size:.85rem;color:#6B6B8A;margin-bottom:10px;">اختر الحرف الناقص:</div>
+    <div class="fmopts" id="FMOPTS"></div>
+    <div class="fmfb" id="FMFB"></div>
+    <div style="text-align:center;margin-top:12px;"><button class="bp bmint" onclick="setupFindMiss()">🔄 لغز جديد</button></div>
   </div>
+</div>
 
-  <div class="prog-wrap">
-    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
-    <div class="prog-label">
-      <span id="progText">٠ / ١٠</span>
-      <span>التقدّم</span>
+<!-- 8 QUIZ -->
+<div class="sec" id="sec-quiz">
+  <div class="card">
+    <div class="ct">❓ وقت الاختبار!</div>
+    <div class="qctr"><span id="QC">سؤال ١ / ٨</span><span class="qspill" id="QS">⭐ ٠</span></div>
+    <div class="qq" id="QQ">أيّ صورة تبدأ بهذا الحرف؟</div>
+    <div class="ql" id="QL" style="color:#FF7B5B">أ</div>
+    <div class="qopts" id="QOPTS"></div>
+    <div class="qfb" id="QFB"></div>
+    <button class="qnxt" id="QNXT" onclick="nextQ()">التالي ▶</button>
+  </div>
+</div>
+
+<!-- 9 TRACE -->
+<div class="sec" id="sec-trace">
+  <div class="card">
+    <div class="ct">🖊️ تتبّع الحرف!</div>
+    <div class="tinstr">اختر حرفاً ثم ارسمه بإصبعك أو الماوس! 🎨</div>
+    <div class="tsel" id="TSEL"></div>
+    <div class="tcwrap"><canvas class="tc" id="TCV" width="640" height="300"></canvas></div>
+    <div class="tctl">
+      <button class="bp bcoral" onclick="clearTrace()">🗑️ مسح</button>
+      <button class="bp bsun" onclick="toggleGuide()">👁️ دليل</button>
+      <button class="bp bmint" onclick="nextTL()">⏭ الحرف التالي</button>
     </div>
   </div>
 </div>
 
-<!-- ══ RESULT ══ -->
-<div class="screen" id="resultScreen">
-  <div class="gc" style="text-align:center;">
-    <span class="res-trophy" id="resTrophy">🏆</span>
-    <div class="res-title" id="resTitle"></div>
-    <p class="res-msg" id="resMsg"></p>
-    <div class="star-row" id="starRow"></div>
-    <div class="res-stats">
-      <div class="rs-box"><span class="rs-val" id="rsScore">0</span><span class="rs-lbl">نقطة</span></div>
-      <div class="rs-box"><span class="rs-val" id="rsCorrect">0</span><span class="rs-lbl">صحيح</span></div>
-      <div class="rs-box"><span class="rs-val" id="rsCoins">0</span><span class="rs-lbl">عملة</span></div>
-    </div>
-    <div class="res-actions">
-      <button class="ra-btn primary" onclick="retryGame()">🔄 العب مجدداً</button>
-      <button class="ra-btn secondary" onclick="switchTab('game')">🎮 الأوضاع</button>
-      <button class="ra-btn secondary" onclick="switchTab('lesson')">📖 الدرس</button>
+<!-- 10 TAKEAWAY -->
+<div class="sec" id="sec-takeaway">
+  <div class="tkhero">
+    <div style="font-size:2.8rem">🏆</div>
+    <h2>تعلّمت الحروف العربية!</h2>
+    <p style="font-size:.87rem;opacity:.92;font-family:'Times New Roman',Times,serif;">كل ما استكشفته في هذه المغامرة</p>
+  </div>
+  <div class="card">
+    <ul class="tkl">
+      <li style="animation-delay:.05s"><div class="tki">🔤</div><div class="tkt"><strong>٢٨ حرفاً في الأبجدية العربية</strong><span>الأبجدية العربية تحتوي على ٢٨ حرفاً من الألف إلى الياء.</span></div></li>
+      <li style="animation-delay:.10s"><div class="tki">🔡</div><div class="tkt"><strong>أشكال الحرف الأربعة</strong><span>لكل حرف شكل مختلف في أول الكلمة وفي وسطها وفي آخرها وعند الإفراد.</span></div></li>
+      <li style="animation-delay:.15s"><div class="tki">☀️</div><div class="tkt"><strong>الحروف الشمسية (١٤ حرفاً)</strong><span>هي الحروف التي تُدغم فيها لام التعريف مثل: الشمس ← الشَّمس.</span></div></li>
+      <li style="animation-delay:.20s"><div class="tki">🌙</div><div class="tkt"><strong>الحروف القمرية (١٤ حرفاً)</strong><span>هي الحروف التي تظهر معها لام التعريف مثل: القمر ← الْقمر.</span></div></li>
+      <li style="animation-delay:.25s"><div class="tki">🍎</div><div class="tkt"><strong>الحروف تصنع الكلمات</strong><span>عندما تجمع الحروف بالترتيب الصحيح تحصل على كلمات مثل: كتاب، باب، نجم!</span></div></li>
+      <li style="animation-delay:.30s"><div class="tki">🃏</div><div class="tkt"><strong>صل وهجّي وصنّف وتتبّع!</strong><span>التدريب يجعلك بطلاً — العب جميع الألعاب لتتقن الحروف!</span></div></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="cert">
+      <div class="certttl">🏅 شهادتي في الحروف</div>
+      <p style="color:#6B6B8A;font-size:.85rem;margin-top:6px;font-family:'Times New Roman',Times,serif;">أدخل اسمك لتحصل على شهادتك!</p>
+      <input class="cinput" type="text" id="CI" placeholder="✨ اكتب اسمك هنا" maxlength="30"/>
+      <button class="bp blav" onclick="genCert()" style="display:block;margin:0 auto">🎓 احصل على شهادتي!</button>
+      <div class="cres" id="CR">
+        <div style="font-size:2.7rem">🏆✨</div>
+        <div style="font-family:'Times New Roman',Times,serif;font-size:1.25rem;font-weight:900;color:#FF7B5B" id="CN"></div>
+        <div style="font-size:.8rem;color:#6B6B8A;margin-top:6px;font-family:'Times New Roman',Times,serif">لقد استكشفت جميع الحروف الأبجدية العربية الـ٢٨!<br>بقلم المعلمة <strong>منال بزي</strong> 👩‍🏫</div>
+      </div>
     </div>
   </div>
 </div>
 
-</main>
-
-<div class="teacher-badge">👩‍🏫 المعلمة منال بزي</div>
+</div>
+<footer>🍎 بإشراف المعلمة <span>منال بزي</span> · مغامرة الحروف العربية</footer>
 
 <script>
-// ══════════════════════════════════════
-//  ARABIC LETTERS DATA (28 letters)
-// ══════════════════════════════════════
-const LETTERS = [
-  { letter:'أ', name:'أَلِف',  word:'أَسَد',    wordEn:'Lion',     emoji:'🦁' },
-  { letter:'ب', name:'باء',   word:'بَيت',     wordEn:'House',    emoji:'🏠' },
-  { letter:'ت', name:'تاء',   word:'تُفّاحة',  wordEn:'Apple',    emoji:'🍎' },
-  { letter:'ث', name:'ثاء',   word:'ثَعلَب',   wordEn:'Fox',      emoji:'🦊' },
-  { letter:'ج', name:'جيم',   word:'جَمَل',    wordEn:'Camel',    emoji:'🐪' },
-  { letter:'ح', name:'حاء',   word:'حِصان',    wordEn:'Horse',    emoji:'🐴' },
-  { letter:'خ', name:'خاء',   word:'خَروف',    wordEn:'Lamb',     emoji:'🐑' },
-  { letter:'د', name:'دال',   word:'دُبّ',     wordEn:'Bear',     emoji:'🐻' },
-  { letter:'ذ', name:'ذال',   word:'ذِئب',     wordEn:'Wolf',     emoji:'🐺' },
-  { letter:'ر', name:'راء',   word:'رُمّان',   wordEn:'Pomegranate',emoji:'🍎' },
-  { letter:'ز', name:'زاي',   word:'زَهرة',    wordEn:'Flower',   emoji:'🌸' },
-  { letter:'س', name:'سين',   word:'سَمَكة',   wordEn:'Fish',     emoji:'🐟' },
-  { letter:'ش', name:'شين',   word:'شَمس',     wordEn:'Sun',      emoji:'☀️' },
-  { letter:'ص', name:'صاد',   word:'صَقر',     wordEn:'Falcon',   emoji:'🦅' },
-  { letter:'ض', name:'ضاد',   word:'ضِفدَع',   wordEn:'Frog',     emoji:'🐸' },
-  { letter:'ط', name:'طاء',   word:'طائِرة',   wordEn:'Airplane', emoji:'✈️' },
-  { letter:'ظ', name:'ظاء',   word:'ظَبي',     wordEn:'Gazelle',  emoji:'🦌' },
-  { letter:'ع', name:'عين',   word:'عَصفور',   wordEn:'Bird',     emoji:'🐦' },
-  { letter:'غ', name:'غين',   word:'غَيمة',    wordEn:'Cloud',    emoji:'☁️' },
-  { letter:'ف', name:'فاء',   word:'فَراشة',   wordEn:'Butterfly',emoji:'🦋' },
-  { letter:'ق', name:'قاف',   word:'قِطّة',    wordEn:'Cat',      emoji:'🐱' },
-  { letter:'ك', name:'كاف',   word:'كِتاب',    wordEn:'Book',     emoji:'📚' },
-  { letter:'ل', name:'لام',   word:'لَيمون',   wordEn:'Lemon',    emoji:'🍋' },
-  { letter:'م', name:'ميم',   word:'مَدرَسة',  wordEn:'School',   emoji:'🏫' },
-  { letter:'ن', name:'نون',   word:'نَجمة',    wordEn:'Star',     emoji:'⭐' },
-  { letter:'ه', name:'هاء',   word:'هِلال',    wordEn:'Crescent', emoji:'🌙' },
-  { letter:'و', name:'واو',   word:'وَردة',    wordEn:'Rose',     emoji:'🌹' },
-  { letter:'ي', name:'ياء',   word:'يَمامة',   wordEn:'Dove',     emoji:'🕊️' }
+// ===== DATA =====
+const ABC = [
+  {L:'أ', w:'أسد',    e:'🦁', forms:['أ','أ','ـأ','ـأ'], pos:'الهمزة والألف'},
+  {L:'ب', w:'بطّة',   e:'🦆', forms:['بـ','ـبـ','ـب','ب'],  pos:''},
+  {L:'ت', w:'تفاحة', e:'🍎', forms:['تـ','ـتـ','ـت','ت'],  pos:''},
+  {L:'ث', w:'ثعلب',  e:'🦊', forms:['ثـ','ـثـ','ـث','ث'],  pos:''},
+  {L:'ج', w:'جمل',   e:'🐪', forms:['جـ','ـجـ','ـج','ج'],  pos:''},
+  {L:'ح', w:'حصان',  e:'🐴', forms:['حـ','ـحـ','ـح','ح'],  pos:''},
+  {L:'خ', w:'خروف',  e:'🐑', forms:['خـ','ـخـ','ـخ','خ'],  pos:''},
+  {L:'د', w:'دجاجة', e:'🐔', forms:['د','ـد','ـد','د'],   pos:''},
+  {L:'ذ', w:'ذئب',   e:'🐺', forms:['ذ','ـذ','ـذ','ذ'],   pos:''},
+  {L:'ر', w:'ربيع',  e:'🌸', forms:['ر','ـر','ـر','ر'],   pos:''},
+  {L:'ز', w:'زهرة',  e:'🌺', forms:['ز','ـز','ـز','ز'],   pos:''},
+  {L:'س', w:'سمكة',  e:'🐟', forms:['سـ','ـسـ','ـس','س'],  pos:''},
+  {L:'ش', w:'شمس',   e:'☀️', forms:['شـ','ـشـ','ـش','ش'],  pos:''},
+  {L:'ص', w:'صقر',   e:'🦅', forms:['صـ','ـصـ','ـص','ص'],  pos:''},
+  {L:'ض', w:'ضفدع',  e:'🐸', forms:['ضـ','ـضـ','ـض','ض'],  pos:''},
+  {L:'ط', w:'طائر',  e:'🐦', forms:['طـ','ـطـ','ـط','ط'],  pos:''},
+  {L:'ظ', w:'ظبي',   e:'🦌', forms:['ظـ','ـظـ','ـظ','ظ'],  pos:''},
+  {L:'ع', w:'عصفور', e:'🐧', forms:['عـ','ـعـ','ـع','ع'],  pos:''},
+  {L:'غ', w:'غيمة',  e:'☁️', forms:['غـ','ـغـ','ـغ','غ'],  pos:''},
+  {L:'ف', w:'فيل',   e:'🐘', forms:['فـ','ـفـ','ـف','ف'],  pos:''},
+  {L:'ق', w:'قطّة',  e:'🐱', forms:['قـ','ـقـ','ـق','ق'],  pos:''},
+  {L:'ك', w:'كلب',   e:'🐶', forms:['كـ','ـكـ','ـك','ك'],  pos:''},
+  {L:'ل', w:'ليمون', e:'🍋', forms:['لـ','ـلـ','ـل','ل'],  pos:''},
+  {L:'م', w:'مانجو', e:'🥭', forms:['مـ','ـمـ','ـم','م'],  pos:''},
+  {L:'ن', w:'نجمة',  e:'⭐', forms:['نـ','ـنـ','ـن','ن'],  pos:''},
+  {L:'ه', w:'هلال',  e:'🌙', forms:['هـ','ـهـ','ـه','ه'],  pos:''},
+  {L:'و', w:'وردة',  e:'🌹', forms:['و','ـو','ـو','و'],   pos:''},
+  {L:'ي', w:'يمامة', e:'🕊️', forms:['يـ','ـيـ','ـي','ي'],  pos:''}
 ];
+// Shamsiyya (solar) letters — assimilate lam
+const SHAMS = new Set(['ت','ث','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ل','ن']);
+// Simple 3-letter Arabic words for spelling
+const DW = [
+  {word:['ك','ت','ب'], e:'📚', label:'كتب'},
+  {word:['ب','ا','ب'], e:'🚪', label:'باب'},
+  {word:['ق','م','ر'], e:'🌙', label:'قمر'},
+  {word:['ن','ج','م'], e:'⭐', label:'نجم'},
+  {word:['ب','ي','ت'], e:'🏠', label:'بيت'},
+  {word:['ك','ل','ب'], e:'🐶', label:'كلب'},
+  {word:['ح','ص','ن'], e:'🐴', label:'حصن'},
+  {word:['ج','م','ل'], e:'🐪', label:'جمل'},
+  {word:['ف','ي','ل'], e:'🐘', label:'فيل'},
+  {word:['ش','م','س'], e:'☀️', label:'شمس'},
+];
+const CL=['c0','c1','c2','c3','c4','c5'];
+const TC=['t0','t1','t2','t3','t4','t5'];
+const BGS=['bg0','bg1','bg2','bg3','bg4','bg5'];
+const COLORS=['#FF7B5B','#9B8FD4','#5EC4A0','#E6A000','#FF8CB3','#56CCF2'];
+const toArabicNum = n => n.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+function shuf(a){return[...a].sort(()=>Math.random()-.5);}
 
-const ARAB=['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
-function toAr(n){ return String(n).split('').map(d=>ARAB[+d]).join(''); }
-function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
-
-// ══════════════════════════════════════
-//  SPEECH (Arabic TTS – robust)
-// ══════════════════════════════════════
-const speechAvailable = 'speechSynthesis' in window;
-
-document.addEventListener('click', function unlockAudio(){
-  if(speechAvailable){
-    const u = new SpeechSynthesisUtterance('');
-    window.speechSynthesis.speak(u);
-  }
-  document.removeEventListener('click', unlockAudio);
-}, { once: true });
-
-function getVoices(){ return speechAvailable ? window.speechSynthesis.getVoices() : []; }
-
-function speakAr(text, onEnd){
-  if(!speechAvailable){ if(onEnd) onEnd(); return; }
-  window.speechSynthesis.cancel();
-
-  function doSpeak(){
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = 'ar-SA';
-    utt.rate = 0.75;
-    utt.pitch = 1.05;
-    utt.volume = 1;
-
-    const all = getVoices();
-    const arVoice =
-      all.find(v=>v.lang==='ar-SA') ||
-      all.find(v=>v.lang==='ar-EG') ||
-      all.find(v=>v.lang.startsWith('ar')) ||
-      null;
-    if(arVoice) utt.voice = arVoice;
-
-    if(onEnd) utt.onend = onEnd;
-    setTimeout(()=> window.speechSynthesis.speak(utt), 80);
-  }
-
-  const vv = getVoices();
-  if(vv.length === 0){
-    window.speechSynthesis.onvoiceschanged = function(){
-      window.speechSynthesis.onvoiceschanged = null;
-      doSpeak();
-    };
-  } else {
-    doSpeak();
-  }
+// NAV
+function S(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+  if(id==='order')renderOrder();
+  if(id==='match')setupMatch();
+  if(id==='drag')setupDrag();
+  if(id==='memory')setupMemory();
+  if(id==='sort')setupSort();
+  if(id==='findmiss')setupFindMiss();
+  if(id==='quiz')setupQuiz();
+  if(id==='trace')initTrace();
 }
 
-// ══════════════════════════════════════
-//  BUILD LESSON GRID
-// ══════════════════════════════════════
-const COLORS=['#059669','#2563EB','#7C3AED','#0891B2','#D97706','#EA580C',
-  '#DB2777','#4F46E5','#065F46','#1E40AF','#6B21A8','#0E7490',
-  '#92400E','#7C2D12','#15803D','#1D4ED8','#5B21B6','#0C4A6E',
-  '#166534','#1E3A8A','#4C1D95','#164E63','#78350F','#991B1B',
-  '#14532D','#1E3A8A','#3B0764','#064E3B'];
-
-function buildGrid(){
-  const grid = document.getElementById('arabicGrid');
-  LETTERS.forEach(function(l, i){
-    const card = document.createElement('div');
-    card.className = 'ar-card';
-    const col = COLORS[i % COLORS.length];
-    card.innerHTML =
-      '<span class="ar-letter" style="color:'+col+'">'+l.letter+'</span>'+
-      '<span class="ar-name" style="color:'+col+'">'+l.name+'</span>'+
-      '<span class="ar-word">'+l.emoji+' '+l.word+'</span>';
-    card.onclick = function(){
-      document.querySelectorAll('.ar-card').forEach(c=>c.classList.remove('speaking'));
-      card.classList.add('speaking');
-      speakAr(l.name + ' ... ' + l.word, ()=>card.classList.remove('speaking'));
-    };
-    grid.appendChild(card);
+// 1 EXPLORE
+let visited=new Set();
+function renderExplore(){
+  const g=document.getElementById('AG');g.innerHTML='';
+  ABC.forEach((d,i)=>{
+    const t=document.createElement('div');
+    t.className='lt '+CL[i%6];t.id='T'+i;
+    t.innerHTML=`<span class="ltb">${d.L}</span><span class="lts">${d.w}</span>`;
+    t.onclick=()=>exploreL(d,t,i);g.appendChild(t);
   });
 }
-buildGrid();
-
-// ══════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════
-let playerName='طالب', coins=0, streak=0;
-let currentMode='listen', questions=[], qIdx=0;
-let timeLeft=15, maxTime=15, timerInt=null;
-let sessionScore=0, sessionCorrect=0, sessionCoins=0;
-let questionLocked=false, gameEnded=false;
-let currentQ=null;
-
-// ══════════════════════════════════════
-//  SCREENS & TABS
-// ══════════════════════════════════════
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-function switchTab(tab){
-  document.getElementById('tabLesson').classList.toggle('active', tab==='lesson');
-  document.getElementById('tabGame').classList.toggle('active', tab==='game');
-  clearInterval(timerInt);
-  if(tab==='lesson') showScreen('lessonScreen');
-  else showScreen('gameSelectScreen');
+function exploreL(d,tile,i){
+  document.querySelectorAll('.lt').forEach(t=>t.classList.remove('atile'));
+  tile.classList.add('atile','vis');visited.add(d.L);
+  const isS=SHAMS.has(d.L);
+  const p=document.getElementById('LP');
+  p.className='lp '+BGS[i%6];
+  p.innerHTML=`
+    <div class="lpl ${TC[i%6]}">${d.L}</div>
+    <div class="lpe">${d.e}</div>
+    <div class="lpw ${TC[i%6]}">${d.L} كما في كلمة: ${d.w}</div>
+    <div><span class="lpb" style="background:${isS?'#FFF0ED':'#F0EEFF'};color:${isS?'#FF7B5B':'#9B8FD4'}">${isS?'☀️ حرف شمسي':'🌙 حرف قمري'}</span></div>
+    <div class="lpforms">
+      ${['في البداية','في الوسط','في النهاية','منفرد'].map((pos,pi)=>`
+        <div class="form-pill">
+          <span class="fl ${TC[i%6]}">${d.forms[pi]}</span>
+          <span class="fn">${pos}</span>
+        </div>`).join('')}
+    </div>`;
+  const pct=Math.round(visited.size/28*100);
+  document.getElementById('PF').style.width=pct+'%';
+  document.getElementById('PL').textContent=toArabicNum(visited.size)+' / ٢٨ حرف تمّ استكشافه';
+  if(visited.size===28){pop('🎊','استكشفت جميع الحروف الـ٢٨!');confetti();}
 }
 
-// ══════════════════════════════════════
-//  GAME START
-// ══════════════════════════════════════
-const MODE_LABELS = {
-  listen:'🔊 اسمع واختر',
-  shape: '🔤 شاهد وسمِّ',
-  word:  '🖼️ صورة وحرف',
-  form:  '✍️ اسم الحرف'
-};
-const MODE_TIME = { listen:15, shape:12, word:14, form:12 };
-
-function startGame(mode){
-  currentMode = mode;
-  playerName = document.getElementById('studentName').value.trim() || 'طالب';
-  const pool = shuffle([...Array(28).keys()]).slice(0,10);
-  questions = pool.map(i=>({ idx:i }));
-  qIdx=0; sessionScore=0; sessionCorrect=0; sessionCoins=0;
-  streak=0; gameEnded=false; coins=0;
-  maxTime = MODE_TIME[mode];
-  document.getElementById('coinsVal').textContent=0;
-  document.getElementById('streakVal').textContent=0;
-  document.getElementById('modeTag').textContent=MODE_LABELS[mode];
-  showScreen('gameScreen');
-  loadQ();
-}
-
-function updateProg(){
-  const pct = qIdx/questions.length*100;
-  document.getElementById('progFill').style.width=pct+'%';
-  document.getElementById('progText').textContent=toAr(qIdx)+' / '+toAr(questions.length);
-}
-
-function getWrongIdxs(correct, count){
-  return shuffle([...Array(28).keys()].filter(i=>i!==correct)).slice(0, count);
-}
-
-// ══════════════════════════════════════
-//  LOAD QUESTION
-// ══════════════════════════════════════
-function loadQ(){
-  if(qIdx >= questions.length){ endGame(); return; }
-  questionLocked = false;
-  currentQ = questions[qIdx];
-  const li = currentQ.idx;
-  const L = LETTERS[li];
-  const wrongs = getWrongIdxs(li, 3);
-
-  document.getElementById('qBadge').textContent = 'السؤال '+toAr(qIdx+1)+' من '+toAr(questions.length);
-
-  ['listenZone','shapeZone','wordZone','formZone'].forEach(id=>{
-    document.getElementById(id).style.display='none';
+// 2 ORDER
+function renderOrder(){
+  const r=document.getElementById('OR');r.innerHTML='';
+  ABC.forEach((d,i)=>{
+    const t=document.createElement('div');
+    t.className='ot '+CL[i%6];t.textContent=d.L;
+    t.onclick=()=>pop(d.e,d.L+' — '+d.w);r.appendChild(t);
   });
-  const lb = document.getElementById('listenBtn');
-  lb.classList.remove('speaking');
-  lb.textContent='🔊';
-
-  const grid = document.getElementById('choicesGrid');
-  grid.innerHTML='';
-
-  if(currentMode==='listen'){
-    // hear name → pick letter shape
-    document.getElementById('listenZone').style.display='flex';
-    setFb('neutral','انقر 🔊 لتسمع الحرف!');
-    const choices = shuffle([li,...wrongs]);
-    choices.forEach(ci=>{
-      const btn = mkBtn(LETTERS[ci].letter, LETTERS[ci].name, String(ci));
-      btn.style.fontSize='2.4rem';
-      grid.appendChild(btn);
-    });
-    setTimeout(speakQuestion, 400);
-  }
-  else if(currentMode==='shape'){
-    // see letter → pick its name
-    document.getElementById('shapeZone').style.display='block';
-    document.getElementById('displayLetter').textContent = L.letter;
-    setFb('neutral','ما اسم هذا الحرف؟');
-    const choices = shuffle([li,...wrongs]);
-    choices.forEach(ci=>{
-      const btn = mkBtn(LETTERS[ci].name, LETTERS[ci].letter, String(ci));
-      btn.style.fontSize='1.2rem';
-      grid.appendChild(btn);
-    });
-    setTimeout(speakQuestion, 300);
-  }
-  else if(currentMode==='word'){
-    // see emoji+word → pick first letter
-    document.getElementById('wordZone').style.display='block';
-    document.getElementById('wordEmoji').textContent = L.emoji;
-    document.getElementById('wordHint').textContent = L.word;
-    setFb('neutral','بأي حرف تبدأ هذه الكلمة؟');
-    const choices = shuffle([li,...wrongs]);
-    choices.forEach(ci=>{
-      const btn = mkBtn(LETTERS[ci].letter, LETTERS[ci].name, String(ci));
-      btn.style.fontSize='2.4rem';
-      grid.appendChild(btn);
-    });
-    speakAr(L.word);
-  }
-  else if(currentMode==='form'){
-    // see letter → pick full name
-    document.getElementById('formZone').style.display='block';
-    document.getElementById('displayFormLetter').textContent = L.letter;
-    setFb('neutral','ما الاسم الكامل لهذا الحرف؟');
-    const choices = shuffle([li,...wrongs]);
-    choices.forEach(ci=>{
-      const btn = mkBtn(LETTERS[ci].name, LETTERS[ci].letter, String(ci));
-      btn.style.fontSize='1.15rem';
-      grid.appendChild(btn);
-    });
-    setTimeout(speakQuestion, 300);
-  }
-
-  updateProg();
-  startTimer();
-}
-
-function mkBtn(main, sub, val){
-  const btn = document.createElement('button');
-  btn.className = 'ch-btn';
-  btn.innerHTML = '<span>'+main+'</span><span class="ch-sub">'+sub+'</span>';
-  btn.setAttribute('data-val', val);
-  btn.addEventListener('click', ()=>handleAnswer(btn));
-  return btn;
-}
-
-// ══════════════════════════════════════
-//  SPEAK QUESTION
-// ══════════════════════════════════════
-function speakQuestion(){
-  if(!currentQ) return;
-  const L = LETTERS[currentQ.idx];
-  const lb = document.getElementById('listenBtn');
-  lb.classList.add('speaking');
-  speakAr(L.name, ()=>{ lb.classList.remove('speaking'); lb.textContent='🔊'; });
-}
-
-// ══════════════════════════════════════
-//  HANDLE ANSWER
-// ══════════════════════════════════════
-function handleAnswer(btn){
-  if(questionLocked) return;
-  questionLocked = true;
-  clearInterval(timerInt);
-  const li = currentQ.idx;
-  const L = LETTERS[li];
-  const val = parseInt(btn.getAttribute('data-val'));
-  const correct = (val === li);
-
-  if(correct){
-    btn.classList.add('correct');
-    streak++; sessionCorrect++;
-    document.getElementById('streakVal').textContent = streak;
-    const bonus = streak>=3 ? 5 : 0;
-    const spBonus = timeLeft>maxTime*.6 ? 5 : timeLeft>maxTime*.3 ? 2 : 0;
-    const earned = 10+bonus+spBonus;
-    coins+=earned; sessionCoins+=earned; sessionScore+=earned;
-    document.getElementById('coinsVal').textContent=coins;
-    setFb('ok','🎉 صحيح! '+L.letter+' — '+L.name+' — '+L.emoji+' '+L.word);
-    showScorePop('+'+toAr(earned)+'🪙', true);
-    launchConfetti(8);
-    playSoundCorrect();
-    speakAr(L.name + ' ... ' + L.word);
-  } else {
-    btn.classList.add('wrong');
-    streak=0; document.getElementById('streakVal').textContent=0;
-    setFb('bad','❌ الجواب هو '+L.letter+' — '+L.name+' — '+L.emoji+' '+L.word);
-    document.querySelectorAll('#choicesGrid .ch-btn').forEach(b=>{
-      if(parseInt(b.getAttribute('data-val'))===li) b.classList.add('correct');
-    });
-    playSoundWrong();
-    speakAr(L.name + ' ... ' + L.word);
-  }
-  document.querySelectorAll('#choicesGrid .ch-btn').forEach(b=>b.disabled=true);
-  setTimeout(()=>{ qIdx++; loadQ(); }, 1600);
-}
-
-// ══════════════════════════════════════
-//  TIMER
-// ══════════════════════════════════════
-function startTimer(){
-  clearInterval(timerInt);
-  timeLeft=maxTime;
-  updateTimerUI();
-  timerInt=setInterval(()=>{
-    timeLeft--;
-    updateTimerUI();
-    if(timeLeft<=0){ clearInterval(timerInt); if(!questionLocked) timeOut(); }
-  },1000);
-}
-function updateTimerUI(){
-  const p=timeLeft/maxTime;
-  document.getElementById('timerFill').style.width=(p*100)+'%';
-  document.getElementById('timerFill').style.background=
-    p>.5?'linear-gradient(90deg,#059669,#0891B2)':
-    p>.25?'linear-gradient(90deg,#EA580C,#D97706)':
-          'linear-gradient(90deg,#DC2626,#EA580C)';
-  document.getElementById('timerLeft').textContent=toAr(timeLeft)+'ث';
-}
-function timeOut(){
-  if(questionLocked) return;
-  questionLocked=true;
-  const L=LETTERS[currentQ.idx];
-  setFb('bad','⏱️ انتهى الوقت! الجواب هو '+L.letter+' — '+L.name);
-  document.querySelectorAll('#choicesGrid .ch-btn').forEach(b=>{
-    if(parseInt(b.getAttribute('data-val'))===currentQ.idx) b.classList.add('correct');
-    b.disabled=true;
+  const g=document.getElementById('ULG');g.innerHTML='';
+  ABC.forEach((d,i)=>{
+    const c=document.createElement('div');c.className='ulc';
+    c.innerHTML=`<div class="ulb ${TC[i%6]}">${d.L}</div>
+      <div class="ule">${d.e}</div>
+      <div class="ulnames">${d.forms.join(' | ')}</div>`;
+    c.onclick=()=>pop(d.e,d.L+' — '+d.w);g.appendChild(c);
   });
-  streak=0; document.getElementById('streakVal').textContent=0;
-  playSoundWrong();
-  speakAr(L.name);
-  setTimeout(()=>{ qIdx++; loadQ(); },2000);
 }
 
-// ══════════════════════════════════════
-//  FEEDBACK
-// ══════════════════════════════════════
-function setFb(type, text){
-  const fb=document.getElementById('fbBar');
-  fb.className='fb-bar '+type;
-  document.getElementById('fbText').textContent=text;
+// 3 MATCH
+let mSel=null;
+function setupMatch(){
+  mSel=null;
+  document.getElementById('MINSTR').textContent='اضغط على حرف ثم اضغط على الصورة المناسبة! 🎯';
+  document.getElementById('MSR').textContent='';
+  const ch=shuf(ABC).slice(0,4),pics=shuf(ch);
+  const lc=document.getElementById('ML');lc.innerHTML='';
+  const pc=document.getElementById('MP');pc.innerHTML='';
+  ch.forEach((d,i)=>{
+    const el=document.createElement('div');el.className='mi';el.dataset.l=d.L;
+    el.innerHTML=`<span style="font-family:'Times New Roman',Times,serif;font-size:2rem;font-weight:900;color:${COLORS[i]}">${d.L}</span>`;
+    el.onclick=()=>pickM(el,'l',d.L);lc.appendChild(el);
+  });
+  pics.forEach(d=>{
+    const el=document.createElement('div');el.className='mi';el.dataset.l=d.L;
+    el.innerHTML=`<div style="font-size:1.9rem">${d.e}</div><div style="font-size:.7rem;font-family:'Times New Roman',Times,serif;font-weight:700;color:#6B6B8A">${d.w}</div>`;
+    el.onclick=()=>pickM(el,'p',d.L);pc.appendChild(el);
+  });
 }
-
-// ══════════════════════════════════════
-//  END GAME
-// ══════════════════════════════════════
-function endGame(){
-  if(gameEnded) return; gameEnded=true;
-  clearInterval(timerInt);
-  const pct=sessionCorrect/questions.length;
-  let trophy,title,msg,stars;
-  if(pct===1){
-    trophy='🏆';title='ممتاز يا '+playerName+'!';msg='أجبت على كل الحروف صحيحة! أنت نجم! 🌟';stars='⭐⭐⭐';
-  } else if(pct>=.7){
-    trophy='🥇';title='رائع يا '+playerName+'!';msg='عمل ممتاز! واصل التمرين!';stars='⭐⭐';
-  } else if(pct>=.4){
-    trophy='🥈';title='محاولة جيدة يا '+playerName+'!';msg='استمع للدرس مجدداً وحاول!';stars='⭐';
+function pickM(el,role,letter){
+  if(el.classList.contains('ok'))return;
+  if(!mSel){mSel={el,role,letter};el.classList.add('sel');return;}
+  if(mSel.role===role){mSel.el.classList.remove('sel');el.classList.add('sel');mSel={el,role,letter};return;}
+  const prev=mSel;mSel=null;prev.el.classList.remove('sel');
+  if(prev.letter===letter){
+    prev.el.classList.add('ok');el.classList.add('ok');
+    document.getElementById('MSR').textContent='✅ إجابة صحيحة! أحسنت!';
+    if([...document.querySelectorAll('.mi')].every(x=>x.classList.contains('ok'))){
+      setTimeout(()=>{pop('🌟','ربطت كل الأزواج! رائع!');confetti();},200);
+    }
   } else {
-    trophy='🎯';title='استمر يا '+playerName+'!';msg='راجع الدرس أولاً ثم العب مجدداً!';stars='';
-  }
-  document.getElementById('resTrophy').textContent=trophy;
-  document.getElementById('resTitle').textContent=title;
-  document.getElementById('resMsg').textContent=msg;
-  document.getElementById('starRow').textContent=stars;
-  document.getElementById('rsScore').textContent=toAr(sessionScore);
-  document.getElementById('rsCorrect').textContent=toAr(sessionCorrect)+'/'+toAr(questions.length);
-  document.getElementById('rsCoins').textContent=toAr(sessionCoins);
-  if(pct>=.7){ launchConfetti(25); playSoundWin(); }
-  showScreen('resultScreen');
-}
-function retryGame(){ startGame(currentMode); }
-
-// ══════════════════════════════════════
-//  VFX
-// ══════════════════════════════════════
-function launchConfetti(n){
-  const cols=['#34D399','#A78BFA','#67E8F9','#FCD34D','#F472B6','#FB923C','#60A5FA'];
-  for(let i=0;i<n;i++){
-    const el=document.createElement('div'); el.className='cp';
-    el.style.cssText='left:'+Math.random()*100+'vw;top:-10px;width:'+(7+Math.random()*7)+'px;height:'+(7+Math.random()*7)+'px;background:'+cols[~~(Math.random()*cols.length)]+';animation-duration:'+(1+Math.random()*1.5)+'s;animation-delay:'+Math.random()*.4+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+';';
-    document.body.appendChild(el); setTimeout(()=>el.remove(),2500);
+    prev.el.classList.add('bad');el.classList.add('bad');
+    document.getElementById('MINSTR').textContent='❌ حاول مرة أخرى!';
+    setTimeout(()=>{prev.el.classList.remove('bad');el.classList.remove('bad');document.getElementById('MINSTR').textContent='اضغط على حرف ثم اضغط على الصورة المناسبة! 🎯';},800);
   }
 }
-function showScorePop(txt,good){
-  const el=document.createElement('div'); el.className='sp';
-  el.textContent=txt;
-  el.style.cssText='color:'+(good?'#059669':'#DC2626')+';left:'+(38+Math.random()*24)+'%;top:45%;';
-  document.body.appendChild(el); setTimeout(()=>el.remove(),1100);
+
+// 4 DRAG SPELL
+let dIdx=0,dSt={},tDE=null,tCL2=null,tLT='',tSI='';
+function setupDrag(){
+  const wd=DW[dIdx%DW.length];
+  dSt={letters:wd.word,label:wd.label,e:wd.e,placed:Array(wd.word.length).fill(null),done:false};
+  document.getElementById('DE').textContent=wd.e;
+  document.getElementById('DH').textContent=wd.word.join(' ');
+  document.getElementById('DFB').textContent='';
+  const dz=document.getElementById('DZ');dz.innerHTML='';
+  // RTL: display boxes right to left but index left to right
+  for(let i=0;i<wd.word.length;i++){
+    const z=document.createElement('div');z.className='dz';z.dataset.i=i;
+    z.innerHTML=`<span class="dzn">${toArabicNum(i+1)}</span>`;
+    z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('dov');});
+    z.addEventListener('dragleave',()=>z.classList.remove('dov'));
+    z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('dov');doDrop(+z.dataset.i,e.dataTransfer.getData('L'),e.dataTransfer.getData('SI'));});
+    dz.appendChild(z);
+  }
+  const items=wd.word.map((l,i)=>({l,si:i}));
+  // Add decoy letters
+  shuf(ABC.filter(d=>!wd.word.includes(d.L))).slice(0,2).forEach((d,i)=>items.push({l:d.L,si:100+i}));
+  const pool=shuf(items);
+  const dp=document.getElementById('DP');dp.innerHTML='';
+  pool.forEach((item,i)=>{
+    const t=document.createElement('div');t.className='dtile '+CL[i%6];
+    t.textContent=item.l;t.id='DT'+i;t.dataset.L=item.l;t.dataset.SI=i;t.draggable=true;
+    t.addEventListener('dragstart',e=>{e.dataTransfer.setData('L',item.l);e.dataTransfer.setData('SI',i);t.style.opacity='.4';});
+    t.addEventListener('dragend',()=>t.style.opacity='');
+    t.addEventListener('touchstart',tSt,{passive:false});
+    t.addEventListener('touchmove',tMv,{passive:false});
+    t.addEventListener('touchend',tEn,{passive:false});
+    dp.appendChild(t);
+  });
+}
+function doDrop(zi,letter,si){
+  const s=dSt;if(s.done)return;
+  const ok=s.letters[zi]===letter;
+  const z=document.querySelector(`.dz[data-i="${zi}"]`);
+  z.classList.remove('dok','derr');
+  z.innerHTML=`<span style="font-family:'Times New Roman',Times,serif;font-weight:900">${letter}</span>`;
+  if(ok){
+    z.classList.add('dok');s.placed[zi]=letter;
+    const src=document.getElementById('DT'+si);if(src)src.classList.add('used');
+    if(s.placed.every((p,i)=>p===s.letters[i])){
+      s.done=true;
+      document.getElementById('DFB').innerHTML=`<span style="color:#5EC4A0">🎉 أحسنت! هجّيت كلمة "${s.label}"! ${s.e}</span>`;
+      confetti();pop(s.e,'كلمة '+s.label+' صحيحة!');
+    }
+  } else {
+    z.classList.add('derr');
+    document.getElementById('DFB').innerHTML=`<span style="color:#FF4B6E">❌ جرّب مكاناً آخر!</span>`;
+    setTimeout(()=>{z.classList.remove('derr');z.innerHTML=`<span class="dzn">${toArabicNum(zi+1)}</span>`;s.placed[zi]=null;document.getElementById('DFB').textContent='';},700);
+  }
+}
+function dragHint(){
+  const s=dSt;
+  for(let i=0;i<s.letters.length;i++){
+    if(!s.placed[i]){
+      const z=document.querySelector(`.dz[data-i="${i}"]`);
+      z.innerHTML=`<span style="font-family:'Times New Roman',Times,serif;font-weight:900;color:#FFD166">${s.letters[i]}</span>`;
+      z.classList.add('dok');s.placed[i]=s.letters[i];
+      document.getElementById('DFB').innerHTML=`<span style="color:#FFD166">💡 ${s.letters[i]} يذهب هنا!</span>`;
+      if(s.placed.every((p,i2)=>p===s.letters[i2])){s.done=true;document.getElementById('DFB').innerHTML=`<span style="color:#5EC4A0">🎉 ${s.label}!</span>`;}
+      return;
+    }
+  }
+}
+function nextDW(){dIdx++;setupDrag();}
+function tSt(e){e.preventDefault();tDE=e.currentTarget;tLT=tDE.dataset.L;tSI=tDE.dataset.SI;tCL2=tDE.cloneNode(true);tCL2.style.cssText+='position:fixed;opacity:.85;pointer-events:none;z-index:9999;transform:scale(1.18);';document.body.appendChild(tCL2);const t=e.touches[0];tCL2.style.left=(t.clientX-30)+'px';tCL2.style.top=(t.clientY-30)+'px';}
+function tMv(e){e.preventDefault();if(!tCL2)return;const t=e.touches[0];tCL2.style.left=(t.clientX-30)+'px';tCL2.style.top=(t.clientY-30)+'px';document.querySelectorAll('.dz').forEach(z=>{const r=z.getBoundingClientRect();if(t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom)z.classList.add('dov');else z.classList.remove('dov');});}
+function tEn(e){e.preventDefault();if(tCL2){tCL2.remove();tCL2=null;}document.querySelectorAll('.dz').forEach(z=>z.classList.remove('dov'));if(!tDE)return;const t=e.changedTouches[0];document.querySelectorAll('.dz').forEach(z=>{const r=z.getBoundingClientRect();if(t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom)doDrop(+z.dataset.i,tLT,tSI);});tDE=null;}
+
+// 5 MEMORY
+let mFlip=[],mMat=0,mTries=0,mLock=false;
+function setupMemory(){
+  mFlip=[];mMat=0;mTries=0;mLock=false;
+  const n=6,ch=shuf(ABC).slice(0,n);
+  document.getElementById('MP2').textContent=toArabicNum(0);
+  document.getElementById('MTOT').textContent=toArabicNum(n);
+  document.getElementById('MT').textContent=toArabicNum(0);
+  const cards=[];
+  ch.forEach(d=>{cards.push({id:d.L,type:'L',d});cards.push({id:d.L,type:'E',d});});
+  const g=document.getElementById('MG');g.innerHTML='';
+  shuf(cards).forEach((c)=>{
+    const card=document.createElement('div');card.className='mc';
+    const isS=SHAMS.has(c.d.L);
+    const fg=isS?'linear-gradient(135deg,#FF7B5B,#FF9A80)':'linear-gradient(135deg,#9B8FD4,#B8AFEB)';
+    card.innerHTML=`<div class="mf" style="background:${fg}">❓</div><div class="mb">${c.type==='L'?`<span style="font-family:'Times New Roman',Times,serif;font-weight:900;font-size:clamp(1.5rem,5vw,2.2rem)">${c.d.L}</span>`:c.d.e}</div>`;
+    card.onclick=()=>flipMem(card,c);g.appendChild(card);
+  });
+}
+function flipMem(card,c){
+  if(mLock||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+  card.classList.add('flipped');mFlip.push({card,c});
+  if(mFlip.length===2){
+    mLock=true;mTries++;
+    document.getElementById('MT').textContent=toArabicNum(mTries);
+    const[a,b]=mFlip;
+    if(a.c.id===b.c.id&&a.c.type!==b.c.type){
+      a.card.classList.add('matched');b.card.classList.add('matched');
+      mMat++;document.getElementById('MP2').textContent=toArabicNum(mMat);
+      mFlip=[];mLock=false;
+      if(mMat===+document.getElementById('MTOT').textContent.replace(/[٠-٩]/g,d=>'0123456789'['٠١٢٣٤٥٦٧٨٩'.indexOf(d)]))
+        setTimeout(()=>{pop('🏆','وجدت كل الأزواج!');confetti();},300);
+    } else {
+      a.card.classList.add('wf');b.card.classList.add('wf');
+      setTimeout(()=>{a.card.classList.remove('flipped','wf');b.card.classList.remove('flipped','wf');mFlip=[];mLock=false;},900);
+    }
+  }
 }
 
-// ══════════════════════════════════════
-//  SOUNDS (Web Audio API)
-// ══════════════════════════════════════
-let actx=null;
-function ga(){ if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)(); if(actx.state==='suspended') actx.resume(); return actx; }
-function pt(f,t,d,v,dl){
-  v=v||.25; dl=dl||0;
-  var c=ga(),o=c.createOscillator(),g=c.createGain();
-  o.connect(g); g.connect(c.destination); o.type=t; o.frequency.value=f;
-  g.gain.setValueAtTime(0,c.currentTime+dl);
-  g.gain.linearRampToValueAtTime(v,c.currentTime+dl+.01);
-  g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dl+d);
-  o.start(c.currentTime+dl); o.stop(c.currentTime+dl+d+.05);
+// 6 SORT (Shamsiyya vs Qamariyya)
+let sortSel=null;
+function setupSort(){
+  sortSel=null;
+  document.getElementById('BVI').innerHTML='';document.getElementById('BCI').innerHTML='';
+  document.getElementById('SFB').textContent='';
+  const ch=shuf(ABC).slice(0,10);
+  const sp=document.getElementById('SP');sp.innerHTML='';
+  ch.forEach((d,i)=>{
+    const t=document.createElement('div');t.className='stile '+CL[i%6];t.textContent=d.L;t.dataset.L=d.L;
+    t.onclick=()=>{
+      if(t.classList.contains('used'))return;
+      document.querySelectorAll('.stile').forEach(x=>x.style.boxShadow='');
+      sortSel=d.L;t.style.boxShadow='0 0 0 3px #FFD166';
+      document.getElementById('SFB').innerHTML=`<span style="color:#9B8FD4">اضغط على <strong>شمسي</strong> أو <strong>قمري</strong>!</span>`;
+    };sp.appendChild(t);
+  });
 }
-function playSoundCorrect(){ pt(523,'sine',.12,.25,0);pt(659,'sine',.12,.25,.1);pt(784,'sine',.18,.25,.2); }
-function playSoundWrong(){ pt(280,'sawtooth',.1,.2,0);pt(200,'sawtooth',.14,.18,.11); }
-function playSoundWin(){ [523,659,784,1047,1319].forEach((f,i)=>pt(f,'sine',.2,.25,i*.09)); }
-document.addEventListener('click', function () {
-    ga();
-}, { once: true });
-document.getElementById('studentName').addEventListener('keydown',e=>{ if(e.key==='Enter') switchTab('game'); });
+function bucketTap(type){
+  if(!sortSel)return;
+  const letter=sortSel;sortSel=null;
+  document.querySelectorAll('.stile').forEach(x=>x.style.boxShadow='');
+  placeBucket(letter,type);
+}
+function placeBucket(letter,type){
+  const isS=SHAMS.has(letter);
+  const ok=(isS&&type==='شمسية')||(!isS&&type==='قمرية');
+  const tile=[...document.querySelectorAll('.stile')].find(t=>t.dataset.L===letter&&!t.classList.contains('used'));
+  if(!tile)return;
+  if(ok){
+    tile.classList.add('used');
+    const ch=document.createElement('div');ch.className='bchip '+(isS?'c0':'c1');ch.textContent=letter;
+    document.getElementById(isS?'BVI':'BCI').appendChild(ch);
+    document.getElementById('SFB').innerHTML=`<span style="color:#5EC4A0">✅ صحيح! ${letter} حرف ${isS?'شمسي':'قمري'}!</span>`;
+    if([...document.querySelectorAll('.stile')].every(t=>t.classList.contains('used')))
+      setTimeout(()=>{pop('🌟','صنّفت جميع الحروف!');confetti();},300);
+  } else {
+    tile.style.animation='sh .3s';setTimeout(()=>tile.style.animation='',400);
+    document.getElementById('SFB').innerHTML=`<span style="color:#FF4B6E">❌ ${letter} حرف ${isS?'شمسي':'قمري'} — المربع الآخر!</span>`;
+  }
+}
+
+// 7 FIND MISSING
+let fmBI=-1,fmSeq=[];
+function setupFindMiss(){
+  fmBI=-1;
+  document.getElementById('FMFB').textContent='';
+  document.getElementById('FMINSTR').textContent='حرف مفقود من السلسلة! اضغط على الحرف الصحيح. 🕵️';
+  const start=Math.floor(Math.random()*(28-4));
+  fmSeq=ABC.slice(start,start+5);
+  fmBI=Math.floor(Math.random()*5);
+  const correct=fmSeq[fmBI];
+  const row=document.getElementById('FMR');row.innerHTML='';
+  fmSeq.forEach((d,i)=>{
+    const t=document.createElement('div');
+    if(i===fmBI){
+      t.className='fmtile fmblank';t.textContent='؟';
+      t.style.fontFamily="'Times New Roman',Times,serif";t.style.fontWeight='900';
+    } else {
+      t.className='fmtile '+CL[i%6];t.textContent=d.L;
+    }
+    row.appendChild(t);
+  });
+  const wrongs=shuf(ABC.filter(d=>d.L!==correct.L)).slice(0,3);
+  const opts=shuf([correct,...wrongs]);
+  const oc=document.getElementById('FMOPTS');oc.innerHTML='';
+  opts.forEach((d,i)=>{
+    const b=document.createElement('div');b.className='fmopt '+CL[i%6];b.textContent=d.L;
+    b.onclick=()=>{
+      document.querySelectorAll('.fmopt').forEach(x=>x.style.pointerEvents='none');
+      if(d.L===correct.L){
+        b.classList.add('fmok');
+        document.getElementById('FMFB').innerHTML=`<span style="color:#5EC4A0">🎉 صحيح! الحرف الناقص هو (${correct.L}) كما في كلمة ${correct.w}! ${correct.e}</span>`;
+        const blank=document.querySelector('.fmblank');
+        if(blank){blank.textContent=correct.L;blank.className='fmtile '+CL[fmBI%6];blank.style.animation='pi .35s cubic-bezier(.34,1.56,.64,1)';}
+        confetti();
+      } else {
+        b.classList.add('fmbad');
+        document.getElementById('FMFB').innerHTML=`<span style="color:#FF4B6E">❌ الإجابة الصحيحة هي (${correct.L}) ${correct.e}</span>`;
+        setTimeout(()=>{document.querySelectorAll('.fmopt').forEach(x=>x.style.pointerEvents='');b.classList.remove('fmbad');},800);
+      }
+    };oc.appendChild(b);
+  });
+}
+
+// 8 QUIZ
+let qL=[],qI=0,qS=0;
+function setupQuiz(){
+  qS=0;qI=0;
+  qL=shuf(ABC).slice(0,8).map(d=>{const w=shuf(ABC.filter(x=>x.L!==d.L)).slice(0,3);return{correct:d,opts:shuf([d,...w])};});
+  document.getElementById('QS').textContent='⭐ '+toArabicNum(0);
+  document.getElementById('QNXT').classList.remove('show');showQ();
+}
+function showQ(){
+  if(qI>=qL.length){endQ();return;}
+  const q=qL[qI];const ci=qI%6;
+  document.getElementById('QC').textContent='سؤال '+toArabicNum(qI+1)+' / '+toArabicNum(qL.length);
+  document.getElementById('QQ').textContent='أيّ صورة تبدأ بهذا الحرف؟';
+  const ql=document.getElementById('QL');ql.textContent=q.correct.L;ql.className='ql '+TC[ci];
+  document.getElementById('QFB').textContent='';document.getElementById('QNXT').classList.remove('show');
+  document.getElementById('QNXT').onclick=()=>{qI++;showQ();};
+  const oc=document.getElementById('QOPTS');oc.innerHTML='';
+  q.opts.forEach(opt=>{
+    const b=document.createElement('button');b.className='qo';
+    b.innerHTML=`<span class="qe">${opt.e}</span>${opt.w}`;
+    b.onclick=()=>checkQ(opt,q.correct,oc);oc.appendChild(b);
+  });
+}
+function checkQ(chosen,correct,container){
+  [...container.querySelectorAll('.qo')].forEach(b=>{
+    b.classList.add('dis');
+    if(b.textContent.includes(correct.w))b.classList.add('correct');
+    if(b.textContent.includes(chosen.w)&&chosen.L!==correct.L)b.classList.add('wrong');
+  });
+  if(chosen.L===correct.L){
+    qS++;document.getElementById('QS').textContent='⭐ '+toArabicNum(qS);
+    document.getElementById('QFB').innerHTML=`<span style="color:#5EC4A0">🎉 صحيح! ${correct.L} كما في ${correct.w}!</span>`;
+  } else {
+    document.getElementById('QFB').innerHTML=`<span style="color:#FF4B6E">❌ الإجابة هي ${correct.e} ${correct.w}!</span>`;
+  }
+  document.getElementById('QNXT').classList.add('show');
+}
+function endQ(){
+  const pct=Math.round(qS/qL.length*100);
+  const em=pct===100?'🏆':pct>=70?'🌟':pct>=50?'😊':'💪';
+  document.getElementById('QQ').textContent='انتهى الاختبار! '+em;
+  document.getElementById('QL').textContent=toArabicNum(qS)+'/'+toArabicNum(qL.length);
+  document.getElementById('QOPTS').innerHTML='';
+  document.getElementById('QFB').innerHTML=`<span style="color:#9B8FD4">${toArabicNum(pct)}% صحيح! ${pct===100?'ممتاز!':pct>=70?'أحسنت!':'تدرّب أكثر!'}</span>`;
+  const nb=document.getElementById('QNXT');nb.textContent='🔄 العب مجدداً';nb.classList.add('show');nb.onclick=setupQuiz;
+  if(pct>=70)confetti();
+}
+
+// 9 TRACE
+let tLI=0,showG=true,drawing=false,lx=0,ly=0;
+const TLS_TRACE=['أ','ب','ت','ث','ج','ح','خ','د','ذ','ر'];
+function initTrace(){
+  const sel=document.getElementById('TSEL');
+  if(sel.children.length===0){
+    TLS_TRACE.forEach((l,i)=>{
+      const btn=document.createElement('div');btn.className='tpick '+CL[i%6];btn.textContent=l;btn.dataset.li=i;
+      btn.onclick=()=>{document.querySelectorAll('.tpick').forEach(b=>b.classList.remove('ap'));btn.classList.add('ap');tLI=i;drawGuide();};
+      sel.appendChild(btn);
+    });
+    sel.children[0].classList.add('ap');
+  }
+  setupCanvas();drawGuide();
+}
+function setupCanvas(){
+  const cv=document.getElementById('TCV');
+  const w=cv.parentElement.offsetWidth;cv.width=w;cv.height=Math.round(w*.48);
+  cv.onmousedown=e=>{drawing=true;const r=cv.getBoundingClientRect();lx=e.clientX-r.left;ly=e.clientY-r.top;};
+  cv.onmousemove=e=>{if(!drawing)return;const r=cv.getBoundingClientRect();stroke(e.clientX-r.left,e.clientY-r.top);};
+  cv.onmouseup=cv.onmouseleave=()=>{drawing=false;};
+  cv.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const r=cv.getBoundingClientRect();lx=e.touches[0].clientX-r.left;ly=e.touches[0].clientY-r.top;},{passive:false});
+  cv.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const r=cv.getBoundingClientRect();stroke(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top);},{passive:false});
+  cv.addEventListener('touchend',()=>{drawing=false;},{passive:false});
+}
+function stroke(x,y){
+  const cv=document.getElementById('TCV'),ctx=cv.getContext('2d');
+  ctx.strokeStyle='#FF7B5B';ctx.lineWidth=Math.max(8,cv.width*.024);ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(x,y);ctx.stroke();lx=x;ly=y;
+}
+function drawGuide(){
+  const cv=document.getElementById('TCV'),ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);if(!showG)return;
+  const letter=TLS_TRACE[tLI];
+  const isS=SHAMS.has(letter);
+  ctx.font=`900 ${Math.round(cv.height*.72)}px 'Times New Roman',Times,serif`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle=isS?'rgba(255,123,91,0.13)':'rgba(155,143,212,0.13)';
+  ctx.strokeStyle=isS?'rgba(255,123,91,0.22)':'rgba(155,143,212,0.22)';
+  ctx.lineWidth=3;ctx.fillText(letter,cv.width/2,cv.height/2+5);ctx.strokeText(letter,cv.width/2,cv.height/2+5);
+  ctx.setLineDash([5,5]);ctx.strokeStyle='rgba(180,180,220,0.35)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,cv.height/2);ctx.lineTo(cv.width,cv.height/2);ctx.stroke();ctx.setLineDash([]);
+}
+function clearTrace(){const cv=document.getElementById('TCV');cv.getContext('2d').clearRect(0,0,cv.width,cv.height);drawGuide();}
+function toggleGuide(){showG=!showG;drawGuide();}
+function nextTL(){tLI=(tLI+1)%TLS_TRACE.length;document.querySelectorAll('.tpick').forEach(b=>b.classList.remove('ap'));document.querySelectorAll('.tpick')[tLI].classList.add('ap');clearTrace();}
+
+// CERT
+function genCert(){
+  const name=document.getElementById('CI').value.trim();
+  if(!name){document.getElementById('CI').style.borderColor='#FF4B6E';return;}
+  document.getElementById('CI').style.borderColor='#D0D0E8';
+  document.getElementById('CN').textContent='🎉 مبروك، '+name+'! 🎉';
+  document.getElementById('CR').classList.add('show');confetti();
+}
+
+// POPUP
+function pop(emoji,text){
+  const p=document.getElementById('FP');
+  document.getElementById('FPE').textContent=emoji;document.getElementById('FPT').textContent=text;
+  p.classList.add('show');setTimeout(()=>p.classList.remove('show'),2400);
+}
+
+// CONFETTI
+function confetti(){
+  const cv=document.getElementById('CC'),ctx=cv.getContext('2d');
+  cv.width=window.innerWidth;cv.height=window.innerHeight;
+  const cols=['#FF7B5B','#9B8FD4','#5EC4A0','#FFD166','#FF8CB3','#56CCF2'];
+  const p=Array.from({length:120},()=>({
+    x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.3,
+    w:8+Math.random()*8,h:14+Math.random()*8,
+    color:cols[Math.floor(Math.random()*cols.length)],
+    rot:Math.random()*Math.PI*2,vx:(Math.random()-.5)*3,vy:3+Math.random()*4,vrot:(Math.random()-.5)*.2
+  }));
+  let f=0;
+  (function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    p.forEach(q=>{ctx.save();ctx.translate(q.x,q.y);ctx.rotate(q.rot);ctx.fillStyle=q.color;ctx.fillRect(-q.w/2,-q.h/2,q.w,q.h);ctx.restore();q.x+=q.vx;q.y+=q.vy;q.rot+=q.vrot;q.vy+=.06;});
+    if(++f<130)requestAnimationFrame(draw);else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+// INIT
+renderExplore();renderOrder();setupFindMiss();
 </script>
 </body>
 </html>
