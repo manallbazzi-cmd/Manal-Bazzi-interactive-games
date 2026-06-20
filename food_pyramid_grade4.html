@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Food Pyramid - Grade 4 - Teacher Manal Bazzi</title>
+<style>
+:root{
+  --grains:#F4A261;--veg:#52B788;--fruit:#E76F51;--dairy:#90E0EF;
+  --protein:#C77DFF;--fats:#FF6B6B;
+  --bg:#FFFEF0;--card:#fff;--shadow:0 8px 32px rgba(0,0,0,.10);--radius:20px;
+  --font:'Segoe UI',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:var(--font);background:var(--bg);min-height:100vh;color:#2C2C2C;overflow-x:hidden;}
+
+header{background:linear-gradient(135deg,#F4A261,#52B788,#90E0EF);color:#fff;text-align:center;padding:16px 12px 12px;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.08);border-radius:50%;}
+.ht{font-size:clamp(1.3rem,4.5vw,2rem);font-weight:900;text-shadow:2px 3px 0 rgba(0,0,0,.15);}
+.hs{font-size:.8rem;opacity:.92;margin-top:4px;font-weight:600;}
+.hicons{font-size:1.4rem;margin-top:5px;letter-spacing:4px;}
+
+nav.tabs{display:flex;overflow-x:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:0 4px;gap:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tb{flex:0 0 auto;padding:10px 11px;border:none;background:transparent;font-family:var(--font);font-weight:700;font-size:.68rem;color:#888;cursor:pointer;border-bottom:3px solid transparent;transition:all .25s;white-space:nowrap;}
+.tb.on{color:#F4A261;border-bottom-color:#F4A261;}
+
+.main{max-width:720px;margin:0 auto;padding:14px 12px 90px;}
+.sec{display:none;}.sec.on{display:block;animation:fu .35s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes popIn{from{transform:scale(.3);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes sh{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(244,162,97,.4);}50%{box-shadow:0 0 0 8px rgba(244,162,97,0);}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;}
+.ct{font-size:1rem;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.hint-box{text-align:center;font-weight:700;font-size:.8rem;padding:10px 14px;border-radius:12px;margin-bottom:12px;}
+
+/* ====== INTERACTIVE PYRAMID ====== */
+.pyramid-wrap{position:relative;width:100%;max-width:400px;margin:0 auto 10px;}
+.pyramid-svg{width:100%;display:block;cursor:pointer;}
+.pyr-layer{transition:filter .2s,transform .15s;transform-origin:center;}
+.pyr-layer:hover{filter:brightness(1.12);}
+.pyr-layer.active-l{filter:brightness(1.2) drop-shadow(0 4px 12px rgba(0,0,0,.3));}
+.layer-label{pointer-events:none;}
+
+/* LAYER DETAIL CARD */
+.layer-detail{border-radius:18px;padding:16px;margin-bottom:14px;animation:fu .3s ease;}
+.ld-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.ld-icon{font-size:2.5rem;}
+.ld-title{font-size:1.2rem;font-weight:900;}
+.ld-portion{font-size:.8rem;margin-top:3px;opacity:.85;}
+.food-items{display:flex;flex-wrap:wrap;gap:8px;}
+.food-chip{border-radius:50px;padding:7px 14px;font-size:.78rem;font-weight:900;color:#fff;cursor:pointer;transition:transform .15s;animation:popIn .3s ease;user-select:none;}
+.food-chip:active{transform:scale(1.15);}
+.nutrient-bar{margin-top:12px;}
+.nb-label{font-size:.72rem;font-weight:700;margin-bottom:4px;display:flex;justify-content:space-between;}
+.nb-track{background:#F0F0F0;border-radius:50px;height:10px;overflow:hidden;}
+.nb-fill{height:100%;border-radius:50px;transition:width .6s ease;}
+.fun-fact{border-radius:12px;padding:10px 14px;margin-top:10px;font-size:.78rem;line-height:1.5;font-style:italic;}
+
+/* QUIZ */
+.qbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:700;font-size:.8rem;color:#888;}
+.qscore{background:linear-gradient(135deg,#FFD700,#F4A261);color:#fff;border-radius:50px;padding:4px 14px;}
+.q-q{font-size:clamp(.92rem,3vw,1.15rem);font-weight:900;text-align:center;margin-bottom:10px;line-height:1.4;}
+.q-visual{text-align:center;font-size:3rem;margin:8px 0;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px;}
+.qo{background:#fff;border:3px solid #E8E8F0;border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:var(--font);font-weight:700;font-size:clamp(.78rem,2.8vw,.92rem);}
+.qo:hover{border-color:#F4A261;transform:scale(1.02);}
+.qo.qcor{background:#F0FFF8;border-color:#2ED573;}
+.qo.qwrg{background:#FFF0F2;border-color:#FF4757;}
+.qo.qdis{pointer-events:none;}
+.q-fb{text-align:center;font-size:.9rem;font-weight:700;margin-top:8px;min-height:22px;}
+.q-next{display:none;margin:10px auto 0;background:#F4A261;color:#fff;border:none;border-radius:50px;padding:10px 28px;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;}
+.q-next.show{display:block;animation:fu .3s ease;}
+
+/* DRAG BUILD PLATE */
+.plate-area{display:flex;flex-direction:column;gap:12px;}
+.food-bank{display:flex;flex-wrap:wrap;gap:7px;padding:12px;background:#F5F5FA;border-radius:16px;min-height:54px;}
+.fb-item{padding:8px 14px;border-radius:50px;font-weight:900;font-size:.82rem;cursor:pointer;color:#fff;transition:all .2s;user-select:none;box-shadow:0 3px 10px rgba(0,0,0,.12);}
+.fb-item:active{transform:scale(1.12);}
+.fb-item.used{opacity:.2;pointer-events:none;}
+.fb-item.sel-fb{box-shadow:0 0 0 4px #FFD700;transform:scale(1.08);}
+.my-plate{position:relative;width:220px;height:220px;margin:0 auto;}
+.plate-circle{position:absolute;inset:0;border-radius:50%;border:6px solid #E0E0E0;background:#FAFAFA;display:flex;align-items:center;justify-content:center;}
+.plate-dividers{position:absolute;inset:0;pointer-events:none;}
+.plate-section{position:absolute;border-radius:50%;clip-path:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:.6rem;font-weight:900;text-align:center;}
+.plate-section.dov{filter:brightness(1.15);box-shadow:inset 0 0 0 3px #FFD700;}
+.plate-drop-items{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;padding:4px;}
+.plate-drop-items span{font-size:1rem;}
+.plate-label{position:absolute;font-size:.6rem;font-weight:900;color:#555;pointer-events:none;}
+.plate-fb{text-align:center;font-size:.9rem;font-weight:700;margin-top:10px;min-height:22px;}
+.plate-score{text-align:center;margin-top:8px;font-size:.85rem;color:#888;font-weight:700;}
+
+/* MATCH */
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mcol-t{font-size:.82rem;font-weight:900;text-align:center;margin-bottom:7px;}
+.mitem{border:3px solid #E8E8F0;border-radius:13px;padding:10px 7px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;user-select:none;margin-bottom:7px;font-size:.82rem;font-weight:700;}
+.mitem.sel{border-color:#F4A261;background:#FFF8F0;transform:scale(1.04);}
+.mitem.ok{border-color:#2ED573;background:#F0FFF8;pointer-events:none;animation:popIn .3s ease;}
+.mitem.bad{border-color:#FF4757;background:#FFF0F2;animation:sh .3s;}
+.match-fb{text-align:center;font-size:.9rem;margin-top:8px;min-height:22px;font-weight:700;}
+
+/* MEMORY */
+.mem-stats{display:flex;justify-content:center;gap:14px;margin-bottom:10px;font-weight:700;font-size:.82rem;}
+.mstat{background:#fff;border-radius:50px;padding:4px 14px;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.mcard{aspect-ratio:.9;border-radius:13px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .4s;user-select:none;}
+.mcard.flipped{transform:rotateY(180deg);}
+.mcard.matched{transform:rotateY(180deg);pointer-events:none;}
+.mfront,.mback{position:absolute;inset:0;border-radius:13px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.mfront{font-size:1.4rem;color:#fff;}
+.mback{background:#fff;border:3px solid #E8E8F0;transform:rotateY(180deg);font-size:.72rem;font-weight:900;text-align:center;padding:4px;flex-direction:column;gap:2px;}
+.mback .mb-e{font-size:1.3rem;}
+.mcard.matched .mback{border-color:#2ED573;background:#F0FFF8;}
+.mcard.mwrong .mback{border-color:#FF4757;background:#FFF0F2;}
+
+/* SORT CALORIES */
+.cal-animal{display:flex;flex-direction:column;gap:10px;}
+.cal-item{display:flex;align-items:center;gap:10px;background:#F5F5FA;border-radius:14px;padding:10px 12px;}
+.cal-emoji{font-size:1.8rem;flex-shrink:0;}
+.cal-name{font-weight:700;font-size:.85rem;flex:1;}
+.cal-bar-wrap{flex:2;}
+.cal-bar-bg{background:#E0E0E0;border-radius:50px;height:12px;overflow:hidden;}
+.cal-bar-fill{height:100%;border-radius:50px;transition:width 1s ease;}
+.cal-val{font-size:.75rem;font-weight:900;color:#888;margin-top:2px;}
+
+/* PUZZLE */
+.pz-q{font-size:clamp(.92rem,3vw,1.1rem);font-weight:900;text-align:center;margin-bottom:14px;line-height:1.7;}
+.blank{display:inline-block;min-width:90px;border-bottom:3px solid #F4A261;padding:0 5px;text-align:center;font-weight:900;color:#F4A261;margin:0 4px;vertical-align:bottom;}
+.blank.filled-b{border-color:#2ED573;color:#2ED573;}
+.blank.wrong-b{border-color:#FF4757;color:#FF4757;animation:sh .3s;}
+.pz-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px;}
+.popt{padding:9px 16px;border-radius:50px;font-weight:900;font-size:.85rem;cursor:pointer;color:#fff;transition:all .15s;}
+.popt:active{transform:scale(1.1);}
+.popt.used-p{opacity:.25;pointer-events:none;}
+.pz-fb{text-align:center;font-size:.9rem;font-weight:700;margin-top:10px;min-height:22px;}
+.pz-score{text-align:center;font-size:.82rem;color:#888;margin-bottom:10px;font-weight:700;}
+
+/* HEALTHY/UNHEALTHY SORT */
+.hu-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px;background:#F5F5FA;border-radius:14px;min-height:54px;margin-bottom:12px;}
+.hu-tile{padding:9px 14px;border-radius:50px;font-weight:900;font-size:.85rem;cursor:pointer;transition:all .2s;user-select:none;box-shadow:0 3px 8px rgba(0,0,0,.1);}
+.hu-tile:active{transform:scale(1.12);}
+.hu-tile.used-h{opacity:.2;pointer-events:none;}
+.hu-tile.sel-h{box-shadow:0 0 0 4px #FFD700;transform:scale(1.08);}
+.hu-buckets{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.hu-bucket{border-radius:16px;min-height:90px;padding:10px 8px;border:3px dashed;cursor:pointer;transition:all .2s;}
+.hu-bucket.dov-h{transform:scale(1.04);box-shadow:0 0 0 3px #FFD700;}
+.hu-bt{font-size:.82rem;font-weight:900;text-align:center;margin-bottom:8px;}
+.hu-bi{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:30px;}
+.hu-chip{font-size:.75rem;padding:3px 8px;border-radius:50px;color:#fff;font-weight:700;animation:popIn .25s;}
+.hu-fb{text-align:center;font-size:.9rem;font-weight:700;min-height:22px;}
+
+.cert-wrap{background:linear-gradient(135deg,#FFF8F0,#F0FFF8);border:3px dashed #52B788;border-radius:18px;text-align:center;padding:20px 14px;}
+.cinput{border:2px solid #D0D0E8;border-radius:50px;padding:10px 20px;font-family:var(--font);font-size:1rem;width:100%;max-width:260px;text-align:center;margin:10px auto;outline:none;display:block;}
+.cinput:focus{border-color:#52B788;}
+.cert-result{display:none;margin-top:12px;animation:fu .4s ease;}
+.cert-result.show{display:block;}
+
+.pw{background:#F0F0F5;border-radius:50px;height:9px;margin-top:9px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,#F4A261,#52B788);border-radius:50px;transition:width .4s ease;}
+.pl{font-size:.7rem;color:#aaa;margin-top:3px;}
+
+.cnv{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+.fpop{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) scale(.5);background:#fff;border-radius:20px;padding:16px 26px;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center;z-index:1000;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:85vw;}
+.fpop.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.fpe{font-size:2.2rem;}.fpt{font-size:1rem;margin-top:5px;font-weight:700;}
+.btn{border:none;border-radius:50px;padding:9px 22px;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;color:#fff;transition:transform .15s;}
+.btn:active{transform:scale(.95);}
+footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #F0F0F8;text-align:center;padding:7px;font-size:.7rem;color:#aaa;font-weight:700;z-index:100;}
+footer span{color:#F4A261;}
+</style>
+</head>
+<body>
+<canvas class="cnv" id="CC"></canvas>
+<div class="fpop" id="FP"><div class="fpe" id="FPE">🎉</div><div class="fpt" id="FPT">Amazing!</div></div>
+
+<header>
+  <div class="ht">🍎 Food Pyramid Explorer!</div>
+  <div class="hs">Grade 4 Science · Teacher Manal Bazzi</div>
+  <div class="hicons">🌾 🥦 🍎 🥛 🥩 🧈</div>
+</header>
+
+<nav class="tabs">
+  <button class="tb on" onclick="S('pyramid',this)">🔺 Pyramid</button>
+  <button class="tb"    onclick="S('quiz',this)">❓ Quiz</button>
+  <button class="tb"    onclick="S('plate',this)">🍽️ My Plate</button>
+  <button class="tb"    onclick="S('match',this)">🔗 Match</button>
+  <button class="tb"    onclick="S('memory',this)">🃏 Memory</button>
+  <button class="tb"    onclick="S('puzzle',this)">🧩 Puzzle</button>
+  <button class="tb"    onclick="S('healthy',this)">💚 Healthy?</button>
+  <button class="tb"    onclick="S('nutrients',this)">💊 Nutrients</button>
+  <button class="tb"    onclick="S('summary',this)">🌟 Summary</button>
+</nav>
+
+<div class="main">
+
+<!-- 1. PYRAMID -->
+<div class="sec on" id="sec-pyramid">
+  <div class="card">
+    <div class="ct" style="color:#F4A261">🔺 The Food Pyramid!</div>
+    <div class="hint-box" style="background:#FFF8F0;color:#F4A261">Tap each level to explore that food group! 👆</div>
+    <div class="pyramid-wrap" id="PYR_WRAP"></div>
+    <div id="PYR_DETAIL"></div>
+    <div class="pw"><div class="pf" id="PYR_PF" style="width:0%"></div></div>
+    <div class="pl" id="PYR_PL">0 / 6 food groups explored</div>
+  </div>
+</div>
+
+<!-- 2. QUIZ -->
+<div class="sec" id="sec-quiz">
+  <div class="card">
+    <div class="ct" style="color:#F4A261">❓ Quiz Time!</div>
+    <div class="qbar"><span id="QC">Question 1/10</span><span class="qscore" id="QS">⭐ 0</span></div>
+    <div class="q-q" id="QQ">Loading...</div>
+    <div class="q-visual" id="QV"></div>
+    <div class="q-opts" id="QOPTS"></div>
+    <div class="q-fb" id="QFB"></div>
+    <button class="q-next" id="QNXT">Next ▶</button>
+  </div>
+</div>
+
+<!-- 3. MY PLATE -->
+<div class="sec" id="sec-plate">
+  <div class="card">
+    <div class="ct" style="color:#52B788">🍽️ Build Your Healthy Plate!</div>
+    <div class="hint-box" style="background:#E8F5E9;color:#2E7D32">Tap a food, then tap the correct section on the plate! 🎯</div>
+    <div class="plate-area">
+      <div class="food-bank" id="FOOD_BANK"></div>
+      <div class="my-plate" id="MY_PLATE"></div>
+      <div class="plate-fb" id="PLATE_FB"></div>
+      <div class="plate-score" id="PLATE_SCORE">Correct: 0 / 0</div>
+    </div>
+    <div style="text-align:center;margin-top:10px"><button class="btn" style="background:#52B788" onclick="setupPlate()">🔄 New Plate</button></div>
+  </div>
+</div>
+
+<!-- 4. MATCH -->
+<div class="sec" id="sec-match">
+  <div class="card">
+    <div class="ct" style="color:#C77DFF">🔗 Match Food to Group!</div>
+    <div class="hint-box" style="background:#F3E8FF;color:#C77DFF">Tap a food, then tap its food group! 🎯</div>
+    <div class="match-cols">
+      <div><div class="mcol-t" style="color:#F4A261">🍽️ Food</div><div id="ML"></div></div>
+      <div><div class="mcol-t" style="color:#52B788">📦 Group</div><div id="MR"></div></div>
+    </div>
+    <div class="match-fb" id="MFB"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn" style="background:#C77DFF" onclick="setupMatch()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 5. MEMORY -->
+<div class="sec" id="sec-memory">
+  <div class="card">
+    <div class="ct" style="color:#E76F51">🃏 Memory Game!</div>
+    <div class="hint-box" style="background:#FFF0EC;color:#E76F51">Match each food with its food group!</div>
+    <div class="mem-stats">
+      <div class="mstat">✅ <span id="MM">0</span>/<span id="MTOT">8</span></div>
+      <div class="mstat">🔄 <span id="MTR">0</span> tries</div>
+    </div>
+    <div class="mem-grid" id="MEM_GRID"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn" style="background:#E76F51" onclick="setupMemory()">🔄 New Game</button></div>
+  </div>
+</div>
+
+<!-- 6. PUZZLE -->
+<div class="sec" id="sec-puzzle">
+  <div class="card">
+    <div class="ct" style="color:#52B788">🧩 Fill in the Blanks!</div>
+    <div class="pz-score" id="PZ_SC">Score: 0 / 0</div>
+    <div class="pz-q" id="PZ_Q"></div>
+    <div class="pz-opts" id="PZ_OPTS"></div>
+    <div class="pz-fb" id="PZ_FB"></div>
+    <div style="text-align:center;margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn" style="background:#F4A261" onclick="nextPuzzle()">▶ Next</button>
+      <button class="btn" style="background:#52B788" onclick="setupPuzzle()">🔄 Restart</button>
+    </div>
+  </div>
+</div>
+
+<!-- 7. HEALTHY / UNHEALTHY -->
+<div class="sec" id="sec-healthy">
+  <div class="card">
+    <div class="ct" style="color:#52B788">💚 Healthy or Not?</div>
+    <div class="hint-box" style="background:#E8F5E9;color:#2E7D32">Tap a food, then drop it in the right group!</div>
+    <div class="hu-buckets">
+      <div class="hu-bucket" style="border-color:#2ED573;background:#F0FFF8" onclick="huDrop('healthy')">
+        <div class="hu-bt" style="color:#2E7D32">💚 Healthy</div>
+        <div class="hu-bi" id="HBI_healthy"></div>
+      </div>
+      <div class="hu-bucket" style="border-color:#FF4757;background:#FFF0F2" onclick="huDrop('unhealthy')">
+        <div class="hu-bt" style="color:#FF4757">❌ Unhealthy</div>
+        <div class="hu-bi" id="HBI_unhealthy"></div>
+      </div>
+    </div>
+    <div class="hu-pool" id="HU_POOL"></div>
+    <div class="hu-fb" id="HU_FB"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn" style="background:#52B788" onclick="setupHealthy()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 8. NUTRIENTS -->
+<div class="sec" id="sec-nutrients">
+  <div class="card">
+    <div class="ct" style="color:#90E0EF;-webkit-text-stroke:.5px #555">💊 Nutrients & What They Do!</div>
+    <div id="NUT_CONTENT"></div>
+  </div>
+</div>
+
+<!-- 9. SUMMARY -->
+<div class="sec" id="sec-summary">
+  <div style="text-align:center;padding:20px 12px 14px;background:linear-gradient(135deg,#F4A261,#52B788,#90E0EF);border-radius:18px;color:#fff;margin-bottom:14px">
+    <div style="font-size:2.5rem">🍎</div>
+    <div style="font-size:1.4rem;font-weight:900;margin:7px 0">You Mastered the Food Pyramid!</div>
+    <div style="font-size:.82rem;opacity:.9">6 food groups · healthy eating · nutrients!</div>
+  </div>
+  <div class="card" id="SUM_CONTENT"></div>
+  <div class="card">
+    <div class="cert-wrap">
+      <div style="font-size:1.1rem;font-weight:900;color:#52B788">🏅 My Healthy Eating Certificate</div>
+      <p style="color:#aaa;font-size:.8rem;margin-top:5px">Enter your name to get your certificate!</p>
+      <input class="cinput" type="text" id="CI" placeholder="Your name here ✨" maxlength="30"/>
+      <button class="btn" style="background:#52B788;display:block;margin:0 auto" onclick="genCert()">🎓 Get My Certificate!</button>
+      <div class="cert-result" id="CR">
+        <div style="font-size:2rem">🏆🍎✨</div>
+        <div style="font-size:1.1rem;font-weight:900;color:#F4A261" id="CN"></div>
+        <div style="font-size:.78rem;color:#aaa;margin-top:5px">You mastered the Food Pyramid and healthy eating!<br>Presented by Teacher <strong>Manal Bazzi</strong> 👩‍🏫</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>🍎 Created by Teacher <span>Manal Bazzi</span> · Food Pyramid · Grade 4</footer>
+
+<script>
+/* SOUND */
+const AC=(()=>{try{return new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}})();
+function resume(){if(AC&&AC.state==='suspended')AC.resume();}
+function osc(type,freq,gain,start,dur){if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(freq,start);g.gain.setValueAtTime(gain,start);g.gain.exponentialRampToValueAtTime(0.001,start+dur);o.connect(g);g.connect(AC.destination);o.start(start);o.stop(start+dur+.01);}
+function sndClick(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',660,.1,t,.06);}
+function sndReveal(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',440,.13,t,.08);osc('sine',660,.12,t+.09,.1);osc('triangle',880,.1,t+.18,.14);}
+function sndCorrect(){if(!AC)return;resume();const t=AC.currentTime;[[523,.16],[659,.16],[784,.16],[1047,.2]].forEach(([f,v],i)=>osc('sine',f,v,t+i*.1,.2));[1760,2093].forEach((f,i)=>osc('triangle',f,.05,t+.42+i*.07,.14));}
+function sndWrong(){if(!AC)return;resume();const t=AC.currentTime;osc('sawtooth',180,.18,t,.12);osc('sawtooth',140,.16,t+.1,.15);}
+function sndFlip(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',600,.09,t,.05);}
+function sndMatch(){if(!AC)return;resume();const t=AC.currentTime;[523,659,784].forEach((f,i)=>osc('sine',f,.16,t+i*.09,.18));}
+function sndCelebration(){if(!AC)return;resume();const t=AC.currentTime;[[523,659,784,1047],[587,740,880,1175]].forEach(([a,b,c,d],gi)=>[a,b,c,d].forEach(f=>osc('sine',f,.13,t+gi*.3,.26)));[523,659,784,1047,1568].forEach((f,i)=>osc('square',f,.04,t+.62+i*.07,.14));}
+
+/* DATA */
+const GROUPS = [
+  {
+    id:'fats', name:'Fats & Sweets', icon:'🧈', color:'#FF6B6B', servings:'Use sparingly',
+    desc:'This tiny top of the pyramid! Eat very little. These give energy but have few nutrients.',
+    tip:'⚠️ Sugary drinks, candy, and fried food belong here. Enjoy only as a treat!',
+    foods:[
+      {e:'🍬',n:'Candy'},{e:'🧈',n:'Butter'},{e:'🍟',n:'French Fries'},
+      {e:'🥤',n:'Soda'},{e:'🎂',n:'Cake'},{e:'🍕',n:'Chips'},
+    ],
+    nutrients:'Sugar & Fat',nutrientPct:15,
+    fact:'💡 Too much sugar can cause tooth decay and give you energy "crashes"!',
+  },
+  {
+    id:'dairy', name:'Dairy', icon:'🥛', color:'#90E0EF', servings:'2–3 servings per day',
+    desc:'Milk, cheese and yogurt! These build strong bones and teeth with calcium.',
+    tip:'🥛 One glass of milk, a small yogurt, or 2 slices of cheese = 1 serving.',
+    foods:[
+      {e:'🥛',n:'Milk'},{e:'🧀',n:'Cheese'},{e:'🍦',n:'Yogurt'},
+      {e:'🧆',n:'Cottage Cheese'},{e:'🥤',n:'Milkshake'},{e:'🫙',n:'Kefir'},
+    ],
+    nutrients:'Calcium & Vitamin D',nutrientPct:55,
+    fact:'💡 Calcium makes your bones 99% of their strength! You need it most when young.',
+  },
+  {
+    id:'protein', name:'Protein', icon:'🥩', color:'#C77DFF', servings:'2–3 servings per day',
+    desc:'Meat, fish, eggs, beans and nuts! These build and repair your muscles.',
+    tip:'🥩 A serving is about the size of your palm — chicken, fish, eggs, or lentils.',
+    foods:[
+      {e:'🥚',n:'Eggs'},{e:'🍗',n:'Chicken'},{e:'🐟',n:'Fish'},
+      {e:'🫘',n:'Beans'},{e:'🥜',n:'Nuts'},{e:'🥩',n:'Beef'},
+    ],
+    nutrients:'Protein & Iron',nutrientPct:65,
+    fact:'💡 Your muscles, hair, nails, and skin are all made from protein!',
+  },
+  {
+    id:'fruit', name:'Fruits', icon:'🍎', color:'#E76F51', servings:'2–4 servings per day',
+    desc:'Fresh fruits are full of vitamins and fiber! They boost your immune system.',
+    tip:'🍎 Try to eat the rainbow — different colors mean different vitamins!',
+    foods:[
+      {e:'🍎',n:'Apple'},{e:'🍌',n:'Banana'},{e:'🍊',n:'Orange'},
+      {e:'🍇',n:'Grapes'},{e:'🍓',n:'Strawberry'},{e:'🥭',n:'Mango'},
+    ],
+    nutrients:'Vitamin C & Fiber',nutrientPct:72,
+    fact:'💡 Vitamin C in fruits helps your body heal cuts and fight sickness!',
+  },
+  {
+    id:'veg', name:'Vegetables', icon:'🥦', color:'#52B788', servings:'3–5 servings per day',
+    desc:'The biggest non-grain group! Vegetables have vitamins, minerals and fiber.',
+    tip:'🥦 Fill HALF your plate with vegetables every meal for great health!',
+    foods:[
+      {e:'🥦',n:'Broccoli'},{e:'🥕',n:'Carrot'},{e:'🍅',n:'Tomato'},
+      {e:'🥬',n:'Spinach'},{e:'🌽',n:'Corn'},{e:'🧅',n:'Onion'},
+    ],
+    nutrients:'Vitamins A & K & Fiber',nutrientPct:80,
+    fact:'💡 Eating colorful vegetables every day can lower your risk of getting sick!',
+  },
+  {
+    id:'grains', name:'Grains', icon:'🌾', color:'#F4A261', servings:'6–11 servings per day',
+    desc:'The base and biggest group! Bread, rice, pasta and cereals give you energy all day.',
+    tip:'🌾 Choose WHOLE grains (brown rice, whole wheat bread) over white — more fiber!',
+    foods:[
+      {e:'🍞',n:'Bread'},{e:'🍚',n:'Rice'},{e:'🍝',n:'Pasta'},
+      {e:'🥣',n:'Cereal'},{e:'🫓',n:'Pita'},{e:'🥞',n:'Oats'},
+    ],
+    nutrients:'Carbohydrates & B Vitamins',nutrientPct:90,
+    fact:'💡 Your brain runs on glucose from carbohydrates — you need grains to think clearly!',
+  },
+];
+
+// pyramid order: grains(bottom) → veg → fruit → protein → dairy → fats(top)
+const PYR_ORDER = ['grains','veg','fruit','protein','dairy','fats'];
+const NUTRIENTS = [
+  {name:'Carbohydrates',emoji:'⚡',color:'#F4A261',what:'Main energy source for brain and body.',sources:'Bread, rice, pasta, potatoes, oats.',daily:'45–65% of daily calories.'},
+  {name:'Proteins',emoji:'💪',color:'#C77DFF',what:'Build and repair muscles, skin, hair and nails.',sources:'Meat, fish, eggs, beans, dairy, nuts.',daily:'10–35% of daily calories.'},
+  {name:'Fats',emoji:'🧈',color:'#FF6B6B',what:'Protect organs, absorb vitamins, give long-lasting energy.',sources:'Olive oil, nuts, avocado, butter.',daily:'20–35% of daily calories.'},
+  {name:'Vitamins',emoji:'🌈',color:'#52B788',what:'Help body functions — immunity, eyesight, healing.',sources:'Fruits, vegetables, dairy, eggs.',daily:'Varies per vitamin (A, B, C, D, E, K).'},
+  {name:'Minerals',emoji:'🦴',color:'#90E0EF',what:'Build bones (calcium), carry oxygen (iron), balance fluids.',sources:'Dairy, leafy greens, meat, nuts, seeds.',daily:'Varies: calcium 1000mg, iron 8–18mg.'},
+  {name:'Water',emoji:'💧',color:'#0096C7',what:'Carries nutrients, regulates temperature, flushes toxins.',sources:'Water, fruits, vegetables, soups.',daily:'6–8 glasses (1.5–2 liters) per day.'},
+  {name:'Fiber',emoji:'🌿',color:'#2E7D32',what:'Aids digestion, controls blood sugar, keeps you full.',sources:'Whole grains, fruits, vegetables, beans.',daily:'25g per day for children.'},
+];
+const HEALTHY_FOODS=[
+  {e:'🥦',n:'Broccoli',ok:true,color:'#52B788'},{e:'🍎',n:'Apple',ok:true,color:'#E76F51'},
+  {e:'🥛',n:'Milk',ok:true,color:'#90E0EF'},{e:'🥚',n:'Egg',ok:true,color:'#C77DFF'},
+  {e:'🍞',n:'Whole Wheat Bread',ok:true,color:'#F4A261'},{e:'🐟',n:'Fish',ok:true,color:'#C77DFF'},
+  {e:'🥕',n:'Carrot',ok:true,color:'#F4A261'},{e:'🍇',n:'Grapes',ok:true,color:'#E76F51'},
+  {e:'🍬',n:'Candy',ok:false,color:'#FF6B6B'},{e:'🍟',n:'French Fries',ok:false,color:'#FF6B6B'},
+  {e:'🥤',n:'Soda',ok:false,color:'#FF6B6B'},{e:'🎂',n:'Cake',ok:false,color:'#FF6B6B'},
+  {e:'🍕',n:'Chips',ok:false,color:'#FF6B6B'},{e:'🍦',n:'Ice Cream',ok:false,color:'#FF6B6B'},
+];
+
+function shuf(a){return[...a].sort(()=>Math.random()-.5);}
+function pop(e,t){const p=document.getElementById('FP');document.getElementById('FPE').textContent=e;document.getElementById('FPT').textContent=t;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),2500);}
+function confetti(){
+  const cv=document.getElementById('CC'),ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
+  const c=['#F4A261','#52B788','#E76F51','#90E0EF','#C77DFF','#FFD700','#FF6B6B'];
+  const p=Array.from({length:130},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.3,w:7+Math.random()*9,h:13+Math.random()*9,color:c[Math.floor(Math.random()*c.length)],rot:Math.random()*Math.PI*2,vx:(Math.random()-.5)*3,vy:3+Math.random()*4,vrot:(Math.random()-.5)*.2}));
+  let f=0;(function d(){ctx.clearRect(0,0,cv.width,cv.height);p.forEach(q=>{ctx.save();ctx.translate(q.x,q.y);ctx.rotate(q.rot);ctx.fillStyle=q.color;ctx.fillRect(-q.w/2,-q.h/2,q.w,q.h);ctx.restore();q.x+=q.vx;q.y+=q.vy;q.rot+=q.vrot;q.vy+=.06;});if(++f<140)requestAnimationFrame(d);else ctx.clearRect(0,0,cv.width,cv.height);})();
+}
+
+function S(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');if(btn)btn.classList.add('on');
+  if(id==='quiz')setupQuiz();if(id==='plate')setupPlate();if(id==='match')setupMatch();
+  if(id==='memory')setupMemory();if(id==='puzzle')setupPuzzle();if(id==='healthy')setupHealthy();
+  if(id==='nutrients')renderNutrients();if(id==='summary')renderSummary();
+}
+
+/* ===== 1. PYRAMID ===== */
+let pyrVisited=new Set();
+function initPyramid(){
+  // SVG pyramid with 6 layers bottom to top
+  const W=320,H=300,layers=PYR_ORDER.map((id,i)=>GROUPS.find(g=>g.id===id));
+  // each layer: trapezoid. bottom layer widest.
+  // total height 300, 6 layers each ~50px
+  const LH=46, topPad=10;
+  let svg=`<svg id="PYR_SVG" viewBox="0 0 ${W} ${H+topPad}" xmlns="http://www.w3.org/2000/svg" class="pyramid-svg">`;
+  layers.forEach((g,i)=>{
+    const rev=5-i; // 0=top(fats), 5=bottom(grains)
+    const y=topPad+rev*LH;
+    const halfW=20+(rev+1)*(W/2-20)/6;
+    const x1=W/2-halfW, x2=W/2+halfW;
+    // next row
+    const nextHalfW=20+(rev)*(W/2-20)/6;
+    const nx1=W/2-nextHalfW, nx2=W/2+nextHalfW;
+    const pts=`${x1},${y} ${x2},${y} ${nx2},${y+LH} ${nx1},${y+LH}`;
+    svg+=`<polygon points="${pts}" fill="${g.color}" stroke="#fff" stroke-width="2.5" opacity=".92"
+      onclick="selectLayer('${g.id}')" style="cursor:pointer;transition:filter .2s" id="PL_${g.id}"/>`;
+    // text label
+    const cx=W/2, cy=y+LH/2+5;
+    const tw=halfW*1.6;
+    if(tw>60){
+      svg+=`<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="${Math.min(13,tw/7)}" font-weight="900" fill="#fff" pointer-events="none" style="text-shadow:0 1px 3px rgba(0,0,0,.3)">${g.icon} ${g.name}</text>`;
+      svg+=`<text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="${Math.min(10,tw/9)}" fill="rgba(255,255,255,.85)" pointer-events="none">${g.servings}</text>`;
+    } else {
+      svg+=`<text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="10" font-weight="900" fill="#fff" pointer-events="none">${g.icon}</text>`;
+    }
+  });
+  svg+=`</svg>`;
+  document.getElementById('PYR_WRAP').innerHTML=svg;
+}
+function selectLayer(id){
+  sndReveal();pyrVisited.add(id);
+  document.querySelectorAll('[id^="PL_"]').forEach(el=>el.setAttribute('opacity','.92'));
+  const el=document.getElementById('PL_'+id);if(el)el.setAttribute('opacity','1');
+  const g=GROUPS.find(x=>x.id===id);
+  const det=document.getElementById('PYR_DETAIL');
+  det.innerHTML=`<div class="layer-detail" style="background:linear-gradient(135deg,${g.color}33,${g.color}18);border:2px solid ${g.color}55">
+    <div class="ld-head">
+      <div class="ld-icon">${g.icon}</div>
+      <div><div class="ld-title" style="color:${g.color}">${g.name}</div>
+      <div class="ld-portion" style="color:${g.color}AA">📏 ${g.servings}</div></div>
+    </div>
+    <div style="font-size:.8rem;color:#444;margin-bottom:10px;line-height:1.5">${g.desc}</div>
+    <div style="font-size:.75rem;font-weight:700;color:${g.color};margin-bottom:8px">🍽️ Foods in this group — tap to learn:</div>
+    <div class="food-items">${g.foods.map(f=>`<div class="food-chip" style="background:${g.color}" onclick="foodClick('${f.n}','${g.name}','${g.color}')">${f.e} ${f.n}</div>`).join('')}</div>
+    <div class="nutrient-bar">
+      <div class="nb-label"><span style="color:${g.color};font-weight:900">🔬 Key Nutrients: ${g.nutrients}</span><span>${g.nutrientPct}%</span></div>
+      <div class="nb-track"><div class="nb-fill" style="width:0%;background:${g.color}" id="NB_${id}"></div></div>
+    </div>
+    <div class="fun-fact" style="background:${g.color}18;color:#444">${g.fact}</div>
+    <div style="margin-top:10px;font-size:.75rem;background:${g.color}22;padding:8px 12px;border-radius:10px;color:#555">💡 Tip: ${g.tip}</div>
+  </div>`;
+  setTimeout(()=>{const nb=document.getElementById('NB_'+id);if(nb)nb.style.width=g.nutrientPct+'%';},100);
+  const pct=Math.round(pyrVisited.size/6*100);
+  document.getElementById('PYR_PF').style.width=pct+'%';
+  document.getElementById('PYR_PL').textContent=pyrVisited.size+' / 6 food groups explored';
+  if(pyrVisited.size===6)setTimeout(()=>{pop('🏆','You explored all 6 food groups!');confetti();sndCelebration();},300);
+}
+function foodClick(name,group,color){
+  sndClick();pop('🍽️',name+' is in the '+group+'!');
+}
+
+/* ===== 2. QUIZ ===== */
+let qL=[],qI=0,qSc=0;
+function setupQuiz(){qI=0;qSc=0;qL=buildQ();document.getElementById('QS').textContent='⭐ 0';document.getElementById('QNXT').classList.remove('show');showQ();}
+function buildQ(){
+  const qs=[];
+  GROUPS.forEach(g=>{
+    shuf(g.foods).slice(0,2).forEach(f=>{
+      const wrong=shuf(GROUPS.filter(x=>x.id!==g.id)).slice(0,3).map(x=>x.name);
+      qs.push({q:`Which food group does ${f.n} belong to?`,vis:f.e,correct:g.name,opts:shuf([g.name,...wrong])});
+    });
+  });
+  qs.push({q:'Which food group gives you the MOST energy and is at the BASE of the pyramid?',vis:'🌾',correct:'Grains',opts:shuf(['Grains','Dairy','Fats & Sweets','Protein'])});
+  qs.push({q:'Which food group should you eat the LEAST of?',vis:'⚠️',correct:'Fats & Sweets',opts:shuf(['Fats & Sweets','Vegetables','Fruits','Grains'])});
+  qs.push({q:'Which nutrient in dairy makes your bones strong?',vis:'🦴',correct:'Calcium',opts:shuf(['Calcium','Protein','Vitamin C','Fiber'])});
+  qs.push({q:'How many servings of vegetables should you eat per day?',vis:'🥦',correct:'3–5 servings',opts:shuf(['3–5 servings','1 serving','6–8 servings','10 servings'])});
+  qs.push({q:'Which vitamin in fruits helps fight sickness?',vis:'🍊',correct:'Vitamin C',opts:shuf(['Vitamin C','Calcium','Iron','Vitamin K'])});
+  qs.push({q:'What do proteins help build and repair?',vis:'💪',correct:'Muscles',opts:shuf(['Muscles','Bones only','Teeth','Blood sugar'])});
+  qs.push({q:'How many glasses of water should you drink per day?',vis:'💧',correct:'6–8 glasses',opts:shuf(['6–8 glasses','1–2 glasses','10–12 glasses','3 glasses'])});
+  qs.push({q:'Which is a WHOLE GRAIN choice?',vis:'🌾',correct:'Brown rice',opts:shuf(['Brown rice','White bread','White pasta','Chips'])});
+  return shuf(qs).slice(0,10);
+}
+function showQ(){
+  if(qI>=qL.length){endQ();return;}
+  const q=qL[qI];
+  document.getElementById('QC').textContent=`Question ${qI+1}/${qL.length}`;
+  document.getElementById('QQ').textContent=q.q;
+  document.getElementById('QV').textContent=q.vis;
+  document.getElementById('QFB').textContent='';document.getElementById('QNXT').classList.remove('show');
+  document.getElementById('QNXT').onclick=()=>{qI++;showQ();};
+  const oc=document.getElementById('QOPTS');oc.innerHTML='';
+  q.opts.forEach(opt=>{const b=document.createElement('button');b.className='qo';b.textContent=opt;b.onclick=()=>checkQ(opt,q,oc);oc.appendChild(b);});
+}
+function checkQ(chosen,q,c){
+  [...c.querySelectorAll('.qo')].forEach(b=>{b.classList.add('qdis');if(b.textContent===q.correct)b.classList.add('qcor');if(b.textContent===chosen&&chosen!==q.correct)b.classList.add('qwrg');});
+  if(chosen===q.correct){sndCorrect();qSc++;document.getElementById('QS').textContent='⭐ '+qSc;document.getElementById('QFB').innerHTML=`<span style="color:#2ED573">🎉 Correct! 👏</span>`;}
+  else{sndWrong();document.getElementById('QFB').innerHTML=`<span style="color:#FF4757">❌ Answer: ${q.correct}</span>`;}
+  document.getElementById('QNXT').classList.add('show');
+}
+function endQ(){
+  const pct=Math.round(qSc/qL.length*100);const em=pct===100?'🏆':pct>=70?'🌟':pct>=50?'😊':'💪';
+  document.getElementById('QQ').textContent=`Quiz Done! ${em}`;
+  document.getElementById('QV').textContent='';document.getElementById('QOPTS').innerHTML='';
+  document.getElementById('QFB').innerHTML=`<span style="color:#F4A261">${pct}% — ${pct===100?'Nutrition expert!':pct>=70?'Great job!':'Keep learning!'}</span>`;
+  const nb=document.getElementById('QNXT');nb.textContent='🔄 Play Again';nb.classList.add('show');nb.onclick=setupQuiz;
+  if(pct>=70){confetti();sndCelebration();}
+}
+
+/* ===== 3. PLATE ===== */
+// My Plate: 4 sections (grains, protein, veg, fruit) + dairy circle
+let plateSel=null,plateCorrect=0,plateTotal=0;
+const PLATE_SECTIONS=[
+  {id:'veg',  label:'Vegetables',emoji:'🥦',color:'#52B788',x:25,y:25,w:50,h:50},
+  {id:'grains',label:'Grains',emoji:'🌾',color:'#F4A261',x:50,y:25,w:50,h:50},
+  {id:'protein',label:'Protein',emoji:'🥩',color:'#C77DFF',x:25,y:50,w:50,h:50},
+  {id:'fruit', label:'Fruits', emoji:'🍎',color:'#E76F51',x:50,y:50,w:50,h:50},
+];
+function setupPlate(){
+  plateSel=null;plateCorrect=0;plateTotal=0;
+  document.getElementById('PLATE_FB').textContent='';
+  document.getElementById('PLATE_SCORE').textContent='Correct: 0 / 0';
+  // Build SVG plate
+  const plate=document.getElementById('MY_PLATE');
+  plate.innerHTML=`
+    <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" style="width:220px;height:220px;display:block">
+      <!-- plate base -->
+      <circle cx="110" cy="110" r="105" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="4"/>
+      <!-- 4 quadrants -->
+      <!-- top-left: veg -->
+      <path d="M110,110 L110,10 A100,100 0 0,0 10,110 Z" fill="#52B78855" stroke="#fff" stroke-width="3" id="PS_veg" onclick="plateDrop('veg')" style="cursor:pointer"/>
+      <text x="62" y="72" text-anchor="middle" font-size="22" pointer-events="none">🥦</text>
+      <text x="62" y="90" text-anchor="middle" font-size="9" font-weight="900" fill="#2E7D32" pointer-events="none">Vegetables</text>
+      <!-- top-right: grains -->
+      <path d="M110,110 L110,10 A100,100 0 0,1 210,110 Z" fill="#F4A26155" stroke="#fff" stroke-width="3" id="PS_grains" onclick="plateDrop('grains')" style="cursor:pointer"/>
+      <text x="158" y="72" text-anchor="middle" font-size="22" pointer-events="none">🌾</text>
+      <text x="158" y="90" text-anchor="middle" font-size="9" font-weight="900" fill="#9C5700" pointer-events="none">Grains</text>
+      <!-- bottom-left: protein -->
+      <path d="M110,110 L10,110 A100,100 0 0,0 110,210 Z" fill="#C77DFF55" stroke="#fff" stroke-width="3" id="PS_protein" onclick="plateDrop('protein')" style="cursor:pointer"/>
+      <text x="62" y="160" text-anchor="middle" font-size="22" pointer-events="none">🥩</text>
+      <text x="62" y="178" text-anchor="middle" font-size="9" font-weight="900" fill="#6A0080" pointer-events="none">Protein</text>
+      <!-- bottom-right: fruit -->
+      <path d="M110,110 L210,110 A100,100 0 0,1 110,210 Z" fill="#E76F5155" stroke="#fff" stroke-width="3" id="PS_fruit" onclick="plateDrop('fruit')" style="cursor:pointer"/>
+      <text x="158" y="160" text-anchor="middle" font-size="22" pointer-events="none">🍎</text>
+      <text x="158" y="178" text-anchor="middle" font-size="9" font-weight="900" fill="#8B2000" pointer-events="none">Fruits</text>
+      <!-- center circle -->
+      <circle cx="110" cy="110" r="20" fill="#90E0EF88" stroke="#fff" stroke-width="2"/>
+      <text x="110" y="115" text-anchor="middle" font-size="16" pointer-events="none">🥛</text>
+      <!-- dropped items -->
+      <text id="DRP_veg"    x="55"  y="50"  font-size="16" text-anchor="middle" pointer-events="none"></text>
+      <text id="DRP_grains" x="165" y="50"  font-size="16" text-anchor="middle" pointer-events="none"></text>
+      <text id="DRP_protein"x="55"  y="190" font-size="16" text-anchor="middle" pointer-events="none"></text>
+      <text id="DRP_fruit"  x="165" y="190" font-size="16" text-anchor="middle" pointer-events="none"></text>
+    </svg>`;
+  // Build food bank — 2 from each group (veg, grains, protein, fruit)
+  const bank=document.getElementById('FOOD_BANK');bank.innerHTML='';
+  ['veg','grains','protein','fruit'].forEach(gid=>{
+    const g=GROUPS.find(x=>x.id===gid);
+    shuf(g.foods).slice(0,2).forEach(f=>{
+      const el=document.createElement('div');el.className='fb-item';el.style.background=g.color;
+      el.textContent=f.e+' '+f.n;el.dataset.group=gid;el.dataset.emoji=f.e;
+      el.onclick=()=>{
+        if(el.classList.contains('used'))return;sndClick();
+        document.querySelectorAll('.fb-item').forEach(x=>x.classList.remove('sel-fb'));
+        plateSel=el;el.classList.add('sel-fb');
+        document.getElementById('PLATE_FB').innerHTML=`<span style="color:#A855F7">Now tap the correct section on the plate! 👆</span>`;
+      };bank.appendChild(el);
+    });
+  });
+}
+function plateDrop(sectionId){
+  if(!plateSel)return;
+  plateTotal++;
+  const correct=plateSel.dataset.group===sectionId;
+  plateSel.classList.remove('sel-fb');
+  if(correct){
+    sndCorrect();plateCorrect++;plateSel.classList.add('used');
+    const drp=document.getElementById('DRP_'+sectionId);
+    if(drp){const cur=drp.textContent;drp.textContent=(cur?cur+' ':'')+plateSel.dataset.emoji;}
+    document.getElementById('PLATE_FB').innerHTML=`<span style="color:#2ED573">✅ ${plateSel.textContent.trim()} goes in ${PLATE_SECTIONS.find(s=>s.id===sectionId)?.label}!</span>`;
+    plateSel=null;
+    if([...document.querySelectorAll('.fb-item')].every(x=>x.classList.contains('used'))){
+      setTimeout(()=>{pop('🍽️','Your plate is complete!');confetti();sndCelebration();},200);
+    }
+  } else {
+    sndWrong();
+    document.getElementById('PLATE_FB').innerHTML=`<span style="color:#FF4757">❌ Wrong section! Try again!</span>`;
+    plateSel=null;
+  }
+  document.getElementById('PLATE_SCORE').textContent=`Correct: ${plateCorrect} / ${plateTotal}`;
+}
+
+/* ===== 4. MATCH ===== */
+let mSel=null;
+function setupMatch(){
+  mSel=null;document.getElementById('MFB').textContent='';
+  const pairs=shuf(GROUPS.flatMap(g=>g.foods.map(f=>({food:f.e+' '+f.n,group:g.name,color:g.color})))).slice(0,5);
+  const right=shuf(pairs.map(p=>({group:p.group,color:p.color})));
+  const ml=document.getElementById('ML');ml.innerHTML='';const mr=document.getElementById('MR');mr.innerHTML='';
+  pairs.forEach(p=>{
+    const el=document.createElement('div');el.className='mitem';el.innerHTML=`<strong>${p.food}</strong>`;
+    el.onclick=()=>pickM(el,'f',p.food,p.group);ml.appendChild(el);
+  });
+  right.forEach(r=>{
+    const el=document.createElement('div');el.className='mitem';el.style.color=r.color;el.style.fontWeight='900';
+    el.textContent=r.group;el.onclick=()=>pickM(el,'g',null,r.group);mr.appendChild(el);
+  });
+}
+function pickM(el,role,food,group){
+  if(el.classList.contains('ok'))return;
+  if(!mSel){mSel={el,role,food,group};el.classList.add('sel');return;}
+  if(mSel.role===role){mSel.el.classList.remove('sel');el.classList.add('sel');mSel={el,role,food,group};return;}
+  const prev=mSel;mSel=null;prev.el.classList.remove('sel');
+  const foodName=role==='f'?food:prev.food;const chosenGroup=role==='g'?group:prev.group;
+  const realGroup=GROUPS.find(g=>g.foods.some(f=>f.e+' '+f.n===foodName));
+  const fEl=role==='f'?el:prev.el;const gEl=role==='g'?el:prev.el;
+  if(realGroup&&realGroup.name===chosenGroup){
+    sndMatch();fEl.classList.add('ok');gEl.classList.add('ok');
+    document.getElementById('MFB').innerHTML=`<span style="color:#2ED573">✅ ${foodName} → ${chosenGroup}!</span>`;
+    if([...document.querySelectorAll('.mitem')].every(x=>x.classList.contains('ok')))setTimeout(()=>{pop('🌟','All matched!');confetti();sndCelebration();},200);
+  } else {
+    sndWrong();fEl.classList.add('bad');gEl.classList.add('bad');
+    document.getElementById('MFB').innerHTML=`<span style="color:#FF4757">❌ Try again!</span>`;
+    setTimeout(()=>{fEl.classList.remove('bad');gEl.classList.remove('bad');document.getElementById('MFB').textContent='';},800);
+  }
+}
+
+/* ===== 5. MEMORY ===== */
+let mFl=[],mMt=0,mTr=0,mLk=false;
+function setupMemory(){
+  mFl=[];mMt=0;mTr=0;mLk=false;const n=8;
+  const all=shuf(GROUPS.flatMap(g=>g.foods.map(f=>({food:f.e+' '+f.n,emoji:f.e,group:g.name,color:g.color,icon:g.icon}))));
+  const ch=all.slice(0,n);
+  document.getElementById('MM').textContent=0;document.getElementById('MTOT').textContent=n;document.getElementById('MTR').textContent=0;
+  const cards=[];ch.forEach(c=>{cards.push({id:c.food,type:'food',c});cards.push({id:c.food,type:'group',c});});
+  const g=document.getElementById('MEM_GRID');g.innerHTML='';
+  shuf(cards).forEach(card=>{
+    const el=document.createElement('div');el.className='mcard';
+    el.innerHTML=`<div class="mfront" style="background:linear-gradient(135deg,${card.c.color},${card.c.color}BB)">🍽️</div>
+      <div class="mback" style="color:${card.c.color}">
+        ${card.type==='food'?`<div class="mb-e">${card.c.emoji}</div><div>${card.c.food.split(' ').slice(1).join(' ')}</div>`:`<div class="mb-e">${card.c.icon}</div><div>${card.c.group}</div>`}
+      </div>`;
+    el.onclick=()=>flipM(el,card);g.appendChild(el);
+  });
+}
+function flipM(el,card){
+  if(mLk||el.classList.contains('flipped')||el.classList.contains('matched'))return;
+  sndFlip();el.classList.add('flipped');mFl.push({el,card});
+  if(mFl.length===2){
+    mLk=true;mTr++;document.getElementById('MTR').textContent=mTr;
+    const[a,b]=mFl;
+    if(a.card.id===b.card.id&&a.card.type!==b.card.type){
+      sndMatch();a.el.classList.add('matched');b.el.classList.add('matched');mMt++;document.getElementById('MM').textContent=mMt;mFl=[];mLk=false;
+      if(mMt===+document.getElementById('MTOT').textContent)setTimeout(()=>{pop('🏆','All pairs!');confetti();sndCelebration();},300);
+    } else {
+      sndWrong();a.el.classList.add('mwrong');b.el.classList.add('mwrong');
+      setTimeout(()=>{a.el.classList.remove('flipped','mwrong');b.el.classList.remove('flipped','mwrong');mFl=[];mLk=false;},950);
+    }
+  }
+}
+
+/* ===== 6. PUZZLE ===== */
+const PUZZLES=[
+  {q:'___ is the base of the food pyramid and gives us the most energy.',blank:'Grains',opts:['Grains','Dairy','Protein','Fats'],color:'#F4A261'},
+  {q:'We should eat Fats & Sweets ___ because they have few nutrients.',blank:'sparingly',opts:['sparingly','daily','always','first'],color:'#FF6B6B'},
+  {q:'Calcium in ___ makes our bones and teeth strong.',blank:'dairy',opts:['dairy','grains','fruits','fats'],color:'#90E0EF'},
+  {q:'We should fill ___ of our plate with vegetables.',blank:'half',opts:['half','all','one quarter','one third'],color:'#52B788'},
+  {q:'Vitamin ___ in fruits helps our body fight sickness.',blank:'C',opts:['C','A','D','K'],color:'#E76F51'},
+  {q:'Protein helps build and repair our ___.',blank:'muscles',opts:['muscles','bones only','blood sugar','skin only'],color:'#C77DFF'},
+  {q:'We should drink ___ glasses of water every day.',blank:'6–8',opts:['6–8','1–2','10–12','3'],color:'#0096C7'},
+  {q:'___ grains like brown rice have more fiber than white rice.',blank:'Whole',opts:['Whole','White','Fried','Processed'],color:'#F4A261'},
+  {q:'___ is a type of carbohydrate found in fruits and vegetables that aids digestion.',blank:'Fiber',opts:['Fiber','Calcium','Protein','Fat'],color:'#52B788'},
+  {q:'The food pyramid has ___ food groups in total.',blank:'6',opts:['6','4','8','3'],color:'#F4A261'},
+  {q:'___ are in the protein group and are an excellent plant-based source.',blank:'Beans',opts:['Beans','Butter','Cheese','Corn'],color:'#C77DFF'},
+  {q:'Your brain uses ___ from carbohydrates to think clearly.',blank:'glucose',opts:['glucose','calcium','protein','fat'],color:'#F4A261'},
+  {q:'Vegetables and fruits contain ___ that help the body function.',blank:'vitamins',opts:['vitamins','fats','calories only','sugar'],color:'#52B788'},
+  {q:'Eating too much ___ can cause tooth decay.',blank:'sugar',opts:['sugar','fiber','calcium','water'],color:'#FF6B6B'},
+  {q:'___ is the mineral that carries oxygen in our blood.',blank:'Iron',opts:['Iron','Calcium','Vitamin C','Fiber'],color:'#C77DFF'},
+];
+let pzList=[],pzI=0,pzSc=0,pzTot=0;
+function setupPuzzle(){pzI=0;pzSc=0;pzTot=0;pzList=shuf(PUZZLES);nextPuzzle();}
+function nextPuzzle(){
+  if(pzI>=pzList.length){pzI=0;pzList=shuf(PUZZLES);}
+  pzTot++;document.getElementById('PZ_FB').textContent='';
+  const pz=pzList[pzI++];
+  document.getElementById('PZ_SC').textContent=`Score: ${pzSc} / ${pzTot-1}`;
+  const parts=pz.q.split('___');
+  document.getElementById('PZ_Q').innerHTML=parts[0]+'<span class="blank" id="PZ_BL">___</span>'+parts[1];
+  const oc=document.getElementById('PZ_OPTS');oc.innerHTML='';
+  shuf(pz.opts).forEach(opt=>{
+    const b=document.createElement('div');b.className='popt';b.style.background=pz.color;b.textContent=opt;
+    b.onclick=()=>{
+      [...document.querySelectorAll('.popt')].forEach(x=>x.classList.add('used-p'));
+      const bl=document.getElementById('PZ_BL');
+      if(opt===pz.blank){
+        sndCorrect();pzSc++;pzTot++;bl.textContent=opt;bl.classList.add('filled-b');
+        document.getElementById('PZ_FB').innerHTML=`<span style="color:#2ED573">🎉 Correct!</span>`;
+        document.getElementById('PZ_SC').textContent=`Score: ${pzSc} / ${pzTot-1}`;
+        setTimeout(nextPuzzle,1400);
+      } else {
+        sndWrong();pzTot++;bl.textContent=opt;bl.classList.add('wrong-b');
+        document.getElementById('PZ_FB').innerHTML=`<span style="color:#FF4757">❌ Answer: <strong>${pz.blank}</strong></span>`;
+        document.getElementById('PZ_SC').textContent=`Score: ${pzSc} / ${pzTot-1}`;
+      }
+    };oc.appendChild(b);
+  });
+}
+
+/* ===== 7. HEALTHY / UNHEALTHY ===== */
+let huSel=null;
+function setupHealthy(){
+  huSel=null;document.getElementById('HBI_healthy').innerHTML='';document.getElementById('HBI_unhealthy').innerHTML='';
+  document.getElementById('HU_FB').textContent='';
+  const pool=document.getElementById('HU_POOL');pool.innerHTML='';
+  shuf(HEALTHY_FOODS).forEach(f=>{
+    const t=document.createElement('div');t.className='hu-tile';t.style.background=f.color;
+    t.textContent=f.e+' '+f.n;t.dataset.ok=f.ok;
+    t.onclick=()=>{
+      if(t.classList.contains('used-h'))return;sndClick();
+      document.querySelectorAll('.hu-tile').forEach(x=>x.classList.remove('sel-h'));
+      huSel=t;t.classList.add('sel-h');
+      document.getElementById('HU_FB').innerHTML=`<span style="color:#A855F7">Now tap the correct group! 👆</span>`;
+    };pool.appendChild(t);
+  });
+}
+function huDrop(type){
+  if(!huSel)return;
+  const isOk=(huSel.dataset.ok==='true');const correct=(type==='healthy')===isOk;
+  huSel.classList.remove('sel-h');
+  if(correct){
+    sndCorrect();huSel.classList.add('used-h');
+    const chip=document.createElement('div');chip.className='hu-chip';chip.style.background=huSel.style.background;chip.textContent=huSel.textContent;
+    document.getElementById('HBI_'+type).appendChild(chip);
+    document.getElementById('HU_FB').innerHTML=`<span style="color:#2ED573">✅ ${huSel.textContent.trim()} is ${type}!</span>`;
+    huSel=null;
+    if([...document.querySelectorAll('.hu-tile')].every(x=>x.classList.contains('used-h')))setTimeout(()=>{pop('💚','Perfect! You know healthy eating!');confetti();sndCelebration();},300);
+  } else {
+    sndWrong();huSel.style.animation='sh .3s';setTimeout(()=>{if(huSel)huSel.style.animation='';},400);
+    document.getElementById('HU_FB').innerHTML=`<span style="color:#FF4757">❌ Try the other group!</span>`;
+    huSel=null;
+  }
+}
+
+/* ===== 8. NUTRIENTS ===== */
+function renderNutrients(){
+  const c=document.getElementById('NUT_CONTENT');c.innerHTML='';
+  NUTRIENTS.forEach(n=>{
+    c.innerHTML+=`<div style="border-radius:16px;padding:14px;margin-bottom:10px;background:${n.color}22;border:2px solid ${n.color}44">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:2rem">${n.emoji}</span>
+        <div style="font-weight:900;font-size:1rem;color:${n.color}">${n.name}</div>
+      </div>
+      <div style="font-size:.78rem;color:#444;margin-bottom:5px;line-height:1.5">🔬 <strong>What it does:</strong> ${n.what}</div>
+      <div style="font-size:.76rem;color:#555;margin-bottom:4px">🍽️ <strong>Sources:</strong> ${n.sources}</div>
+      <div style="font-size:.74rem;background:${n.color}33;border-radius:8px;padding:5px 10px;color:${n.color};font-weight:700">📏 Daily need: ${n.daily}</div>
+    </div>`;
+  });
+}
+
+/* ===== SUMMARY ===== */
+function renderSummary(){
+  const c=document.getElementById('SUM_CONTENT');
+  c.innerHTML='<div class="ct" style="color:#F4A261">🔺 The 6 Food Groups</div>';
+  [...PYR_ORDER].reverse().forEach(id=>{
+    const g=GROUPS.find(x=>x.id===id);
+    c.innerHTML+=`<div style="border-radius:14px;padding:12px;margin-bottom:8px;background:${g.color}22;border:2px solid ${g.color}44">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:1.6rem">${g.icon}</span>
+        <div><div style="font-weight:900;color:${g.color}">${g.name}</div>
+        <div style="font-size:.72rem;color:#888">${g.servings}</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">${g.foods.map(f=>`<span style="background:${g.color};color:#fff;border-radius:50px;padding:3px 10px;font-size:.72rem;font-weight:700">${f.e} ${f.n}</span>`).join('')}</div>
+    </div>`;
+  });
+}
+
+/* CERT */
+function genCert(){
+  const name=document.getElementById('CI').value.trim();
+  if(!name){document.getElementById('CI').style.borderColor='#FF4757';return;}
+  document.getElementById('CI').style.borderColor='#D0D0E8';
+  document.getElementById('CN').textContent='🎉 Congratulations, '+name+'! 🎉';
+  document.getElementById('CR').classList.add('show');confetti();sndCelebration();
+}
+
+/* INIT */
+initPyramid();
+</script>
+</body>
+</html>

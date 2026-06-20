@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Animal World & Their Babies - Grade 1</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&display=swap');
+:root{
+  --red:#FF4757;--blue:#1E90FF;--green:#2ED573;--yellow:#FFD700;
+  --orange:#FF6B35;--purple:#A855F7;--pink:#FF69B4;--brown:#8B5E3C;
+  --white:#FFFFFF;--black:#2C2C2C;
+  --bg:#FFFBF0;--card:#fff;--shadow:0 8px 32px rgba(0,0,0,.10);
+  --radius:20px;--font:'Baloo 2',Tahoma,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:var(--font);background:var(--bg);min-height:100vh;color:var(--black);overflow-x:hidden;direction:ltr;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,#FF6B35,#A855F7,#1E90FF);color:#fff;text-align:center;padding:18px 16px 14px;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;top:-30px;left:-30px;width:100px;height:100px;background:rgba(255,255,255,.1);border-radius:50%;}
+header::after{content:'';position:absolute;bottom:-20px;right:-20px;width:70px;height:70px;background:rgba(255,255,255,.08);border-radius:50%;}
+.ht{font-size:clamp(1.5rem,5vw,2.2rem);font-weight:800;letter-spacing:1px;text-shadow:2px 3px 0 rgba(0,0,0,.15);}
+.hs{font-size:.82rem;opacity:.92;margin-top:5px;font-weight:600;}
+.hteach{font-size:.78rem;opacity:.92;margin-top:2px;font-weight:600;}
+.hicons{font-size:1.4rem;margin-top:6px;letter-spacing:6px;}
+
+/* TABS */
+nav.tabs{display:flex;overflow-x:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:0 4px;gap:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tb{flex:0 0 auto;padding:11px 12px;border:none;background:transparent;font-family:var(--font);font-weight:700;font-size:.72rem;color:#888;cursor:pointer;border-bottom:3px solid transparent;transition:all .25s;white-space:nowrap;}
+.tb.on{color:#FF6B35;border-bottom-color:#FF6B35;}
+
+/* SECTIONS */
+.main{max-width:700px;margin:0 auto;padding:16px 12px 90px;}
+.sec{display:none;}
+.sec.on{display:block;animation:fu .35s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pop{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes sh{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+/* CARD */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:16px;}
+.ct{font-size:1.05rem;font-weight:800;color:#FF6B35;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* ====== 1. ANIMALS EXPLORE ====== */
+.animal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.animal-card{border-radius:16px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .2s,box-shadow .2s;border:3px solid transparent;position:relative;overflow:hidden;}
+.animal-card:active{transform:scale(.93);}
+.animal-card.visited{opacity:.7;}
+.animal-card.active-a{transform:scale(1.1);box-shadow:0 0 0 4px #FFD700,0 8px 20px rgba(0,0,0,.2);}
+.ac-emoji{font-size:1.8rem;}
+.ac-name{font-size:.65rem;font-weight:800;color:#fff;margin-top:4px;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+.animal-detail{border-radius:18px;padding:20px;text-align:center;margin-bottom:14px;transition:all .3s;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
+.ad-big{font-size:clamp(2.5rem,12vw,5rem);font-weight:800;animation:pop .35s cubic-bezier(.34,1.56,.64,1);}
+.ad-emoji{font-size:clamp(2rem,8vw,3.5rem);}
+.ad-word{font-size:clamp(1rem,4vw,1.5rem);font-weight:800;}
+.ad-baby{font-size:.9rem;font-weight:700;margin-top:4px;}
+.ad-sound{font-size:.82rem;font-weight:600;opacity:.85;}
+
+/* ====== 2. BABIES EXPLORE ====== */
+.baby-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.baby-card{border-radius:16px;padding:16px 8px;text-align:center;cursor:pointer;border:3px solid transparent;transition:transform .2s;background:#F8F8FF;}
+.baby-card:active{transform:scale(.93);}
+.baby-card.active-b{border-color:#FFD700;transform:scale(1.08);box-shadow:0 0 0 3px #FFD700;}
+.baby-emoji-big{font-size:2.2rem;margin-bottom:6px;}
+.baby-name{font-size:.85rem;font-weight:800;}
+.baby-detail{border-radius:18px;padding:20px;text-align:center;margin-bottom:14px;background:linear-gradient(135deg,#F0EEFF,#FFF0F8);}
+.bd-big{font-size:3.5rem;animation:pop .35s cubic-bezier(.34,1.56,.64,1);}
+.bd-name{font-size:1.8rem;font-weight:800;color:#A855F7;}
+.bd-parent{font-size:.9rem;color:#888;margin-top:4px;}
+
+/* ====== 3. MATCH ====== */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mcol-title{font-size:.85rem;font-weight:800;text-align:center;margin-bottom:8px;color:#A855F7;}
+.mi2{border:3px solid #E8E8F0;border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;user-select:none;}
+.mi2.sel{border-color:#FF6B35;background:#FFF5F0;transform:scale(1.04);}
+.mi2.ok2{border-color:#2ED573;background:#F0FFF8;pointer-events:none;animation:pop .3s ease;}
+.mi2.bad2{border-color:#FF4757;background:#FFF0F2;animation:sh .3s;}
+.mi2-lbl{font-size:1.3rem;font-weight:800;}
+.mi2-sub{font-size:.7rem;color:#aaa;margin-top:3px;}
+.match-fb{text-align:center;font-size:.95rem;margin-top:10px;min-height:24px;font-weight:700;}
+
+/* ====== 4. DRAG & DROP ====== */
+.drag-instr{text-align:center;font-weight:700;color:#A855F7;margin-bottom:14px;font-size:.86rem;background:linear-gradient(135deg,#F0EEFF,#FFF0F8);padding:12px;border-radius:12px;}
+.buckets{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.bucket{flex:1;min-width:120px;border-radius:16px;padding:12px 8px;border:3px dashed #D0D0E8;min-height:80px;transition:all .2s;cursor:pointer;}
+.bucket.dov3{border-color:#FFD700;transform:scale(1.03);box-shadow:0 0 0 3px #FFD700;}
+.bucket-title{font-size:.8rem;font-weight:800;text-align:center;margin-bottom:8px;}
+.bucket-items{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:36px;}
+.bchip2{font-size:.85rem;padding:4px 10px;border-radius:50px;color:#fff;font-weight:700;animation:pop .25s ease;}
+.drag-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px;background:#F5F5FA;border-radius:14px;min-height:56px;margin-bottom:10px;}
+.dtile2{padding:10px 16px;border-radius:12px;color:#fff;font-weight:800;font-size:1rem;cursor:grab;transition:transform .15s;box-shadow:0 4px 12px rgba(0,0,0,.12);user-select:none;touch-action:none;}
+.dtile2:active{transform:scale(1.15) rotate(3deg);}
+.dtile2.used2{opacity:.2;pointer-events:none;}
+.drag-fb{text-align:center;font-size:.9rem;font-weight:700;min-height:24px;margin-top:8px;}
+
+/* ====== 5. QUIZ ====== */
+.qbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:700;font-size:.82rem;color:#888;}
+.qscore{background:linear-gradient(135deg,#FFD700,#FF6B35);color:#fff;border-radius:50px;padding:4px 16px;font-size:.9rem;}
+.q-question{text-align:center;font-size:clamp(1rem,3.5vw,1.3rem);font-weight:800;color:#333;margin-bottom:10px;}
+.q-visual{text-align:center;margin:10px 0;}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.qo2{background:#fff;border:3px solid #E8E8F0;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:var(--font);font-weight:800;font-size:clamp(.82rem,3vw,1rem);}
+.qo2:hover{border-color:#A855F7;transform:scale(1.03);}
+.qo2.qcor{background:#F0FFF8;border-color:#2ED573;}
+.qo2.qwrg{background:#FFF0F2;border-color:#FF4757;}
+.qo2.qdis{pointer-events:none;}
+.q-fb{text-align:center;font-size:.95rem;font-weight:700;margin-top:10px;min-height:26px;}
+.q-next{display:none;margin:12px auto 0;background:#FF6B35;color:#fff;border:none;border-radius:50px;padding:11px 32px;font-family:var(--font);font-size:.92rem;font-weight:700;cursor:pointer;}
+.q-next.show{display:block;animation:fu .3s ease;}
+
+/* ====== 6. MEMORY ====== */
+.mem-stats{display:flex;justify-content:center;gap:18px;margin-bottom:12px;font-weight:700;font-size:.85rem;}
+.mstat2{background:#fff;border-radius:50px;padding:5px 16px;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.mc2{aspect-ratio:.9;border-radius:14px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .4s;user-select:none;}
+.mc2.flipped2{transform:rotateY(180deg);}
+.mc2.matched2{transform:rotateY(180deg);pointer-events:none;}
+.mf2,.mb2{position:absolute;inset:0;border-radius:14px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.mf2{font-size:1.6rem;color:#fff;}
+.mb2{background:#fff;border:3px solid #E8E8F0;transform:rotateY(180deg);font-size:1.4rem;}
+.mc2.matched2 .mb2{border-color:#2ED573;background:#F0FFF8;}
+.mc2.wf2 .mb2{border-color:#FF4757;background:#FFF0F2;}
+
+/* ====== 7. SORT ====== */
+.sort-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px;background:#F5F5FA;border-radius:14px;min-height:56px;margin-bottom:12px;}
+.stile2{padding:10px 14px;border-radius:12px;color:#fff;font-weight:800;font-size:.95rem;cursor:pointer;transition:transform .15s;user-select:none;}
+.stile2:active{transform:scale(1.18);}
+.stile2.used3{opacity:.2;pointer-events:none;}
+.sort-buckets{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.sbuck2{border-radius:16px;min-height:80px;padding:10px 8px;border:3px dashed #D0D0E8;transition:all .2s;cursor:pointer;}
+.sbuck2.dov4{transform:scale(1.03);box-shadow:0 0 0 3px #FFD700;}
+.sbkt{font-size:.82rem;font-weight:800;text-align:center;margin-bottom:8px;}
+.sbki{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;min-height:32px;}
+.sort-fb{text-align:center;font-size:.9rem;font-weight:700;min-height:24px;}
+.sort-sel-display{text-align:center;font-size:.8rem;color:#A855F7;margin-bottom:8px;font-weight:700;min-height:20px;}
+
+/* ====== 8. FIND MISSING ====== */
+.fm-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
+.fm-tile{width:clamp(44px,10vw,60px);height:clamp(52px,12vw,68px);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:clamp(1.4rem,4vw,2rem);font-weight:800;color:#fff;}
+.fm-blank{border:3px dashed #C0C0D8;background:#F5F5FA;color:#C0C0D8;cursor:pointer;font-size:1.4rem;}
+.fm-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px;}
+.fmopt2{padding:10px 18px;border-radius:12px;color:#fff;font-weight:800;font-size:1.3rem;cursor:pointer;transition:transform .15s;border:3px solid transparent;}
+.fmopt2:active{transform:scale(1.12);}
+.fmopt2.fmok2{border-color:#2ED573;}.fmopt2.fmbad2{border-color:#FF4757;animation:sh .3s;}
+.fm-fb{text-align:center;font-size:.95rem;font-weight:700;margin-top:8px;min-height:24px;}
+
+/* ====== CERTIFICATE ====== */
+.cert-wrap{background:linear-gradient(135deg,#FFF5F0,#F0EEFF);border:3px dashed #A855F7;border-radius:18px;text-align:center;padding:22px 16px;}
+.cert-title{font-size:1.15rem;font-weight:800;color:#A855F7;}
+.cinput2{border:2px solid #D0D0E8;border-radius:50px;padding:10px 20px;font-family:var(--font);font-size:1rem;width:100%;max-width:280px;text-align:center;margin:10px auto;outline:none;transition:border-color .2s;display:block;}
+.cinput2:focus{border-color:#A855F7;}
+.cert-result{display:none;margin-top:14px;animation:fu .4s ease;}
+.cert-result.show{display:block;}
+
+/* BUTTONS */
+.btn{border:none;border-radius:50px;padding:10px 24px;font-family:var(--font);font-size:.9rem;font-weight:700;cursor:pointer;transition:transform .15s;color:#fff;}
+.btn:active{transform:scale(.95);}
+.btn-orange{background:#FF6B35;}.btn-purple{background:#A855F7;}.btn-green{background:#2ED573;color:#1a6b3a;}.btn-blue{background:#1E90FF;}
+
+/* POPUP & CONFETTI */
+.cnv{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+.fpop{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) scale(.5);background:#fff;border-radius:20px;padding:18px 28px;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center;z-index:1000;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);}
+.fpop.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.fpe{font-size:2.4rem;}.fpt{font-family:var(--font);font-size:1.05rem;margin-top:6px;font-weight:700;}
+
+/* PROGRESS */
+.pw{background:#F0F0F5;border-radius:50px;height:10px;margin-top:10px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,#FF6B35,#A855F7);border-radius:50px;transition:width .4s ease;}
+.pl{font-size:.73rem;color:#aaa;margin-top:4px;text-align:right;}
+
+/* ANIMAL PAIR DISPLAY */
+.pair-display{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px;background:linear-gradient(135deg,#FFF5F0,#F0EEFF);border-radius:16px;margin-bottom:12px;}
+.pair-parent,.pair-baby{text-align:center;}
+.pair-emoji-lg{font-size:2.5rem;}
+.pair-label{font-size:.7rem;font-weight:700;color:#888;}
+.pair-arrow{font-size:1.5rem;color:#A855F7;}
+
+footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #F0F0F8;text-align:center;padding:8px;font-size:.72rem;color:#aaa;font-weight:700;z-index:100;}
+footer span{color:#FF6B35;}
+</style>
+</head>
+<body>
+<canvas class="cnv" id="CC"></canvas>
+<div class="fpop" id="FP"><div class="fpe" id="FPE">🎉</div><div class="fpt" id="FPT">Great job!</div></div>
+
+<header>
+  <div class="ht">🐾 Animal World & Their Babies!</div>
+  <div class="hs">Grade 1</div>
+  <div class="hteach">👩‍🏫 Teacher: Manal Bazzi</div>
+  <div class="hicons">🐄 🐘 🦁 🐓 🐑</div>
+</header>
+
+<nav class="tabs">
+  <button class="tb on"  onclick="S('animals',this)">🐾 Animals</button>
+  <button class="tb"     onclick="S('babies',this)">🐣 Babies</button>
+  <button class="tb"     onclick="S('match',this)">🔗 Match</button>
+  <button class="tb"     onclick="S('drag',this)">🎯 Sort</button>
+  <button class="tb"     onclick="S('quiz',this)">❓ Quiz</button>
+  <button class="tb"     onclick="S('memory',this)">🃏 Memory</button>
+  <button class="tb"     onclick="S('sort',this)">🔠 Arrange</button>
+  <button class="tb"     onclick="S('findmiss',this)">🔎 Find Missing</button>
+  <button class="tb"     onclick="S('summary',this)">🌟 Summary</button>
+</nav>
+
+<div class="main">
+
+<!-- 1. ANIMALS -->
+<div class="sec on" id="sec-animals">
+  <div class="card">
+    <div class="ct">🐾 Tap an animal to learn about it!</div>
+    <div class="animal-detail" id="AD" style="background:linear-gradient(135deg,#F0EEFF,#FFF0F8)">
+      <div style="font-size:2rem">👆</div>
+      <div style="font-weight:800;color:#A855F7">Tap an animal below!</div>
+    </div>
+    <div class="pw"><div class="pf" id="APF" style="width:0%"></div></div>
+    <div class="pl" id="APL">0 / 8 animals</div>
+  </div>
+  <div class="card">
+    <div class="ct">🌿 The Eight Animals</div>
+    <div class="animal-grid" id="AG"></div>
+  </div>
+</div>
+
+<!-- 2. BABIES -->
+<div class="sec" id="sec-babies">
+  <div class="card">
+    <div class="ct">🐣 Tap a baby animal to learn about it!</div>
+    <div class="baby-detail" id="BD">
+      <div style="font-size:2rem">👆</div>
+      <div style="font-weight:800;color:#A855F7">Tap a baby below!</div>
+    </div>
+    <div class="pw"><div class="pf" id="BPF" style="width:0%"></div></div>
+    <div class="pl" id="BPL">0 / 8 babies</div>
+  </div>
+  <div class="card">
+    <div class="ct">🍼 Animal Babies</div>
+    <div class="baby-grid" id="BABG"></div>
+  </div>
+</div>
+
+<!-- 3. MATCH -->
+<div class="sec" id="sec-match">
+  <div class="card">
+    <div class="ct">🔗 Match the animal to its baby!</div>
+    <div style="text-align:center;font-size:.82rem;color:#A855F7;font-weight:700;background:linear-gradient(135deg,#F0EEFF,#FFF0F8);padding:10px;border-radius:12px;margin-bottom:14px">Tap the animal, then tap its correct baby! 🎯</div>
+    <div class="match-grid">
+      <div><div class="mcol-title">Animal 🐾</div><div id="ML2"></div></div>
+      <div><div class="mcol-title">Baby 🐣</div><div id="MN2"></div></div>
+    </div>
+    <div class="match-fb" id="MFB2"></div>
+    <div style="text-align:center;margin-top:12px"><button class="btn btn-orange" onclick="setupMatch()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 4. DRAG SORT -->
+<div class="sec" id="sec-drag">
+  <div class="card">
+    <div class="ct">🎯 Sort the animals and their babies!</div>
+    <div class="drag-instr" id="DINSTR2">Tap a card, then place it in the correct group! 🏆</div>
+    <div class="buckets" id="BUCKETS"></div>
+    <div class="drag-pool" id="DPOOL2"></div>
+    <div class="drag-fb" id="DFB2"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-purple" onclick="setupDragSort()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 5. QUIZ -->
+<div class="sec" id="sec-quiz">
+  <div class="card">
+    <div class="ct">❓ Quiz Time!</div>
+    <div class="qbar"><span id="QC2">Question 1 / 8</span><span class="qscore" id="QS2">⭐ 0</span></div>
+    <div class="q-question" id="QQ2">What is the name of this animal's baby?</div>
+    <div class="q-visual" id="QV2"></div>
+    <div class="q-opts" id="QOPTS2"></div>
+    <div class="q-fb" id="QFB2"></div>
+    <button class="q-next" id="QNXT2" onclick="nextQ()">Next ▶</button>
+  </div>
+</div>
+
+<!-- 6. MEMORY -->
+<div class="sec" id="sec-memory">
+  <div class="card">
+    <div class="ct">🃏 Memory Game!</div>
+    <div style="text-align:center;font-size:.82rem;color:#888;margin-bottom:10px">Flip the animal and find its baby!</div>
+    <div class="mem-stats">
+      <div class="mstat2">✅ <span id="MM2">0</span> / <span id="MTOT2">8</span></div>
+      <div class="mstat2">🔄 <span id="MT2">0</span> tries</div>
+    </div>
+    <div class="mem-grid" id="MGRID2"></div>
+    <div style="text-align:center;margin-top:12px"><button class="btn btn-blue" onclick="setupMemory()">🔄 New Game</button></div>
+  </div>
+</div>
+
+<!-- 7. SORT -->
+<div class="sec" id="sec-sort">
+  <div class="card">
+    <div class="ct">🔠 Arrange the Words!</div>
+    <div style="text-align:center;font-size:.82rem;color:#A855F7;font-weight:700;background:linear-gradient(135deg,#F0EEFF,#FFF0F8);padding:10px;border-radius:12px;margin-bottom:14px">Tap a word, then choose its group!</div>
+    <div class="sort-sel-display" id="SSEL2"></div>
+    <div class="sort-buckets">
+      <div class="sbuck2" style="border-color:#FF6B35;background:#FFF5F0" onclick="sortBucketTap('animal')" id="SBA">
+        <div class="sbkt" style="color:#FF6B35">🐾 Animal</div>
+        <div class="sbki" id="SBI_animal"></div>
+      </div>
+      <div class="sbuck2" style="border-color:#1E90FF;background:#F0F8FF" onclick="sortBucketTap('baby')" id="SBS">
+        <div class="sbkt" style="color:#1E90FF">🐣 Baby</div>
+        <div class="sbki" id="SBI_baby"></div>
+      </div>
+    </div>
+    <div class="sort-pool" id="SPOOL2"></div>
+    <div class="sort-fb" id="SFB2"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-orange" onclick="setupSort2()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 8. FIND MISSING -->
+<div class="sec" id="sec-findmiss">
+  <div class="card">
+    <div class="ct">🔎 Find the Missing One!</div>
+    <div style="text-align:center;font-weight:700;color:#A855F7;font-size:.85rem;background:linear-gradient(135deg,#F0EEFF,#FFF0F8);padding:10px;border-radius:12px;margin-bottom:14px" id="FMINSTR2">Which animal is missing? 🕵️</div>
+    <div class="fm-row" id="FMR2"></div>
+    <div style="text-align:center;font-size:.82rem;color:#888;margin-bottom:8px;font-weight:700">Choose the correct answer:</div>
+    <div class="fm-opts" id="FMOPTS2"></div>
+    <div class="fm-fb" id="FMFB2"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-green" onclick="setupFindMiss()">🔄 New Puzzle</button></div>
+  </div>
+</div>
+
+<!-- 9. SUMMARY -->
+<div class="sec" id="sec-summary">
+  <div style="text-align:center;padding:22px 12px 16px;background:linear-gradient(135deg,#FF6B35,#A855F7,#1E90FF);border-radius:18px;color:#fff;margin-bottom:16px">
+    <div style="font-size:2.8rem">🏆</div>
+    <div style="font-size:1.5rem;font-weight:800;margin:8px 0">You learned animals and their babies!</div>
+    <div style="font-size:.85rem;opacity:.9">Everything you discovered on this journey</div>
+  </div>
+  <div class="card">
+    <div class="ct">🐾 Animals You Learned</div>
+    <div id="SUM_ANIMALS" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center"></div>
+  </div>
+  <div class="card">
+    <div class="ct">🐣 Animal Babies</div>
+    <div id="SUM_BABIES" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center"></div>
+  </div>
+  <div class="card">
+    <div class="ct">🔗 Every Pair & Its Baby</div>
+    <div id="SUM_PAIRS" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
+  </div>
+  <div class="card">
+    <div class="cert-wrap">
+      <div class="cert-title">🏅 My Certificate</div>
+      <p style="color:#aaa;font-size:.82rem;margin-top:6px">Enter your name to get your certificate!</p>
+      <input class="cinput2" type="text" id="CI2" placeholder="Your name here ✨" maxlength="30"/>
+      <button class="btn btn-purple" onclick="genCert()" style="display:block;margin:0 auto">🎓 Get My Certificate!</button>
+      <div class="cert-result" id="CR2">
+        <div style="font-size:2.5rem">🏆✨🐾</div>
+        <div style="font-size:1.2rem;font-weight:800;color:#FF6B35" id="CN2"></div>
+        <div style="font-size:.8rem;color:#aaa;margin-top:6px">You learned 8 animals and their babies!<br>Great learning 🌟<br>Teacher: Manal Bazzi</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main -->
+<footer>🐾 Animal World & Their Babies · Grade 1 · Teacher: Manal Bazzi <span>🌟</span></footer>
+
+<script>
+/* ===== SOUND ENGINE ===== */
+const AC=(()=>{try{return new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}})();
+function resume(){if(AC&&AC.state==='suspended')AC.resume();}
+function osc(type,freq,gain,start,dur){
+  if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.setValueAtTime(freq,start);
+  g.gain.setValueAtTime(gain,start);g.gain.exponentialRampToValueAtTime(0.001,start+dur);
+  o.connect(g);g.connect(AC.destination);o.start(start);o.stop(start+dur+.01);
+}
+function sndClick(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',880,.12,t,.05);osc('sine',660,.08,t+.03,.04);}
+function sndCorrect(){
+  if(!AC)return;resume();const t=AC.currentTime;
+  [[523,.18],[659,.18],[784,.18],[1047,.22]].forEach(([f,v],i)=>osc('sine',f,v,t+i*.1,.2));
+  [1760,2093].forEach((f,i)=>osc('triangle',f,.06,t+.4+i*.07,.15));
+}
+function sndWrong(){if(!AC)return;resume();const t=AC.currentTime;osc('sawtooth',180,.2,t,.12);osc('sawtooth',140,.18,t+.1,.15);}
+function sndReveal(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',440,.15,t,.08);osc('sine',660,.15,t+.1,.1);osc('triangle',880,.12,t+.2,.15);}
+function sndFlip(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',700,.1,t,.04);osc('sine',500,.08,t+.03,.05);}
+function sndMatch(){if(!AC)return;resume();const t=AC.currentTime;[523,659,784].forEach((f,i)=>osc('sine',f,.18,t+i*.09,.18));}
+function sndCelebration(){
+  if(!AC)return;resume();const t=AC.currentTime;
+  [[523,659,784,1047],[587,740,880,1175]].forEach(([a,b,c,d],gi)=>[a,b,c,d].forEach(f=>osc('sine',f,.14,t+gi*.32,.28)));
+  [523,659,784,1047,1568].forEach((f,i)=>osc('square',f,.05,t+.65+i*.07,.15));
+}
+
+/* ===== DATA ===== */
+const ANIMALS=[
+  {id:'cow',    name:'Cow',     baby:'Calf',    emoji:'🐄', babyEmoji:'🐮', hex:'#FF6B35', sound:'Makes the sound: Moo 🎵', habitat:'Farm 🌾'},
+  {id:'sheep',  name:'Sheep',   baby:'Lamb',    emoji:'🐑', babyEmoji:'🐏', hex:'#A855F7', sound:'Makes the sound: Baa 🎵', habitat:'Farm 🌾'},
+  {id:'hen',    name:'Hen',     baby:'Chick',   emoji:'🐓', babyEmoji:'🐥', hex:'#FFD700', sound:'Makes the sound: Cluck 🎵', habitat:'Farm 🌾'},
+  {id:'cat',    name:'Cat',     baby:'Kitten',  emoji:'🐱', babyEmoji:'🐈', hex:'#FF69B4', sound:'Makes the sound: Meow 🎵', habitat:'House 🏠'},
+  {id:'dog',    name:'Dog',     baby:'Puppy',   emoji:'🐶', babyEmoji:'🐕', hex:'#8B5E3C', sound:'Makes the sound: Woof Woof 🎵', habitat:'House 🏠'},
+  {id:'lion',   name:'Lion',    baby:'Cub',     emoji:'🦁', babyEmoji:'🐆', hex:'#FF4757', sound:'Makes the sound: Roar 🎵', habitat:'Forest 🌳'},
+  {id:'elephant',name:'Elephant',baby:'Calf',   emoji:'🐘', babyEmoji:'🫏', hex:'#1E90FF', sound:'Makes a long trumpet sound 🎵', habitat:'Forest 🌳'},
+  {id:'duck',   name:'Duck',    baby:'Duckling',emoji:'🦆', babyEmoji:'🐤', hex:'#2ED573', sound:'Makes the sound: Quack 🎵', habitat:'Pond 💧'},
+];
+
+const ANIMAL_COLORS=['#FF6B35','#A855F7','#FFD700','#FF69B4','#8B5E3C','#FF4757','#1E90FF','#2ED573'];
+
+/* ===== NAV ===== */
+function S(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+  if(id==='match')setupMatch();
+  if(id==='drag')setupDragSort();
+  if(id==='quiz')setupQuiz2();
+  if(id==='memory')setupMemory();
+  if(id==='sort')setupSort2();
+  if(id==='findmiss')setupFindMiss();
+  if(id==='summary')renderSummary();
+}
+
+/* ===== 1. ANIMALS ===== */
+let visitedA=new Set();
+function renderAnimals(){
+  const g=document.getElementById('AG');g.innerHTML='';
+  ANIMALS.forEach((a)=>{
+    const d=document.createElement('div');
+    d.className='animal-card'+(visitedA.has(a.id)?' visited':'');
+    d.style.background=`linear-gradient(135deg,${a.hex},${a.hex}CC)`;
+    d.innerHTML=`<div class="ac-emoji">${a.emoji}</div><div class="ac-name">${a.name}</div>`;
+    d.onclick=()=>exploreAnimal(a,d);g.appendChild(d);
+  });
+}
+function exploreAnimal(a,tile){
+  sndReveal();
+  document.querySelectorAll('.animal-card').forEach(t=>t.classList.remove('active-a'));
+  tile.classList.add('active-a');visitedA.add(a.id);
+  const ad=document.getElementById('AD');
+  ad.style.background=`linear-gradient(135deg,${a.hex}33,${a.hex}22)`;
+  ad.innerHTML=`
+    <div class="ad-big" style="color:${a.hex}">${a.name}</div>
+    <div class="ad-emoji">${a.emoji}</div>
+    <div class="ad-baby" style="color:${a.hex}">🐣 Baby: <strong>${a.baby}</strong> ${a.babyEmoji}</div>
+    <div class="ad-sound" style="color:${a.hex}">${a.sound}</div>
+    <div style="font-size:.78rem;color:${a.hex};opacity:.8">Lives in: ${a.habitat}</div>`;
+  const pct=Math.round(visitedA.size/8*100);
+  document.getElementById('APF').style.width=pct+'%';
+  document.getElementById('APL').textContent=visitedA.size+' / 8 animals discovered';
+  renderAnimals();
+}
+
+/* ===== 2. BABIES ===== */
+let visitedB=new Set();
+function renderBabies(){
+  const g=document.getElementById('BABG');g.innerHTML='';
+  ANIMALS.forEach((a)=>{
+    const d=document.createElement('div');
+    d.className='baby-card'+(visitedB.has(a.id)?' visited':'');
+    d.style.borderColor=visitedB.has(a.id)?a.hex:'transparent';
+    d.innerHTML=`<div class="baby-emoji-big">${a.babyEmoji}</div><div class="baby-name" style="color:${a.hex}">${a.baby}</div>`;
+    d.onclick=()=>exploreBaby(a,d);g.appendChild(d);
+  });
+}
+function exploreBaby(a,tile){
+  sndReveal();
+  document.querySelectorAll('.baby-card').forEach(t=>t.classList.remove('active-b'));
+  tile.classList.add('active-b');visitedB.add(a.id);
+  const bd=document.getElementById('BD');
+  bd.style.background=`linear-gradient(135deg,${a.hex}22,${a.hex}11)`;
+  bd.innerHTML=`
+    <div class="bd-big">${a.babyEmoji}</div>
+    <div class="bd-name" style="color:${a.hex}">${a.baby}</div>
+    <div class="bd-parent">baby ${a.emoji} <strong>${a.name}</strong></div>`;
+  const pct=Math.round(visitedB.size/8*100);
+  document.getElementById('BPF').style.width=pct+'%';
+  document.getElementById('BPL').textContent=visitedB.size+' / 8 babies discovered';
+  renderBabies();
+}
+
+/* ===== 3. MATCH ===== */
+let matchSelAnimal=null,matchDone=new Set();
+function setupMatch(){
+  matchSelAnimal=null;matchDone=new Set();
+  document.getElementById('MFB2').textContent='';
+  const items=shuf(ANIMALS).slice(0,5);
+  const lCol=document.getElementById('ML2');lCol.innerHTML='';
+  const rCol=document.getElementById('MN2');rCol.innerHTML='';
+  const shuffled=shuf([...items]);
+  items.forEach(a=>{
+    const d=document.createElement('div');
+    d.className='mi2';d.dataset.id=a.id;d.dataset.side='animal';
+    d.innerHTML=`<div class="mi2-lbl">${a.emoji}</div><div class="mi2-sub">${a.name}</div>`;
+    d.onclick=()=>matchTap(d,'animal',a.id);lCol.appendChild(d);
+  });
+  shuffled.forEach(a=>{
+    const d=document.createElement('div');
+    d.className='mi2';d.dataset.id=a.id;d.dataset.side='baby';
+    d.innerHTML=`<div class="mi2-lbl">${a.babyEmoji}</div><div class="mi2-sub">${a.baby}</div>`;
+    d.onclick=()=>matchTap(d,'baby',a.id);rCol.appendChild(d);
+  });
+}
+function matchTap(el,side,id){
+  if(matchDone.has(id))return;
+  sndClick();
+  if(side==='animal'){
+    document.querySelectorAll('#ML2 .mi2').forEach(x=>x.classList.remove('sel'));
+    el.classList.add('sel');
+    matchSelAnimal=id;
+    document.getElementById('MFB2').textContent='';
+  } else {
+    if(!matchSelAnimal){document.getElementById('MFB2').innerHTML='<span style="color:#A855F7">Choose an animal first! 👆</span>';return;}
+    if(matchSelAnimal===id){
+      sndCorrect();matchDone.add(id);
+      document.querySelectorAll(`#ML2 .mi2[data-id="${id}"]`).forEach(x=>{x.classList.remove('sel');x.classList.add('ok2');});
+      el.classList.add('ok2');
+      const a=ANIMALS.find(x=>x.id===id);
+      document.getElementById('MFB2').innerHTML=`<span style="color:#2ED573">✅ Correct! ${a.emoji} ${a.name} → ${a.babyEmoji} ${a.baby}</span>`;
+      matchSelAnimal=null;
+      if(matchDone.size===5){setTimeout(()=>{pop('🎉','Well done! You matched every pair!');confetti();sndCelebration();},300);}
+    } else {
+      sndWrong();el.classList.add('bad2');
+      setTimeout(()=>el.classList.remove('bad2'),350);
+      document.getElementById('MFB2').innerHTML='<span style="color:#FF4757">❌ Try again!</span>';
+    }
+  }
+}
+
+/* ===== 4. DRAG SORT ===== */
+let dragSel=null,dragItems=[];
+function setupDragSort(){
+  dragSel=null;dragItems=[];
+  document.getElementById('DFB2').textContent='';
+  const types=['animal','baby'];
+  const picked=shuf(ANIMALS).slice(0,4);
+  const pool=[];
+  picked.forEach(a=>{
+    pool.push({label:a.name+' '+a.emoji,type:'animal',hex:a.hex,id:a.id+'_a'});
+    pool.push({label:a.baby+' '+a.babyEmoji,type:'baby',hex:a.hex,id:a.id+'_b'});
+  });
+  dragItems=shuf(pool);
+  const bk=document.getElementById('BUCKETS');bk.innerHTML='';
+  types.forEach(t=>{
+    const bEl=document.createElement('div');
+    bEl.className='bucket';
+    bEl.style.borderColor=t==='animal'?'#FF6B35':'#1E90FF';
+    bEl.style.background=t==='animal'?'#FFF5F0':'#F0F8FF';
+    bEl.innerHTML=`<div class="bucket-title" style="color:${t==='animal'?'#FF6B35':'#1E90FF'}">${t==='animal'?'🐾 Animals':'🐣 Babies'}</div><div class="bucket-items" id="BI_${t}"></div>`;
+    bEl.onclick=()=>dropToBucket(t);bk.appendChild(bEl);
+  });
+  const dp=document.getElementById('DPOOL2');dp.innerHTML='';
+  dragItems.forEach(item=>{
+    const d=document.createElement('div');d.className='dtile2';
+    d.style.background=item.hex;d.textContent=item.label;d._item=item;
+    d.onclick=()=>{
+      sndClick();
+      document.querySelectorAll('.dtile2').forEach(x=>x.style.boxShadow='');
+      if(dragSel===item){dragSel=null;return;}
+      dragSel=item;d.style.boxShadow='0 0 0 4px #FFD700';
+      document.getElementById('DFB2').innerHTML=`<span style="color:#A855F7">Choose a group! 👆</span>`;
+    };dp.appendChild(d);
+  });
+}
+function dropToBucket(type){
+  if(!dragSel)return;
+  const item=dragSel;dragSel=null;
+  document.querySelectorAll('.dtile2').forEach(x=>x.style.boxShadow='');
+  const tile=[...document.querySelectorAll('.dtile2')].find(t=>t._item===item&&!t.classList.contains('used2'));
+  if(!tile)return;
+  if(item.type===type){
+    sndCorrect();tile.classList.add('used2');
+    const chip=document.createElement('div');chip.className='bchip2';
+    chip.style.background=item.hex;chip.textContent=item.label;
+    document.getElementById('BI_'+type).appendChild(chip);
+    document.getElementById('DFB2').innerHTML=`<span style="color:#2ED573">✅ Correct! ${item.label} is ${type==='animal'?'an animal 🐾':'a baby 🐣'}</span>`;
+    const allUsed=[...document.querySelectorAll('.dtile2')].every(t=>t.classList.contains('used2'));
+    if(allUsed)setTimeout(()=>{pop('🌟','You sorted every word!');confetti();sndCelebration();},300);
+  } else {
+    sndWrong();tile.style.animation='sh .3s';setTimeout(()=>tile.style.animation='',400);
+    document.getElementById('DFB2').innerHTML=`<span style="color:#FF4757">❌ ${item.label} is ${item.type==='animal'?'an animal 🐾':'a baby 🐣'}!</span>`;
+  }
+}
+
+/* ===== 5. QUIZ ===== */
+let qIdx=0,qScore=0,qItems=[],qAnswered=false;
+function setupQuiz2(){
+  qIdx=0;qScore=0;qAnswered=false;
+  qItems=shuf([...ANIMALS]);
+  document.getElementById('QS2').textContent='⭐ 0';
+  document.getElementById('QNXT2').classList.remove('show');
+  document.getElementById('QFB2').textContent='';
+  renderQ();
+}
+function renderQ(){
+  if(qIdx>=qItems.length){
+    document.getElementById('QQ2').textContent='Quiz Complete! 🏆';
+    document.getElementById('QV2').innerHTML=`<div style="font-size:3rem">🎊</div>`;
+    document.getElementById('QOPTS2').innerHTML=`<div style="text-align:center;grid-column:1/-1;font-size:1.1rem;font-weight:800;color:#FF6B35">Your score: ${qScore} / ${qItems.length} ⭐</div>`;
+    if(qScore>=6){confetti();sndCelebration();}
+    document.getElementById('QNXT2').classList.remove('show');
+    return;
+  }
+  qAnswered=false;
+  const a=qItems[qIdx];
+  document.getElementById('QC2').textContent=`Question ${qIdx+1} / ${qItems.length}`;
+  const qtype=Math.random()<.5?'baby':'animal';
+  if(qtype==='baby'){
+    document.getElementById('QQ2').textContent=`What is the baby of: ${a.emoji} ${a.name}?`;
+    document.getElementById('QV2').innerHTML=`<div style="font-size:4rem;animation:pop .3s cubic-bezier(.34,1.56,.64,1)">${a.emoji}</div>`;
+    const wrongs=shuf(ANIMALS.filter(x=>x.id!==a.id)).slice(0,3);
+    const opts=shuf([{label:a.baby+' '+a.babyEmoji,correct:true},...wrongs.map(w=>({label:w.baby+' '+w.babyEmoji,correct:false}))]);
+    const oc=document.getElementById('QOPTS2');oc.innerHTML='';
+    opts.forEach(opt=>{
+      const b=document.createElement('button');b.className='qo2';b.textContent=opt.label;
+      b.onclick=()=>answerQ(b,opt.correct,a);oc.appendChild(b);
+    });
+  } else {
+    document.getElementById('QQ2').textContent=`This baby belongs to which animal? ${a.babyEmoji} ${a.baby}`;
+    document.getElementById('QV2').innerHTML=`<div style="font-size:4rem;animation:pop .3s cubic-bezier(.34,1.56,.64,1)">${a.babyEmoji}</div>`;
+    const wrongs=shuf(ANIMALS.filter(x=>x.id!==a.id)).slice(0,3);
+    const opts=shuf([{label:a.name+' '+a.emoji,correct:true},...wrongs.map(w=>({label:w.name+' '+w.emoji,correct:false}))]);
+    const oc=document.getElementById('QOPTS2');oc.innerHTML='';
+    opts.forEach(opt=>{
+      const b=document.createElement('button');b.className='qo2';b.textContent=opt.label;
+      b.onclick=()=>answerQ(b,opt.correct,a);oc.appendChild(b);
+    });
+  }
+  document.getElementById('QFB2').textContent='';
+  document.getElementById('QNXT2').classList.remove('show');
+}
+function answerQ(btn,correct,a){
+  if(qAnswered)return;qAnswered=true;
+  document.querySelectorAll('.qo2').forEach(b=>b.classList.add('qdis'));
+  if(correct){
+    sndCorrect();btn.classList.add('qcor');qScore++;
+    document.getElementById('QS2').textContent='⭐ '+qScore;
+    document.getElementById('QFB2').innerHTML=`<span style="color:#2ED573">🎉 Correct! ${a.emoji} → ${a.babyEmoji} ${a.baby}</span>`;
+  } else {
+    sndWrong();btn.classList.add('qwrg');
+    document.getElementById('QFB2').innerHTML=`<span style="color:#FF4757">❌ The answer: ${a.baby} ${a.babyEmoji}</span>`;
+  }
+  document.getElementById('QNXT2').classList.add('show');
+}
+function nextQ(){qIdx++;renderQ();}
+
+/* ===== 6. MEMORY ===== */
+let memFlipped=[],memMatched=0,memTries=0,memLock=false;
+function setupMemory(){
+  memFlipped=[];memMatched=0;memTries=0;memLock=false;
+  document.getElementById('MM2').textContent='0';
+  document.getElementById('MTOT2').textContent='8';
+  document.getElementById('MT2').textContent='0';
+  const pairs=[];
+  ANIMALS.forEach(a=>{
+    pairs.push({id:a.id,display:a.emoji,match:a.id,isAnimal:true,hex:a.hex});
+    pairs.push({id:a.id+'_b',display:a.babyEmoji,match:a.id,isAnimal:false,hex:a.hex});
+  });
+  const cards=shuf(pairs);
+  const g=document.getElementById('MGRID2');g.innerHTML='';
+  cards.forEach((c,i)=>{
+    const d=document.createElement('div');d.className='mc2';d.dataset.idx=i;d.dataset.match=c.match;
+    const front=document.createElement('div');front.className='mf2';
+    front.style.background=`linear-gradient(135deg,${c.hex},${c.hex}AA)`;
+    front.textContent='🐾';
+    const back=document.createElement('div');back.className='mb2';back.textContent=c.display;
+    d.appendChild(front);d.appendChild(back);
+    d.onclick=()=>flipCard(d,c);g.appendChild(d);
+  });
+}
+function flipCard(el,c){
+  if(memLock||el.classList.contains('flipped2')||el.classList.contains('matched2'))return;
+  sndFlip();el.classList.add('flipped2');memFlipped.push({el,c});
+  if(memFlipped.length===2){
+    memLock=true;memTries++;
+    document.getElementById('MT2').textContent=memTries;
+    const [a,b]=memFlipped;
+    if(a.c.match===b.c.match&&a.c.id!==b.c.id){
+      sndMatch();memMatched++;
+      document.getElementById('MM2').textContent=memMatched;
+      setTimeout(()=>{a.el.classList.add('matched2');b.el.classList.add('matched2');memFlipped=[];memLock=false;
+        if(memMatched===8){setTimeout(()=>{pop('🏆','You found every pair!');confetti();sndCelebration();},200);}
+      },500);
+    } else {
+      setTimeout(()=>{
+        a.el.classList.add('wf2');b.el.classList.add('wf2');
+        setTimeout(()=>{a.el.classList.remove('flipped2','wf2');b.el.classList.remove('flipped2','wf2');memFlipped=[];memLock=false;},400);
+      },800);
+    }
+  }
+}
+
+/* ===== 7. SORT ===== */
+let sortSel=null;
+function setupSort2(){
+  sortSel=null;
+  document.getElementById('SFB2').textContent='';
+  document.getElementById('SSEL2').textContent='';
+  document.getElementById('SBI_animal').innerHTML='';
+  document.getElementById('SBI_baby').innerHTML='';
+  const items=[];
+  shuf(ANIMALS).slice(0,4).forEach(a=>{
+    items.push({label:a.name+' '+a.emoji,type:'animal',hex:a.hex,id:a.id+'_a'});
+    items.push({label:a.baby+' '+a.babyEmoji,type:'baby',hex:a.hex,id:a.id+'_b'});
+  });
+  const pool=document.getElementById('SPOOL2');pool.innerHTML='';
+  shuf(items).forEach(item=>{
+    const d=document.createElement('div');d.className='stile2';
+    d.style.background=item.hex;d.textContent=item.label;d._item=item;
+    d.onclick=()=>{
+      sndClick();
+      document.querySelectorAll('.stile2').forEach(x=>x.style.boxShadow='');
+      if(sortSel===item){sortSel=null;document.getElementById('SSEL2').textContent='';return;}
+      sortSel=item;d.style.boxShadow='0 0 0 4px #FFD700';
+      document.getElementById('SSEL2').textContent='You chose: '+item.label+' — put it in the right group!';
+    };pool.appendChild(d);
+  });
+}
+function sortBucketTap(type){
+  if(!sortSel)return;
+  const item=sortSel;sortSel=null;
+  document.querySelectorAll('.stile2').forEach(x=>x.style.boxShadow='');
+  document.getElementById('SSEL2').textContent='';
+  const tile=[...document.querySelectorAll('.stile2')].find(t=>t._item===item&&!t.classList.contains('used3'));
+  if(!tile)return;
+  if(item.type===type){
+    sndCorrect();tile.classList.add('used3');
+    const chip=document.createElement('div');chip.className='bchip2';chip.style.background=item.hex;chip.textContent=item.label;
+    document.getElementById('SBI_'+type).appendChild(chip);
+    document.getElementById('SFB2').innerHTML=`<span style="color:#2ED573">✅ Correct! ${item.label} is ${type==='animal'?'an animal 🐾':'a baby 🐣'}</span>`;
+    const allUsed=[...document.querySelectorAll('.stile2')].every(t=>t.classList.contains('used3'));
+    if(allUsed)setTimeout(()=>{pop('🌟','You arranged every word!');confetti();sndCelebration();},300);
+  } else {
+    sndWrong();tile.style.animation='sh .3s';setTimeout(()=>tile.style.animation='',400);
+    document.getElementById('SFB2').innerHTML=`<span style="color:#FF4757">❌ ${item.label} is ${item.type==='animal'?'an animal 🐾':'a baby 🐣'}!</span>`;
+  }
+}
+
+/* ===== 8. FIND MISSING ===== */
+let fmBlank=-1,fmSeq=[],fmType='animal';
+function setupFindMiss(){
+  document.getElementById('FMFB2').textContent='';
+  document.querySelectorAll('.fmopt2').forEach(b=>b.classList.remove('fmok2','fmbad2'));
+  fmType=Math.random()<.5?'animal':'baby';
+  const start=Math.floor(Math.random()*(ANIMALS.length-4));
+  fmSeq=ANIMALS.slice(start,start+5);
+  fmBlank=Math.floor(Math.random()*5);
+  const correct=fmSeq[fmBlank];
+  document.getElementById('FMINSTR2').textContent=fmType==='animal'?'Which animal is missing? 🕵️':'Which baby is missing? 🔍';
+  const row=document.getElementById('FMR2');row.innerHTML='';
+  fmSeq.forEach((item,i)=>{
+    const t=document.createElement('div');
+    if(i===fmBlank){
+      t.className='fm-tile fm-blank';t.textContent='?';
+    } else {
+      t.className='fm-tile';
+      t.style.background=`linear-gradient(135deg,${item.hex},${item.hex}AA)`;
+      t.textContent=fmType==='animal'?item.emoji:item.babyEmoji;
+    }
+    row.appendChild(t);
+  });
+  const wrongs=shuf(ANIMALS.filter(d=>d.id!==correct.id)).slice(0,3);
+  const opts=shuf([correct,...wrongs]);
+  const oc=document.getElementById('FMOPTS2');oc.innerHTML='';
+  opts.forEach(d=>{
+    const b=document.createElement('div');b.className='fmopt2';
+    b.style.background=`linear-gradient(135deg,${d.hex},${d.hex}AA)`;
+    b.textContent=fmType==='animal'?d.emoji:d.babyEmoji;
+    b.title=fmType==='animal'?d.name:d.baby;
+    b.onclick=()=>{
+      document.querySelectorAll('.fmopt2').forEach(x=>x.style.pointerEvents='none');
+      if(d.id===correct.id){
+        sndCorrect();b.classList.add('fmok2');
+        document.getElementById('FMFB2').innerHTML=`<span style="color:#2ED573">🎉 Correct! The missing one is ${fmType==='animal'?correct.name:correct.baby}! 🎊</span>`;
+        const blank=document.querySelector('.fm-blank');
+        if(blank){blank.style.background=`linear-gradient(135deg,${correct.hex},${correct.hex}AA)`;blank.textContent=fmType==='animal'?correct.emoji:correct.babyEmoji;blank.className='fm-tile';}
+        confetti();sndCelebration();
+      } else {
+        sndWrong();b.classList.add('fmbad2');
+        document.getElementById('FMFB2').innerHTML=`<span style="color:#FF4757">❌ The answer is ${fmType==='animal'?correct.name:correct.baby} ${fmType==='animal'?correct.emoji:correct.babyEmoji}</span>`;
+        setTimeout(()=>{document.querySelectorAll('.fmopt2').forEach(x=>x.style.pointerEvents='');b.classList.remove('fmbad2');},800);
+      }
+    };oc.appendChild(b);
+  });
+}
+
+/* ===== SUMMARY ===== */
+function renderSummary(){
+  const sa=document.getElementById('SUM_ANIMALS');sa.innerHTML='';
+  ANIMALS.forEach(a=>{
+    sa.innerHTML+=`<div style="display:flex;align-items:center;gap:6px;background:${a.hex}22;border-radius:50px;padding:6px 14px;border:2px solid ${a.hex}66">
+      <span style="font-size:1.2rem">${a.emoji}</span>
+      <span style="font-weight:800;font-size:.9rem;color:${a.hex}">${a.name}</span></div>`;
+  });
+  const sb=document.getElementById('SUM_BABIES');sb.innerHTML='';
+  ANIMALS.forEach(a=>{
+    sb.innerHTML+=`<div style="text-align:center;background:#F8F8FF;border-radius:14px;padding:10px 6px;">
+      <div style="font-size:1.8rem">${a.babyEmoji}</div>
+      <div style="font-weight:800;font-size:.78rem;color:${a.hex};margin-top:4px">${a.baby}</div>
+    </div>`;
+  });
+  const sp=document.getElementById('SUM_PAIRS');sp.innerHTML='';
+  ANIMALS.forEach(a=>{
+    sp.innerHTML+=`<div style="display:flex;align-items:center;gap:8px;background:${a.hex}11;border-radius:14px;padding:10px 12px;border:2px solid ${a.hex}33">
+      <span style="font-size:1.5rem">${a.emoji}</span>
+      <div style="flex:1">
+        <div style="font-weight:800;font-size:.85rem;color:${a.hex}">${a.name}</div>
+        <div style="font-size:.75rem;color:#888">→ baby: ${a.baby}</div>
+      </div>
+      <span style="font-size:1.3rem">${a.babyEmoji}</span>
+    </div>`;
+  });
+}
+
+/* ===== CERTIFICATE ===== */
+function genCert(){
+  const name=document.getElementById('CI2').value.trim();
+  if(!name){document.getElementById('CI2').style.borderColor='#FF4757';return;}
+  document.getElementById('CI2').style.borderColor='#D0D0E8';
+  document.getElementById('CN2').textContent='🎉 Congratulations '+name+'! 🎉';
+  document.getElementById('CR2').classList.add('show');
+  confetti();sndCelebration();
+}
+
+/* ===== HELPERS ===== */
+function shuf(a){return[...a].sort(()=>Math.random()-.5);}
+function pop(emoji,text){
+  const p=document.getElementById('FP');
+  document.getElementById('FPE').textContent=emoji;
+  document.getElementById('FPT').textContent=text;
+  p.classList.add('show');setTimeout(()=>p.classList.remove('show'),2400);
+}
+function confetti(){
+  const cv=document.getElementById('CC'),ctx=cv.getContext('2d');
+  cv.width=window.innerWidth;cv.height=window.innerHeight;
+  const cols=['#FF4757','#A855F7','#2ED573','#FFD700','#FF69B4','#1E90FF','#FF6B35'];
+  const p=Array.from({length:120},()=>({
+    x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.3,
+    w:8+Math.random()*8,h:14+Math.random()*8,
+    color:cols[Math.floor(Math.random()*cols.length)],
+    rot:Math.random()*Math.PI*2,vx:(Math.random()-.5)*3,vy:3+Math.random()*4,vrot:(Math.random()-.5)*.2
+  }));
+  let f=0;
+  (function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    p.forEach(q=>{ctx.save();ctx.translate(q.x,q.y);ctx.rotate(q.rot);ctx.fillStyle=q.color;ctx.fillRect(-q.w/2,-q.h/2,q.w,q.h);ctx.restore();q.x+=q.vx;q.y+=q.vy;q.rot+=q.vrot;q.vy+=.06;});
+    if(++f<130)requestAnimationFrame(draw);else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* ===== INIT ===== */
+renderAnimals();renderBabies();
+</script>
+</body>
+</html>

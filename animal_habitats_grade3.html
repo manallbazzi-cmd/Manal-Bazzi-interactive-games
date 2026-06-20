@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Animal Habitats - Grade 3 - Teacher Manal Bazzi</title>
+<style>
+:root{
+  --desert:#FF8C00;--forest:#2E7D32;--ocean:#0077B6;
+  --desert-light:#FFF3E0;--forest-light:#E8F5E9;--ocean-light:#E0F4FF;
+  --bg:#F8FFFE;--card:#fff;--shadow:0 8px 32px rgba(0,0,0,.10);--radius:20px;
+  --font:'Segoe UI',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:var(--font);background:var(--bg);min-height:100vh;color:#2C2C2C;overflow-x:hidden;}
+
+header{background:linear-gradient(135deg,#FF8C00,#2E7D32,#0077B6);color:#fff;text-align:center;padding:16px 12px 12px;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.08);border-radius:50%;}
+.ht{font-size:clamp(1.3rem,4.5vw,2rem);font-weight:900;text-shadow:2px 3px 0 rgba(0,0,0,.2);}
+.hs{font-size:.8rem;opacity:.92;margin-top:4px;font-weight:600;}
+.hicons{font-size:1.5rem;margin-top:6px;letter-spacing:4px;}
+
+nav.tabs{display:flex;overflow-x:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:0 4px;gap:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tb{flex:0 0 auto;padding:10px 11px;border:none;background:transparent;font-family:var(--font);font-weight:700;font-size:.68rem;color:#888;cursor:pointer;border-bottom:3px solid transparent;transition:all .25s;white-space:nowrap;}
+.tb.on{color:#FF8C00;border-bottom-color:#FF8C00;}
+
+.main{max-width:720px;margin:0 auto;padding:14px 12px 90px;}
+.sec{display:none;}.sec.on{display:block;animation:fu .35s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes popIn{from{transform:scale(.3);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes sh{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes swim{0%{transform:translateX(0) scaleX(1);}49%{transform:translateX(40px) scaleX(1);}50%{transform:translateX(40px) scaleX(-1);}100%{transform:translateX(0) scaleX(-1);}}
+@keyframes sway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;}
+.ct{font-size:1rem;font-weight:900;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.hint-box{text-align:center;font-weight:700;font-size:.8rem;padding:10px 14px;border-radius:12px;margin-bottom:12px;}
+
+/* HABITAT SCENE CARDS */
+.hab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}
+.hab-card{border-radius:18px;padding:16px 8px;text-align:center;cursor:pointer;transition:all .2s;border:3px solid transparent;position:relative;overflow:hidden;}
+.hab-card:active{transform:scale(.93);}
+.hab-card.active-h{transform:scale(1.06);box-shadow:0 0 0 4px #FFD700;}
+.hab-icon{font-size:2.4rem;margin-bottom:5px;}
+.hab-name{font-size:.78rem;font-weight:900;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.3);}
+.hab-count{font-size:.62rem;color:rgba(255,255,255,.85);margin-top:2px;}
+
+/* SCENE DISPLAY */
+.scene-wrap{border-radius:20px;overflow:hidden;margin-bottom:14px;position:relative;min-height:200px;}
+.scene-svg{width:100%;display:block;}
+.animal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.animal-chip{border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid rgba(255,255,255,.4);background:rgba(255,255,255,.2);}
+.animal-chip:active{transform:scale(.92);}
+.animal-chip.visited-a{opacity:.8;border-color:rgba(255,255,255,.7);}
+.a-emoji{font-size:1.8rem;}
+.a-name{font-size:.68rem;font-weight:900;color:#fff;margin-top:3px;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+.animal-info{border-radius:16px;padding:14px;margin-top:10px;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);animation:fu .25s ease;}
+.ai-title{font-size:1rem;font-weight:900;color:#fff;}
+.ai-facts{font-size:.76rem;color:rgba(255,255,255,.95);margin-top:6px;line-height:1.6;}
+.ai-adapt{font-size:.72rem;color:rgba(255,255,255,.85);margin-top:6px;font-style:italic;}
+
+/* QUIZ */
+.qbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:700;font-size:.8rem;color:#888;}
+.qscore{background:linear-gradient(135deg,#FFD700,#FF8C00);color:#fff;border-radius:50px;padding:4px 14px;font-size:.88rem;}
+.q-q{font-size:clamp(.92rem,3vw,1.15rem);font-weight:900;text-align:center;margin-bottom:10px;line-height:1.4;}
+.q-visual{text-align:center;font-size:3rem;margin:8px 0;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px;}
+.qo{background:#fff;border:3px solid #E8E8F0;border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:var(--font);font-weight:700;font-size:clamp(.78rem,2.8vw,.95rem);}
+.qo:hover{border-color:#FF8C00;transform:scale(1.02);}
+.qo.qcor{background:#F0FFF8;border-color:#2ED573;}
+.qo.qwrg{background:#FFF0F2;border-color:#FF4757;}
+.qo.qdis{pointer-events:none;}
+.q-fb{text-align:center;font-size:.9rem;font-weight:700;margin-top:8px;min-height:22px;}
+.q-next{display:none;margin:10px auto 0;background:#FF8C00;color:#fff;border:none;border-radius:50px;padding:10px 28px;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;}
+.q-next.show{display:block;animation:fu .3s ease;}
+
+/* MATCH */
+.match-area{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mcol-t{font-size:.82rem;font-weight:900;text-align:center;margin-bottom:7px;}
+.mitem{border:3px solid #E8E8F0;border-radius:13px;padding:10px 7px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;user-select:none;margin-bottom:7px;font-size:.85rem;font-weight:700;}
+.mitem.sel{border-color:#FF8C00;background:#FFF8F0;transform:scale(1.04);}
+.mitem.ok{border-color:#2ED573;background:#F0FFF8;pointer-events:none;animation:popIn .3s ease;}
+.mitem.bad{border-color:#FF4757;background:#FFF0F2;animation:sh .3s;}
+.match-fb{text-align:center;font-size:.9rem;margin-top:8px;min-height:22px;font-weight:700;}
+
+/* DRAG SORT */
+.buckets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.bucket{border-radius:16px;padding:10px 6px;border:3px dashed #D0D0E8;min-height:90px;cursor:pointer;transition:all .2s;}
+.bucket.dov{transform:scale(1.04);box-shadow:0 0 0 3px #FFD700;}
+.bucket-title{font-size:.72rem;font-weight:900;text-align:center;margin-bottom:7px;}
+.bucket-items{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:30px;}
+.bchip{font-size:.78rem;padding:3px 8px;border-radius:50px;color:#fff;font-weight:700;animation:popIn .25s ease;}
+.drag-pool{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;padding:10px;background:#F5F5FA;border-radius:14px;min-height:54px;margin-bottom:10px;}
+.dtile{padding:8px 13px;border-radius:12px;color:#fff;font-weight:900;font-size:.85rem;cursor:pointer;transition:transform .15s;box-shadow:0 4px 12px rgba(0,0,0,.12);user-select:none;}
+.dtile:active{transform:scale(1.12) rotate(2deg);}
+.dtile.used{opacity:.2;pointer-events:none;}
+.drag-fb{text-align:center;font-size:.9rem;font-weight:700;min-height:22px;margin-top:8px;}
+
+/* MEMORY */
+.mem-stats{display:flex;justify-content:center;gap:14px;margin-bottom:10px;font-weight:700;font-size:.82rem;}
+.mstat{background:#fff;border-radius:50px;padding:4px 14px;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.mcard{aspect-ratio:.9;border-radius:13px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .4s;user-select:none;}
+.mcard.flipped{transform:rotateY(180deg);}
+.mcard.matched{transform:rotateY(180deg);pointer-events:none;}
+.mfront,.mback{position:absolute;inset:0;border-radius:13px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.mfront{font-size:1.5rem;color:#fff;}
+.mback{background:#fff;border:3px solid #E8E8F0;transform:rotateY(180deg);font-size:.75rem;font-weight:900;text-align:center;padding:4px;flex-direction:column;gap:2px;}
+.mback .mb-e{font-size:1.4rem;}
+.mcard.matched .mback{border-color:#2ED573;background:#F0FFF8;}
+.mcard.mwrong .mback{border-color:#FF4757;background:#FFF0F2;}
+
+/* PUZZLE */
+.pz-q{font-size:clamp(.92rem,3vw,1.1rem);font-weight:900;text-align:center;margin-bottom:14px;line-height:1.7;}
+.blank{display:inline-block;min-width:90px;border-bottom:3px solid #FF8C00;padding:0 5px;text-align:center;font-weight:900;color:#FF8C00;margin:0 4px;vertical-align:bottom;}
+.blank.filled-b{border-color:#2ED573;color:#2ED573;}
+.blank.wrong-b{border-color:#FF4757;color:#FF4757;animation:sh .3s;}
+.pz-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px;}
+.popt{padding:9px 16px;border-radius:50px;font-weight:900;font-size:.85rem;cursor:pointer;color:#fff;transition:all .15s;}
+.popt:active{transform:scale(1.1);}
+.popt.used-p{opacity:.25;pointer-events:none;}
+.pz-fb{text-align:center;font-size:.9rem;font-weight:700;margin-top:10px;min-height:22px;}
+.pz-score{text-align:center;font-size:.82rem;color:#888;margin-bottom:10px;font-weight:700;}
+
+/* FIND HOME */
+.fh-animal{text-align:center;padding:16px;border-radius:18px;margin-bottom:12px;}
+.fh-emoji{font-size:4rem;animation:float 2s infinite;}
+.fh-name{font-size:1.2rem;font-weight:900;margin-top:8px;}
+.fh-clue{font-size:.82rem;color:rgba(255,255,255,.9);margin-top:5px;font-style:italic;}
+.fh-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.fhopt{border-radius:16px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;border:3px solid transparent;font-weight:700;font-size:.8rem;color:#fff;}
+.fhopt:active{transform:scale(.94);}
+.fhopt.fh-ok{border-color:#FFD700;animation:popIn .3s ease;}
+.fhopt.fh-bad{border-color:#FF4757;animation:sh .3s;}
+.fh-fb{text-align:center;font-size:.9rem;font-weight:700;margin-top:10px;min-height:22px;}
+
+/* CERT */
+.cert-wrap{background:linear-gradient(135deg,#FFF8F0,#F0FFF8);border:3px dashed #2E7D32;border-radius:18px;text-align:center;padding:20px 14px;}
+.cinput{border:2px solid #D0D0E8;border-radius:50px;padding:10px 20px;font-family:var(--font);font-size:1rem;width:100%;max-width:260px;text-align:center;margin:10px auto;outline:none;display:block;}
+.cinput:focus{border-color:#2E7D32;}
+.cert-result{display:none;margin-top:12px;animation:fu .4s ease;}
+.cert-result.show{display:block;}
+
+/* PROGRESS */
+.pw{background:#F0F0F5;border-radius:50px;height:9px;margin-top:9px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,#FF8C00,#2E7D32);border-radius:50px;transition:width .4s ease;}
+.pl{font-size:.7rem;color:#aaa;margin-top:3px;}
+
+.cnv{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+.fpop{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) scale(.5);background:#fff;border-radius:20px;padding:16px 26px;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center;z-index:1000;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:85vw;}
+.fpop.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.fpe{font-size:2.2rem;}.fpt{font-size:1rem;margin-top:5px;font-weight:700;}
+
+.btn{border:none;border-radius:50px;padding:9px 22px;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;color:#fff;transition:transform .15s;}
+.btn:active{transform:scale(.95);}
+.btn-desert{background:#FF8C00;}.btn-forest{background:#2E7D32;}.btn-ocean{background:#0077B6;}
+.btn-purple{background:#A855F7;}.btn-green{background:#2ED573;color:#1a6b3a;}
+
+footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #F0F0F8;text-align:center;padding:7px;font-size:.7rem;color:#aaa;font-weight:700;z-index:100;}
+footer span{color:#FF8C00;}
+</style>
+</head>
+<body>
+<canvas class="cnv" id="CC"></canvas>
+<div class="fpop" id="FP"><div class="fpe" id="FPE">🎉</div><div class="fpt" id="FPT">Amazing!</div></div>
+
+<header>
+  <div class="ht">🌍 Animal Habitats Explorer!</div>
+  <div class="hs">Grade 3 Science · Teacher Manal Bazzi</div>
+  <div class="hicons">🏜️ 🌲 🌊</div>
+</header>
+
+<nav class="tabs">
+  <button class="tb on" onclick="S('explore',this)">🔬 Explore</button>
+  <button class="tb"    onclick="S('quiz',this)">❓ Quiz</button>
+  <button class="tb"    onclick="S('match',this)">🔗 Match</button>
+  <button class="tb"    onclick="S('drag',this)">🎯 Sort</button>
+  <button class="tb"    onclick="S('memory',this)">🃏 Memory</button>
+  <button class="tb"    onclick="S('puzzle',this)">🧩 Puzzle</button>
+  <button class="tb"    onclick="S('findhome',this)">🏠 Find Home</button>
+  <button class="tb"    onclick="S('summary',this)">🌟 Summary</button>
+</nav>
+
+<div class="main">
+
+<!-- 1. EXPLORE -->
+<div class="sec on" id="sec-explore">
+  <div class="card">
+    <div class="ct" style="color:#FF8C00">🌍 Explore the 3 Habitats!</div>
+    <div class="hint-box" style="background:#FFF8F0;color:#FF8C00">Tap a habitat to meet its animals! 🐾</div>
+    <div class="hab-grid" id="HAB_GRID"></div>
+    <div class="pw"><div class="pf" id="EXP_PF" style="width:0%"></div></div>
+    <div class="pl" id="EXP_PL">0 animals discovered</div>
+  </div>
+  <div id="HAB_DETAIL"></div>
+</div>
+
+<!-- 2. QUIZ -->
+<div class="sec" id="sec-quiz">
+  <div class="card">
+    <div class="ct" style="color:#FF8C00">❓ Quiz Time!</div>
+    <div class="qbar"><span id="QC">Question 1/10</span><span class="qscore" id="QS">⭐ 0</span></div>
+    <div class="q-q" id="QQ">Loading...</div>
+    <div class="q-visual" id="QV"></div>
+    <div class="q-opts" id="QOPTS"></div>
+    <div class="q-fb" id="QFB"></div>
+    <button class="q-next" id="QNXT">Next ▶</button>
+  </div>
+</div>
+
+<!-- 3. MATCH -->
+<div class="sec" id="sec-match">
+  <div class="card">
+    <div class="ct" style="color:#2E7D32">🔗 Match Animal to Habitat!</div>
+    <div class="hint-box" style="background:#E8F5E9;color:#2E7D32">Tap an animal, then tap its habitat! 🎯</div>
+    <div class="match-area">
+      <div><div class="mcol-t" style="color:#FF8C00">🐾 Animal</div><div id="MATCH_LEFT"></div></div>
+      <div><div class="mcol-t" style="color:#0077B6">🏠 Habitat</div><div id="MATCH_RIGHT"></div></div>
+    </div>
+    <div class="match-fb" id="MATCH_FB"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-desert" onclick="setupMatch()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 4. DRAG SORT -->
+<div class="sec" id="sec-drag">
+  <div class="card">
+    <div class="ct" style="color:#0077B6">🎯 Sort Animals to Their Habitats!</div>
+    <div class="hint-box" style="background:#E0F4FF;color:#0077B6">Tap an animal, then tap its habitat! 🏠</div>
+    <div class="buckets" id="BUCKETS"></div>
+    <div class="drag-pool" id="DRAG_POOL"></div>
+    <div class="drag-fb" id="DRAG_FB"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-ocean" onclick="setupDrag()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 5. MEMORY -->
+<div class="sec" id="sec-memory">
+  <div class="card">
+    <div class="ct" style="color:#FF8C00">🃏 Memory Game!</div>
+    <div class="hint-box" style="background:#FFF8F0;color:#FF8C00">Match each animal with its habitat!</div>
+    <div class="mem-stats">
+      <div class="mstat">✅ <span id="MM">0</span>/<span id="MTOT">8</span></div>
+      <div class="mstat">🔄 <span id="MTR">0</span> tries</div>
+    </div>
+    <div class="mem-grid" id="MEM_GRID"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-forest" onclick="setupMemory()">🔄 New Game</button></div>
+  </div>
+</div>
+
+<!-- 6. PUZZLE -->
+<div class="sec" id="sec-puzzle">
+  <div class="card">
+    <div class="ct" style="color:#2E7D32">🧩 Fill in the Blanks!</div>
+    <div class="pz-score" id="PZ_SCORE">Score: 0 / 0</div>
+    <div class="pz-q" id="PZ_Q"></div>
+    <div class="pz-opts" id="PZ_OPTS"></div>
+    <div class="pz-fb" id="PZ_FB"></div>
+    <div style="text-align:center;margin-top:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-desert" onclick="nextPuzzle()">▶ Next</button>
+      <button class="btn btn-forest" onclick="setupPuzzle()">🔄 Restart</button>
+    </div>
+  </div>
+</div>
+
+<!-- 7. FIND HOME -->
+<div class="sec" id="sec-findhome">
+  <div class="card">
+    <div class="ct" style="color:#0077B6">🏠 Find the Animal's Home!</div>
+    <div class="hint-box" style="background:#E0F4FF;color:#0077B6">Read the clue and choose the correct habitat!</div>
+    <div id="FH_ANIMAL"></div>
+    <div class="fh-opts" id="FH_OPTS"></div>
+    <div class="fh-fb" id="FH_FB"></div>
+    <div style="text-align:center;margin-top:12px"><button class="btn btn-ocean" onclick="setupFindHome()">🔄 Next Animal</button></div>
+  </div>
+</div>
+
+<!-- 8. SUMMARY -->
+<div class="sec" id="sec-summary">
+  <div style="text-align:center;padding:20px 12px 14px;background:linear-gradient(135deg,#FF8C00,#2E7D32,#0077B6);border-radius:18px;color:#fff;margin-bottom:14px">
+    <div style="font-size:2.5rem">🌍</div>
+    <div style="font-size:1.4rem;font-weight:900;margin:7px 0">You Explored 3 Habitats!</div>
+    <div style="font-size:.82rem;opacity:.9">Desert 🏜️ · Forest 🌲 · Ocean 🌊</div>
+  </div>
+  <div class="card" id="SUM_CONTENT"></div>
+  <div class="card">
+    <div class="cert-wrap">
+      <div style="font-size:1.1rem;font-weight:900;color:#2E7D32">🏅 My Science Certificate</div>
+      <p style="color:#aaa;font-size:.8rem;margin-top:5px">Enter your name to get your certificate!</p>
+      <input class="cinput" type="text" id="CI" placeholder="Your name here ✨" maxlength="30"/>
+      <button class="btn btn-forest" onclick="genCert()" style="display:block;margin:0 auto">🎓 Get My Certificate!</button>
+      <div class="cert-result" id="CR">
+        <div style="font-size:2rem">🌍🏆✨</div>
+        <div style="font-size:1.1rem;font-weight:900;color:#FF8C00" id="CN"></div>
+        <div style="font-size:.78rem;color:#aaa;margin-top:5px">You explored Desert, Forest &amp; Ocean habitats!<br>Presented by Teacher <strong>Manal Bazzi</strong> 👩‍🏫</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>🌍 Created by Teacher <span>Manal Bazzi</span> · Animal Habitats · Grade 3</footer>
+
+<script>
+/* ===== SOUND ENGINE ===== */
+const AC=(()=>{try{return new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}})();
+function resume(){if(AC&&AC.state==='suspended')AC.resume();}
+function osc(type,freq,gain,start,dur){if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.setValueAtTime(freq,start);g.gain.setValueAtTime(gain,start);g.gain.exponentialRampToValueAtTime(0.001,start+dur);o.connect(g);g.connect(AC.destination);o.start(start);o.stop(start+dur+.01);}
+function sndClick(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',660,.1,t,.06);}
+function sndReveal(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',440,.13,t,.08);osc('sine',660,.13,t+.09,.1);osc('triangle',880,.1,t+.18,.14);}
+function sndCorrect(){if(!AC)return;resume();const t=AC.currentTime;[[523,.16],[659,.16],[784,.16],[1047,.2]].forEach(([f,v],i)=>osc('sine',f,v,t+i*.1,.2));[1760,2093].forEach((f,i)=>osc('triangle',f,.05,t+.42+i*.07,.14));}
+function sndWrong(){if(!AC)return;resume();const t=AC.currentTime;osc('sawtooth',180,.18,t,.12);osc('sawtooth',140,.16,t+.1,.15);}
+function sndFlip(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',600,.09,t,.05);}
+function sndMatch(){if(!AC)return;resume();const t=AC.currentTime;[523,659,784].forEach((f,i)=>osc('sine',f,.16,t+i*.09,.18));}
+function sndCelebration(){if(!AC)return;resume();const t=AC.currentTime;[[523,659,784,1047],[587,740,880,1175]].forEach(([a,b,c,d],gi)=>[a,b,c,d].forEach(f=>osc('sine',f,.13,t+gi*.3,.26)));[523,659,784,1047,1568].forEach((f,i)=>osc('square',f,.04,t+.62+i*.07,.14));}
+
+/* ===== DATA ===== */
+const HABITATS = {
+  desert:{
+    name:'Desert', emoji:'🏜️', color:'#FF8C00', light:'#FFF3E0', bg:'linear-gradient(160deg,#FF8C00,#FFB347)',
+    description:'Hot, dry land with little rain. Animals survive extreme heat and find water in clever ways.',
+    climate:'🌡️ Very hot days, cold nights · 🌧️ Less than 25cm rain per year',
+    animals:[
+      {name:'Camel',      emoji:'🐪', fact:'Can go 2 weeks without water! Stores fat in its hump.',         adapt:'Thick eyelashes keep sand out · Wide feet for walking on sand · Can drink 135L at once!'},
+      {name:'Fennec Fox', emoji:'🦊', fact:'Huge ears help it hear prey underground and release body heat.', adapt:'Active at night to avoid heat · Thick fur for cold nights · Burrows in sand to stay cool'},
+      {name:'Scorpion',   emoji:'🦂', fact:'Can survive without food for 12 months!',                        adapt:'Waterproof body · Hunts at night · Venom to catch prey'},
+      {name:'Rattlesnake',emoji:'🐍', fact:'Shakes its rattle as a warning — can sense heat from prey.',     adapt:'Moves in S-shapes on sand · Scales prevent water loss · Hunts at dawn and dusk'},
+      {name:'Roadrunner', emoji:'🐦', fact:'Runs up to 32 km/h! Gets water from food it eats.',              adapt:'Spreads wings to warm up in the morning · Runs instead of flying · Eats lizards and snakes'},
+      {name:'Gecko',      emoji:'🦎', fact:'Licks morning dew off its eyes and skin to drink water!',        adapt:'Nocturnal · Sticky feet to climb rocks · Burrows underground during hot hours'},
+    ]
+  },
+  forest:{
+    name:'Forest', emoji:'🌲', color:'#2E7D32', light:'#E8F5E9', bg:'linear-gradient(160deg,#2E7D32,#4CAF50)',
+    description:'Dense trees and plants with lots of rain. Animals use the trees for food, shelter and movement.',
+    climate:'🌡️ Mild temperatures · 🌧️ 150-250cm rain per year',
+    animals:[
+      {name:'Bear',       emoji:'🐻', fact:'Hibernates all winter! Eats up to 20kg of food per day in fall.', adapt:'Thick fur for cold · Climbs trees · Excellent sense of smell to find food'},
+      {name:'Owl',        emoji:'🦉', fact:'Can rotate its head 270°! Silent wings for night hunting.',        adapt:'Silent feathers to surprise prey · Night vision · Facial disc channels sound to ears'},
+      {name:'Deer',       emoji:'🦌', fact:'Can run 48 km/h! Males grow new antlers every year.',             adapt:'Camouflage coat · Hooves for running · Eyes on sides of head to see predators'},
+      {name:'Squirrel',   emoji:'🐿️', fact:'Hides thousands of nuts and remembers most of them!',             adapt:'Sharp claws for climbing · Bushy tail for balance · Gnaws hard shells with strong teeth'},
+      {name:'Wolf',       emoji:'🐺', fact:'Hunts in packs and howls to communicate with the pack.',          adapt:'Pack hunting strategy · Strong legs for long runs · Sharp senses of hearing and smell'},
+      {name:'Woodpecker', emoji:'🐦', fact:'Pecks wood 20 times per second to find insects inside!',          adapt:'Strong beak like a chisel · Long sticky tongue · Stiff tail for support while pecking'},
+    ]
+  },
+  ocean:{
+    name:'Ocean', emoji:'🌊', color:'#0077B6', light:'#E0F4FF', bg:'linear-gradient(160deg,#0077B6,#00B4D8)',
+    description:'Vast saltwater covering 71% of Earth. Animals have amazing adaptations to breathe and move in water.',
+    climate:'🌡️ Temperature varies with depth · 🧂 3.5% salt content',
+    animals:[
+      {name:'Dolphin',    emoji:'🐬', fact:'Breathes air through a blowhole! Uses echolocation to find food.', adapt:'Streamlined body for fast swimming · Blowholes for breathing at surface · Echolocation sonar'},
+      {name:'Shark',      emoji:'🦈', fact:'Has 7 rows of teeth! Can smell blood from 400 meters away.',       adapt:'Cartilage skeleton for flexibility · Gills to breathe underwater · Lateral line senses vibrations'},
+      {name:'Octopus',    emoji:'🐙', fact:'Has 3 hearts and blue blood! Can change color in 0.3 seconds.',    adapt:'8 arms with suckers · Can change color and texture · Ink cloud for escaping predators'},
+      {name:'Sea Turtle', emoji:'🐢', fact:'Lives up to 100 years! Returns to the beach it was born on.',      adapt:'Flippers for swimming · Shell for protection · Holds breath for 7 hours while sleeping'},
+      {name:'Clownfish',  emoji:'🐠', fact:'Lives safely in stinging sea anemones — they protect each other!', adapt:'Mucus coating protects from anemone stings · Bright colors as warning · Stays near anemone'},
+      {name:'Blue Whale', emoji:'🐋', fact:'The LARGEST animal ever! Heart the size of a small car.',          adapt:'Baleen plates filter tiny krill from water · Blubber for insulation · Huge lungs for deep dives'},
+    ]
+  }
+};
+
+const HAB_KEYS = Object.keys(HABITATS);
+function shuf(a){return[...a].sort(()=>Math.random()-.5);}
+function pop(e,t){const p=document.getElementById('FP');document.getElementById('FPE').textContent=e;document.getElementById('FPT').textContent=t;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),2500);}
+function confetti(){
+  const cv=document.getElementById('CC'),ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
+  const c=['#FF8C00','#2E7D32','#0077B6','#2ED573','#FFD700','#FF69B4','#A855F7'];
+  const p=Array.from({length:130},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.3,w:7+Math.random()*9,h:13+Math.random()*9,color:c[Math.floor(Math.random()*c.length)],rot:Math.random()*Math.PI*2,vx:(Math.random()-.5)*3,vy:3+Math.random()*4,vrot:(Math.random()-.5)*.2}));
+  let f=0;(function d(){ctx.clearRect(0,0,cv.width,cv.height);p.forEach(q=>{ctx.save();ctx.translate(q.x,q.y);ctx.rotate(q.rot);ctx.fillStyle=q.color;ctx.fillRect(-q.w/2,-q.h/2,q.w,q.h);ctx.restore();q.x+=q.vx;q.y+=q.vy;q.rot+=q.vrot;q.vy+=.06;});if(++f<140)requestAnimationFrame(d);else ctx.clearRect(0,0,cv.width,cv.height);})();
+}
+
+/* NAV */
+function S(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');if(btn)btn.classList.add('on');
+  if(id==='quiz')setupQuiz();if(id==='match')setupMatch();if(id==='drag')setupDrag();
+  if(id==='memory')setupMemory();if(id==='puzzle')setupPuzzle();if(id==='findhome')setupFindHome();
+  if(id==='summary')renderSummary();
+}
+
+/* ===== 1. EXPLORE ===== */
+let expVisited=new Set();
+function initExplore(){
+  const g=document.getElementById('HAB_GRID');
+  HAB_KEYS.forEach(key=>{
+    const h=HABITATS[key];
+    const d=document.createElement('div');d.className='hab-card';
+    d.style.background=h.bg;
+    d.innerHTML=`<div class="hab-icon">${h.emoji}</div><div class="hab-name">${h.name}</div><div class="hab-count">${h.animals.length} animals</div>`;
+    d.onclick=()=>exploreHabitat(key,d);g.appendChild(d);
+  });
+}
+function exploreHabitat(key,tile){
+  sndReveal();
+  document.querySelectorAll('.hab-card').forEach(c=>c.classList.remove('active-h'));
+  tile.classList.add('active-h');
+  const h=HABITATS[key];
+  const det=document.getElementById('HAB_DETAIL');
+  det.innerHTML=`
+    <div style="border-radius:20px;overflow:hidden;margin-bottom:12px">
+      ${buildHabitatScene(key)}
+    </div>
+    <div style="border-radius:18px;padding:16px;background:${h.bg};margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:2.2rem">${h.emoji}</span>
+        <div><div style="font-weight:900;color:#fff;font-size:1rem">${h.name}</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.85);margin-top:2px">${h.climate}</div></div>
+      </div>
+      <div style="font-size:.78rem;color:rgba(255,255,255,.9);margin-bottom:12px;line-height:1.5">${h.description}</div>
+      <div style="font-size:.8rem;font-weight:900;color:#fff;margin-bottom:8px">🐾 Tap an animal to learn about it:</div>
+      <div class="animal-grid" id="AG_${key}"></div>
+      <div id="AI_${key}" style="display:none"></div>
+    </div>`;
+  h.animals.forEach(a=>{
+    const chip=document.createElement('div');chip.className='animal-chip'+(expVisited.has(key+a.name)?' visited-a':'');
+    chip.innerHTML=`<div class="a-emoji">${a.emoji}</div><div class="a-name">${a.name}</div>`;
+    chip.onclick=()=>{
+      sndClick();expVisited.add(key+a.name);chip.classList.add('visited-a');
+      const ai=document.getElementById('AI_'+key);ai.style.display='block';
+      ai.innerHTML=`<div class="animal-info">
+        <div class="ai-title">${a.emoji} ${a.name}</div>
+        <div class="ai-facts">🌟 ${a.fact}</div>
+        <div class="ai-adapt">🔧 Adaptations: ${a.adapt}</div>
+      </div>`;
+      const total=HAB_KEYS.reduce((s,k)=>s+HABITATS[k].animals.length,0);
+      const pct=Math.round(expVisited.size/total*100);
+      document.getElementById('EXP_PF').style.width=pct+'%';
+      document.getElementById('EXP_PL').textContent=expVisited.size+' / '+total+' animals discovered';
+      if(expVisited.size===total){setTimeout(()=>{pop('🌍','You discovered ALL animals!');confetti();sndCelebration();},300);}
+    };
+    document.getElementById('AG_'+key).appendChild(chip);
+  });
+}
+
+function buildHabitatScene(key){
+  if(key==='desert') return `<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+    <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFB347"/><stop offset="100%" stop-color="#FFD700"/></linearGradient>
+    <linearGradient id="sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F4A460"/><stop offset="100%" stop-color="#DEB887"/></linearGradient></defs>
+    <rect width="400" height="180" fill="url(#sky)"/>
+    <!-- sun -->
+    <circle cx="340" cy="35" r="28" fill="#FFF200" opacity=".9"/>
+    <circle cx="340" cy="35" r="22" fill="#FFD700"/>
+    <!-- heat rays -->
+    <line x1="340" y1="0" x2="340" y2="8" stroke="#FFF200" stroke-width="2.5"/>
+    <line x1="370" y1="10" x2="376" y2="4" stroke="#FFF200" stroke-width="2.5"/>
+    <line x1="380" y1="35" x2="388" y2="35" stroke="#FFF200" stroke-width="2.5"/>
+    <!-- sand dunes -->
+    <ellipse cx="80"  cy="165" rx="120" ry="40" fill="url(#sand)"/>
+    <ellipse cx="250" cy="170" rx="180" ry="45" fill="#D4A355"/>
+    <ellipse cx="380" cy="160" rx="100" ry="35" fill="#C8963C"/>
+    <!-- ground -->
+    <rect x="0" y="145" width="400" height="35" fill="#C8963C"/>
+    <!-- cactus 1 -->
+    <rect x="58" y="90" width="10" height="60" rx="5" fill="#4CAF50"/>
+    <rect x="48" y="108" width="22" height="8" rx="4" fill="#4CAF50"/>
+    <rect x="38" y="100" width="10" height="22" rx="5" fill="#4CAF50"/>
+    <!-- cactus 2 -->
+    <rect x="155" y="100" width="8" height="48" rx="4" fill="#388E3C"/>
+    <rect x="148" y="112" width="18" height="7" rx="3" fill="#388E3C"/>
+    <rect x="165" y="105" width="8" height="18" rx="4" fill="#388E3C"/>
+    <!-- camel -->
+    <ellipse cx="280" cy="140" rx="30" ry="15" fill="#C8963C"/>
+    <ellipse cx="300" cy="128" rx="12" ry="10" fill="#C8963C"/>
+    <ellipse cx="292" cy="125" rx="7" ry="11" fill="#C8963C"/>
+    <ellipse cx="310" cy="128" rx="5" ry="8" fill="#A0724A"/>
+    <!-- hump -->
+    <ellipse cx="275" cy="126" rx="10" ry="12" fill="#A0724A"/>
+    <!-- camel legs -->
+    <rect x="265" y="152" width="6" height="20" rx="3" fill="#A0724A"/>
+    <rect x="276" y="152" width="6" height="20" rx="3" fill="#A0724A"/>
+    <rect x="288" y="152" width="6" height="20" rx="3" fill="#A0724A"/>
+    <rect x="299" y="152" width="6" height="20" rx="3" fill="#A0724A"/>
+    <!-- camel eye -->
+    <circle cx="307" cy="125" r="2" fill="#333"/>
+    <!-- scorpion -->
+    <ellipse cx="80" cy="152" rx="12" ry="6" fill="#FF8C00"/>
+    <ellipse cx="72" cy="150" rx="6" ry="4" fill="#FF8C00"/>
+    <path d="M92,148 Q105,135 100,125" fill="none" stroke="#FF8C00" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="100" cy="123" r="3" fill="#FF4757"/>
+    <!-- rocks -->
+    <ellipse cx="30"  cy="152" rx="18" ry="10" fill="#A0724A"/>
+    <ellipse cx="370" cy="150" rx="22" ry="12" fill="#8B5E3C"/>
+    <!-- small snake -->
+    <path d="M340,148 Q350,142 360,148 Q370,154 380,148" fill="none" stroke="#8B8000" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="340" cy="148" r="4" fill="#6B6B00"/>
+    <!-- stars / sand bits -->
+    <circle cx="120" cy="148" r="2" fill="#DEB887"/>
+    <circle cx="200" cy="152" r="1.5" fill="#C8B08A"/>
+    <text x="200" y="20" text-anchor="middle" font-size="13" fill="#8B4513" font-weight="bold" opacity=".6">🏜️ Desert</text>
+  </svg>`;
+
+  if(key==='forest') return `<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+    <defs><linearGradient id="fsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#87CEEB"/><stop offset="100%" stop-color="#B0E0E6"/></linearGradient>
+    <linearGradient id="fgrnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4CAF50"/><stop offset="100%" stop-color="#2E7D32"/></linearGradient></defs>
+    <rect width="400" height="180" fill="url(#fsky)"/>
+    <!-- clouds -->
+    <ellipse cx="60"  cy="30" rx="35" ry="16" fill="#fff" opacity=".85"/>
+    <ellipse cx="90"  cy="24" rx="25" ry="14" fill="#fff" opacity=".85"/>
+    <ellipse cx="320" cy="28" rx="30" ry="14" fill="#fff" opacity=".8"/>
+    <!-- ground -->
+    <rect x="0" y="140" width="400" height="40" fill="url(#fgrnd)"/>
+    <!-- undergrowth -->
+    <ellipse cx="200" cy="143" rx="200" ry="18" fill="#388E3C" opacity=".7"/>
+    <!-- big tree left -->
+    <rect x="28" y="60" width="18" height="90" rx="5" fill="#5D4037"/>
+    <ellipse cx="37" cy="55" rx="38" ry="50" fill="#2E7D32"/>
+    <ellipse cx="20" cy="70" rx="22" ry="30" fill="#388E3C"/>
+    <ellipse cx="55" cy="65" rx="20" ry="28" fill="#1B5E20"/>
+    <!-- big tree right -->
+    <rect x="354" y="65" width="18" height="85" rx="5" fill="#5D4037"/>
+    <ellipse cx="363" cy="58" rx="36" ry="48" fill="#2E7D32"/>
+    <ellipse cx="345" cy="72" rx="20" ry="28" fill="#388E3C"/>
+    <ellipse cx="380" cy="68" rx="18" ry="26" fill="#1B5E20"/>
+    <!-- mid tree -->
+    <rect x="178" y="80" width="14" height="68" rx="4" fill="#5D4037"/>
+    <ellipse cx="185" cy="72" rx="30" ry="40" fill="#43A047"/>
+    <!-- bear -->
+    <ellipse cx="120" cy="148" rx="22" ry="15" fill="#5D4037"/>
+    <ellipse cx="105" cy="138" rx="13" ry="12" fill="#5D4037"/>
+    <circle cx="98"  cy="133" r="5" fill="#4E342E"/>
+    <circle cx="112" cy="133" r="5" fill="#4E342E"/>
+    <ellipse cx="105" cy="144" rx="7"  ry="5"  fill="#4E342E"/>
+    <circle cx="101" cy="137" r="1.5" fill="#fff"/>
+    <circle cx="109" cy="137" r="1.5" fill="#fff"/>
+    <!-- owl on branch -->
+    <rect x="295" y="95" width="50" height="5" rx="2" fill="#5D4037"/>
+    <ellipse cx="300" cy="84" rx="10" ry="13" fill="#8B6914"/>
+    <circle cx="296" cy="80" r="5" fill="#FFD700" opacity=".9"/>
+    <circle cx="304" cy="80" r="5" fill="#FFD700" opacity=".9"/>
+    <circle cx="296" cy="80" r="3" fill="#333"/>
+    <circle cx="304" cy="80" r="3" fill="#333"/>
+    <polygon points="300,82 297,86 303,86" fill="#FF8C00"/>
+    <!-- deer -->
+    <ellipse cx="250" cy="148" rx="18" ry="10" fill="#C8963C"/>
+    <ellipse cx="265" cy="138" rx="9"  ry="8"  fill="#C8963C"/>
+    <line x1="263" y1="131" x2="258" y2="120" stroke="#8B6914" stroke-width="2.5"/>
+    <line x1="267" y1="131" x2="272" y2="120" stroke="#8B6914" stroke-width="2.5"/>
+    <line x1="258" y1="120" x2="252" y2="115" stroke="#8B6914" stroke-width="2"/>
+    <line x1="272" y1="120" x2="278" y2="115" stroke="#8B6914" stroke-width="2"/>
+    <!-- deer legs -->
+    <rect x="240" y="156" width="5" height="18" rx="2" fill="#A0724A"/>
+    <rect x="249" y="156" width="5" height="18" rx="2" fill="#A0724A"/>
+    <rect x="258" y="156" width="5" height="18" rx="2" fill="#A0724A"/>
+    <rect x="267" y="156" width="5" height="18" rx="2" fill="#A0724A"/>
+    <!-- mushrooms -->
+    <rect x="155" y="148" width="6" height="12" rx="2" fill="#fff"/>
+    <ellipse cx="158" cy="148" rx="9" ry="6" fill="#FF4757"/>
+    <circle cx="155" cy="146" r="1.5" fill="#fff"/>
+    <circle cx="161" cy="145" r="1.5" fill="#fff"/>
+    <!-- squirrel -->
+    <ellipse cx="185" cy="105" rx="7" ry="9" fill="#A0522D"/>
+    <ellipse cx="185" cy="97"  rx="5" ry="5" fill="#A0522D"/>
+    <path d="M185,98 Q178,88 182,82 Q189,88 185,98Z" fill="#8B4513"/>
+    <text x="200" y="20" text-anchor="middle" font-size="13" fill="#1B5E20" font-weight="bold" opacity=".7">🌲 Forest</text>
+  </svg>`;
+
+  if(key==='ocean') return `<svg viewBox="0 0 400 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+    <defs>
+      <linearGradient id="osky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#87CEEB"/><stop offset="60%" stop-color="#B0E0E6"/></linearGradient>
+      <linearGradient id="ow"   x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0096C7"/><stop offset="100%" stop-color="#023E8A"/></linearGradient>
+    </defs>
+    <rect width="400" height="180" fill="url(#osky)"/>
+    <!-- horizon line wave top -->
+    <path d="M0,75 Q50,65 100,75 Q150,85 200,75 Q250,65 300,75 Q350,85 400,75 L400,180 L0,180Z" fill="url(#ow)"/>
+    <!-- wave overlays -->
+    <path d="M0,78 Q40,70 80,78 Q120,86 160,78 Q200,70 240,78 Q280,86 320,78 Q360,70 400,78" fill="none" stroke="#90E0EF" stroke-width="2.5" opacity=".5"/>
+    <path d="M0,88 Q50,80 100,88 Q150,96 200,88 Q250,80 300,88 Q350,96 400,88" fill="none" stroke="#90E0EF" stroke-width="2" opacity=".35"/>
+    <!-- seafloor -->
+    <ellipse cx="200" cy="185" rx="220" ry="30" fill="#1B3A6B" opacity=".5"/>
+    <!-- coral left -->
+    <line x1="30" y1="178" x2="30" y2="148" stroke="#FF6B8A" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="30" cy="145" r="10" fill="#FF4D6D" opacity=".8"/>
+    <circle cx="22" cy="150" r="7" fill="#FF6B8A" opacity=".8"/>
+    <circle cx="38" cy="150" r="7" fill="#FF6B8A" opacity=".8"/>
+    <!-- coral right -->
+    <line x1="370" y1="178" x2="370" y2="152" stroke="#FF8C42" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="370" cy="148" r="9" fill="#FF6B1A" opacity=".8"/>
+    <circle cx="362" cy="153" r="6" fill="#FF8C42" opacity=".8"/>
+    <circle cx="378" cy="153" r="6" fill="#FF8C42" opacity=".8"/>
+    <!-- seaweed -->
+    <path d="M80,178 Q72,162 80,148 Q88,134 80,120" fill="none" stroke="#2E7D32" stroke-width="6" stroke-linecap="round"/>
+    <path d="M320,178 Q328,160 320,145 Q312,130 320,118" fill="none" stroke="#388E3C" stroke-width="5" stroke-linecap="round"/>
+    <!-- whale big -->
+    <ellipse cx="200" cy="115" rx="70" ry="30" fill="#023E8A"/>
+    <ellipse cx="135" cy="118" rx="18" ry="14" fill="#023E8A"/>
+    <!-- whale tail -->
+    <path d="M268,108 Q285,95 290,108 Q285,120 268,115Z" fill="#03045E"/>
+    <!-- whale eye -->
+    <circle cx="148" cy="113" r="4" fill="#fff"/>
+    <circle cx="149" cy="113" r="2.5" fill="#333"/>
+    <!-- whale mouth smile -->
+    <path d="M138,122 Q143,127 148,122" fill="none" stroke="#90CAF9" stroke-width="2" stroke-linecap="round"/>
+    <!-- whale blowhole water -->
+    <line x1="195" y1="87"  x2="195" y2="72"  stroke="#90E0EF" stroke-width="3" stroke-linecap="round"/>
+    <line x1="200" y1="87"  x2="200" y2="68"  stroke="#90E0EF" stroke-width="3" stroke-linecap="round"/>
+    <line x1="205" y1="87"  x2="207" y2="73"  stroke="#90E0EF" stroke-width="3" stroke-linecap="round"/>
+    <!-- dolphin -->
+    <ellipse cx="310" cy="98" rx="28" ry="11" fill="#4FC3F7"/>
+    <ellipse cx="285" cy="100" rx="9" ry="7" fill="#4FC3F7"/>
+    <path d="M336,95 Q345,88 342,98Z" fill="#0288D1"/>
+    <path d="M310,88 Q315,78 320,88Z" fill="#0288D1"/>
+    <circle cx="289" cy="98" r="2.5" fill="#01579B"/>
+    <!-- fish school -->
+    <ellipse cx="130" cy="155" rx="10" ry="5" fill="#FF8C00" opacity=".85"/>
+    <ellipse cx="148" cy="160" rx="9"  ry="4" fill="#FF8C00" opacity=".85"/>
+    <ellipse cx="165" cy="153" rx="10" ry="5" fill="#FF6B35" opacity=".85"/>
+    <!-- octopus small -->
+    <ellipse cx="350" cy="162" rx="12" ry="9" fill="#9C27B0" opacity=".8"/>
+    <line x1="343" y1="170" x2="338" y2="178" stroke="#7B1FA2" stroke-width="3" stroke-linecap="round"/>
+    <line x1="348" y1="171" x2="345" y2="179" stroke="#7B1FA2" stroke-width="3" stroke-linecap="round"/>
+    <line x1="353" y1="171" x2="353" y2="179" stroke="#7B1FA2" stroke-width="3" stroke-linecap="round"/>
+    <line x1="358" y1="170" x2="362" y2="178" stroke="#7B1FA2" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="346" cy="160" r="2" fill="#fff"/>
+    <circle cx="354" cy="160" r="2" fill="#fff"/>
+    <!-- sea turtle -->
+    <ellipse cx="60" cy="152" rx="14" ry="10" fill="#388E3C"/>
+    <ellipse cx="60" cy="152" rx="10" ry="7" fill="#2E7D32"/>
+    <ellipse cx="48" cy="150" rx="6" ry="4" fill="#388E3C"/>
+    <ellipse cx="72" cy="150" rx="6" ry="4" fill="#388E3C"/>
+    <ellipse cx="57" cy="143" rx="6" ry="4" fill="#388E3C"/>
+    <ellipse cx="55" cy="141" rx="4" ry="5" fill="#4CAF50"/>
+    <!-- bubbles -->
+    <circle cx="100" cy="130" r="3" fill="none" stroke="#90E0EF" stroke-width="1.5" opacity=".6"/>
+    <circle cx="108" cy="120" r="2" fill="none" stroke="#90E0EF" stroke-width="1.5" opacity=".5"/>
+    <circle cx="260" cy="140" r="2.5" fill="none" stroke="#90E0EF" stroke-width="1.5" opacity=".5"/>
+    <text x="200" y="68" text-anchor="middle" font-size="13" fill="#023E8A" font-weight="bold" opacity=".7">🌊 Ocean</text>
+  </svg>`;
+}
+
+/* ===== 2. QUIZ ===== */
+let qList=[],qIdx=0,qScore=0;
+function setupQuiz(){
+  qIdx=0;qScore=0;qList=buildQ();
+  document.getElementById('QS').textContent='⭐ 0';document.getElementById('QNXT').classList.remove('show');showQ();
+}
+function buildQ(){
+  const qs=[];
+  // animal → habitat
+  HAB_KEYS.forEach(key=>{
+    const h=HABITATS[key];shuf(h.animals).slice(0,2).forEach(a=>{
+      const w=shuf(HAB_KEYS.filter(k=>k!==key)).slice(0,3).map(k=>HABITATS[k].name);
+      qs.push({q:`Where does the ${a.name} live?`,visual:a.emoji,correct:h.name,opts:shuf([h.name,...w])});
+    });
+  });
+  // habitat → feature
+  qs.push({q:'Which habitat is very hot and dry with little rain?',visual:'🌡️',correct:'Desert',opts:shuf(['Desert','Forest','Ocean'])});
+  qs.push({q:'Which habitat covers 71% of the Earth?',visual:'🌊',correct:'Ocean',opts:shuf(['Desert','Forest','Ocean'])});
+  qs.push({q:'Which habitat has dense trees and lots of rain?',visual:'🌧️',correct:'Forest',opts:shuf(['Desert','Forest','Ocean'])});
+  qs.push({q:'Which animal stores fat in its hump to survive the desert?',visual:'🐪',correct:'Camel',opts:shuf(['Camel','Bear','Dolphin','Owl'])});
+  qs.push({q:'Which ocean animal can change color in 0.3 seconds?',visual:'🐙',correct:'Octopus',opts:shuf(['Octopus','Shark','Dolphin','Sea Turtle'])});
+  qs.push({q:'Which forest animal hibernates all winter?',visual:'❄️',correct:'Bear',opts:shuf(['Bear','Wolf','Deer','Squirrel'])});
+  qs.push({q:'Which animal uses echolocation to find food underwater?',visual:'🔊',correct:'Dolphin',opts:shuf(['Dolphin','Shark','Whale','Octopus'])});
+  qs.push({q:'The camel can go 2 weeks without what?',visual:'💧',correct:'Water',opts:shuf(['Water','Food','Sleep','Shade'])});
+  qs.push({q:'What does the owl rotate 270 degrees?',visual:'🦉',correct:'Its head',opts:shuf(['Its head','Its wings','Its feet','Its eyes'])});
+  return shuf(qs).slice(0,10);
+}
+function showQ(){
+  if(qIdx>=qList.length){endQ();return;}
+  const q=qList[qIdx];
+  document.getElementById('QC').textContent=`Question ${qIdx+1}/${qList.length}`;
+  document.getElementById('QQ').textContent=q.q;
+  document.getElementById('QV').textContent=q.visual;
+  document.getElementById('QFB').textContent='';document.getElementById('QNXT').classList.remove('show');
+  document.getElementById('QNXT').onclick=()=>{qIdx++;showQ();};
+  const oc=document.getElementById('QOPTS');oc.innerHTML='';
+  q.opts.forEach(opt=>{const b=document.createElement('button');b.className='qo';b.textContent=opt;b.onclick=()=>checkQ(opt,q,oc);oc.appendChild(b);});
+}
+function checkQ(chosen,q,c){
+  [...c.querySelectorAll('.qo')].forEach(b=>{b.classList.add('qdis');if(b.textContent===q.correct)b.classList.add('qcor');if(b.textContent===chosen&&chosen!==q.correct)b.classList.add('qwrg');});
+  if(chosen===q.correct){sndCorrect();qScore++;document.getElementById('QS').textContent='⭐ '+qScore;document.getElementById('QFB').innerHTML=`<span style="color:#2ED573">🎉 Correct! Great job! 👏</span>`;}
+  else{sndWrong();document.getElementById('QFB').innerHTML=`<span style="color:#FF4757">❌ Answer: ${q.correct}</span>`;}
+  document.getElementById('QNXT').classList.add('show');
+}
+function endQ(){
+  const pct=Math.round(qScore/qList.length*100);const em=pct===100?'🏆':pct>=70?'🌟':pct>=50?'😊':'💪';
+  document.getElementById('QQ').textContent=`Quiz Done! ${em}`;
+  document.getElementById('QV').textContent='';document.getElementById('QOPTS').innerHTML='';
+  document.getElementById('QFB').innerHTML=`<span style="color:#FF8C00">${pct}% — ${pct===100?'Nature expert!':pct>=70?'Excellent!':'Keep learning!'}</span>`;
+  const nb=document.getElementById('QNXT');nb.textContent='🔄 Play Again';nb.classList.add('show');nb.onclick=setupQuiz;
+  if(pct>=70){confetti();sndCelebration();}
+}
+
+/* ===== 3. MATCH ===== */
+let mSel=null;
+function setupMatch(){
+  mSel=null;document.getElementById('MATCH_FB').textContent='';
+  const pairs=shuf(HAB_KEYS.flatMap(key=>HABITATS[key].animals.map(a=>({animal:a.name,emoji:a.emoji,hab:HABITATS[key].name,color:HABITATS[key].color})))).slice(0,5);
+  const right=shuf(pairs.map(p=>({hab:p.hab,color:p.color})));
+  const ml=document.getElementById('MATCH_LEFT');ml.innerHTML='';
+  const mr=document.getElementById('MATCH_RIGHT');mr.innerHTML='';
+  pairs.forEach(p=>{
+    const el=document.createElement('div');el.className='mitem';
+    el.innerHTML=`${p.emoji} <strong>${p.animal}</strong>`;
+    el.onclick=()=>pickM(el,'a',p.animal,p.hab);ml.appendChild(el);
+  });
+  right.forEach(r=>{
+    const el=document.createElement('div');el.className='mitem';el.style.color=r.color;
+    el.textContent=r.hab;el.onclick=()=>pickM(el,'h',null,r.hab);mr.appendChild(el);
+  });
+}
+function pickM(el,role,animal,hab){
+  if(el.classList.contains('ok'))return;
+  if(!mSel){mSel={el,role,animal,hab};el.classList.add('sel');return;}
+  if(mSel.role===role){mSel.el.classList.remove('sel');el.classList.add('sel');mSel={el,role,animal,hab};return;}
+  const prev=mSel;mSel=null;prev.el.classList.remove('sel');
+  const anName=role==='a'?animal:prev.animal;const chosenHab=role==='h'?hab:prev.hab;
+  const realHab=HAB_KEYS.flatMap(k=>HABITATS[k].animals.map(a=>({name:a.name,hab:HABITATS[k].name}))).find(x=>x.name===anName);
+  const aEl=role==='a'?el:prev.el;const hEl=role==='h'?el:prev.el;
+  if(realHab&&realHab.hab===chosenHab){
+    sndMatch();aEl.classList.add('ok');hEl.classList.add('ok');
+    document.getElementById('MATCH_FB').innerHTML=`<span style="color:#2ED573">✅ ${anName} lives in the ${chosenHab}!</span>`;
+    if([...document.querySelectorAll('.mitem')].every(x=>x.classList.contains('ok'))){setTimeout(()=>{pop('🌟','All matched!');confetti();sndCelebration();},200);}
+  } else {
+    sndWrong();aEl.classList.add('bad');hEl.classList.add('bad');
+    document.getElementById('MATCH_FB').innerHTML=`<span style="color:#FF4757">❌ Try again!</span>`;
+    setTimeout(()=>{aEl.classList.remove('bad');hEl.classList.remove('bad');document.getElementById('MATCH_FB').textContent='';},800);
+  }
+}
+
+/* ===== 4. DRAG SORT ===== */
+let dSel=null;
+function setupDrag(){
+  dSel=null;document.getElementById('DRAG_FB').textContent='';
+  const bk=document.getElementById('BUCKETS');bk.innerHTML='';
+  HAB_KEYS.forEach(key=>{
+    const h=HABITATS[key];const b=document.createElement('div');b.className='bucket';
+    b.style.borderColor=h.color;b.style.background=h.light;
+    b.innerHTML=`<div class="bucket-title" style="color:${h.color}">${h.emoji} ${h.name}</div><div class="bucket-items" id="BI_${key}"></div>`;
+    b.onclick=()=>doDrop(key);bk.appendChild(b);
+  });
+  const allAnimals=shuf(HAB_KEYS.flatMap(key=>HABITATS[key].animals.map(a=>({...a,hab:key}))));
+  const pool=document.getElementById('DRAG_POOL');pool.innerHTML='';
+  allAnimals.slice(0,12).forEach(a=>{
+    const h=HABITATS[a.hab];const t=document.createElement('div');t.className='dtile';
+    t.style.background=h.color;t.textContent=a.emoji+' '+a.name;t.dataset.hab=a.hab;t.dataset.name=a.name;
+    t.onclick=()=>{
+      if(t.classList.contains('used'))return;sndClick();
+      document.querySelectorAll('.dtile').forEach(x=>x.style.boxShadow='');
+      dSel=t;t.style.boxShadow='0 0 0 4px #FFD700';
+      document.getElementById('DRAG_FB').innerHTML=`<span style="color:#A855F7">Now tap the correct habitat! 👆</span>`;
+    };pool.appendChild(t);
+  });
+}
+function doDrop(habKey){
+  if(!dSel||dSel.classList.contains('used'))return;
+  const ok=dSel.dataset.hab===habKey;dSel.style.boxShadow='';
+  const h=HABITATS[habKey];
+  if(ok){
+    sndCorrect();dSel.classList.add('used');
+    const chip=document.createElement('div');chip.className='bchip';chip.style.background=h.color;chip.textContent=dSel.textContent;
+    document.getElementById('BI_'+habKey).appendChild(chip);
+    document.getElementById('DRAG_FB').innerHTML=`<span style="color:#2ED573">✅ ${dSel.dataset.name} lives in the ${h.name}!</span>`;
+    dSel=null;
+    if([...document.querySelectorAll('.dtile')].every(t=>t.classList.contains('used'))){setTimeout(()=>{pop('🏆','All animals sorted!');confetti();sndCelebration();},300);}
+  } else {
+    sndWrong();dSel.style.animation='sh .3s';setTimeout(()=>{if(dSel)dSel.style.animation='';},400);
+    document.getElementById('DRAG_FB').innerHTML=`<span style="color:#FF4757">❌ That's not the right habitat!</span>`;
+  }
+}
+
+/* ===== 5. MEMORY ===== */
+let memFl=[],memMt=0,memTr=0,memLk=false;
+function setupMemory(){
+  memFl=[];memMt=0;memTr=0;memLk=false;const n=8;
+  const all=shuf(HAB_KEYS.flatMap(key=>HABITATS[key].animals.map(a=>({...a,habName:HABITATS[key].name,color:HABITATS[key].color,habEmoji:HABITATS[key].emoji}))));
+  const chosen=all.slice(0,n);
+  document.getElementById('MM').textContent=0;document.getElementById('MTOT').textContent=n;document.getElementById('MTR').textContent=0;
+  const cards=[];chosen.forEach(a=>{cards.push({id:a.name,type:'animal',a});cards.push({id:a.name,type:'habitat',a});});
+  const g=document.getElementById('MEM_GRID');g.innerHTML='';
+  shuf(cards).forEach(card=>{
+    const el=document.createElement('div');el.className='mcard';
+    el.innerHTML=`<div class="mfront" style="background:linear-gradient(135deg,${card.a.color},${card.a.color}BB)">🌍</div>
+      <div class="mback" style="color:${card.a.color}">
+        ${card.type==='animal'?`<div class="mb-e">${card.a.emoji}</div><div>${card.a.name}</div>`:`<div class="mb-e">${card.a.habEmoji}</div><div>${card.a.habName}</div>`}
+      </div>`;
+    el.onclick=()=>flipM(el,card);g.appendChild(el);
+  });
+}
+function flipM(el,card){
+  if(memLk||el.classList.contains('flipped')||el.classList.contains('matched'))return;
+  sndFlip();el.classList.add('flipped');memFl.push({el,card});
+  if(memFl.length===2){
+    memLk=true;memTr++;document.getElementById('MTR').textContent=memTr;
+    const[a,b]=memFl;
+    if(a.card.id===b.card.id&&a.card.type!==b.card.type){
+      sndMatch();a.el.classList.add('matched');b.el.classList.add('matched');memMt++;document.getElementById('MM').textContent=memMt;memFl=[];memLk=false;
+      if(memMt===+document.getElementById('MTOT').textContent)setTimeout(()=>{pop('🏆','All pairs found!');confetti();sndCelebration();},300);
+    } else {
+      sndWrong();a.el.classList.add('mwrong');b.el.classList.add('mwrong');
+      setTimeout(()=>{a.el.classList.remove('flipped','mwrong');b.el.classList.remove('flipped','mwrong');memFl=[];memLk=false;},950);
+    }
+  }
+}
+
+/* ===== 6. PUZZLE ===== */
+const PUZZLES=[
+  {q:'The ___ stores fat in its hump to survive without water in the desert.',blank:'camel',opts:['camel','bear','dolphin','shark'],color:'#FF8C00'},
+  {q:'The ___ is the largest animal ever and lives in the ocean.',blank:'blue whale',opts:['blue whale','shark','dolphin','sea turtle'],color:'#0077B6'},
+  {q:'The ___ hibernates all winter and lives in the forest.',blank:'bear',opts:['bear','camel','octopus','wolf'],color:'#2E7D32'},
+  {q:'The ___ has 8 arms and can change color in the ocean.',blank:'octopus',opts:['octopus','clownfish','shark','dolphin'],color:'#0077B6'},
+  {q:'The ___ uses echolocation to find food in the ocean.',blank:'dolphin',opts:['dolphin','whale','shark','sea turtle'],color:'#0077B6'},
+  {q:'The fennec fox has huge ___ to release heat in the desert.',blank:'ears',opts:['ears','feet','eyes','tail'],color:'#FF8C00'},
+  {q:'The owl can rotate its head ___ degrees to hunt in the forest.',blank:'270',opts:['270','90','180','360'],color:'#2E7D32'},
+  {q:'The clownfish lives safely inside stinging ___ in the ocean.',blank:'sea anemones',opts:['sea anemones','coral','seaweed','rocks'],color:'#0077B6'},
+  {q:'The ___ pecks wood 20 times per second to find insects in the forest.',blank:'woodpecker',opts:['woodpecker','owl','squirrel','deer'],color:'#2E7D32'},
+  {q:'The camel can drink ___ liters of water at once.',blank:'135',opts:['135','50','10','200'],color:'#FF8C00'},
+  {q:'The shark can smell blood from ___ meters away.',blank:'400',opts:['400','10','100','1000'],color:'#0077B6'},
+  {q:'The sea turtle can hold its breath for ___ hours while sleeping.',blank:'7',opts:['7','1','20','30'],color:'#0077B6'},
+  {q:'The squirrel hides thousands of ___ and remembers most hiding spots.',blank:'nuts',opts:['nuts','berries','insects','leaves'],color:'#2E7D32'},
+  {q:'A gecko licks morning ___ off its eyes and skin to drink water in the desert.',blank:'dew',opts:['dew','sand','rocks','plants'],color:'#FF8C00'},
+  {q:'The blue whale\'s heart is the size of a small ___.',blank:'car',opts:['car','ball','house','tree'],color:'#0077B6'},
+];
+let pzList=[],pzIdx=0,pzSc=0,pzTot=0;
+function setupPuzzle(){pzIdx=0;pzSc=0;pzTot=0;pzList=shuf(PUZZLES);nextPuzzle();}
+function nextPuzzle(){
+  if(pzIdx>=pzList.length){pzIdx=0;pzList=shuf(PUZZLES);}
+  pzTot++;document.getElementById('PZ_FB').textContent='';
+  const pz=pzList[pzIdx++];
+  document.getElementById('PZ_SCORE').textContent=`Score: ${pzSc} / ${pzTot-1}`;
+  const parts=pz.q.split('___');
+  document.getElementById('PZ_Q').innerHTML=parts[0]+'<span class="blank" id="PZ_BL">___</span>'+parts[1];
+  const oc=document.getElementById('PZ_OPTS');oc.innerHTML='';
+  shuf(pz.opts).forEach(opt=>{
+    const b=document.createElement('div');b.className='popt';b.style.background=pz.color;b.textContent=opt;
+    b.onclick=()=>{
+      [...document.querySelectorAll('.popt')].forEach(x=>x.classList.add('used-p'));
+      const bl=document.getElementById('PZ_BL');
+      if(opt===pz.blank){
+        sndCorrect();pzSc++;pzTot++;bl.textContent=opt;bl.classList.add('filled-b');
+        document.getElementById('PZ_FB').innerHTML=`<span style="color:#2ED573">🎉 Correct!</span>`;
+        document.getElementById('PZ_SCORE').textContent=`Score: ${pzSc} / ${pzTot-1}`;
+        setTimeout(nextPuzzle,1400);
+      } else {
+        sndWrong();pzTot++;bl.textContent=opt;bl.classList.add('wrong-b');
+        document.getElementById('PZ_FB').innerHTML=`<span style="color:#FF4757">❌ Answer: <strong>${pz.blank}</strong></span>`;
+        document.getElementById('PZ_SCORE').textContent=`Score: ${pzSc} / ${pzTot-1}`;
+      }
+    };oc.appendChild(b);
+  });
+}
+
+/* ===== 7. FIND HOME ===== */
+const FH_ANIMALS=HAB_KEYS.flatMap(key=>HABITATS[key].animals.map(a=>({...a,hab:key,habName:HABITATS[key].name})));
+let fhList=[],fhIdx=0,fhSc=0;
+function setupFindHome(){
+  if(fhList.length===0||fhIdx>=fhList.length){fhList=shuf(FH_ANIMALS);fhIdx=0;}
+  document.getElementById('FH_FB').textContent='';
+  const a=fhList[fhIdx++];const h=HABITATS[a.hab];
+  document.getElementById('FH_ANIMAL').innerHTML=`
+    <div class="fh-animal" style="background:${h.bg}">
+      <div class="fh-emoji">${a.emoji}</div>
+      <div class="fh-name" style="color:#fff">${a.name}</div>
+      <div class="fh-clue" style="color:rgba(255,255,255,.9)">💡 Clue: ${a.adapt.split('·')[0].trim()}</div>
+    </div>`;
+  const oc=document.getElementById('FH_OPTS');oc.innerHTML='';
+  HAB_KEYS.forEach(key=>{
+    const hh=HABITATS[key];const b=document.createElement('div');b.className='fhopt';
+    b.style.background=hh.bg;
+    b.innerHTML=`<div style="font-size:1.8rem">${hh.emoji}</div><div style="margin-top:4px">${hh.name}</div>`;
+    b.onclick=()=>{
+      [...document.querySelectorAll('.fhopt')].forEach(x=>x.style.pointerEvents='none');
+      if(key===a.hab){
+        sndCorrect();fhSc++;b.classList.add('fh-ok');
+        document.getElementById('FH_FB').innerHTML=`<span style="color:#2ED573">🎉 Correct! The ${a.name} lives in the ${hh.name}! ${a.emoji}</span>`;
+        setTimeout(()=>{if(fhIdx<fhList.length)setupFindHome();else{pop('🌍','You found all homes!');confetti();sndCelebration();}},1600);
+      } else {
+        sndWrong();b.classList.add('fh-bad');
+        document.getElementById('FH_FB').innerHTML=`<span style="color:#FF4757">❌ The ${a.name} lives in the ${HABITATS[a.hab].name} ${HABITATS[a.hab].emoji}</span>`;
+        setTimeout(()=>{[...document.querySelectorAll('.fhopt')].forEach(x=>x.style.pointerEvents='');b.classList.remove('fh-bad');},800);
+      }
+    };oc.appendChild(b);
+  });
+}
+
+/* ===== SUMMARY ===== */
+function renderSummary(){
+  const c=document.getElementById('SUM_CONTENT');c.innerHTML='<div class="ct" style="color:#FF8C00">🌍 The 3 Habitats &amp; Their Animals</div>';
+  HAB_KEYS.forEach(key=>{
+    const h=HABITATS[key];
+    c.innerHTML+=`<div style="border-radius:16px;padding:14px;margin-bottom:12px;background:${h.bg}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:2rem">${h.emoji}</span>
+        <div><div style="font-weight:900;color:#fff;font-size:1rem">${h.name}</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.88)">${h.climate}</div></div>
+      </div>
+      <div style="font-size:.76rem;color:rgba(255,255,255,.92);margin-bottom:10px;line-height:1.5">${h.description}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">${h.animals.map(a=>`<div style="background:rgba(255,255,255,.22);border-radius:50px;padding:5px 12px;color:#fff;font-size:.74rem;font-weight:700">${a.emoji} ${a.name}</div>`).join('')}</div>
+    </div>`;
+  });
+}
+
+/* ===== CERT ===== */
+function genCert(){
+  const name=document.getElementById('CI').value.trim();
+  if(!name){document.getElementById('CI').style.borderColor='#FF4757';return;}
+  document.getElementById('CI').style.borderColor='#D0D0E8';
+  document.getElementById('CN').textContent='🎉 Congratulations, '+name+'! 🎉';
+  document.getElementById('CR').classList.add('show');confetti();sndCelebration();
+}
+
+/* ===== INIT ===== */
+initExplore();
+</script>
+</body>
+</html>

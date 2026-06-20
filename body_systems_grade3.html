@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Body Systems Explorer - Grade 3 - Teacher Manal Bazzi</title>
+<style>
+:root{
+  --dig:#FF6B35;--res:#1E90FF;--cir:#FF4757;--ske:#8B5E3C;--mus:#A855F7;
+  --bg:#F0F8FF;--card:#fff;--shadow:0 8px 32px rgba(0,0,0,.10);--radius:20px;
+  --font:'Segoe UI',Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:var(--font);background:var(--bg);min-height:100vh;color:#2C2C2C;overflow-x:hidden;}
+
+header{background:linear-gradient(135deg,#FF6B35,#FF4757,#1E90FF);color:#fff;text-align:center;padding:16px 12px 12px;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.08);border-radius:50%;}
+header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:80px;height:80px;background:rgba(255,255,255,.06);border-radius:50%;}
+.ht{font-size:clamp(1.3rem,4.5vw,2rem);font-weight:900;text-shadow:2px 3px 0 rgba(0,0,0,.15);}
+.hs{font-size:.8rem;opacity:.92;margin-top:4px;font-weight:600;}
+.hicons{font-size:1.3rem;margin-top:5px;letter-spacing:5px;}
+
+nav.tabs{display:flex;overflow-x:auto;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:0 4px;gap:2px;scrollbar-width:none;}
+nav.tabs::-webkit-scrollbar{display:none;}
+.tb{flex:0 0 auto;padding:10px 11px;border:none;background:transparent;font-family:var(--font);font-weight:700;font-size:.68rem;color:#888;cursor:pointer;border-bottom:3px solid transparent;transition:all .25s;white-space:nowrap;}
+.tb.on{color:#FF4757;border-bottom-color:#FF4757;}
+
+.main{max-width:720px;margin:0 auto;padding:14px 12px 90px;}
+.sec{display:none;}.sec.on{display:block;animation:fu .35s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes popIn{from{transform:scale(.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+@keyframes sh{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px;}
+.ct{font-size:1rem;font-weight:900;color:#FF4757;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.hint{text-align:center;font-weight:700;font-size:.8rem;padding:10px 14px;border-radius:12px;margin-bottom:12px;}
+
+/* SYSTEM CARDS */
+.sys-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+.sys-card{border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;border:3px solid transparent;transition:all .2s;position:relative;overflow:hidden;}
+.sys-card:active{transform:scale(.94);}
+.sys-card.active-sys{transform:scale(1.05);box-shadow:0 0 0 4px #FFD700;}
+.sys-icon{font-size:2.2rem;margin-bottom:6px;}
+.sys-name{font-size:.78rem;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3);}
+.sys-organ-count{font-size:.65rem;color:rgba(255,255,255,.85);margin-top:2px;}
+
+/* SYSTEM DETAIL */
+.sys-detail{border-radius:18px;padding:18px;margin-bottom:14px;animation:fu .3s ease;}
+.sd-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.sd-icon{font-size:2.8rem;}
+.sd-title{font-size:1.3rem;font-weight:900;}
+.sd-sub{font-size:.8rem;opacity:.8;margin-top:3px;}
+.organs-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;}
+.organ-chip{border-radius:14px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.4);}
+.organ-chip:active{transform:scale(.92);}
+.organ-chip.visited-o{background:rgba(255,255,255,.5);}
+.organ-emoji{font-size:1.5rem;}
+.organ-name{font-size:.72rem;font-weight:900;color:#fff;margin-top:3px;}
+.organ-detail{border-radius:14px;padding:14px;margin-top:10px;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);animation:fu .25s ease;}
+.od-title{font-size:1rem;font-weight:900;color:#fff;}
+.od-fact{font-size:.78rem;color:rgba(255,255,255,.95);margin-top:5px;line-height:1.5;}
+
+/* LABEL GAME */
+.body-diagram{position:relative;width:100%;max-width:280px;margin:0 auto 14px;display:block;}
+.body-svg{width:100%;border-radius:18px;background:linear-gradient(135deg,#F0F8FF,#E8F4FD);border:2px solid #D0E8F8;}
+.label-pin{position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:10;}
+.pin-dot{width:20px;height:20px;border-radius:50%;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.25);transition:all .2s;animation:pulse 2s infinite;}
+.pin-dot:active{transform:scale(1.3);}
+.pin-label{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:#fff;border-radius:8px;padding:3px 8px;font-size:.68rem;font-weight:900;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.15);pointer-events:none;opacity:0;transition:opacity .2s;}
+.label-pin:hover .pin-label,.label-pin.show-lbl .pin-label{opacity:1;}
+.label-info{border-radius:14px;padding:14px;min-height:60px;animation:fu .25s ease;}
+
+/* DRAG LABEL */
+.drag-body{position:relative;width:100%;max-width:280px;margin:0 auto;display:block;}
+.drag-zone{position:absolute;transform:translate(-50%,-50%);width:70px;height:26px;border:2px dashed rgba(255,255,255,.6);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:900;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;background:rgba(255,255,255,.1);}
+.drag-zone.dov{border-color:#FFD700;background:rgba(255,215,0,.2);transform:translate(-50%,-50%) scale(1.08);}
+.drag-zone.filled{border-style:solid;background:rgba(255,255,255,.25);color:#fff;pointer-events:none;}
+.drag-zone.correct-z{border-color:#2ED573;background:rgba(46,213,115,.2);}
+.drag-zone.wrong-z{border-color:#FF4757;background:rgba(255,71,87,.2);animation:sh .3s;}
+.drag-labels{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;padding:10px;background:#F5F5FA;border-radius:14px;margin-top:12px;}
+.dlabel{padding:8px 14px;border-radius:50px;font-weight:900;font-size:.82rem;cursor:pointer;transition:all .2s;user-select:none;color:#fff;}
+.dlabel:active{transform:scale(1.12);}
+.dlabel.used-dl{opacity:.25;pointer-events:none;}
+.dlabel.selected-dl{box-shadow:0 0 0 3px #FFD700;transform:scale(1.08);}
+
+/* QUIZ */
+.qbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:700;font-size:.8rem;color:#888;}
+.qscore{background:linear-gradient(135deg,#FFD700,#FF6B35);color:#fff;border-radius:50px;padding:4px 14px;font-size:.88rem;}
+.q-q{font-size:clamp(.95rem,3.2vw,1.2rem);font-weight:900;text-align:center;margin-bottom:10px;}
+.q-visual{text-align:center;font-size:3rem;margin:8px 0;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px;}
+.qo{background:#fff;border:3px solid #E8E8F0;border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:var(--font);font-weight:700;font-size:clamp(.78rem,2.8vw,.95rem);}
+.qo:hover{border-color:#A855F7;transform:scale(1.02);}
+.qo.qcor{background:#F0FFF8;border-color:#2ED573;}
+.qo.qwrg{background:#FFF0F2;border-color:#FF4757;}
+.qo.qdis{pointer-events:none;}
+.q-fb{text-align:center;font-size:.9rem;font-weight:700;margin-top:8px;min-height:24px;}
+.q-next{display:none;margin:10px auto 0;background:#FF4757;color:#fff;border:none;border-radius:50px;padding:10px 28px;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;}
+.q-next.show{display:block;animation:fu .3s ease;}
+
+/* MATCH */
+.match-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mcol-t{font-size:.82rem;font-weight:900;text-align:center;margin-bottom:7px;color:#A855F7;}
+.mitem{border:3px solid #E8E8F0;border-radius:13px;padding:10px 7px;text-align:center;cursor:pointer;transition:all .2s;background:#fff;user-select:none;margin-bottom:7px;font-size:.85rem;font-weight:700;}
+.mitem.sel{border-color:#FF6B35;background:#FFF5F0;transform:scale(1.04);}
+.mitem.ok{border-color:#2ED573;background:#F0FFF8;pointer-events:none;animation:popIn .3s ease;}
+.mitem.bad{border-color:#FF4757;background:#FFF0F2;animation:sh .3s;}
+.match-fb{text-align:center;font-size:.9rem;margin-top:8px;min-height:22px;font-weight:700;}
+
+/* MEMORY */
+.mem-stats{display:flex;justify-content:center;gap:14px;margin-bottom:10px;font-weight:700;font-size:.82rem;}
+.mstat{background:#fff;border-radius:50px;padding:4px 14px;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+.mcard{aspect-ratio:.85;border-radius:13px;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .4s;user-select:none;}
+.mcard.flipped{transform:rotateY(180deg);}
+.mcard.matched{transform:rotateY(180deg);pointer-events:none;}
+.mfront,.mback{position:absolute;inset:0;border-radius:13px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.mfront{font-size:1.5rem;color:#fff;}
+.mback{background:#fff;border:3px solid #E8E8F0;transform:rotateY(180deg);font-size:.78rem;font-weight:900;text-align:center;padding:4px;}
+.mcard.matched .mback{border-color:#2ED573;background:#F0FFF8;}
+.mcard.mwrong .mback{border-color:#FF4757;background:#FFF0F2;}
+
+/* PUZZLE / FILL BLANKS */
+.puzzle-q{font-size:clamp(.95rem,3vw,1.1rem);font-weight:900;text-align:center;margin-bottom:14px;line-height:1.8;}
+.blank{display:inline-block;min-width:80px;border-bottom:3px solid #A855F7;padding:0 6px;text-align:center;font-weight:900;color:#A855F7;margin:0 4px;vertical-align:bottom;cursor:pointer;transition:all .2s;}
+.blank.filled-b{border-color:#2ED573;color:#2ED573;}
+.blank.wrong-b{border-color:#FF4757;color:#FF4757;animation:sh .3s;}
+.puzzle-opts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px;}
+.popt{padding:9px 18px;border-radius:50px;font-weight:900;font-size:.88rem;cursor:pointer;color:#fff;transition:all .15s;user-select:none;}
+.popt:active{transform:scale(1.1);}
+.popt.used-p{opacity:.25;pointer-events:none;}
+.popt.sel-p{box-shadow:0 0 0 3px #FFD700;transform:scale(1.07);}
+.puzzle-fb{text-align:center;font-size:.9rem;font-weight:700;margin-top:10px;min-height:22px;}
+.puzzle-score{text-align:center;font-size:.82rem;color:#888;margin-bottom:10px;font-weight:700;}
+
+/* PROGRESS */
+.pw{background:#F0F0F5;border-radius:50px;height:9px;margin-top:9px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,#FF4757,#A855F7);border-radius:50px;transition:width .4s ease;}
+.pl{font-size:.7rem;color:#aaa;margin-top:3px;}
+
+/* POPUP & CONFETTI */
+.cnv{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;}
+.fpop{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) scale(.5);background:#fff;border-radius:20px;padding:16px 26px;box-shadow:0 20px 60px rgba(0,0,0,.18);text-align:center;z-index:1000;opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.34,1.56,.64,1);max-width:85vw;}
+.fpop.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+.fpe{font-size:2.2rem;}.fpt{font-size:1rem;margin-top:5px;font-weight:700;}
+
+/* CERT */
+.cert-wrap{background:linear-gradient(135deg,#FFF5F0,#F0EEFF);border:3px dashed #A855F7;border-radius:18px;text-align:center;padding:20px 14px;}
+.cinput{border:2px solid #D0D0E8;border-radius:50px;padding:10px 20px;font-family:var(--font);font-size:1rem;width:100%;max-width:260px;text-align:center;margin:10px auto;outline:none;display:block;}
+.cinput:focus{border-color:#A855F7;}
+.cert-result{display:none;margin-top:12px;animation:fu .4s ease;}
+.cert-result.show{display:block;}
+
+/* BUTTONS */
+.btn{border:none;border-radius:50px;padding:9px 22px;font-family:var(--font);font-size:.88rem;font-weight:700;cursor:pointer;color:#fff;transition:transform .15s;}
+.btn:active{transform:scale(.95);}
+.btn-red{background:#FF4757;}.btn-blue{background:#1E90FF;}.btn-purple{background:#A855F7;}.btn-green{background:#2ED573;color:#1a6b3a;}.btn-orange{background:#FF6B35;}
+
+footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2px solid #F0F0F8;text-align:center;padding:7px;font-size:.7rem;color:#aaa;font-weight:700;z-index:100;}
+footer span{color:#FF4757;}
+</style>
+</head>
+<body>
+<canvas class="cnv" id="CC"></canvas>
+<div class="fpop" id="FP"><div class="fpe" id="FPE">🎉</div><div class="fpt" id="FPT">Amazing!</div></div>
+
+<header>
+  <div class="ht">🫀 Body Systems Explorer!</div>
+  <div class="hs">Grade 3 Science · Teacher Manal Bazzi</div>
+  <div class="hicons">🫁 🦷 🫀 💪 🧠</div>
+</header>
+
+<nav class="tabs">
+  <button class="tb on" onclick="S('explore',this)">🔬 Explore</button>
+  <button class="tb"    onclick="S('label',this)">📍 Label It</button>
+  <button class="tb"    onclick="S('drag',this)">🎯 Drag Label</button>
+  <button class="tb"    onclick="S('quiz',this)">❓ Quiz</button>
+  <button class="tb"    onclick="S('match',this)">🔗 Match</button>
+  <button class="tb"    onclick="S('memory',this)">🃏 Memory</button>
+  <button class="tb"    onclick="S('puzzle',this)">🧩 Puzzle</button>
+  <button class="tb"    onclick="S('summary',this)">🌟 Summary</button>
+</nav>
+
+<div class="main">
+
+<!-- 1. EXPLORE -->
+<div class="sec on" id="sec-explore">
+  <div class="card">
+    <div class="ct">🔬 Explore the 5 Body Systems!</div>
+    <div class="hint" style="background:linear-gradient(135deg,#FFF0F2,#FFF5F0);color:#FF4757">Tap a system to discover its organs! 👆</div>
+    <div class="sys-grid" id="SYS_GRID"></div>
+  </div>
+  <div id="SYS_DETAIL"></div>
+</div>
+
+<!-- 2. LABEL IT -->
+<div class="sec" id="sec-label">
+  <div class="card">
+    <div class="ct">📍 Label the Body Systems!</div>
+    <div class="hint" style="background:linear-gradient(135deg,#F0EEFF,#FFF0F8);color:#A855F7">Tap the glowing dots to identify organs! 💡</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px" id="LABEL_SYS_BTNS"></div>
+    <div class="body-diagram" id="BODY_DIAG"></div>
+    <div class="label-info" id="LABEL_INFO" style="background:linear-gradient(135deg,#F0EEFF,#FFF0F8);min-height:70px;display:flex;align-items:center;justify-content:center">
+      <div style="text-align:center;color:#A855F7;font-weight:700">👆 Tap a pin to learn about that organ!</div>
+    </div>
+    <div class="pw"><div class="pf" id="LBL_PF" style="width:0%"></div></div>
+    <div class="pl" id="LBL_PL">0 organs discovered</div>
+  </div>
+</div>
+
+<!-- 3. DRAG LABEL -->
+<div class="sec" id="sec-drag">
+  <div class="card">
+    <div class="ct">🎯 Drag the Labels!</div>
+    <div class="hint" style="background:linear-gradient(135deg,#FFF0F2,#FFF5F0);color:#FF4757">Tap a label then tap the correct spot on the body! 🎯</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px" id="DL_SYS_BTNS"></div>
+    <div class="drag-body" id="DRAG_BODY"></div>
+    <div class="drag-labels" id="DRAG_LABELS"></div>
+    <div class="drag-fb" id="DL_FB" style="text-align:center;font-size:.9rem;font-weight:700;margin-top:8px;min-height:22px;"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-orange" onclick="setupDragLabel()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 4. QUIZ -->
+<div class="sec" id="sec-quiz">
+  <div class="card">
+    <div class="ct">❓ Quiz Time!</div>
+    <div class="qbar"><span id="QC">Question 1/10</span><span class="qscore" id="QS">⭐ 0</span></div>
+    <div class="q-q" id="QQ">Loading...</div>
+    <div class="q-visual" id="QV"></div>
+    <div class="q-opts" id="QOPTS"></div>
+    <div class="q-fb" id="QFB"></div>
+    <button class="q-next" id="QNXT">Next ▶</button>
+  </div>
+</div>
+
+<!-- 5. MATCH -->
+<div class="sec" id="sec-match">
+  <div class="card">
+    <div class="ct">🔗 Match Organ to System!</div>
+    <div class="hint" style="background:linear-gradient(135deg,#F0EEFF,#FFF0F8);color:#A855F7">Tap an organ, then tap its body system! 🎯</div>
+    <div class="match-cols">
+      <div><div class="mcol-t">🫁 Organ</div><div id="MATCH_LEFT"></div></div>
+      <div><div class="mcol-t">⚙️ System</div><div id="MATCH_RIGHT"></div></div>
+    </div>
+    <div class="match-fb" id="MATCH_FB"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-red" onclick="setupMatch()">🔄 New Round</button></div>
+  </div>
+</div>
+
+<!-- 6. MEMORY -->
+<div class="sec" id="sec-memory">
+  <div class="card">
+    <div class="ct">🃏 Memory Game!</div>
+    <div class="hint" style="background:linear-gradient(135deg,#FFF0F2,#FFF5F0);color:#FF4757">Find the matching organ + system pairs!</div>
+    <div class="mem-stats">
+      <div class="mstat">✅ <span id="MM">0</span>/<span id="MTOT">8</span></div>
+      <div class="mstat">🔄 <span id="MTR">0</span> tries</div>
+    </div>
+    <div class="mem-grid" id="MEM_GRID"></div>
+    <div style="text-align:center;margin-top:10px"><button class="btn btn-purple" onclick="setupMemory()">🔄 New Game</button></div>
+  </div>
+</div>
+
+<!-- 7. PUZZLE -->
+<div class="sec" id="sec-puzzle">
+  <div class="card">
+    <div class="ct">🧩 Fill in the Blanks!</div>
+    <div class="puzzle-score" id="PZ_SCORE">Score: 0 / 0</div>
+    <div class="puzzle-q" id="PZ_Q"></div>
+    <div class="puzzle-opts" id="PZ_OPTS"></div>
+    <div class="puzzle-fb" id="PZ_FB"></div>
+    <div style="text-align:center;margin-top:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-blue" onclick="nextPuzzle()">▶ Next Question</button>
+      <button class="btn btn-orange" onclick="setupPuzzle()">🔄 Restart</button>
+    </div>
+  </div>
+</div>
+
+<!-- 8. SUMMARY -->
+<div class="sec" id="sec-summary">
+  <div style="text-align:center;padding:20px 12px 14px;background:linear-gradient(135deg,#FF4757,#A855F7,#1E90FF);border-radius:18px;color:#fff;margin-bottom:14px">
+    <div style="font-size:2.5rem">🏆</div>
+    <div style="font-size:1.4rem;font-weight:900;margin:7px 0">You Explored the Human Body!</div>
+    <div style="font-size:.82rem;opacity:.9">5 systems · 20+ organs · all discovered!</div>
+  </div>
+  <div class="card">
+    <div class="ct">🫀 The 5 Body Systems</div>
+    <div id="SUM_SYSTEMS"></div>
+  </div>
+  <div class="card">
+    <div class="cert-wrap">
+      <div style="font-size:1.1rem;font-weight:900;color:#A855F7">🏅 My Science Certificate</div>
+      <p style="color:#aaa;font-size:.8rem;margin-top:5px">Enter your name to get your certificate!</p>
+      <input class="cinput" type="text" id="CI" placeholder="Your name here ✨" maxlength="30"/>
+      <button class="btn btn-purple" onclick="genCert()" style="display:block;margin:0 auto">🎓 Get My Certificate!</button>
+      <div class="cert-result" id="CR">
+        <div style="font-size:2.2rem">🏆🔬✨</div>
+        <div style="font-size:1.1rem;font-weight:900;color:#FF4757" id="CN"></div>
+        <div style="font-size:.78rem;color:#aaa;margin-top:5px">You mastered the 5 Human Body Systems!<br>Presented by Teacher <strong>Manal Bazzi</strong> 👩‍🏫</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- main -->
+<footer>🔬 Created by Teacher <span>Manal Bazzi</span> · Body Systems Explorer · Grade 3</footer>
+
+<script>
+/* ===== SOUND ENGINE ===== */
+const AC=(()=>{try{return new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}})();
+function resume(){if(AC&&AC.state==='suspended')AC.resume();}
+function osc(type,freq,gain,start,dur){
+  if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.setValueAtTime(freq,start);
+  g.gain.setValueAtTime(gain,start);g.gain.exponentialRampToValueAtTime(0.001,start+dur);
+  o.connect(g);g.connect(AC.destination);o.start(start);o.stop(start+dur+.01);
+}
+function sndClick(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',660,.1,t,.06);}
+function sndReveal(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',440,.13,t,.08);osc('sine',660,.13,t+.09,.1);osc('triangle',880,.1,t+.18,.14);}
+function sndCorrect(){if(!AC)return;resume();const t=AC.currentTime;[[523,.16],[659,.16],[784,.16],[1047,.2]].forEach(([f,v],i)=>osc('sine',f,v,t+i*.1,.2));[1760,2093].forEach((f,i)=>osc('triangle',f,.05,t+.42+i*.07,.14));}
+function sndWrong(){if(!AC)return;resume();const t=AC.currentTime;osc('sawtooth',180,.18,t,.12);osc('sawtooth',140,.16,t+.1,.15);}
+function sndFlip(){if(!AC)return;resume();const t=AC.currentTime;osc('sine',600,.09,t,.05);}
+function sndMatch(){if(!AC)return;resume();const t=AC.currentTime;[523,659,784].forEach((f,i)=>osc('sine',f,.16,t+i*.09,.18));}
+function sndCelebration(){
+  if(!AC)return;resume();const t=AC.currentTime;
+  [[523,659,784,1047],[587,740,880,1175]].forEach(([a,b,c,d],gi)=>[a,b,c,d].forEach(f=>osc('sine',f,.13,t+gi*.3,.26)));
+  [523,659,784,1047,1568].forEach((f,i)=>osc('square',f,.04,t+.62+i*.07,.14));
+}
+
+/* ===== DATA ===== */
+const SYSTEMS = {
+  digestive:{
+    name:'Digestive System', icon:'🍽️', color:'#FF6B35', bg:'linear-gradient(135deg,#FF6B35,#FF8C5A)',
+    job:'Breaks down food into nutrients the body can use',
+    organs:[
+      {name:'Mouth',    emoji:'👄', fact:'Food enters here — teeth chew and saliva begins digestion.'},
+      {name:'Esophagus',emoji:'🌀', fact:'A muscular tube 25 cm long that pushes food to the stomach.'},
+      {name:'Stomach',  emoji:'🫙', fact:'Churns food with acid — holds up to 1 liter of food!'},
+      {name:'Small Intestine',emoji:'🪱', fact:'6 meters long! Absorbs nutrients into the blood.'},
+      {name:'Large Intestine',emoji:'〰️', fact:'Absorbs water and forms waste (1.5 meters long).'},
+      {name:'Liver',    emoji:'🟤', fact:'Produces bile to digest fats and filters toxins.'},
+    ]
+  },
+  respiratory:{
+    name:'Respiratory System', icon:'🫁', color:'#1E90FF', bg:'linear-gradient(135deg,#1E90FF,#4AA8FF)',
+    job:'Brings oxygen into the body and removes carbon dioxide',
+    organs:[
+      {name:'Nose',     emoji:'👃', fact:'Filters, warms and moistens air before it enters the lungs.'},
+      {name:'Trachea',  emoji:'🏗️', fact:'The windpipe — a 10 cm tube that carries air to the lungs.'},
+      {name:'Lungs',    emoji:'🫁', fact:'Two spongy organs — you breathe about 20,000 times a day!'},
+      {name:'Diaphragm',emoji:'⬇️', fact:'A dome-shaped muscle under the lungs that controls breathing.'},
+      {name:'Bronchi',  emoji:'🌿', fact:'Two tubes that branch from the trachea into each lung.'},
+      {name:'Alveoli',  emoji:'🫧', fact:'Tiny air sacs where oxygen enters the blood — 600 million in each lung!'},
+    ]
+  },
+  circulatory:{
+    name:'Circulatory System', icon:'🫀', color:'#FF4757', bg:'linear-gradient(135deg,#FF4757,#FF6B7A)',
+    job:'Pumps blood carrying oxygen and nutrients to every cell',
+    organs:[
+      {name:'Heart',    emoji:'🫀', fact:'Beats 100,000 times a day — pumps 5 liters of blood per minute!'},
+      {name:'Arteries', emoji:'🔴', fact:'Carry oxygen-rich blood AWAY from the heart.'},
+      {name:'Veins',    emoji:'🔵', fact:'Carry oxygen-poor blood BACK to the heart.'},
+      {name:'Blood',    emoji:'🩸', fact:'Contains red cells, white cells, and platelets — 5 liters in your body!'},
+      {name:'Capillaries',emoji:'🕸️', fact:'Tiny vessels thinner than a hair that reach every cell.'},
+      {name:'Plasma',   emoji:'💛', fact:'The liquid part of blood — 55% of blood is plasma!'},
+    ]
+  },
+  skeletal:{
+    name:'Skeletal System', icon:'🦷', color:'#8B5E3C', bg:'linear-gradient(135deg,#8B5E3C,#A87050)',
+    job:'Supports the body, protects organs, and helps movement',
+    organs:[
+      {name:'Skull',    emoji:'💀', fact:'Protects the brain — made of 22 fused bones!'},
+      {name:'Spine',    emoji:'🏛️', fact:'33 vertebrae protect the spinal cord and keep you upright.'},
+      {name:'Ribs',     emoji:'🦴', fact:'12 pairs of ribs form a cage protecting the heart and lungs.'},
+      {name:'Femur',    emoji:'🦵', fact:'The thigh bone — the LONGEST and STRONGEST bone in the body!'},
+      {name:'Joints',   emoji:'🔩', fact:'Where two bones meet — knees, elbows, hips are all joints.'},
+      {name:'Cartilage',emoji:'🟡', fact:'Flexible tissue at the ends of bones that cushions joints.'},
+    ]
+  },
+  muscular:{
+    name:'Muscular System', icon:'💪', color:'#A855F7', bg:'linear-gradient(135deg,#A855F7,#C07EFF)',
+    job:'Moves the body and keeps organs working',
+    organs:[
+      {name:'Biceps',   emoji:'💪', fact:'The muscle in your upper arm that bends your elbow.'},
+      {name:'Heart Muscle',emoji:'❤️', fact:'Cardiac muscle — never gets tired, beats your whole life!'},
+      {name:'Triceps',  emoji:'🏋️', fact:'The muscle at the back of your upper arm that straightens it.'},
+      {name:'Tendons',  emoji:'🔗', fact:'Strong cords that connect muscles to bones.'},
+      {name:'Smooth Muscle',emoji:'〽️', fact:'Moves food through your digestive system without you thinking about it!'},
+      {name:'Gluteus Maximus',emoji:'🍑', fact:'Your bottom! The LARGEST muscle in the human body.'},
+    ]
+  }
+};
+
+const SYS_KEYS = Object.keys(SYSTEMS);
+function shuf(a){return[...a].sort(()=>Math.random()-.5);}
+function pop(e,t){const p=document.getElementById('FP');document.getElementById('FPE').textContent=e;document.getElementById('FPT').textContent=t;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),2500);}
+function confetti(){
+  const cv=document.getElementById('CC'),ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
+  const c=['#FF4757','#A855F7','#2ED573','#FFD700','#FF69B4','#1E90FF','#FF6B35','#8B5E3C'];
+  const p=Array.from({length:130},()=>({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*.3,w:7+Math.random()*9,h:13+Math.random()*9,color:c[Math.floor(Math.random()*c.length)],rot:Math.random()*Math.PI*2,vx:(Math.random()-.5)*3,vy:3+Math.random()*4,vrot:(Math.random()-.5)*.2}));
+  let f=0;(function d(){ctx.clearRect(0,0,cv.width,cv.height);p.forEach(q=>{ctx.save();ctx.translate(q.x,q.y);ctx.rotate(q.rot);ctx.fillStyle=q.color;ctx.fillRect(-q.w/2,-q.h/2,q.w,q.h);ctx.restore();q.x+=q.vx;q.y+=q.vy;q.rot+=q.vrot;q.vy+=.06;});if(++f<140)requestAnimationFrame(d);else ctx.clearRect(0,0,cv.width,cv.height);})();
+}
+
+/* ===== NAV ===== */
+function S(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');if(btn)btn.classList.add('on');
+  if(id==='label')initLabel();
+  if(id==='drag')initDragLabel();
+  if(id==='quiz')setupQuiz();
+  if(id==='match')setupMatch();
+  if(id==='memory')setupMemory();
+  if(id==='puzzle')setupPuzzle();
+  if(id==='summary')renderSummary();
+}
+
+/* ===== 1. EXPLORE ===== */
+let visitedSys=new Set(),visitedOrgans=new Set();
+function initExplore(){
+  const g=document.getElementById('SYS_GRID');g.innerHTML='';
+  SYS_KEYS.forEach(key=>{
+    const s=SYSTEMS[key];
+    const d=document.createElement('div');d.className='sys-card';
+    d.style.background=s.bg;
+    d.innerHTML=`<div class="sys-icon">${s.icon}</div><div class="sys-name">${s.name}</div><div class="sys-organ-count">${s.organs.length} organs</div>`;
+    d.onclick=()=>exploreSystem(key,d);g.appendChild(d);
+  });
+}
+function exploreSystem(key,tile){
+  sndReveal();visitedSys.add(key);
+  document.querySelectorAll('.sys-card').forEach(c=>c.classList.remove('active-sys'));
+  tile.classList.add('active-sys');
+  const s=SYSTEMS[key];
+  const det=document.getElementById('SYS_DETAIL');
+  det.innerHTML=`
+    <div class="sys-detail" style="background:${s.bg}">
+      <div class="sd-head">
+        <div class="sd-icon">${s.icon}</div>
+        <div><div class="sd-title" style="color:#fff">${s.name}</div><div class="sd-sub" style="color:rgba(255,255,255,.85)">💡 ${s.job}</div></div>
+      </div>
+      <div class="organs-list" id="OL_${key}"></div>
+      <div id="OD_${key}" style="display:none"></div>
+    </div>`;
+  s.organs.forEach((o,i)=>{
+    const chip=document.createElement('div');chip.className='organ-chip'+(visitedOrgans.has(key+o.name)?' visited-o':'');
+    chip.innerHTML=`<div class="organ-emoji">${o.emoji}</div><div class="organ-name">${o.name}</div>`;
+    chip.onclick=()=>{
+      sndClick();visitedOrgans.add(key+o.name);chip.classList.add('visited-o');
+      const od=document.getElementById('OD_'+key);od.style.display='block';
+      od.innerHTML=`<div class="organ-detail"><div class="od-title">${o.emoji} ${o.name}</div><div class="od-fact">${o.fact}</div></div>`;
+    };
+    document.getElementById('OL_'+key).appendChild(chip);
+  });
+  if(visitedSys.size===5){setTimeout(()=>{pop('🏆','You explored ALL 5 body systems!');confetti();sndCelebration();},300);}
+}
+
+/* ===== 2. LABEL IT ===== */
+// SVG viewBox is 0 0 200 420
+// Body layout: head 85-115,10-45 | neck 93-107,45-60 | torso 65-135,60-200 | arms 30-65,65-175 & 135-170,65-175 | legs 68-95,200-390 & 105-132,200-390
+// Pin x,y are percentages of the SVG viewBox (200 wide, 420 tall)
+const BODY_PINS = {
+  digestive:[
+    {organ:'Mouth',           x:50,  y:10,  label_side:'right'},
+    {organ:'Esophagus',       x:50,  y:16,  label_side:'right'},
+    {organ:'Liver',           x:57,  y:29,  label_side:'right'},
+    {organ:'Stomach',         x:44,  y:31,  label_side:'left'},
+    {organ:'Small Intestine', x:50,  y:41,  label_side:'right'},
+    {organ:'Large Intestine', x:50,  y:49,  label_side:'left'},
+  ],
+  respiratory:[
+    {organ:'Nose',            x:50,  y:8,   label_side:'right'},
+    {organ:'Trachea',         x:50,  y:17,  label_side:'right'},
+    {organ:'Bronchi',         x:50,  y:24,  label_side:'left'},
+    {organ:'Lungs',           x:50,  y:29,  label_side:'right'},
+    {organ:'Diaphragm',       x:50,  y:38,  label_side:'left'},
+    {organ:'Alveoli',         x:60,  y:27,  label_side:'right'},
+  ],
+  circulatory:[
+    {organ:'Heart',           x:44,  y:27,  label_side:'left'},
+    {organ:'Arteries',        x:62,  y:35,  label_side:'right'},
+    {organ:'Veins',           x:38,  y:35,  label_side:'left'},
+    {organ:'Capillaries',     x:62,  y:55,  label_side:'right'},
+    {organ:'Blood',           x:44,  y:27,  label_side:'left'},
+    {organ:'Plasma',          x:56,  y:40,  label_side:'right'},
+  ],
+  skeletal:[
+    {organ:'Skull',           x:50,  y:6,   label_side:'right'},
+    {organ:'Spine',           x:50,  y:33,  label_side:'right'},
+    {organ:'Ribs',            x:50,  y:26,  label_side:'left'},
+    {organ:'Femur',           x:43,  y:62,  label_side:'left'},
+    {organ:'Joints',          x:43,  y:53,  label_side:'left'},
+    {organ:'Cartilage',       x:57,  y:53,  label_side:'right'},
+  ],
+  muscular:[
+    {organ:'Biceps',          x:34,  y:33,  label_side:'left'},
+    {organ:'Triceps',         x:66,  y:33,  label_side:'right'},
+    {organ:'Heart Muscle',    x:44,  y:27,  label_side:'left'},
+    {organ:'Tendons',         x:43,  y:56,  label_side:'left'},
+    {organ:'Smooth Muscle',   x:50,  y:42,  label_side:'right'},
+    {organ:'Gluteus Maximus', x:50,  y:50,  label_side:'right'},
+  ],
+};
+
+// Full anatomical SVG body — viewBox 0 0 200 420
+function buildBodySVG(color, sysKey){
+  // organ shapes per system drawn inside the body
+  const organShapes = {
+    digestive:`
+      <!-- mouth -->
+      <ellipse cx="100" cy="42" rx="8" ry="3" fill="${color}CC" opacity=".7"/>
+      <!-- esophagus -->
+      <rect x="98" y="45" width="4" height="20" rx="2" fill="${color}AA" opacity=".7"/>
+      <!-- liver right lobe -->
+      <ellipse cx="113" cy="122" rx="14" ry="10" fill="${color}DD" opacity=".75"/>
+      <!-- stomach -->
+      <ellipse cx="91" cy="130" rx="12" ry="10" fill="${color}BB" opacity=".8"/>
+      <!-- small intestine coils -->
+      <ellipse cx="100" cy="158" rx="18" ry="14" fill="none" stroke="${color}" stroke-width="5" opacity=".55"/>
+      <ellipse cx="100" cy="158" rx="11" ry="8" fill="none" stroke="${color}" stroke-width="4" opacity=".45"/>
+      <!-- large intestine frame -->
+      <rect x="74" y="172" width="52" height="8" rx="4" fill="${color}AA" opacity=".6"/>
+      <rect x="74" y="144" width="8" height="36" rx="4" fill="${color}99" opacity=".6"/>
+      <rect x="118" y="144" width="8" height="36" rx="4" fill="${color}99" opacity=".6"/>`,
+    respiratory:`
+      <!-- nose bridge -->
+      <ellipse cx="100" cy="30" rx="5" ry="7" fill="${color}BB" opacity=".7"/>
+      <!-- trachea -->
+      <rect x="97" y="62" width="6" height="30" rx="3" fill="${color}CC" opacity=".75"/>
+      <!-- left lung -->
+      <ellipse cx="85" cy="118" rx="16" ry="28" fill="${color}BB" opacity=".65"/>
+      <!-- right lung -->
+      <ellipse cx="115" cy="118" rx="16" ry="28" fill="${color}BB" opacity=".65"/>
+      <!-- bronchi -->
+      <line x1="100" y1="92" x2="88" y2="102" stroke="${color}" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+      <line x1="100" y1="92" x2="112" y2="102" stroke="${color}" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+      <!-- diaphragm -->
+      <path d="M72,150 Q100,162 128,150" fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+      <!-- alveoli dots on right lung -->
+      <circle cx="118" cy="108" r="4" fill="${color}" opacity=".5"/>
+      <circle cx="124" cy="116" r="3" fill="${color}" opacity=".5"/>
+      <circle cx="118" cy="124" r="4" fill="${color}" opacity=".5"/>`,
+    circulatory:`
+      <!-- heart shape -->
+      <path d="M100,120 C100,120 82,108 82,97 C82,89 90,85 100,95 C110,85 118,89 118,97 C118,108 100,120 100,120Z" fill="${color}" opacity=".85"/>
+      <!-- aorta up -->
+      <path d="M100,95 C100,80 105,72 100,65" fill="none" stroke="${color}DD" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+      <!-- main arteries down -->
+      <line x1="107" y1="115" x2="120" y2="145" stroke="${color}" stroke-width="4" opacity=".7"/>
+      <line x1="120" y1="145" x2="118" y2="200" stroke="${color}" stroke-width="3" opacity=".6"/>
+      <!-- veins left -->
+      <line x1="93" y1="115" x2="80" y2="145" stroke="#4488FF" stroke-width="4" opacity=".7"/>
+      <line x1="80" y1="145" x2="82" y2="200" stroke="#4488FF" stroke-width="3" opacity=".6"/>
+      <!-- capillaries in legs -->
+      <line x1="83" y1="265" x2="83" y2="320" stroke="${color}" stroke-width="1.5" opacity=".4"/>
+      <line x1="117" y1="265" x2="117" y2="320" stroke="${color}" stroke-width="1.5" opacity=".4"/>`,
+    skeletal:`
+      <!-- skull dome -->
+      <ellipse cx="100" cy="22" rx="22" ry="20" fill="${color}88" stroke="${color}" stroke-width="2" opacity=".8"/>
+      <!-- jaw -->
+      <path d="M82,36 Q100,46 118,36" fill="none" stroke="${color}" stroke-width="2.5" opacity=".8"/>
+      <!-- spine -->
+      <rect x="98" y="60" width="4" height="130" rx="2" fill="${color}AA" opacity=".75"/>
+      <circle cx="100" cy="68"  r="5" fill="${color}" opacity=".6"/>
+      <circle cx="100" cy="82"  r="5" fill="${color}" opacity=".6"/>
+      <circle cx="100" cy="96"  r="5" fill="${color}" opacity=".6"/>
+      <circle cx="100" cy="110" r="5" fill="${color}" opacity=".6"/>
+      <circle cx="100" cy="124" r="5" fill="${color}" opacity=".6"/>
+      <circle cx="100" cy="138" r="5" fill="${color}" opacity=".6"/>
+      <circle cx="100" cy="152" r="5" fill="${color}" opacity=".6"/>
+      <!-- ribs -->
+      <path d="M100,82 C88,78 76,84 76,96 C76,104 88,106 100,104" fill="none" stroke="${color}" stroke-width="3" opacity=".7"/>
+      <path d="M100,82 C112,78 124,84 124,96 C124,104 112,106 100,104" fill="none" stroke="${color}" stroke-width="3" opacity=".7"/>
+      <path d="M100,96 C90,92 80,96 80,106" fill="none" stroke="${color}" stroke-width="2.5" opacity=".6"/>
+      <path d="M100,96 C110,92 120,96 120,106" fill="none" stroke="${color}" stroke-width="2.5" opacity=".6"/>
+      <!-- pelvis -->
+      <path d="M80,165 Q100,172 120,165 Q128,180 100,185 Q72,180 80,165Z" fill="${color}77" stroke="${color}" stroke-width="1.5" opacity=".7"/>
+      <!-- femur left -->
+      <rect x="80" y="192" width="12" height="80" rx="6" fill="${color}BB" stroke="${color}" stroke-width="1.5" opacity=".8"/>
+      <!-- femur right -->
+      <rect x="108" y="192" width="12" height="80" rx="6" fill="${color}BB" stroke="${color}" stroke-width="1.5" opacity=".8"/>
+      <!-- knee joints -->
+      <circle cx="86"  cy="278" r="8" fill="${color}99" stroke="${color}" stroke-width="1.5" opacity=".8"/>
+      <circle cx="114" cy="278" r="8" fill="${color}99" stroke="${color}" stroke-width="1.5" opacity=".8"/>`,
+    muscular:`
+      <!-- biceps left -->
+      <ellipse cx="57" cy="130" rx="9" ry="20" fill="${color}CC" opacity=".75"/>
+      <!-- triceps left (behind) -->
+      <ellipse cx="50" cy="132" rx="7" ry="18" fill="${color}99" opacity=".55"/>
+      <!-- biceps right -->
+      <ellipse cx="143" cy="130" rx="9" ry="20" fill="${color}CC" opacity=".75"/>
+      <!-- triceps right -->
+      <ellipse cx="150" cy="132" rx="7" ry="18" fill="${color}99" opacity=".55"/>
+      <!-- pectorals -->
+      <ellipse cx="87"  cy="90" rx="17" ry="13" fill="${color}BB" opacity=".65"/>
+      <ellipse cx="113" cy="90" rx="17" ry="13" fill="${color}BB" opacity=".65"/>
+      <!-- heart muscle -->
+      <path d="M100,112 C100,112 86,102 86,93 C86,86 92,82 100,91 C108,82 114,86 114,93 C114,102 100,112 100,112Z" fill="${color}" opacity=".8"/>
+      <!-- abs -->
+      <rect x="90" y="120" width="9" height="10" rx="3" fill="${color}99" opacity=".6"/>
+      <rect x="101" y="120" width="9" height="10" rx="3" fill="${color}99" opacity=".6"/>
+      <rect x="90" y="133" width="9" height="10" rx="3" fill="${color}99" opacity=".6"/>
+      <rect x="101" y="133" width="9" height="10" rx="3" fill="${color}99" opacity=".6"/>
+      <!-- gluteus -->
+      <ellipse cx="86"  cy="200" rx="18" ry="14" fill="${color}BB" opacity=".7"/>
+      <ellipse cx="114" cy="200" rx="18" ry="14" fill="${color}BB" opacity=".7"/>
+      <!-- quad left -->
+      <ellipse cx="83"  cy="250" rx="12" ry="28" fill="${color}AA" opacity=".65"/>
+      <!-- quad right -->
+      <ellipse cx="117" cy="250" rx="12" ry="28" fill="${color}AA" opacity=".65"/>
+      <!-- tendons at knees -->
+      <rect x="79"  cy="276" x="79"  y="276" width="8" height="12" rx="3" fill="${color}DD" opacity=".8"/>
+      <rect x="113" y="276" width="8" height="12" rx="3" fill="${color}DD" opacity=".8"/>`,
+  };
+
+  return `<svg id="BODY_SVG" viewBox="0 0 200 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:500px;border-radius:18px;background:#F0F8FF;border:2px solid #D0E8F8;display:block">
+    <!-- BODY SILHOUETTE -->
+    <!-- head -->
+    <ellipse cx="100" cy="24" rx="24" ry="22" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1.5"/>
+    <!-- neck -->
+    <rect x="93" y="44" width="14" height="18" rx="5" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1"/>
+    <!-- torso -->
+    <path d="M65,60 Q60,62 60,70 L62,195 Q62,200 68,200 L132,200 Q138,200 138,195 L140,70 Q140,62 135,60 Z" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1.5"/>
+    <!-- left arm -->
+    <path d="M65,62 Q48,65 42,80 L35,155 Q34,165 40,166 L52,166 Q58,165 58,155 L62,90 Q65,75 68,68Z" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1.2"/>
+    <!-- right arm -->
+    <path d="M135,62 Q152,65 158,80 L165,155 Q166,165 160,166 L148,166 Q142,165 142,155 L138,90 Q135,75 132,68Z" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1.2"/>
+    <!-- left leg -->
+    <path d="M68,198 L68,200 Q65,202 65,210 L70,320 Q70,330 78,330 L92,330 Q100,330 100,320 L100,210 Q100,202 96,200 L96,198Z" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1.2"/>
+    <!-- right leg -->
+    <path d="M104,198 L104,200 Q100,202 100,210 L100,320 Q100,330 108,330 L122,330 Q130,330 130,320 L135,210 Q135,202 132,200 L132,198Z" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1.2"/>
+    <!-- feet -->
+    <ellipse cx="82"  cy="334" rx="14" ry="7" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1"/>
+    <ellipse cx="118" cy="334" rx="14" ry="7" fill="#FFE0C8" stroke="#E8C4A0" stroke-width="1"/>
+    <!-- face details -->
+    <circle cx="92" cy="20" r="3" fill="#C8906A" opacity=".5"/>
+    <circle cx="108" cy="20" r="3" fill="#C8906A" opacity=".5"/>
+    <path d="M93,30 Q100,35 107,30" fill="none" stroke="#C8906A" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+    <!-- hair -->
+    <path d="M76,20 Q76,2 100,2 Q124,2 124,20" fill="#8B6543" opacity=".7"/>
+
+    <!-- ORGAN SHAPES FOR THIS SYSTEM -->
+    ${organShapes[sysKey]||''}
+  </svg>`;
+}
+
+let labelSys='digestive', lblVisited=new Set();
+function initLabel(){
+  if(document.getElementById('LABEL_SYS_BTNS').children.length===0){
+    SYS_KEYS.forEach(key=>{
+      const s=SYSTEMS[key];const btn=document.createElement('button');
+      btn.className='btn';btn.style.background=s.color;btn.style.fontSize='.75rem';btn.style.padding='7px 14px';
+      btn.textContent=s.icon+' '+s.name.split(' ')[0];
+      btn.onclick=()=>{sndClick();labelSys=key;renderLabelBody();};
+      document.getElementById('LABEL_SYS_BTNS').appendChild(btn);
+    });
+  }
+  renderLabelBody();
+}
+
+function renderLabelBody(){
+  const pins=BODY_PINS[labelSys];const s=SYSTEMS[labelSys];
+  const diag=document.getElementById('BODY_DIAG');
+  // Use a wrapper div that is position:relative, SVG inside
+  diag.style.position='relative';
+  diag.style.display='inline-block';
+  diag.style.width='100%';
+  diag.innerHTML = buildBodySVG(s.color, labelSys);
+
+  // After SVG is in DOM, place pins using SVG coordinate mapping
+  requestAnimationFrame(()=>{
+    const svgEl=document.getElementById('BODY_SVG');
+    if(!svgEl)return;
+    const rect=svgEl.getBoundingClientRect();
+    const diagRect=diag.getBoundingClientRect();
+    // SVG viewBox: 0 0 200 420
+    pins.forEach(pin=>{
+      const pinEl=document.createElement('div');
+      pinEl.className='label-pin'+(lblVisited.has(pin.sys+pin.organ)?' show-lbl':'');
+      // Convert SVG % coords to pixel offsets relative to diag container
+      // pin.x and pin.y are % of viewBox (200 x 420)
+      const px = (pin.x/100) * rect.width  + (rect.left - diagRect.left);
+      const py = (pin.y/100) * rect.height + (rect.top  - diagRect.top);
+      pinEl.style.position='absolute';
+      pinEl.style.left = px+'px';
+      pinEl.style.top  = py+'px';
+      pinEl.style.transform='translate(-50%,-50%)';
+      // label floats left or right
+      const side = pin.label_side==='left' ? 'right:22px;left:auto;' : 'left:22px;';
+      pinEl.innerHTML=`
+        <div class="pin-dot" style="background:${s.color};border-color:#fff;width:16px;height:16px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);animation:pulse 2s infinite;cursor:pointer;"></div>
+        <div class="pin-label" style="position:absolute;top:-13px;${side}background:#fff;border-radius:8px;padding:3px 8px;font-size:.65rem;font-weight:900;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.15);color:${s.color};border:1px solid ${s.color}44;pointer-events:none;opacity:${lblVisited.has(pin.sys+pin.organ)?1:0};transition:opacity .2s">${pin.organ}</div>`;
+      pinEl.addEventListener('click',()=>{
+        sndReveal();lblVisited.add(pin.sys+pin.organ);
+        pinEl.querySelector('.pin-label').style.opacity='1';
+        pinEl.classList.add('show-lbl');
+        const organ=SYSTEMS[pin.sys].organs.find(o=>o.name===pin.organ);
+        if(organ){
+          document.getElementById('LABEL_INFO').innerHTML=`
+            <div style="text-align:center;padding:4px">
+              <div style="font-size:2rem">${organ.emoji}</div>
+              <div style="font-weight:900;color:${s.color};font-size:1rem;margin-top:4px">${organ.name}</div>
+              <div style="font-size:.78rem;color:#555;margin-top:5px;line-height:1.5">${organ.fact}</div>
+            </div>`;
+          document.getElementById('LABEL_INFO').style.background=`linear-gradient(135deg,${s.color}18,${s.color}08)`;
+        }
+        const total=Object.values(BODY_PINS).reduce((a,b)=>a+b.length,0);
+        const pct=Math.round(lblVisited.size/total*100);
+        document.getElementById('LBL_PF').style.width=pct+'%';
+        document.getElementById('LBL_PL').textContent=lblVisited.size+' / '+total+' organs discovered';
+        if(lblVisited.size===total){setTimeout(()=>{pop('🏆','You labeled every organ!');confetti();sndCelebration();},200);}
+      });
+      diag.appendChild(pinEl);
+    });
+  });
+}
+
+/* ===== 3. DRAG LABEL ===== */
+let dlSys='digestive',dlSel=null;
+function initDragLabel(){
+  if(document.getElementById('DL_SYS_BTNS').children.length===0){
+    SYS_KEYS.forEach(key=>{
+      const s=SYSTEMS[key];const btn=document.createElement('button');
+      btn.className='btn';btn.style.background=s.color;btn.style.fontSize='.75rem';btn.style.padding='7px 14px';
+      btn.textContent=s.icon+' '+s.name.split(' ')[0];
+      btn.onclick=()=>{sndClick();dlSys=key;setupDragLabel();};
+      document.getElementById('DL_SYS_BTNS').appendChild(btn);
+    });
+  }
+  setupDragLabel();
+}
+function setupDragLabel(){
+  dlSel=null;document.getElementById('DL_FB').textContent='';
+  const s=SYSTEMS[dlSys];const organs=shuf(s.organs).slice(0,4);
+  const body=document.getElementById('DRAG_BODY');
+  body.style.position='relative';body.style.display='inline-block';body.style.width='100%';
+  body.innerHTML = buildBodySVG(s.color, dlSys);
+
+  // Pin positions per system for the 4 chosen organs (use same BODY_PINS coords)
+  requestAnimationFrame(()=>{
+    const svgEl=document.getElementById('BODY_SVG');if(!svgEl)return;
+    const rect=svgEl.getBoundingClientRect();
+    const bodyRect=body.getBoundingClientRect();
+    organs.forEach(organ=>{
+      const pinData=(BODY_PINS[dlSys]||[]).find(p=>p.organ===organ.name);
+      if(!pinData)return;
+      const px=(pinData.x/100)*rect.width +(rect.left-bodyRect.left);
+      const py=(pinData.y/100)*rect.height+(rect.top -bodyRect.top);
+      const zone=document.createElement('div');
+      zone.style.cssText=`position:absolute;left:${px}px;top:${py}px;transform:translate(-50%,-50%);
+        width:72px;height:24px;border:2px dashed rgba(255,255,255,.7);border-radius:20px;
+        display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:900;
+        color:rgba(255,255,255,.8);cursor:pointer;transition:all .2s;background:rgba(0,0,0,.18);z-index:5;`;
+      zone.dataset.organ=organ.name;zone.textContent='Drop here';
+      zone.onclick=()=>{
+        if(zone.classList.contains('filled'))return;
+        if(!dlSel)return;
+        if(dlSel.dataset.name===organ.name){
+          sndCorrect();zone.textContent=organ.emoji+' '+organ.name;
+          zone.style.background='rgba(46,213,115,.35)';zone.style.borderColor='#2ED573';zone.style.borderStyle='solid';
+          zone.classList.add('filled');dlSel.classList.add('used-dl');
+          document.getElementById('DL_FB').innerHTML=`<span style="color:#2ED573">✅ Correct! ${organ.name} placed!</span>`;
+          dlSel=null;document.querySelectorAll('.dlabel').forEach(l=>l.classList.remove('selected-dl'));
+          const allFilled=[...document.querySelectorAll('[data-organ]')].filter(z=>z.dataset.organ).every(z=>z.classList.contains('filled'));
+          if(allFilled)setTimeout(()=>{pop('🏆','All organs placed!');confetti();sndCelebration();},200);
+        } else {
+          sndWrong();zone.style.borderColor='#FF4757';
+          document.getElementById('DL_FB').innerHTML=`<span style="color:#FF4757">❌ Wrong spot! Try again!</span>`;
+          setTimeout(()=>{zone.style.borderColor='rgba(255,255,255,.7)';},600);
+        }
+      };
+      body.appendChild(zone);
+    });
+  });
+  const labels=document.getElementById('DRAG_LABELS');labels.innerHTML='';
+  shuf(organs).forEach(organ=>{
+    const lbl=document.createElement('div');lbl.className='dlabel';lbl.style.background=s.color;
+    lbl.textContent=organ.emoji+' '+organ.name;lbl.dataset.name=organ.name;
+    lbl.onclick=()=>{
+      if(lbl.classList.contains('used-dl'))return;sndClick();
+      document.querySelectorAll('.dlabel').forEach(l=>l.classList.remove('selected-dl'));
+      dlSel=lbl;lbl.classList.add('selected-dl');
+      document.getElementById('DL_FB').innerHTML=`<span style="color:#A855F7">Now tap the correct spot on the body! 👆</span>`;
+    };labels.appendChild(lbl);
+  });
+}
+
+/* ===== 4. QUIZ ===== */
+let qList=[],qIdx=0,qScore=0;
+function setupQuiz(){
+  qIdx=0;qScore=0;qList=buildQuestions();
+  document.getElementById('QS').textContent='⭐ 0';document.getElementById('QNXT').classList.remove('show');showQuestion();
+}
+function buildQuestions(){
+  const qs=[];
+  // organ → system
+  SYS_KEYS.forEach(key=>{
+    const s=SYSTEMS[key];shuf(s.organs).slice(0,2).forEach(o=>{
+      const wrong=shuf(SYS_KEYS.filter(k=>k!==key)).slice(0,3).map(k=>SYSTEMS[k].name);
+      qs.push({q:`Which system does the ${o.name} belong to?`,visual:o.emoji,correct:s.name,opts:shuf([s.name,...wrong]),type:'organ-sys'});
+    });
+  });
+  // job → system
+  SYS_KEYS.forEach(key=>{
+    const s=SYSTEMS[key];
+    const wrong=shuf(SYS_KEYS.filter(k=>k!==key)).slice(0,3).map(k=>SYSTEMS[k].name);
+    qs.push({q:`"${s.job}" — Which system is this?`,visual:s.icon,correct:s.name,opts:shuf([s.name,...wrong]),type:'job-sys'});
+  });
+  // fact → organ
+  SYS_KEYS.forEach(key=>{
+    const s=SYSTEMS[key];shuf(s.organs).slice(0,1).forEach(o=>{
+      const allOrgans=SYS_KEYS.flatMap(k=>SYSTEMS[k].organs.map(x=>x.name));
+      const wrong=shuf(allOrgans.filter(n=>n!==o.name)).slice(0,3);
+      qs.push({q:o.fact+'\n\nWhat organ is this?',visual:'🔬',correct:o.name,opts:shuf([o.name,...wrong]),type:'fact-organ'});
+    });
+  });
+  return shuf(qs).slice(0,10);
+}
+function showQuestion(){
+  if(qIdx>=qList.length){endQuiz();return;}
+  const q=qList[qIdx];
+  document.getElementById('QC').textContent=`Question ${qIdx+1}/${qList.length}`;
+  document.getElementById('QQ').textContent=q.q;
+  document.getElementById('QV').textContent=q.visual;
+  document.getElementById('QFB').textContent='';document.getElementById('QNXT').classList.remove('show');
+  document.getElementById('QNXT').onclick=()=>{qIdx++;showQuestion();};
+  const oc=document.getElementById('QOPTS');oc.innerHTML='';
+  q.opts.forEach(opt=>{
+    const b=document.createElement('button');b.className='qo';b.textContent=opt;
+    b.onclick=()=>checkQ(opt,q,oc);oc.appendChild(b);
+  });
+}
+function checkQ(chosen,q,c){
+  [...c.querySelectorAll('.qo')].forEach(b=>{b.classList.add('qdis');if(b.textContent===q.correct)b.classList.add('qcor');if(b.textContent===chosen&&chosen!==q.correct)b.classList.add('qwrg');});
+  if(chosen===q.correct){sndCorrect();qScore++;document.getElementById('QS').textContent='⭐ '+qScore;document.getElementById('QFB').innerHTML=`<span style="color:#2ED573">🎉 Correct! Well done! 👏</span>`;}
+  else{sndWrong();document.getElementById('QFB').innerHTML=`<span style="color:#FF4757">❌ Answer: ${q.correct}</span>`;}
+  document.getElementById('QNXT').classList.add('show');
+}
+function endQuiz(){
+  const pct=Math.round(qScore/qList.length*100);const em=pct===100?'🏆':pct>=70?'🌟':pct>=50?'😊':'💪';
+  document.getElementById('QQ').textContent=`Quiz Done! ${em}`;
+  document.getElementById('QV').textContent='';document.getElementById('QOPTS').innerHTML='';
+  document.getElementById('QFB').innerHTML=`<span style="color:#A855F7">${pct}% — ${pct===100?'Perfect scientist!':pct>=70?'Great job!':'Keep studying!'}</span>`;
+  const nb=document.getElementById('QNXT');nb.textContent='🔄 Play Again';nb.classList.add('show');nb.onclick=setupQuiz;
+  if(pct>=70){confetti();sndCelebration();}
+}
+
+/* ===== 5. MATCH ===== */
+let mSel=null;
+function setupMatch(){
+  mSel=null;document.getElementById('MATCH_FB').textContent='';
+  const pairs=shuf(SYS_KEYS.flatMap(key=>SYSTEMS[key].organs.map(o=>({organ:o.name,emoji:o.emoji,sys:SYSTEMS[key].name,color:SYSTEMS[key].color})))).slice(0,5);
+  const sysRight=shuf(pairs.map(p=>({sys:p.sys,color:p.color})));
+  const ml=document.getElementById('MATCH_LEFT');ml.innerHTML='';
+  const mr=document.getElementById('MATCH_RIGHT');mr.innerHTML='';
+  pairs.forEach(p=>{
+    const el=document.createElement('div');el.className='mitem';el.dataset.id=p.organ+p.sys;el.dataset.role='organ';
+    el.innerHTML=`${p.emoji} <strong>${p.organ}</strong>`;el.onclick=()=>pickMatch(el,'organ',p.organ,p.sys);ml.appendChild(el);
+  });
+  sysRight.forEach(s=>{
+    const el=document.createElement('div');el.className='mitem';el.dataset.role='sys';
+    el.style.color=s.color;el.textContent=s.sys;el.onclick=()=>pickMatch(el,'sys',null,s.sys);mr.appendChild(el);
+  });
+}
+function pickMatch(el,role,organ,sys){
+  if(el.classList.contains('ok'))return;
+  if(!mSel){mSel={el,role,organ,sys};el.classList.add('sel');return;}
+  if(mSel.role===role){mSel.el.classList.remove('sel');el.classList.add('sel');mSel={el,role,organ,sys};return;}
+  const prev=mSel;mSel=null;prev.el.classList.remove('sel');
+  const organEl=role==='organ'?el:prev.el;const sysEl=role==='sys'?el:prev.el;
+  const correctSys=role==='organ'?SYS_KEYS.find(k=>SYSTEMS[k].organs.find(o=>o.name===organ))||'':prev.sys;
+  const chosenSys=role==='sys'?sys:prev.sys;
+  const organName=role==='organ'?organ:prev.organ;
+  const realSys=SYS_KEYS.flatMap(k=>SYSTEMS[k].organs.map(o=>({name:o.name,sys:SYSTEMS[k].name}))).find(x=>x.name===organName);
+  if(realSys&&realSys.sys===chosenSys){
+    sndMatch();organEl.classList.add('ok');sysEl.classList.add('ok');
+    document.getElementById('MATCH_FB').innerHTML=`<span style="color:#2ED573">✅ Correct! ${organName} → ${chosenSys}!</span>`;
+    if([...document.querySelectorAll('.mitem')].every(x=>x.classList.contains('ok'))){setTimeout(()=>{pop('🌟','All matched! Amazing!');confetti();sndCelebration();},200);}
+  } else {
+    sndWrong();organEl.classList.add('bad');sysEl.classList.add('bad');
+    document.getElementById('MATCH_FB').innerHTML=`<span style="color:#FF4757">❌ Try again!</span>`;
+    setTimeout(()=>{organEl.classList.remove('bad');sysEl.classList.remove('bad');document.getElementById('MATCH_FB').textContent='';},800);
+  }
+}
+
+/* ===== 6. MEMORY ===== */
+let memFlip=[],memMat=0,memTr=0,memLock=false;
+function setupMemory(){
+  memFlip=[];memMat=0;memTr=0;memLock=false;const n=8;
+  const pairs=shuf(SYS_KEYS.flatMap(k=>SYSTEMS[k].organs.map(o=>({organ:o.name,emoji:o.emoji,sys:SYSTEMS[k].name,color:SYSTEMS[k].color})))).slice(0,n);
+  document.getElementById('MM').textContent=0;document.getElementById('MTOT').textContent=n;document.getElementById('MTR').textContent=0;
+  const cards=[];pairs.forEach(p=>{cards.push({id:p.organ,type:'organ',p});cards.push({id:p.organ,type:'sys',p});});
+  const g=document.getElementById('MEM_GRID');g.innerHTML='';
+  shuf(cards).forEach(card=>{
+    const el=document.createElement('div');el.className='mcard';
+    el.innerHTML=`<div class="mfront" style="background:linear-gradient(135deg,${card.p.color},${card.p.color}BB)">🧬</div>
+      <div class="mback" style="color:${card.p.color}">${card.type==='organ'?card.p.emoji+'<br>'+card.p.organ:card.p.sys}</div>`;
+    el.onclick=()=>flipMem(el,card);g.appendChild(el);
+  });
+}
+function flipMem(el,card){
+  if(memLock||el.classList.contains('flipped')||el.classList.contains('matched'))return;
+  sndFlip();el.classList.add('flipped');memFlip.push({el,card});
+  if(memFlip.length===2){
+    memLock=true;memTr++;document.getElementById('MTR').textContent=memTr;
+    const[a,b]=memFlip;
+    if(a.card.id===b.card.id&&a.card.type!==b.card.type){
+      sndMatch();a.el.classList.add('matched');b.el.classList.add('matched');memMat++;document.getElementById('MM').textContent=memMat;memFlip=[];memLock=false;
+      if(memMat===+document.getElementById('MTOT').textContent){setTimeout(()=>{pop('🏆','All pairs found! Science genius!');confetti();sndCelebration();},300);}
+    } else {
+      sndWrong();a.el.classList.add('mwrong');b.el.classList.add('mwrong');
+      setTimeout(()=>{a.el.classList.remove('flipped','mwrong');b.el.classList.remove('flipped','mwrong');memFlip=[];memLock=false;},950);
+    }
+  }
+}
+
+/* ===== 7. PUZZLE ===== */
+const PUZZLES=[
+  {q:'The ___ system pumps blood through the body.',blank:'circulatory',opts:['circulatory','digestive','respiratory','skeletal'],color:'#FF4757'},
+  {q:'The ___ system breaks down food into nutrients.',blank:'digestive',opts:['digestive','muscular','circulatory','skeletal'],color:'#FF6B35'},
+  {q:'The ___ system brings oxygen into the body.',blank:'respiratory',opts:['respiratory','digestive','circulatory','muscular'],color:'#1E90FF'},
+  {q:'The ___ system supports and protects the body using bones.',blank:'skeletal',opts:['skeletal','muscular','digestive','respiratory'],color:'#8B5E3C'},
+  {q:'The ___ system moves the body using muscles.',blank:'muscular',opts:['muscular','skeletal','circulatory','respiratory'],color:'#A855F7'},
+  {q:'The heart is the main organ of the ___ system.',blank:'circulatory',opts:['circulatory','digestive','muscular','skeletal'],color:'#FF4757'},
+  {q:'The lungs are the main organs of the ___ system.',blank:'respiratory',opts:['respiratory','circulatory','digestive','muscular'],color:'#1E90FF'},
+  {q:'The stomach belongs to the ___ system.',blank:'digestive',opts:['digestive','respiratory','circulatory','muscular'],color:'#FF6B35'},
+  {q:'The femur is the longest bone in the ___ system.',blank:'skeletal',opts:['skeletal','muscular','digestive','respiratory'],color:'#8B5E3C'},
+  {q:'Tendons connect muscles to bones in the ___ system.',blank:'muscular',opts:['muscular','skeletal','circulatory','digestive'],color:'#A855F7'},
+  {q:'The ___ in your lungs absorb oxygen into the blood.',blank:'alveoli',opts:['alveoli','bronchi','trachea','capillaries'],color:'#1E90FF'},
+  {q:'The ___ is the largest muscle in your body.',blank:'gluteus maximus',opts:['gluteus maximus','biceps','triceps','diaphragm'],color:'#A855F7'},
+  {q:'The ___ beats 100,000 times every day.',blank:'heart',opts:['heart','liver','stomach','lungs'],color:'#FF4757'},
+  {q:'Food is pushed to the stomach through the ___.',blank:'esophagus',opts:['esophagus','trachea','bronchi','intestine'],color:'#FF6B35'},
+  {q:'The ___ protects the brain — it is made of 22 bones.',blank:'skull',opts:['skull','spine','ribs','femur'],color:'#8B5E3C'},
+];
+let pzList=[],pzIdx=0,pzScore=0,pzTotal=0,pzSel=null;
+function setupPuzzle(){pzIdx=0;pzScore=0;pzTotal=0;pzSel=null;pzList=shuf(PUZZLES);nextPuzzle();}
+function nextPuzzle(){
+  if(pzIdx>=pzList.length){pzIdx=0;pzList=shuf(PUZZLES);}
+  pzSel=null;pzTotal++;document.getElementById('PZ_FB').textContent='';
+  const pz=pzList[pzIdx++];
+  document.getElementById('PZ_SCORE').textContent=`Score: ${pzScore} / ${pzTotal-1}`;
+  const qEl=document.getElementById('PZ_Q');
+  const parts=pz.q.split('___');
+  qEl.innerHTML=parts[0]+'<span class="blank" id="PZ_BLANK">___</span>'+parts[1];
+  const oc=document.getElementById('PZ_OPTS');oc.innerHTML='';
+  shuf(pz.opts).forEach(opt=>{
+    const b=document.createElement('div');b.className='popt';b.style.background=pz.color;b.textContent=opt;
+    b.onclick=()=>{
+      if(b.classList.contains('used-p'))return;
+      document.querySelectorAll('.popt').forEach(x=>x.style.boxShadow='');pzSel=opt;b.style.boxShadow='0 0 0 3px #FFD700';
+      // auto check
+      const blank=document.getElementById('PZ_BLANK');
+      [...document.querySelectorAll('.popt')].forEach(x=>x.classList.add('used-p'));
+      if(opt===pz.blank){
+        sndCorrect();pzScore++;pzTotal++;blank.textContent=opt;blank.classList.add('filled-b');
+        document.getElementById('PZ_FB').innerHTML=`<span style="color:#2ED573">🎉 Correct! Well done!</span>`;
+        document.getElementById('PZ_SCORE').textContent=`Score: ${pzScore} / ${pzTotal-1}`;
+        setTimeout(nextPuzzle,1400);
+      } else {
+        sndWrong();blank.textContent=opt;blank.classList.add('wrong-b');pzTotal++;
+        document.getElementById('PZ_FB').innerHTML=`<span style="color:#FF4757">❌ The answer was: <strong>${pz.blank}</strong></span>`;
+        document.getElementById('PZ_SCORE').textContent=`Score: ${pzScore} / ${pzTotal-1}`;
+      }
+    };oc.appendChild(b);
+  });
+}
+
+/* ===== SUMMARY ===== */
+function renderSummary(){
+  const c=document.getElementById('SUM_SYSTEMS');c.innerHTML='';
+  SYS_KEYS.forEach(key=>{
+    const s=SYSTEMS[key];
+    c.innerHTML+=`<div style="border-radius:16px;padding:14px;margin-bottom:10px;background:${s.bg}">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:1.8rem">${s.icon}</span>
+        <div><div style="font-weight:900;color:#fff;font-size:.95rem">${s.name}</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.85)">${s.job}</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">${s.organs.map(o=>`<div style="background:rgba(255,255,255,.22);border-radius:50px;padding:4px 10px;color:#fff;font-size:.72rem;font-weight:700">${o.emoji} ${o.name}</div>`).join('')}</div>
+    </div>`;
+  });
+}
+
+/* ===== CERT ===== */
+function genCert(){
+  const name=document.getElementById('CI').value.trim();
+  if(!name){document.getElementById('CI').style.borderColor='#FF4757';return;}
+  document.getElementById('CI').style.borderColor='#D0D0E8';
+  document.getElementById('CN').textContent='🎉 Congratulations, '+name+'! 🎉';
+  document.getElementById('CR').classList.add('show');confetti();sndCelebration();
+}
+
+/* ===== INIT ===== */
+initExplore();
+</script>
+</body>
+</html>
