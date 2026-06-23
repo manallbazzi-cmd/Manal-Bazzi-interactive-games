@@ -178,6 +178,7 @@ nav {
 .subject-card.arabic { border-color: #d1fae5; }
 .subject-card.french { border-color: #dbeafe; }
 .subject-card.geometry { border-color: #ffedd5; }
+.subject-card.science { border-color: #d1fae5; }
 
 .subject-icon {
   width: 80px; height: 80px; border-radius: 16px;
@@ -188,6 +189,7 @@ nav {
 .arabic .subject-icon { background: #ecfdf5; }
 .french .subject-icon { background: #eff6ff; }
 .geometry .subject-icon { background: #fff7ed; }
+.science .subject-icon { background: #ecfdf5; }
 
 .subject-name-ar { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 2px; }
 .subject-name-en { font-size: .8rem; color: var(--sub); margin-bottom: 12px; }
@@ -200,6 +202,7 @@ nav {
 .arabic .grade-tag { background: #d1fae5; color: #059669; }
 .french .grade-tag { background: #dbeafe; color: #2563eb; }
 .geometry .grade-tag { background: #ffedd5; color: #ea580c; }
+.science .grade-tag { background: #d1fae5; color: #059669; }
 
 /* ── GAMES SECTION ── */
 .games-section {
@@ -472,6 +475,15 @@ nav {
         <span class="grade-tag">Grade 2</span>
         <span class="grade-tag">Grade 1</span>
         <span class="grade-tag">Grade 3</span>
+      </div>
+    </div>
+    <div class="subject-card science" onclick="filterSubject('science')">
+      <div class="subject-icon">🔬</div>
+      <div class="subject-name-ar">Science</div>
+      <div class="subject-grades">
+        <span class="grade-tag">Grade 1</span>
+        <span class="grade-tag">Grade 3</span>
+        <span class="grade-tag">Grade 4</span>
       </div>
     </div>
   </div>
