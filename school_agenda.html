@@ -230,7 +230,7 @@ agenda.innerHTML="";
 if(this.value==="") return;
 
 const list = advancedGrades.includes(this.value)
-  ? [...materials, ...materialsAdvanced]
+  ? [...materials.filter(m=>m[1]!=="Science"), ...materialsAdvanced]
   : materials;
 
 list.forEach(m=>{
