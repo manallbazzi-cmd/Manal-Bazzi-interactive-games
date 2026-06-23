@@ -178,6 +178,10 @@ nav {
 .subject-card.arabic { border-color: #d1fae5; }
 .subject-card.french { border-color: #dbeafe; }
 .subject-card.geometry { border-color: #ffedd5; }
+.subject-card.science { border-color: #d1fae5; }
+.subject-card.english { border-color: #dbeafe; }
+.english .subject-icon { background: #eff6ff; }
+.english .grade-tag { background: #dbeafe; color: #2563eb; }
 
 .subject-icon {
   width: 80px; height: 80px; border-radius: 16px;
@@ -188,6 +192,7 @@ nav {
 .arabic .subject-icon { background: #ecfdf5; }
 .french .subject-icon { background: #eff6ff; }
 .geometry .subject-icon { background: #fff7ed; }
+.science .subject-icon { background: #ecfdf5; }
 
 .subject-name-ar { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 2px; }
 .subject-name-en { font-size: .8rem; color: var(--sub); margin-bottom: 12px; }
@@ -200,6 +205,7 @@ nav {
 .arabic .grade-tag { background: #d1fae5; color: #059669; }
 .french .grade-tag { background: #dbeafe; color: #2563eb; }
 .geometry .grade-tag { background: #ffedd5; color: #ea580c; }
+.science .grade-tag { background: #d1fae5; color: #059669; }
 
 /* ── GAMES SECTION ── */
 .games-section {
@@ -415,14 +421,44 @@ nav {
     
     <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:16px">
       <div style="background:white;border-radius:16px;padding:14px 22px;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem">🎮 Interactive Games <span style="color:var(--purple);font-size:1.1rem">+28</span></div>
-      <div style="background:white;border-radius:16px;padding:14px 22px;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem">📚 Subjects <span style="color:var(--purple);font-size:1.1rem">3</span></div>
+      <div style="background:white;border-radius:16px;padding:14px 22px;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem">📚 Subjects <span style="color:var(--purple);font-size:1.1rem">5</span></div>
       <div style="background:white;border-radius:16px;padding:14px 22px;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem">🏆 Grade Levels <span style="color:var(--purple);font-size:1.1rem">3</span></div>
       <div style="background:white;border-radius:16px;padding:14px 22px;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:10px;font-weight:700;font-size:.9rem">🌐 Bilingual</div>
     </div>
   </div>
 
+  <!-- HOW TO PLAY -->
+  <div style="max-width:700px;margin:0 auto 32px;padding:0 20px">
+    <div style="background:white;border-radius:20px;padding:24px 28px;box-shadow:0 4px 20px rgba(108,63,255,.12);border:2px solid #ede9fe">
+      <div style="text-align:center;font-size:1.15rem;font-weight:900;color:var(--purple);margin-bottom:18px">🎮 How to Play</div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
+        <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:180px">
+          <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--blue));color:white;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+          <div>
+            <div style="font-weight:800;font-size:.95rem;color:var(--dark)">Choose a Subject</div>
+            <div style="font-size:.8rem;color:var(--sub);margin-top:3px">Tap one of the subject cards below — Math, English, Arabic, Science and more!</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:180px">
+          <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--pink));color:white;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+          <div>
+            <div style="font-weight:800;font-size:.95rem;color:var(--dark)">Pick a Game</div>
+            <div style="font-size:.8rem;color:var(--sub);margin-top:3px">Browse the games below and tap ▶ Play to start your learning adventure!</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:180px">
+          <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--teal));color:white;font-weight:900;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+          <div>
+            <div style="font-weight:800;font-size:.95rem;color:var(--dark)">Learn & Have Fun!</div>
+            <div style="font-size:.8rem;color:var(--sub);margin-top:3px">Complete all activities, earn your score, and get your certificate! 🏆</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SUBJECT CARDS -->
-  
+
   <div class="subjects-grid">
     <div class="subject-card math" onclick="filterSubject('math')">
       <div class="subject-icon">📊</div>
@@ -433,20 +469,13 @@ nav {
         <span class="grade-tag">Grade 3</span>
       </div>
     </div>
-    <div class="subject-card english"
-     onclick="window.location.href='alphabet_english grade 1.html'">
-
-    <div class="subject-icon">🔤</div>
-
-    <div class="subject-name-ar">
-        English Alphabet
-    </div>
-
-    <div class="subject-grades">
+    <div class="subject-card english" onclick="filterSubject('english')">
+      <div class="subject-icon">🔤</div>
+      <div class="subject-name-ar">English</div>
+      <div class="subject-grades">
         <span class="grade-tag">Grade 1</span>
+      </div>
     </div>
-
-</div>
     <div class="subject-card arabic" onclick="filterSubject('arabic')">
       <div class="subject-icon">📖</div>
       <div class="subject-name-ar">Arabic Language</div>
@@ -474,6 +503,15 @@ nav {
         <span class="grade-tag">Grade 3</span>
       </div>
     </div>
+    <div class="subject-card science" onclick="filterSubject('science')">
+      <div class="subject-icon">🔬</div>
+      <div class="subject-name-ar">Science</div>
+      <div class="subject-grades">
+        <span class="grade-tag">Grade 1</span>
+        <span class="grade-tag">Grade 3</span>
+        <span class="grade-tag">Grade 4</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -489,6 +527,7 @@ nav {
     <button class="grade-tab" onclick="switchGrade(1,this)">🌱 Grade 1</button>
     <button class="grade-tab" onclick="switchGrade(2,this)">🌿 Grade 2</button>
     <button class="grade-tab" onclick="switchGrade(3,this)">🌳 Grade 3</button>
+    <button class="grade-tab" onclick="switchGrade(4,this)">🌲 Grade 4</button>
   </div>
 
   <div class="games-grid" id="gamesGrid"></div>
@@ -560,6 +599,17 @@ const ALL_GAMES = [
   { title:'Geometry Bilingual', desc:'Shapes in Arabic & English', grade:1, subject:'geometry', icon:'🔷', colors:['#fff7ed','#ea580c'], tags:['Grade 1','Geometry'], link:'geometry-shapes-bilingual.html' },
   // French
   { title:'French Worksheets', desc:'French language exercises', grade:2, subject:'french', icon:'🇫🇷', colors:['#dbeafe','#2563eb'], tags:['CE1','French'], link:'french_worksheets_new.html' },
+  // English
+  { title:'English Alphabet', desc:'Learn English letters interactively', grade:1, subject:'english', icon:'🔤', colors:['#eff6ff','#2563eb'], tags:['Grade 1','English'], link:'alphabet_english grade 1.html' },
+  { title:'Animal World & Babies', desc:'Animals and their babies in English', grade:1, subject:'english', icon:'🐾', colors:['#fff0f8','#A855F7'], tags:['Grade 1','English'], link:'animals_and_babies_english.html' },
+  // Science
+  { title:'Animal World & Babies', desc:'Learn animals and their babies', grade:1, subject:'science', icon:'🐾', colors:['#fff0f8','#A855F7'], tags:['Grade 1','Science'], link:'animals_and_babies_english.html' },
+  { title:'Animal Habitats', desc:'Desert, Forest & Ocean habitats', grade:3, subject:'science', icon:'🌍', colors:['#fff3e0','#FF8C00'], tags:['Grade 3','Science'], link:'animal_habitats_grade3.html' },
+  { title:'Body Systems', desc:'Explore the 5 human body systems', grade:3, subject:'science', icon:'🫀', colors:['#f0f8ff','#FF4757'], tags:['Grade 3','Science'], link:'body_systems_grade3.html' },
+  { title:'Food Pyramid', desc:'Explore the 6 food groups', grade:4, subject:'science', icon:'🍎', colors:['#fffef0','#F4A261'], tags:['Grade 4','Science'], link:'food_pyramid_grade4.html' },
+  // English
+  { title:'Sight Words Explorer', desc:'Learn & practice 20 Grade 1 sight words', grade:1, subject:'english', icon:'👀', colors:['#f5f0ff','#A855F7'], tags:['Grade 1','English'], link:'sight_words_grade1.html' },
+  { title:'Spelling Adventure', desc:'Spell 16 CVC words with fun games', grade:1, subject:'english', icon:'✏️', colors:['#fff0f8','#FF69B4'], tags:['Grade 1','English'], link:'english_spelling_grade1.html' },
 ];
 
 let currentGrade = 0;
