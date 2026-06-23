@@ -93,6 +93,7 @@ box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer}
 <option>التاسع الأساسي</option>
 </select>
 
+<div id="announcementBanner" style="display:none;background:#fef3c7;border-right:5px solid #f59e0b;border-radius:12px;padding:14px;margin-top:14px;font-size:15px"></div>
 <div id="subjects" class="subjects"></div>
 <div id="agenda"></div>
 
@@ -149,16 +150,36 @@ box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer}
 
 <div id="tech" class="screen">
 <button class="back" onclick="goHome()">⬅ العودة</button>
+
+<!-- 1. عرض وحذف الواجبات -->
 <div class="card">
-<h2>💻 البوابة التقنية</h2>
-
-<div class="entry">👥 إدارة المعلمين والواجبات</div>
-<div class="entry">🏫 إدارة الصفوف</div>
-<div class="entry">📚 إدارة المواد</div>
-<div class="entry">🔑 إدارة كلمات المرور</div>
-<div class="entry">📢 إدارة الإعلانات</div>
-
+  <h2>📋 إدارة الواجبات</h2>
+  <p class="small">عرض جميع الواجبات المحفوظة وحذف أي واجب</p>
+  <button onclick="loadAllHomeworks()" style="margin-top:12px">🔄 تحميل جميع الواجبات</button>
+  <div id="allHomeworks"></div>
 </div>
+
+<!-- 2. تغيير كلمات المرور -->
+<div class="card">
+  <h2>🔑 تغيير كلمات المرور</h2>
+  <p class="small">تغيير كلمة مرور بوابة الأستاذ</p>
+  <input type="password" id="newTeacherPass" placeholder="كلمة مرور الأستاذ الجديدة">
+  <button onclick="changeTeacherPass()">💾 حفظ كلمة مرور الأستاذ</button>
+  <p class="small" style="margin-top:16px">تغيير كلمة مرور البوابة التقنية</p>
+  <input type="password" id="newTechPass" placeholder="كلمة مرور التقنية الجديدة">
+  <button onclick="changeTechPass()">💾 حفظ كلمة مرور التقنية</button>
+</div>
+
+<!-- 3. إدارة الإعلانات -->
+<div class="card">
+  <h2>📢 إدارة الإعلانات</h2>
+  <p class="small">الإعلانات تظهر لجميع الطلاب عند فتح بوابتهم</p>
+  <textarea id="announcementText" placeholder="اكتب الإعلان هنا..." rows="3"></textarea>
+  <button onclick="saveAnnouncement()">📤 نشر الإعلان</button>
+  <button onclick="deleteAnnouncement()" style="background:#ef4444;margin-top:8px">🗑️ حذف الإعلان الحالي</button>
+  <div id="currentAnnouncement" style="margin-top:12px"></div>
+</div>
+
 </div>
 
 </div>
@@ -177,10 +198,32 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+
+let passwords = { teacher: "Teacher2026", tech: "Tech2026" };
+
+async function loadPasswords() {
+  try {
+    const doc = await db.collection("settings").doc("passwords").get();
+    if (doc.exists) passwords = { ...passwords, ...doc.data() };
+  } catch(e) {}
+}
+loadPasswords();
+
+async function loadAnnouncementBanner() {
+  try {
+    const doc = await db.collection("settings").doc("announcement").get();
+    const banner = document.getElementById("announcementBanner");
+    if (doc.exists && doc.data().text) {
+      banner.style.display = "block";
+      banner.innerHTML = "📢 <strong>إعلان:</strong> " + doc.data().text;
+    }
+  } catch(e) {}
+}
+
 function openPortal(id){
   if(id === "teacher"){
       const p = prompt("🔐 أدخلي كلمة مرور بوابة الأستاذ:");
-      if(p !== "Teacher2026"){
+      if(p !== passwords.teacher){
           alert("❌ كلمة مرور الأستاذ غير صحيحة");
           return;
       }
@@ -188,10 +231,16 @@ function openPortal(id){
 
   if(id === "tech"){
       const p = prompt("🔐 أدخلي كلمة مرور البوابة التقنية:");
-      if(p !== "Tech2026"){
+      if(p !== passwords.tech){
           alert("❌ كلمة مرور البوابة التقنية غير صحيحة");
           return;
       }
+      loadAllHomeworks();
+      loadCurrentAnnouncement();
+  }
+
+  if(id === "student"){
+      loadAnnouncementBanner();
   }
 
   document.getElementById("home").style.display="none";
@@ -304,6 +353,101 @@ async function saveHomework() {
     console.error(e);
     alert("❌ حدث خطأ أثناء الحفظ");
   }
+}
+
+// ===== البوابة التقنية =====
+
+async function loadAllHomeworks() {
+  const container = document.getElementById("allHomeworks");
+  container.innerHTML = "<p style='color:#64748b;margin-top:10px'>⏳ جاري التحميل...</p>";
+  try {
+    const snapshot = await db.collection("homeworks").orderBy("date","desc").get();
+    if (snapshot.empty) {
+      container.innerHTML = "<div class='entry'>لا توجد واجبات محفوظة.</div>";
+      return;
+    }
+    let html = "";
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      html += `
+        <div class='entry' style='display:flex;justify-content:space-between;align-items:flex-start;gap:10px'>
+          <div>
+            <strong>${d.grade} — ${d.subject}</strong><br>
+            📅 ${d.date}<br>
+            📝 ${d.homework}
+          </div>
+          <button onclick="deleteHomework('${doc.id}')" style='width:auto;padding:8px 14px;background:#ef4444;border-radius:10px;white-space:nowrap'>🗑️ حذف</button>
+        </div>`;
+    });
+    container.innerHTML = html;
+  } catch(e) {
+    container.innerHTML = "<div class='entry'>❌ حدث خطأ في التحميل.</div>";
+  }
+}
+
+async function deleteHomework(id) {
+  if (!confirm("هل أنت متأكد من حذف هذا الواجب؟")) return;
+  try {
+    await db.collection("homeworks").doc(id).delete();
+    alert("✅ تم حذف الواجب");
+    loadAllHomeworks();
+  } catch(e) {
+    alert("❌ حدث خطأ أثناء الحذف");
+  }
+}
+
+async function changeTeacherPass() {
+  const np = document.getElementById("newTeacherPass").value.trim();
+  if (!np) { alert("أدخل كلمة مرور جديدة"); return; }
+  try {
+    await db.collection("settings").doc("passwords").set({ teacher: np }, { merge: true });
+    passwords.teacher = np;
+    alert("✅ تم تغيير كلمة مرور الأستاذ");
+    document.getElementById("newTeacherPass").value = "";
+  } catch(e) { alert("❌ حدث خطأ"); }
+}
+
+async function changeTechPass() {
+  const np = document.getElementById("newTechPass").value.trim();
+  if (!np) { alert("أدخل كلمة مرور جديدة"); return; }
+  try {
+    await db.collection("settings").doc("passwords").set({ tech: np }, { merge: true });
+    passwords.tech = np;
+    alert("✅ تم تغيير كلمة مرور البوابة التقنية");
+    document.getElementById("newTechPass").value = "";
+  } catch(e) { alert("❌ حدث خطأ"); }
+}
+
+async function saveAnnouncement() {
+  const text = document.getElementById("announcementText").value.trim();
+  if (!text) { alert("اكتب نص الإعلان أولاً"); return; }
+  try {
+    await db.collection("settings").doc("announcement").set({ text });
+    alert("✅ تم نشر الإعلان");
+    loadCurrentAnnouncement();
+    document.getElementById("announcementText").value = "";
+  } catch(e) { alert("❌ حدث خطأ"); }
+}
+
+async function deleteAnnouncement() {
+  if (!confirm("هل تريد حذف الإعلان الحالي؟")) return;
+  try {
+    await db.collection("settings").doc("announcement").delete();
+    alert("✅ تم حذف الإعلان");
+    document.getElementById("currentAnnouncement").innerHTML = "";
+  } catch(e) { alert("❌ حدث خطأ"); }
+}
+
+async function loadCurrentAnnouncement() {
+  try {
+    const doc = await db.collection("settings").doc("announcement").get();
+    const div = document.getElementById("currentAnnouncement");
+    if (doc.exists && doc.data().text) {
+      div.innerHTML = `<div class='entry' style='background:#fef3c7;border-color:#f59e0b'>📢 <strong>الإعلان الحالي:</strong> ${doc.data().text}</div>`;
+    } else {
+      div.innerHTML = "<div class='entry'>لا يوجد إعلان حالياً.</div>";
+    }
+  } catch(e) {}
 }
 
 </script>
