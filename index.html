@@ -652,20 +652,33 @@ function filterSubject(s) {
 
 const bgMusic = new Audio('school_music.mp3');
 bgMusic.loop = true;
+bgMusic.volume = 0.5;
+
+let musicPlaying = false;
 
 function toggleMusic() {
-    if (bgMusic.paused) {
-        bgMusic.play();
-    } else {
-        bgMusic.pause();
-    }
+  const btn = document.getElementById('musicBtn');
+  if (!musicPlaying) {
+    bgMusic.play().then(() => {
+      musicPlaying = true;
+      btn.textContent = '🔊 إيقاف الموسيقى';
+      btn.style.background = '#22c55e';
+    }).catch(() => {
+      btn.textContent = '❌ الموسيقى غير متاحة';
+      setTimeout(() => { btn.textContent = '🎵 تشغيل الموسيقى'; }, 2000);
+    });
+  } else {
+    bgMusic.pause();
+    bgMusic.currentTime = 0;
+    musicPlaying = false;
+    btn.textContent = '🎵 تشغيل الموسيقى';
+    btn.style.background = '#6c4cff';
+  }
 }
 renderGames();
 
 </script>
-  <button id="musicBtn" onclick="toggleMusic()">
-🎵 تشغيل / إيقاف الموسيقى
-</button>
+  <button id="musicBtn" onclick="toggleMusic()">🎵 تشغيل الموسيقى</button>
 
 <style>
 #musicBtn{
