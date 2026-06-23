@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>الأجندة الإلكترونية - مدرسة برج البراجنة الرسمية الأولى للصبيان</title>
+<style>
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#eef3fb;color:#0d2137}
+header{background:linear-gradient(135deg,#0d2137,#1a56a0);padding:35px 20px;color:#fff;text-align:center}
+.container{max-width:1000px;margin:auto;padding:20px}
+.portal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.portal{background:#fff;border-radius:20px;padding:30px;text-align:center;
+box-shadow:0 6px 20px rgba(0,0,0,.1);cursor:pointer;transition:.3s}
+.portal:hover{transform:translateY(-6px)}
+.icon{font-size:55px}
+.screen{display:none}
+.active{display:block}
+.card{background:#fff;border-radius:18px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,.1);margin-top:20px}
+select,input,textarea,button{
+width:100%;padding:14px;margin-top:12px;border-radius:12px;
+border:2px solid #dbe4f3;font-size:16px;box-sizing:border-box
+}
+button{background:#1a56a0;color:#fff;border:none;font-weight:bold;cursor:pointer}
+.subjects{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:15px;margin-top:20px}
+.subject{background:#fff;padding:18px;border-radius:16px;text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer}
+.entry{background:#f8fbff;border-right:5px solid #1a56a0;padding:15px;border-radius:12px;margin-top:12px}
+.back{background:#64748b}
+.small{color:#64748b}
+      .school-logo{
+  width:140px;
+  height:auto;
+  background:#fff;
+  border-radius:50%;
+  padding:8px;
+  margin-bottom:15px;
+  box-shadow:0 4px 15px rgba(0,0,0,.2);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="School Logo" class="school-logo">
+
+  <h1>🏫 الأجندة الإلكترونية</h1>
+  <p>مدرسة برج البراجنة الرسمية الأولى للصبيان</p>
+  <p>Borj El Barajneh First Official School for Boys</p>
+</header>
+
+<div class="container">
+
+<div id="home" class="active">
+<div class="portal-grid">
+
+<div class="portal" onclick="openPortal('student')">
+<div class="icon">👨‍🎓</div>
+<h2>بوابة الطالب</h2>
+<p>الأجندة الخاصة بكل صف</p>
+</div>
+
+<div class="portal" onclick="openPortal('teacher')">
+<div class="icon">👩‍🏫</div>
+<h2>بوابة الأستاذ</h2>
+<p>إضافة الواجبات والإعلانات</p>
+</div>
+
+<div class="portal" onclick="openPortal('tech')">
+<div class="icon">💻</div>
+<h2>البوابة التقنية</h2>
+<p>إدارة المنصة</p>
+</div>
+
+</div>
+</div>
+
+<div id="student" class="screen">
+<button class="back" onclick="goHome()">⬅ العودة</button>
+
+<div class="card">
+<h2>👨‍🎓 بوابة الطالب</h2>
+
+<select id="grade">
+<option value="">-- اختر الصف --</option>
+<option>الأول الأساسي</option>
+<option>الثاني الأساسي</option>
+<option>الثالث الأساسي</option>
+<option>الرابع الأساسي</option>
+<option>الخامس الأساسي</option>
+<option>السادس الأساسي</option>
+<option>السابع الأساسي</option>
+<option>الثامن الأساسي</option>
+<option>التاسع الأساسي</option>
+</select>
+
+<div id="subjects" class="subjects"></div>
+<div id="agenda"></div>
+
+</div>
+</div>
+
+
+<div id="teacher" class="screen">
+<button class="back" onclick="goHome()">⬅ العودة</button>
+<div class="card">
+<h2>👩‍🏫 بوابة الأستاذ</h2>
+<p class="small">إضافة واجبات الصفوف</p>
+
+<select id="teacherGrade">
+<option value="">-- اختر الصف --</option>
+<option>الأول الأساسي</option>
+<option>الثاني الأساسي</option>
+<option>الثالث الأساسي</option>
+<option>الرابع الأساسي</option>
+<option>الخامس الأساسي</option>
+<option>السادس الأساسي</option>
+<option>السابع الأساسي</option>
+<option>الثامن الأساسي</option>
+<option>التاسع الأساسي</option>
+</select>
+
+<select id="teacherSubject">
+<option value="">-- اختر المادة --</option>
+<option>Math</option>
+<option>Science</option>
+<option>English</option>
+<option>اللغة العربية</option>
+<option>التربية المدنية</option>
+<option>الجغرافيا</option>
+<option>الفنون</option>
+<option>التربية الدينية</option>
+<option>Biology</option>
+<option>Chemistry</option>
+<option>Physics</option>
+</select>
+
+<input type="date" id="teacherDate">
+<textarea id="teacherHomework" placeholder="اكتب الواجب أو الملاحظة"></textarea>
+<button onclick="saveHomework()">➕ حفظ الواجب</button>
+<button class="back">✏️ تعديل واجب</button>
+<button class="back">🗑️ حذف واجب</button>
+
+<div class="entry" style="margin-top:20px">
+📌 سيتم عرض واجبات الصف والمادة هنا بعد ربط Firebase.
+</div>
+
+</div>
+</div>
+
+<div id="tech" class="screen">
+<button class="back" onclick="goHome()">⬅ العودة</button>
+<div class="card">
+<h2>💻 البوابة التقنية</h2>
+
+<div class="entry">👥 إدارة المعلمين والواجبات</div>
+<div class="entry">🏫 إدارة الصفوف</div>
+<div class="entry">📚 إدارة المواد</div>
+<div class="entry">🔑 إدارة كلمات المرور</div>
+<div class="entry">📢 إدارة الإعلانات</div>
+
+</div>
+</div>
+
+</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAdtHe-hPEI-np_UVDxZUgObbL6ztE-UPo",
+  authDomain: "borj-barajneh-school-agenda.firebaseapp.com",
+  projectId: "borj-barajneh-school-agenda",
+  storageBucket: "borj-barajneh-school-agenda.firebasestorage.app",
+  messagingSenderId: "1094754305376",
+  appId: "1:1094754305376:web:c7e5b3a738481e75908a05",
+  measurementId: "G-6EEKQ8C8NV"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+function openPortal(id){
+  if(id === "teacher"){
+      const p = prompt("🔐 أدخلي كلمة مرور بوابة الأستاذ:");
+      if(p !== "Teacher2026"){
+          alert("❌ كلمة مرور الأستاذ غير صحيحة");
+          return;
+      }
+  }
+
+  if(id === "tech"){
+      const p = prompt("🔐 أدخلي كلمة مرور البوابة التقنية:");
+      if(p !== "Tech2026"){
+          alert("❌ كلمة مرور البوابة التقنية غير صحيحة");
+          return;
+      }
+  }
+
+  document.getElementById("home").style.display="none";
+  document.querySelectorAll(".screen").forEach(x=>x.style.display="none");
+  document.getElementById(id).style.display="block";
+}
+
+function goHome(){
+document.getElementById("home").style.display="block";
+document.querySelectorAll(".screen").forEach(x=>x.style.display="none");
+}
+
+const materials=[
+["➕","Math"],
+["🔬","Science"],
+["🔤","English"],
+["🏛️","التربية المدنية"],
+["📖","اللغة العربية"],
+["🌍","الجغرافيا"],
+["🎨","الفنون"],
+["☪️","التربية الدينية"]
+];
+const materialsAdvanced=[
+["🧬","Biology"],
+["⚗️","Chemistry"],
+["⚛️","Physics"]
+];
+const advancedGrades=["السابع الأساسي","الثامن الأساسي","التاسع الأساسي"];
+const grade = document.getElementById("grade");
+const subjects = document.getElementById("subjects");
+const agenda = document.getElementById("agenda");
+grade.addEventListener("change",function(){
+subjects.innerHTML="";
+agenda.innerHTML="";
+
+if(this.value==="") return;
+
+const list = advancedGrades.includes(this.value)
+  ? [...materials, ...materialsAdvanced]
+  : materials;
+
+list.forEach(m=>{
+const box=document.createElement("div");
+box.className="subject";
+box.innerHTML="<div style='font-size:35px'>"+m[0]+"</div>"+m[1];
+
+box.onclick = async function () {
+  const snapshot = await db.collection("homeworks")
+    .where("grade", "==", grade.value)
+    .where("subject", "==", m[1])
+    .get();
+
+  if (snapshot.empty) {
+    agenda.innerHTML = `
+      <div class="card">
+        <h3>${m[1]} - ${grade.value}</h3>
+        <div class="entry">
+          📅 لا توجد واجبات مضافة بعد.<br>
+          📝 ستظهر أجندة هذا الصف وهذه المادة هنا.
+        </div>
+      </div>`;
+    return;
+  }
+
+  let html = `<div class="card"><h3>${m[1]} - ${grade.value}</h3>`;
+
+  snapshot.forEach(doc => {
+    const d = doc.data();
+    html += `
+      <div class="entry">
+        📅 ${d.date}<br>
+        📝 ${d.homework}
+      </div>`;
+  });
+
+  html += `</div>`;
+  agenda.innerHTML = html;
+  window.scrollTo({
+    top: agenda.offsetTop,
+    behavior: "smooth"
+  });
+};
+
+subjects.appendChild(box);
+});
+});
+
+async function saveHomework() {
+  const grade = document.getElementById("teacherGrade").value;
+  const subject = document.getElementById("teacherSubject").value;
+  const date = document.getElementById("teacherDate").value;
+  const homework = document.getElementById("teacherHomework").value;
+
+  if (!grade || !subject || !date || !homework) {
+    alert("يرجى تعبئة جميع الحقول");
+    return;
+  }
+
+  try {
+    await db.collection("homeworks").add({
+      grade: grade,
+      subject: subject,
+      date: date,
+      homework: homework
+    });
+
+    alert("✅ تم حفظ الواجب بنجاح");
+    document.getElementById("teacherHomework").value = "";
+  } catch (e) {
+    console.error(e);
+    alert("❌ حدث خطأ أثناء الحفظ");
+  }
+}
+
+</script>
+
+</body>
+</html>
