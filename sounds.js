@@ -27,13 +27,42 @@ const SFX = (() => {
     osc.stop(startTime + duration);
   }
 
-  // ── ✅ Correct answer — happy rising chime ───────────
+  // ── 👏 Clap sound using noise bursts ─────────────────
+  function playClap(c, startTime) {
+    const bufSize = c.sampleRate * 0.06;
+    const buf = c.createBuffer(1, bufSize, c.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1);
+
+    const src  = c.createBufferSource();
+    const gain = c.createGain();
+    const filter = c.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 1200;
+    filter.Q.value = 0.8;
+
+    src.buffer = buf;
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(c.destination);
+
+    gain.gain.setValueAtTime(0.6, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.08);
+    src.start(startTime);
+    src.stop(startTime + 0.1);
+  }
+
+  // ── ✅ Correct answer — clapping + chime ─────────────
   function playCorrect() {
     try {
       const c = getCtx();
       const t = c.currentTime;
-      const notes = [523, 659, 784, 1047]; // C5 E5 G5 C6
-      notes.forEach((f, i) => tone(f, 'sine', 0.18, 0.25, t + i * 0.1, c));
+      // 5 claps in quick succession
+      const clapTimes = [0, 0.1, 0.2, 0.3, 0.42];
+      clapTimes.forEach(d => playClap(c, t + d));
+      // chime on top
+      const notes = [523, 659, 784, 1047];
+      notes.forEach((f, i) => tone(f, 'sine', 0.18, 0.18, t + i * 0.1, c));
     } catch(e) {}
   }
 
