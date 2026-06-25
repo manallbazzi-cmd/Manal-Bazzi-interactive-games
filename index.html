@@ -387,7 +387,7 @@ nav {
     <a class="nav-link active" href="#">🏠 Home</a>
     <a class="nav-link" href="#">🎮 Games</a>
     <a class="nav-link" href="#">📖 Subjects</a>
-    <a class="nav-link" href="#">ℹ️ About</a>
+    <a class="nav-link" href="#" onclick="openAbout();return false;">ℹ️ About</a>
     <a class="nav-btn" href="#">🔒 Teacher Panel</a>
   </div>
 </nav>
@@ -694,8 +694,135 @@ renderGames();
 renderBadgesPanel('badges-container');
 injectStarsWidget();
 
+function openAbout() {
+  const o = document.getElementById('about-overlay');
+  o.style.display = 'flex';
+}
+function closeAbout() {
+  document.getElementById('about-overlay').style.display = 'none';
+}
+
 </script>
   <button id="musicBtn" onclick="toggleMusic()">🎵 تشغيل الموسيقى</button>
+
+<!-- ══════════ ABOUT MODAL ══════════ -->
+<div id="about-overlay" onclick="if(event.target===this)closeAbout()" style="
+  display:none;position:fixed;inset:0;
+  background:rgba(10,5,40,.6);backdrop-filter:blur(6px);
+  z-index:9998;align-items:center;justify-content:center;padding:20px;
+">
+  <div style="
+    background:white;border-radius:28px;max-width:560px;width:100%;
+    max-height:90vh;overflow-y:auto;
+    box-shadow:0 24px 80px rgba(108,63,255,.3);
+    animation:aboutPop .35s cubic-bezier(.34,1.56,.64,1);
+  ">
+    <style>
+      @keyframes aboutPop{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+    </style>
+
+    <!-- Header -->
+    <div style="
+      background:linear-gradient(135deg,#6c3fff 0%,#3a86ff 60%,#0bbfbf 100%);
+      border-radius:28px 28px 0 0;padding:36px 32px 28px;text-align:center;position:relative;
+    ">
+      <button onclick="closeAbout()" style="
+        position:absolute;top:16px;right:16px;background:rgba(255,255,255,.2);
+        border:none;color:white;width:32px;height:32px;border-radius:50%;
+        font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+      ">✕</button>
+      <div style="
+        width:100px;height:100px;border-radius:50%;
+        border:4px solid white;margin:0 auto 16px;
+        background:white;overflow:hidden;
+        box-shadow:0 8px 24px rgba(0,0,0,.2);
+      ">
+        <img src="WhatsApp Image 2026-05-20 at 10.44.20 AM.jpeg"
+             style="width:100%;height:100%;object-fit:cover"
+             onerror="this.parentElement.innerHTML='<div style=\'font-size:48px;line-height:100px\'>👩‍🏫</div>'">
+      </div>
+      <h2 style="color:white;font-size:1.5rem;font-weight:900;margin-bottom:4px">Teacher Manal Bazzi</h2>
+      <p style="color:rgba(255,255,255,.85);font-size:.9rem;font-weight:600">معلمة تعليم ابتدائي | Lebanon 🇱🇧</p>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:28px 32px">
+
+      <!-- About -->
+      <div style="margin-bottom:24px">
+        <h3 style="font-size:1rem;font-weight:900;color:#6c3fff;margin-bottom:10px;display:flex;align-items:center;gap:8px">
+          🌟 عن المنصة
+        </h3>
+        <p style="color:#4b5563;font-size:.9rem;line-height:1.8">
+          منصة تعليمية تفاعلية مصممة بحب للطلاب من الصف الأول حتى الرابع.
+          تجمع بين الرياضيات، العربي، الإنجليزي، والفرنسي — مع ألعاب ممتعة
+          تجعل التعلم مغامرة لا تنسى! 🎮📚
+        </p>
+      </div>
+
+      <!-- Stats -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
+        <div style="background:#f5f0ff;border-radius:16px;padding:16px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:900;color:#6c3fff">+28</div>
+          <div style="font-size:.72rem;font-weight:700;color:#8b5cf6;margin-top:2px">ألعاب تفاعلية</div>
+        </div>
+        <div style="background:#ecfdf5;border-radius:16px;padding:16px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:900;color:#059669">5</div>
+          <div style="font-size:.72rem;font-weight:700;color:#059669;margin-top:2px">مواد دراسية</div>
+        </div>
+        <div style="background:#fff7ed;border-radius:16px;padding:16px;text-align:center">
+          <div style="font-size:1.6rem;font-weight:900;color:#f97316">4</div>
+          <div style="font-size:.72rem;font-weight:700;color:#f97316;margin-top:2px">صفوف دراسية</div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div style="margin-bottom:24px">
+        <h3 style="font-size:1rem;font-weight:900;color:#6c3fff;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          ✨ مميزات المنصة
+        </h3>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:12px;background:#f8fafc;border-radius:12px;padding:12px">
+            <span style="font-size:24px">⭐</span>
+            <div><div style="font-weight:800;font-size:.88rem;color:#1a1150">نظام النجوم والشارات</div><div style="font-size:.78rem;color:#6b7280">اجمع نجوماً وافتح شارات مميزة</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:#f8fafc;border-radius:12px;padding:12px">
+            <span style="font-size:24px">🌐</span>
+            <div><div style="font-weight:800;font-size:.88rem;color:#1a1150">متعدد اللغات</div><div style="font-size:.78rem;color:#6b7280">عربي · إنجليزي · فرنسي</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:#f8fafc;border-radius:12px;padding:12px">
+            <span style="font-size:24px">📱</span>
+            <div><div style="font-weight:800;font-size:.88rem;color:#1a1150">يعمل على كل الأجهزة</div><div style="font-size:.78rem;color:#6b7280">جوال · تابلت · كمبيوتر</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:#f8fafc;border-radius:12px;padding:12px">
+            <span style="font-size:24px">📴</span>
+            <div><div style="font-weight:800;font-size:.88rem;color:#1a1150">يعمل بدون إنترنت</div><div style="font-size:.78rem;color:#6b7280">بعد تحميل الصفحة مرة واحدة</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div style="background:linear-gradient(135deg,#f5f0ff,#eff6ff);border-radius:16px;padding:20px;text-align:center">
+        <h3 style="font-size:1rem;font-weight:900;color:#6c3fff;margin-bottom:14px">📬 تواصل معي</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
+          <a href="mailto:manallbazzi@gmail.com" style="
+            display:flex;align-items:center;gap:8px;
+            background:white;border-radius:50px;padding:10px 20px;
+            font-size:.82rem;font-weight:700;color:#6c3fff;
+            text-decoration:none;box-shadow:0 2px 12px rgba(108,63,255,.12);
+            transition:transform .2s;
+          " onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">
+            ✉️ manallbazzi@gmail.com
+          </a>
+        </div>
+      </div>
+
+      <p style="text-align:center;margin-top:20px;font-size:.78rem;color:#9ca3af">
+        صُنعت بـ ❤️ لكل طالب يحب التعلم
+      </p>
+    </div>
+  </div>
+</div>
 
 <style>
 #musicBtn{
