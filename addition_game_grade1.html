@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Addition Adventure – Grade 1</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="stars-system.js"></script>
 <style>
 :root {
   --sky: #E8F4FD;
@@ -836,6 +837,7 @@ function goTo(screen){
 function startAdventure(){
   const n = document.getElementById('cover-name-input').value.trim() || 'Superstar';
   studentName = n;
+  setStudentName(n);
   document.getElementById('student-name-display').textContent = n;
   document.getElementById('menu-name').textContent = n;
   goTo('menu');
@@ -844,6 +846,7 @@ function startAdventure(){
 function addStars(n){
   totalStars += n;
   document.getElementById('total-stars').textContent = totalStars;
+  addGlobalStars(n);
 }
 
 // ─────────────────────────────────────────────────────────
@@ -1228,6 +1231,13 @@ window.onload=()=>{
   renderEmoji('emoji-row-1',0);renderEmoji('emoji-row-2',0);
   newColPractice();
   document.getElementById('cover-name-input').addEventListener('keydown',e=>{if(e.key==='Enter')startAdventure();});
+  // pre-fill student name from global system
+  const saved = getStudentName();
+  if (saved) {
+    document.getElementById('cover-name-input').value = saved;
+    document.getElementById('student-name-display').textContent = saved;
+  }
+  injectStarsWidget();
 };
 </script>
 </body>
