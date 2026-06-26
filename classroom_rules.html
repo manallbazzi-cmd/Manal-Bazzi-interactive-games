@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>قواعد الصف – Classroom Rules</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=Nunito:wght@700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Tajawal',sans-serif;
+  background: linear-gradient(135deg,#1a0533 0%,#0d1b6e 50%,#0a3d6b 100%);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 12px 30px;
+}
+
+/* ── HEADER ── */
+.poster{
+  width:100%;max-width:750px;
+  background:linear-gradient(160deg,#fff9f0 0%,#f0f4ff 50%,#fff0f9 100%);
+  border-radius:32px;
+  overflow:hidden;
+  box-shadow:0 20px 80px rgba(0,0,0,.5);
+  position:relative;
+}
+
+/* decorative dots */
+.poster::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(108,63,255,.06) 1px,transparent 1px);
+  background-size:28px 28px;
+  pointer-events:none;
+}
+
+.poster-header{
+  background:linear-gradient(135deg,#6c3fff 0%,#3a86ff 50%,#0bbfbf 100%);
+  padding:28px 24px 24px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.poster-header::after{
+  content:'';position:absolute;bottom:-20px;left:0;right:0;height:40px;
+  background:inherit;
+  clip-path:ellipse(55% 100% at 50% 0%);
+}
+.stars-row{font-size:1.4rem;letter-spacing:6px;margin-bottom:10px;opacity:.85;}
+.poster-title-ar{
+  font-size:clamp(1.8rem,6vw,2.8rem);font-weight:900;color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.2);line-height:1.2;
+}
+.poster-title-en{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(1rem,3.5vw,1.5rem);font-weight:900;
+  color:rgba(255,255,255,.9);margin-top:4px;letter-spacing:1px;
+}
+.teacher-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);
+  border-radius:50px;padding:7px 18px;margin-top:14px;
+  font-size:.85rem;font-weight:800;color:#fff;
+}
+
+/* ── RULES ── */
+.rules-container{
+  padding:30px 20px 20px;
+  display:flex;flex-direction:column;gap:14px;
+}
+
+.rule-card{
+  display:flex;align-items:center;gap:14px;
+  background:#fff;
+  border-radius:20px;
+  padding:14px 16px;
+  box-shadow:0 4px 16px rgba(0,0,0,.07);
+  position:relative;
+  overflow:hidden;
+  transition:transform .2s;
+  border-right:6px solid transparent;
+}
+.rule-card::before{
+  content:'';position:absolute;right:0;top:0;bottom:0;
+  width:4px;border-radius:0 20px 20px 0;
+}
+
+.rule-num{
+  width:44px;height:44px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;font-weight:900;color:#fff;
+  flex-shrink:0;
+  font-family:'Nunito',sans-serif;
+}
+.rule-emoji{
+  font-size:clamp(1.8rem,6vw,2.5rem);flex-shrink:0;
+}
+.rule-text{flex:1;}
+.rule-ar{
+  font-size:clamp(.95rem,3.5vw,1.15rem);font-weight:900;
+  color:#1a1150;line-height:1.3;
+}
+.rule-en{
+  font-family:'Nunito',sans-serif;
+  font-size:clamp(.72rem,2.5vw,.85rem);font-weight:800;
+  margin-top:3px;opacity:.7;
+}
+
+/* rule colors */
+.r1{border-right-color:#6c3fff;} .r1 .rule-num{background:linear-gradient(135deg,#6c3fff,#8b5cf6);}
+.r2{border-right-color:#3a86ff;} .r2 .rule-num{background:linear-gradient(135deg,#3a86ff,#60a5fa);}
+.r3{border-right-color:#22c55e;} .r3 .rule-num{background:linear-gradient(135deg,#22c55e,#4ade80);}
+.r4{border-right-color:#f97316;} .r4 .rule-num{background:linear-gradient(135deg,#f97316,#fb923c);}
+.r5{border-right-color:#f43f8a;} .r5 .rule-num{background:linear-gradient(135deg,#f43f8a,#f472b6);}
+.r6{border-right-color:#0bbfbf;} .r6 .rule-num{background:linear-gradient(135deg,#0bbfbf,#34d399);}
+.r7{border-right-color:#fbbf24;} .r7 .rule-num{background:linear-gradient(135deg,#fbbf24,#fcd34d);}
+.r8{border-right-color:#8b5cf6;} .r8 .rule-num{background:linear-gradient(135deg,#8b5cf6,#a78bfa);}
+
+.r1 .rule-en{color:#6c3fff;}
+.r2 .rule-en{color:#3a86ff;}
+.r3 .rule-en{color:#22c55e;}
+.r4 .rule-en{color:#f97316;}
+.r5 .rule-en{color:#f43f8a;}
+.r6 .rule-en{color:#0bbfbf;}
+.r7 .rule-en{color:#d97706;}
+.r8 .rule-en{color:#8b5cf6;}
+
+/* ── FOOTER ── */
+.poster-footer{
+  background:linear-gradient(135deg,#6c3fff,#3a86ff);
+  padding:16px 20px;text-align:center;
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+}
+.footer-text-ar{font-size:1rem;font-weight:900;color:#fff;}
+.footer-text-en{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;color:rgba(255,255,255,.85);}
+.heart{animation:heartbeat 1.2s ease-in-out infinite;}
+@keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+
+/* ── CONTROLS ── */
+.controls{
+  margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+}
+.ctrl-btn{
+  border:none;border-radius:50px;padding:12px 24px;
+  font-family:'Tajawal',sans-serif;font-size:.95rem;font-weight:800;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;
+}
+.ctrl-btn:active{transform:scale(.95);}
+.btn-print{background:#fff;color:#6c3fff;box-shadow:0 4px 16px rgba(108,63,255,.2);}
+.btn-fullscreen{background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.3);}
+.btn-back{background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.2);}
+
+/* ── FULLSCREEN ── */
+.poster:fullscreen,.poster:-webkit-full-screen{
+  border-radius:0;max-width:100%;height:100%;overflow-y:auto;
+}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff;padding:0;}
+  .controls{display:none;}
+  .poster{box-shadow:none;border-radius:0;max-width:100%;}
+}
+
+@media(max-width:480px){
+  .rule-card{gap:10px;padding:12px 12px;}
+  .rule-num{width:36px;height:36px;font-size:1rem;border-radius:10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <a href="index.html" class="ctrl-btn btn-back">← رجوع</a>
+  <button class="ctrl-btn btn-fullscreen" onclick="toggleFS()">⛶ ملء الشاشة</button>
+  <button class="ctrl-btn btn-print" onclick="window.print()">🖨️ طباعة</button>
+</div>
+
+<!-- POSTER -->
+<div class="poster" id="poster">
+
+  <!-- HEADER -->
+  <div class="poster-header">
+    <div class="stars-row">⭐ ⭐ ⭐ ⭐ ⭐</div>
+    <div class="poster-title-ar">قواعد الصف</div>
+    <div class="poster-title-en">Classroom Rules</div>
+    <div class="teacher-badge">👩‍🏫 Teacher Manal Bazzi</div>
+  </div>
+
+  <!-- RULES -->
+  <div class="rules-container">
+
+    <div class="rule-card r1">
+      <div class="rule-num">1</div>
+      <div class="rule-emoji">🤫</div>
+      <div class="rule-text">
+        <div class="rule-ar">أتحدث بهدوء داخل الصف</div>
+        <div class="rule-en">I speak quietly inside the classroom</div>
+      </div>
+    </div>
+
+    <div class="rule-card r2">
+      <div class="rule-num">2</div>
+      <div class="rule-emoji">🙋</div>
+      <div class="rule-text">
+        <div class="rule-ar">أرفع يدي قبل الكلام</div>
+        <div class="rule-en">I raise my hand before speaking</div>
+      </div>
+    </div>
+
+    <div class="rule-card r3">
+      <div class="rule-num">3</div>
+      <div class="rule-emoji">👂</div>
+      <div class="rule-text">
+        <div class="rule-ar">أستمع باهتمام عندما يتكلم الآخرون</div>
+        <div class="rule-en">I listen carefully when others speak</div>
+      </div>
+    </div>
+
+    <div class="rule-card r4">
+      <div class="rule-num">4</div>
+      <div class="rule-emoji">📚</div>
+      <div class="rule-text">
+        <div class="rule-ar">أحافظ على أدواتي وأدوات زملائي</div>
+        <div class="rule-en">I take care of my belongings and my classmates'</div>
+      </div>
+    </div>
+
+    <div class="rule-card r5">
+      <div class="rule-num">5</div>
+      <div class="rule-emoji">💪</div>
+      <div class="rule-text">
+        <div class="rule-ar">أحترم المعلمة وزملائي دائماً</div>
+        <div class="rule-en">I always respect my teacher and classmates</div>
+      </div>
+    </div>
+
+    <div class="rule-card r6">
+      <div class="rule-num">6</div>
+      <div class="rule-emoji">🧹</div>
+      <div class="rule-text">
+        <div class="rule-ar">أحافظ على نظافة الصف</div>
+        <div class="rule-en">I keep the classroom clean</div>
+      </div>
+    </div>
+
+    <div class="rule-card r7">
+      <div class="rule-num">7</div>
+      <div class="rule-emoji">✏️</div>
+      <div class="rule-text">
+        <div class="rule-ar">أنجز واجباتي في الوقت المحدد</div>
+        <div class="rule-en">I finish my work on time</div>
+      </div>
+    </div>
+
+    <div class="rule-card r8">
+      <div class="rule-num">8</div>
+      <div class="rule-emoji">😊</div>
+      <div class="rule-text">
+        <div class="rule-ar">أكون إيجابياً ومبتسماً دائماً</div>
+        <div class="rule-en">I stay positive and always smile</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="poster-footer">
+    <span class="heart">❤️</span>
+    <div>
+      <div class="footer-text-ar">صفٌّ سعيد = تعلُّم رائع!</div>
+      <div class="footer-text-en">A Happy Class = Amazing Learning!</div>
+    </div>
+    <span class="heart">❤️</span>
+  </div>
+
+</div>
+
+<script>
+function toggleFS(){
+  const el=document.getElementById('poster');
+  if(!document.fullscreenElement && !document.webkitFullscreenElement){
+    (el.requestFullscreen||el.webkitRequestFullscreen).call(el);
+  } else {
+    (document.exitFullscreen||document.webkitExitFullscreen).call(document);
+  }
+}
+</script>
+</body>
+</html>
