@@ -329,7 +329,7 @@ function buildMatch(){
 
   // left: emojis, right: arabic text — shuffled independently
   const leftItems=picked.map((r,i)=>({id:i,type:'emoji',val:r.emoji,text:r.emoji}));
-  const rightItems=picked.map((r,i)=>({id:i,type:'text',val:r.ar})).sort(()=>Math.random()-.5);
+  const rightItems=picked.map((r,i)=>({id:i,type:'text',val:lang==='en'?r.en:r.ar})).sort(()=>Math.random()-.5);
   const all=[...leftItems,...rightItems].sort(()=>Math.random()-.5);
 
   matchSelected=null;
@@ -348,7 +348,7 @@ function selectMatch(j,id,type){
   if(!matchSelected){
     matchSelected={j,id,type,el};
     el.classList.add('selected');
-    speak(matchData[parseInt(id)].ar,'ar');
+    speak(lang==='en'?matchData[parseInt(id)].en:matchData[parseInt(id)].ar, lang==='en'?'en-US':'ar');
     return;
   }
 
