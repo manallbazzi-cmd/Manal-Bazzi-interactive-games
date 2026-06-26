@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>Weather & Seasons – Teacher Manal Bazzi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+:root{
+  --purple:#6c3fff;
+  --blue:#3a86ff;
+  --green:#22c55e;
+  --orange:#f97316;
+  --pink:#f43f8a;
+  --yellow:#fbbf24;
+  --teal:#0bbfbf;
+  --red:#ef4444;
+  --bg:#f0f4ff;
+  --white:#fff;
+  --dark:#1a1150;
+  --sub:#6b7280;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;min-height:100dvh;overflow-x:hidden;}
+
+/* HEADER */
+header{text-align:center;padding:env(safe-area-inset-top,0) 0 0;position:relative;overflow:hidden;}
+.header-inner{padding:20px 16px 24px;position:relative;}
+.back-btn{position:absolute;left:12px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}
+.header-icon{font-size:clamp(2rem,8vw,3rem);margin-bottom:6px;display:inline-block;animation:float 3s ease-in-out infinite;}
+.header-title{font-size:clamp(1.4rem,5vw,2rem);font-weight:900;color:#fff;}
+.header-sub{font-size:clamp(.78rem,3vw,.95rem);color:rgba(255,255,255,.85);margin-top:4px;font-weight:700;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* TABS */
+.mode-tabs{display:flex;gap:8px;justify-content:center;padding:16px 12px 8px;flex-wrap:wrap;}
+.mode-tab{padding:9px 18px;border-radius:50px;border:2px solid #e5e7eb;background:#fff;font-size:clamp(.78rem,3vw,.9rem);font-weight:800;color:var(--sub);cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;}
+.mode-tab.active{background:var(--purple);border-color:var(--purple);color:#fff;}
+
+/* SECTION */
+.section{display:none;max-width:600px;margin:0 auto;padding:12px 14px 100px;}
+.section.on{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* WEATHER CARDS */
+.weather-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:360px){.weather-grid{grid-template-columns:repeat(2,1fr);}}
+.weather-card{border-radius:20px;padding:18px 10px;text-align:center;cursor:pointer;transition:transform .2s,box-shadow .2s;user-select:none;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.weather-card:active{transform:scale(.93);}
+.weather-card.active-card{transform:scale(1.06);box-shadow:0 8px 28px rgba(0,0,0,.18);}
+.w-emoji{font-size:clamp(2.2rem,9vw,3.2rem);margin-bottom:8px;display:block;}
+.w-name{font-size:clamp(.82rem,3.5vw,1rem);font-weight:900;color:#fff;}
+.w-desc{font-size:clamp(.65rem,2.5vw,.75rem);color:rgba(255,255,255,.85);margin-top:3px;font-weight:700;}
+
+/* INFO BOX */
+.info-box{background:#fff;border-radius:20px;padding:18px;box-shadow:0 4px 16px rgba(108,63,255,.1);margin-bottom:16px;display:flex;align-items:center;gap:14px;}
+.info-emoji{font-size:clamp(2.5rem,10vw,3.5rem);flex-shrink:0;}
+.info-title{font-size:clamp(1.1rem,4.5vw,1.4rem);font-weight:900;color:var(--dark);}
+.info-fact{font-size:clamp(.8rem,3vw,.95rem);color:var(--sub);margin-top:5px;line-height:1.6;font-weight:700;}
+.speak-btn{border:none;border-radius:50px;padding:10px 20px;background:var(--purple);color:#fff;font-weight:900;font-size:.85rem;cursor:pointer;margin-top:10px;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:7px;transition:all .2s;}
+.speak-btn:active{transform:scale(.95);}
+.speak-btn.speaking{background:var(--green);}
+
+/* SEASONS */
+.seasons-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px;}
+.season-card{border-radius:20px;padding:20px 14px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.1);user-select:none;}
+.season-card:active{transform:scale(.95);}
+.season-card.selected{box-shadow:0 0 0 4px var(--yellow),0 8px 24px rgba(0,0,0,.15);transform:scale(1.04);}
+.s-emoji{font-size:clamp(2.5rem,10vw,3.5rem);margin-bottom:8px;display:block;}
+.s-name{font-size:clamp(1rem,4vw,1.3rem);font-weight:900;color:#fff;}
+.s-months{font-size:clamp(.65rem,2.5vw,.78rem);color:rgba(255,255,255,.85);margin-top:4px;font-weight:700;}
+.season-info{background:#fff;border-radius:20px;padding:18px;box-shadow:0 4px 16px rgba(108,63,255,.1);margin-top:4px;}
+.season-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.fact-chip{background:#f0f4ff;border-radius:50px;padding:6px 14px;font-size:.8rem;font-weight:800;color:var(--purple);}
+
+/* QUIZ */
+.quiz-card{background:#fff;border-radius:24px;padding:22px 18px;box-shadow:0 4px 20px rgba(108,63,255,.1);margin-bottom:14px;text-align:center;}
+.quiz-prompt{font-size:clamp(.88rem,3.5vw,1rem);font-weight:800;color:var(--sub);margin-bottom:14px;}
+.quiz-big{font-size:clamp(3rem,14vw,5rem);margin:6px 0;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.q-opt{background:#fff;border:3px solid #e5e7eb;border-radius:16px;padding:14px 8px;font-size:clamp(1.2rem,5vw,1.7rem);cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;font-weight:900;}
+.q-opt:active{transform:scale(.95);}
+.q-opt.correct{background:#ecfdf5;border-color:var(--green);}
+.q-opt.wrong{background:#fef2f2;border-color:var(--red);animation:shake .3s;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.quiz-score{display:flex;justify-content:center;gap:16px;margin-bottom:14px;}
+.sc{background:#fff;border-radius:16px;padding:10px 18px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.sc-n{font-size:1.5rem;font-weight:900;}
+.sc-l{font-size:.7rem;font-weight:700;color:var(--sub);}
+
+/* DRESS UP */
+.dress-scene{background:linear-gradient(180deg,#87ceeb 0%,#87ceeb 60%,#90ee90 60%,#90ee90 100%);border-radius:20px;height:220px;position:relative;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,.1);}
+.scene-bg{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;}
+.scene-char{font-size:clamp(4rem,16vw,6rem);position:absolute;bottom:30px;left:50%;transform:translateX(-50%);transition:all .3s;}
+.scene-item{position:absolute;font-size:clamp(1.5rem,6vw,2.2rem);transition:all .4s;pointer-events:none;}
+.weather-label{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,.85);border-radius:50px;padding:5px 16px;font-size:.8rem;font-weight:900;color:var(--dark);white-space:nowrap;}
+.clothes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;}
+.cloth-btn{background:#fff;border:3px solid #e5e7eb;border-radius:14px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s;font-size:clamp(1.3rem,5.5vw,1.8rem);}
+.cloth-btn:active{transform:scale(.92);}
+.cloth-btn.selected{border-color:var(--purple);background:#f5f0ff;}
+.cloth-label{font-size:.65rem;font-weight:800;color:var(--sub);margin-top:4px;}
+.dress-prompt{background:linear-gradient(135deg,#f5f0ff,#eff6ff);border-radius:16px;padding:14px;text-align:center;font-weight:800;color:var(--purple);margin-bottom:12px;font-size:clamp(.85rem,3.5vw,1rem);}
+
+/* BOTTOM BAR */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;box-shadow:0 -4px 20px rgba(0,0,0,.1);padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0));display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.bar-btn{border:none;border-radius:50px;padding:11px 22px;font-size:clamp(.82rem,3.5vw,.95rem);font-weight:800;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;display:flex;align-items:center;gap:7px;}
+.bar-btn:active{transform:scale(.95);}
+.btn-primary{background:var(--purple);color:#fff;box-shadow:0 4px 12px rgba(108,63,255,.3);}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(34,197,94,.3);}
+.btn-orange{background:var(--orange);color:#fff;}
+.btn-gray{background:#f3f4f6;color:var(--dark);}
+
+/* TOAST */
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--dark);color:#fff;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:800;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{background:var(--green);}
+.toast.err{background:var(--red);}
+
+/* TITLE */
+.sec-title{text-align:center;font-size:clamp(1rem,4vw,1.2rem);font-weight:900;color:var(--dark);margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="mainHeader">
+  <div class="header-inner" id="headerInner">
+    <a class="back-btn" href="index.html">←</a>
+    <div class="header-icon">⛅</div>
+    <div class="header-title">Weather & Seasons</div>
+    <div class="header-sub">Grade 1 – 2 Science</div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="mode-tabs">
+  <button class="mode-tab active" onclick="setMode('weather',this)">🌤️ Weather</button>
+  <button class="mode-tab" onclick="setMode('seasons',this)">🍂 Seasons</button>
+  <button class="mode-tab" onclick="setMode('dress',this)">👕 Dress Up</button>
+  <button class="mode-tab" onclick="setMode('quiz',this)">🎯 Quiz</button>
+</div>
+
+<!-- ══ WEATHER MODE ══ -->
+<div class="section on" id="weatherSec">
+  <div class="sec-title">🌤️ Types of Weather</div>
+  <div class="weather-grid" id="weatherGrid"></div>
+  <div class="info-box" id="weatherInfo">
+    <div class="info-emoji" id="wInfoEmoji">☀️</div>
+    <div>
+      <div class="info-title" id="wInfoTitle">Sunny</div>
+      <div class="info-fact" id="wInfoFact">The sun shines bright! It's warm and clear outside. Perfect for playing outdoors!</div>
+      <button class="speak-btn" id="speakBtn" onclick="speakWeather()">🔊 Hear it!</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SEASONS MODE ══ -->
+<div class="section" id="seasonsSec">
+  <div class="sec-title">🍂 The Four Seasons</div>
+  <div class="seasons-grid" id="seasonsGrid"></div>
+  <div class="season-info" id="seasonInfo">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="sInfoEmoji" style="font-size:2.5rem">🌸</span>
+      <div>
+        <div style="font-size:1.1rem;font-weight:900;color:var(--dark)" id="sInfoTitle">Spring</div>
+        <div style="font-size:.85rem;color:var(--sub);font-weight:700;margin-top:3px" id="sInfoDesc">Flowers bloom, birds sing, and the weather gets warm!</div>
+      </div>
+    </div>
+    <div class="season-facts" id="sInfoFacts"></div>
+    <button class="speak-btn" onclick="speakSeason()" style="margin-top:12px">🔊 Hear it!</button>
+  </div>
+</div>
+
+<!-- ══ DRESS UP MODE ══ -->
+<div class="section" id="dressSec">
+  <div class="dress-prompt" id="dressPrompt">🌧️ It's <b id="dressWeatherName">Rainy</b>! What should you wear?</div>
+  <div class="dress-scene" id="dressScene">
+    <div id="sceneBg"></div>
+    <div class="scene-char" id="sceneChar">🧒</div>
+    <div class="scene-item" id="sceneItem1" style="top:20px;left:20px;opacity:0"></div>
+    <div class="scene-item" id="sceneItem2" style="top:20px;right:20px;opacity:0"></div>
+    <div class="scene-item" id="sceneItem3" style="top:50px;left:50%;transform:translateX(-50%);opacity:0"></div>
+    <div class="weather-label" id="sceneWeatherLabel">🌧️ Rainy Day</div>
+  </div>
+  <div class="sec-title" style="margin-bottom:10px">Choose the right clothes!</div>
+  <div class="clothes-grid" id="clothesGrid"></div>
+</div>
+
+<!-- ══ QUIZ MODE ══ -->
+<div class="section" id="quizSec">
+  <div class="quiz-score">
+    <div class="sc"><div class="sc-n" id="qScore" style="color:var(--green)">0</div><div class="sc-l">✅ Score</div></div>
+    <div class="sc"><div class="sc-n" id="qTotal" style="color:var(--purple)">0</div><div class="sc-l">📊 Total</div></div>
+    <div class="sc"><div class="sc-n" id="qStreak" style="color:var(--orange)">0</div><div class="sc-l">🔥 Streak</div></div>
+  </div>
+  <div class="quiz-card">
+    <div class="quiz-prompt" id="qPrompt">What type of weather is this?</div>
+    <div class="quiz-big" id="qBig">☀️</div>
+    <div class="quiz-options" id="qOptions"></div>
+  </div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar" id="bottomBar">
+  <button class="bar-btn btn-green" onclick="speakCurrent()">🔊 Read Aloud</button>
+  <button class="bar-btn btn-primary" id="mainAction" onclick="mainAction()">▶ Next</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const WEATHER = [
+  { name:'Sunny',   emoji:'☀️', color:['#fbbf24','#f97316'], fact:'The sun shines bright! It\'s warm and clear outside. Perfect for playing outdoors!', clothes:['👒','🕶️','👗'], temp:'Hot & Warm' },
+  { name:'Cloudy',  emoji:'☁️', color:['#94a3b8','#64748b'], fact:'Clouds cover the sky. It\'s not too hot or too cold. A light jacket is a good idea!', clothes:['🧥','👟','🎒'], temp:'Cool' },
+  { name:'Rainy',   emoji:'🌧️', color:['#3a86ff','#1d4ed8'], fact:'Water falls from the clouds as rain. Plants and animals need rain to survive!', clothes:['☂️','🥾','🧥'], temp:'Wet & Cool' },
+  { name:'Snowy',   emoji:'❄️', color:['#7dd3fc','#0ea5e9'], fact:'Water freezes and falls as snow! Everything looks white and beautiful outside.', clothes:['🧣','🧤','🥾'], temp:'Very Cold' },
+  { name:'Windy',   emoji:'💨', color:['#a78bfa','#7c3aed'], fact:'Strong air moves fast! Wind can move leaves, fly kites, and make it feel colder.', clothes:['🧥','🎩','👟'], temp:'Breezy' },
+  { name:'Stormy',  emoji:'⛈️', color:['#475569','#1e293b'], fact:'Thunder and lightning with heavy rain! Stay indoors and stay safe during a storm.', clothes:['☂️','🧥','🥾'], temp:'Dangerous' },
+];
+
+const SEASONS = [
+  { name:'Spring', emoji:'🌸', color:['#f9a8d4','#ec4899'], months:'March · April · May',
+    desc:'Flowers bloom, birds sing, and the weather gets warm!',
+    facts:['🌸 Flowers bloom','🐦 Birds return','🌧️ April showers','🌡️ Warm weather','🌱 Plants grow'] },
+  { name:'Summer', emoji:'☀️', color:['#fbbf24','#f97316'], months:'June · July · August',
+    desc:'Long sunny days, hot weather, and time for the beach!',
+    facts:['☀️ Long hot days','🏖️ Beach time','🍦 Ice cream!','🌡️ Very hot','🌿 Green trees'] },
+  { name:'Autumn', emoji:'🍂', color:['#f97316','#b45309'], months:'September · October · November',
+    desc:'Leaves turn orange and red, and the air gets cooler.',
+    facts:['🍂 Leaves fall','🎃 Halloween','🌡️ Getting cool','🍎 Harvest time','🦔 Animals prepare'] },
+  { name:'Winter', emoji:'❄️', color:['#7dd3fc','#2563eb'], months:'December · January · February',
+    desc:'Cold weather, snow falls, and days are very short!',
+    facts:['❄️ Snow & ice','🎄 Christmas','🌡️ Very cold','🌑 Short days','🐻 Animals hibernate'] },
+];
+
+const CLOTHES = [
+  { emoji:'☂️', name:'Umbrella', for:['Rainy','Stormy'] },
+  { emoji:'🧥', name:'Coat',     for:['Rainy','Snowy','Windy','Cloudy','Stormy'] },
+  { emoji:'🧣', name:'Scarf',    for:['Snowy','Windy'] },
+  { emoji:'🧤', name:'Gloves',   for:['Snowy'] },
+  { emoji:'👒', name:'Sun Hat',  for:['Sunny'] },
+  { emoji:'🕶️', name:'Sunglasses',for:['Sunny'] },
+  { emoji:'🥾', name:'Boots',    for:['Rainy','Snowy','Stormy'] },
+  { emoji:'👗', name:'T-shirt',  for:['Sunny'] },
+];
+
+const SCENE_BG = {
+  Sunny:  'linear-gradient(180deg,#87ceeb 0%,#87ceeb 60%,#90ee90 60%)',
+  Cloudy: 'linear-gradient(180deg,#b0c4de 0%,#b0c4de 60%,#90ee90 60%)',
+  Rainy:  'linear-gradient(180deg,#4682b4 0%,#4682b4 60%,#6b8e6b 60%)',
+  Snowy:  'linear-gradient(180deg,#e0f0ff 0%,#e0f0ff 60%,#fff 60%)',
+  Windy:  'linear-gradient(180deg,#c5d8e8 0%,#c5d8e8 60%,#90ee90 60%)',
+  Stormy: 'linear-gradient(180deg,#2c3e50 0%,#2c3e50 60%,#5a7a5a 60%)',
+};
+
+// ── STATE ──
+let mode = 'weather';
+let currentWeather = 0;
+let currentSeason = 0;
+let currentDressWeather = 0;
+let selectedClothes = new Set();
+let qScore=0, qTotal=0, qStreak=0;
+let qAnswered=false;
+
+const synth = window.speechSynthesis;
+let voices=[];
+if(synth){ synth.onvoiceschanged=()=>voices=synth.getVoices(); voices=synth.getVoices(); }
+
+function speak(txt, rate=0.88, pitch=1.1){
+  if(!synth) return;
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='en-US'; u.rate=rate; u.pitch=pitch; u.volume=1;
+  const v=voices.find(v=>v.lang.startsWith('en-US'))||voices.find(v=>v.lang.startsWith('en'))||voices[0];
+  if(v) u.voice=v;
+  synth.speak(u);
+}
+
+// ── WEATHER GRID ──
+function buildWeather(){
+  document.getElementById('weatherGrid').innerHTML = WEATHER.map((w,i)=>`
+    <div class="weather-card" id="wcard${i}"
+      style="background:linear-gradient(135deg,${w.color[0]},${w.color[1]})"
+      onclick="selectWeather(${i})">
+      <span class="w-emoji">${w.emoji}</span>
+      <div class="w-name">${w.name}</div>
+      <div class="w-desc">${w.temp}</div>
+    </div>`).join('');
+  selectWeather(0);
+}
+
+function selectWeather(i){
+  currentWeather=i;
+  const w=WEATHER[i];
+  document.querySelectorAll('.weather-card').forEach((c,j)=>c.classList.toggle('active-card',j===i));
+  document.getElementById('wInfoEmoji').textContent=w.emoji;
+  document.getElementById('wInfoTitle').textContent=w.name;
+  document.getElementById('wInfoFact').textContent=w.fact;
+  document.getElementById('mainHeader').querySelector('.header-inner').style.background=
+    `linear-gradient(135deg,${w.color[0]},${w.color[1]})`;
+  speak(w.name + '! ' + w.fact);
+}
+
+function speakWeather(){ speak(WEATHER[currentWeather].name + '! ' + WEATHER[currentWeather].fact); }
+
+// ── SEASONS GRID ──
+function buildSeasons(){
+  document.getElementById('seasonsGrid').innerHTML = SEASONS.map((s,i)=>`
+    <div class="season-card" id="scard${i}"
+      style="background:linear-gradient(135deg,${s.color[0]},${s.color[1]})"
+      onclick="selectSeason(${i})">
+      <span class="s-emoji">${s.emoji}</span>
+      <div class="s-name">${s.name}</div>
+      <div class="s-months">${s.months}</div>
+    </div>`).join('');
+  selectSeason(0);
+}
+
+function selectSeason(i){
+  currentSeason=i;
+  const s=SEASONS[i];
+  document.querySelectorAll('.season-card').forEach((c,j)=>c.classList.toggle('selected',j===i));
+  document.getElementById('sInfoEmoji').textContent=s.emoji;
+  document.getElementById('sInfoTitle').textContent=s.name;
+  document.getElementById('sInfoDesc').textContent=s.desc;
+  document.getElementById('sInfoFacts').innerHTML=s.facts.map(f=>`<div class="fact-chip">${f}</div>`).join('');
+  speak(s.name + '! ' + s.desc + ' ' + s.facts.join('. '));
+}
+
+function speakSeason(){ const s=SEASONS[currentSeason]; speak(s.name + '. ' + s.desc); }
+
+// ── DRESS UP ──
+function buildDress(){
+  const i=currentDressWeather;
+  const w=WEATHER[i];
+  document.getElementById('dressPrompt').innerHTML=`🌤️ It's <b>${w.name}</b>! What should you wear?`;
+  document.getElementById('dressWeatherName').textContent=w.name;
+  document.getElementById('dressScene').style.background=SCENE_BG[w.name]||SCENE_BG.Sunny;
+  document.getElementById('sceneWeatherLabel').textContent=`${w.emoji} ${w.name} Day`;
+  selectedClothes.clear();
+  document.getElementById('clothesGrid').innerHTML=CLOTHES.map((c,i)=>`
+    <div class="cloth-btn" id="cloth${i}" onclick="toggleCloth(${i})">
+      <div>${c.emoji}</div>
+      <div class="cloth-label">${c.name}</div>
+    </div>`).join('');
+  updateSceneItems();
+}
+
+function toggleCloth(i){
+  const c=CLOTHES[i];
+  const el=document.getElementById('cloth'+i);
+  if(selectedClothes.has(i)){ selectedClothes.delete(i); el.classList.remove('selected'); }
+  else { selectedClothes.add(i); el.classList.add('selected'); }
+  updateSceneItems();
+}
+
+function updateSceneItems(){
+  const sel=[...selectedClothes].map(i=>CLOTHES[i].emoji);
+  ['sceneItem1','sceneItem2','sceneItem3'].forEach((id,j)=>{
+    const el=document.getElementById(id);
+    if(sel[j]){ el.textContent=sel[j]; el.style.opacity='1'; el.style.fontSize='clamp(1.8rem,7vw,2.5rem)'; }
+    else{ el.style.opacity='0'; }
+  });
+}
+
+function checkDress(){
+  const w=WEATHER[currentDressWeather];
+  const correct=CLOTHES.filter(c=>c.for.includes(w.name)).map(c=>c.emoji);
+  const chosen=[...selectedClothes].map(i=>CLOTHES[i].emoji);
+  const good=correct.some(e=>chosen.includes(e));
+  if(good){ showToast('🌟 Great choice! Perfect for '+w.name+' weather!','ok'); speak('Great job! Perfect clothes for '+w.name+' weather!'); }
+  else { showToast('❌ Try again! Think about the weather!','err'); speak('Hmm, think about what you need for '+w.name+' weather!'); }
+}
+
+function nextDressWeather(){
+  currentDressWeather=(currentDressWeather+1)%WEATHER.length;
+  buildDress();
+}
+
+// ── QUIZ ──
+const Q_TYPES=['emoji-name','name-emoji','season-emoji','what-to-wear'];
+
+function buildQuiz(){ nextQuiz(); }
+
+function nextQuiz(){
+  qAnswered=false;
+  const type=Q_TYPES[Math.floor(Math.random()*Q_TYPES.length)];
+  let prompt,big,opts,correctOpt;
+
+  if(type==='emoji-name'){
+    const idx=Math.floor(Math.random()*WEATHER.length);
+    const correct=WEATHER[idx];
+    prompt='What type of weather is this?';
+    big=correct.emoji;
+    const pool=WEATHER.filter((_,i)=>i!==idx).sort(()=>Math.random()-.5).slice(0,3);
+    opts=[correct,...pool].sort(()=>Math.random()-.5);
+    correctOpt=correct.name;
+    renderQuiz(prompt,big,opts.map(o=>({label:o.name,val:o.name})),correctOpt);
+
+  } else if(type==='name-emoji'){
+    const idx=Math.floor(Math.random()*WEATHER.length);
+    const correct=WEATHER[idx];
+    prompt='Find the emoji for this weather:';
+    big=correct.name;
+    const pool=WEATHER.filter((_,i)=>i!==idx).sort(()=>Math.random()-.5).slice(0,3);
+    opts=[correct,...pool].sort(()=>Math.random()-.5);
+    correctOpt=correct.emoji;
+    renderQuiz(prompt,big,opts.map(o=>({label:o.emoji,val:o.emoji})),correctOpt,'emoji');
+
+  } else if(type==='season-emoji'){
+    const idx=Math.floor(Math.random()*SEASONS.length);
+    const correct=SEASONS[idx];
+    prompt='Which season is this?';
+    big=correct.emoji;
+    const pool=SEASONS.filter((_,i)=>i!==idx).sort(()=>Math.random()-.5).slice(0,3);
+    opts=[correct,...pool].sort(()=>Math.random()-.5);
+    correctOpt=correct.name;
+    renderQuiz(prompt,big,opts.map(o=>({label:o.name,val:o.name})),correctOpt);
+
+  } else {
+    const idx=Math.floor(Math.random()*WEATHER.length);
+    const correct=WEATHER[idx];
+    prompt=`It's ${correct.name}! What should you wear?`;
+    big=correct.emoji;
+    const correctCloth=CLOTHES.find(c=>c.for.includes(correct.name));
+    const wrongClothes=CLOTHES.filter(c=>!c.for.includes(correct.name)).sort(()=>Math.random()-.5).slice(0,3);
+    opts=[correctCloth,...wrongClothes].sort(()=>Math.random()-.5);
+    correctOpt=correctCloth.emoji;
+    renderQuiz(prompt,big,opts.map(o=>({label:o.emoji+' '+o.name,val:o.emoji})),correctOpt);
+  }
+}
+
+function renderQuiz(prompt,big,opts,correct,type='text'){
+  document.getElementById('qPrompt').textContent=prompt;
+  document.getElementById('qBig').textContent=big;
+  document.getElementById('qOptions').innerHTML=opts.map(o=>`
+    <button class="q-opt" onclick="checkQuiz('${o.val}','${correct}',this)">
+      ${o.label}
+    </button>`).join('');
+  speak(prompt+' '+big);
+}
+
+function checkQuiz(chosen,correct,el){
+  if(qAnswered) return;
+  qAnswered=true;
+  qTotal++;
+  document.querySelectorAll('.q-opt').forEach(o=>o.style.pointerEvents='none');
+  if(chosen===correct){
+    qScore++; qStreak++;
+    el.classList.add('correct');
+    speak('Correct! Well done!');
+    showToast('🌟 Correct!','ok');
+  } else {
+    qStreak=0;
+    el.classList.add('wrong');
+    document.querySelectorAll('.q-opt').forEach(o=>{ if(o.textContent.trim().includes(correct)||o.getAttribute('onclick').includes(`'${correct}'`)) o.classList.add('correct'); });
+    speak('Not quite! The answer is '+correct);
+    showToast('❌ Try again!','err');
+  }
+  document.getElementById('qScore').textContent=qScore;
+  document.getElementById('qTotal').textContent=qTotal;
+  document.getElementById('qStreak').textContent=qStreak;
+  setTimeout(nextQuiz,1800);
+}
+
+// ── MODE ──
+function setMode(m,el){
+  mode=m;
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('on'));
+  document.getElementById(m+'Sec').classList.add('on');
+  // Reset header
+  document.getElementById('headerInner').style.background='';
+
+  if(m==='seasons') buildSeasons();
+  else if(m==='dress') buildDress();
+  else if(m==='quiz') buildQuiz();
+  updateBar();
+}
+
+function updateBar(){
+  const btn=document.getElementById('mainAction');
+  if(mode==='dress'){ btn.textContent='✅ Check!'; btn.onclick=checkDress; }
+  else if(mode==='quiz'){ btn.textContent='⏭️ Skip'; btn.onclick=nextQuiz; }
+  else { btn.textContent='▶ Next'; btn.onclick=()=>{ if(mode==='weather') selectWeather((currentWeather+1)%6); else selectSeason((currentSeason+1)%4); }; }
+}
+
+function speakCurrent(){
+  if(mode==='weather') speakWeather();
+  else if(mode==='seasons') speakSeason();
+  else if(mode==='dress'){ speak('It is '+WEATHER[currentDressWeather].name+'. Choose the right clothes!'); }
+}
+
+function mainAction(){ }
+
+// ── TOAST ──
+function showToast(msg,cls=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+(cls||'');
+  setTimeout(()=>t.className='toast',2200);
+}
+
+// ── INIT ──
+buildWeather();
+updateBar();
+document.addEventListener('touchstart',()=>synth?.cancel(),{once:true,passive:true});
+</script>
+</body>
+</html>
