@@ -127,14 +127,14 @@ header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:cen
     <a class="back-btn" href="index.html">→</a>
     <div class="header-icon">🏫</div>
     <div class="header-title">قواعد الصف — Classroom Rules</div>
-    <div class="header-sub">Grade 1 – 2 &nbsp;|&nbsp; ثنائي اللغة</div>
+    <div class="header-sub">الصف الأول والثاني · Grade 1 – 2</div>
   </div>
 </header>
 
 <div class="mode-tabs">
-  <button class="mode-tab active" onclick="setMode('rules',this)">📋 القواعد</button>
-  <button class="mode-tab" onclick="setMode('quiz',this)">✅ صح أم خطأ؟</button>
-  <button class="mode-tab" onclick="setMode('match',this)">🔗 طابق</button>
+  <button class="mode-tab active" onclick="setMode('rules',this)">📋 القواعد · Rules</button>
+  <button class="mode-tab" onclick="setMode('quiz',this)">✅ صح أم خطأ؟ · Right or Wrong?</button>
+  <button class="mode-tab" onclick="setMode('match',this)">🔗 طابق · Match</button>
 </div>
 
 <!-- ══ RULES LIST ══ -->
@@ -145,9 +145,9 @@ header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:cen
 <!-- ══ QUIZ MODE ══ -->
 <div class="section" id="quizSec">
   <div class="score-row">
-    <div class="sc"><div class="sc-n" id="qScore" style="color:var(--green)">0</div><div class="sc-l">✅ صح</div></div>
-    <div class="sc"><div class="sc-n" id="qTotal" style="color:var(--purple)">0</div><div class="sc-l">📊 المجموع</div></div>
-    <div class="sc"><div class="sc-n" id="qStreak" style="color:var(--orange)">0</div><div class="sc-l">🔥 سلسلة</div></div>
+    <div class="sc"><div class="sc-n" id="qScore" style="color:var(--green)">0</div><div class="sc-l">✅ صح · Correct</div></div>
+    <div class="sc"><div class="sc-n" id="qTotal" style="color:var(--purple)">0</div><div class="sc-l">📊 المجموع · Total</div></div>
+    <div class="sc"><div class="sc-n" id="qStreak" style="color:var(--orange)">0</div><div class="sc-l">🔥 سلسلة · Streak</div></div>
   </div>
   <div class="scenario-card">
     <span class="scenario-emoji" id="scenEmoji">🙋</span>
@@ -156,11 +156,11 @@ header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:cen
     <div class="answer-btns">
       <button class="ans-btn" id="btnRight" onclick="answer(true)">
         <span class="ans-icon">✅</span>
-        <span>صح — Right</span>
+        <span>صح<br><small style="font-family:'Nunito',sans-serif;font-size:.75em;opacity:.8">Right ✓</small></span>
       </button>
       <button class="ans-btn" id="btnWrong" onclick="answer(false)">
         <span class="ans-icon">❌</span>
-        <span>خطأ — Wrong</span>
+        <span>خطأ<br><small style="font-family:'Nunito',sans-serif;font-size:.75em;opacity:.8">Wrong ✗</small></span>
       </button>
     </div>
   </div>
@@ -170,16 +170,16 @@ header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:cen
 <!-- ══ MATCH MODE ══ -->
 <div class="section" id="matchSec">
   <div class="score-row">
-    <div class="sc"><div class="sc-n" id="mScore" style="color:var(--green)">0</div><div class="sc-l">✅ مطابق</div></div>
-    <div class="sc"><div class="sc-n" id="mLeft" style="color:var(--purple)">0</div><div class="sc-l">🎯 متبقي</div></div>
+    <div class="sc"><div class="sc-n" id="mScore" style="color:var(--green)">0</div><div class="sc-l">✅ مطابق · Matched</div></div>
+    <div class="sc"><div class="sc-n" id="mLeft" style="color:var(--purple)">0</div><div class="sc-l">🎯 متبقي · Left</div></div>
   </div>
   <div class="match-grid" id="matchGrid"></div>
 </div>
 
 <!-- BOTTOM BAR -->
 <div class="bottom-bar">
-  <button class="bar-btn btn-gray" id="speakBtn" onclick="speakCurrent()">🔊 اسمع</button>
-  <button class="bar-btn btn-purple" id="actionBtn" onclick="doAction()">▶ التالي</button>
+  <button class="bar-btn btn-gray" id="speakBtn" onclick="speakCurrent()">🔊 اسمع · Listen</button>
+  <button class="bar-btn btn-purple" id="actionBtn" onclick="doAction()">▶ التالي · Next</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -288,7 +288,7 @@ function answer(isRight){
     fb.className='feedback-box ok';
     fb.textContent='🌟 ممتاز! Excellent! — '+s.en;
     fb.style.display='block';
-    showToast('🌟 ممتاز!','ok');
+    showToast('🌟 ممتاز! Excellent!','ok');
     if(qStreak%5===0) confetti();
     speak('ممتاز! صحيح تماماً.','ar');
   } else {
@@ -296,9 +296,9 @@ function answer(isRight){
     document.getElementById(isRight?'btnRight':'btnWrong').classList.add('ans-wrong');
     document.getElementById(s.correct?'btnRight':'btnWrong').classList.add('ans-correct');
     fb.className='feedback-box err';
-    fb.textContent=(s.correct?'✅ هذا صحيح! This is a GOOD behavior!':'❌ هذا خطأ! This is a BAD behavior!')+' — '+s.en;
+    fb.textContent=(s.correct?'✅ هذا سلوك صحيح! This is a GOOD behavior!':'❌ هذا سلوك خاطئ! This is a BAD behavior!')+'\n'+s.en;
     fb.style.display='block';
-    showToast('حاول مرة أخرى!','err');
+    showToast('❌ حاول مرة أخرى! Try again!','err');
     speak('حاول مرة أخرى.','ar');
   }
   updateScores();
@@ -365,16 +365,16 @@ function selectMatch(j,id,type){
     document.getElementById('mScore').textContent=matchScore;
     document.getElementById('mLeft').textContent=matchData.length-matchScore;
     speak('ممتاز!','ar');
-    showToast('🌟 صح!','ok');
+    showToast('🌟 صح! Correct!','ok');
     matchSelected=null;
     if(matchScore===matchData.length){
-      setTimeout(()=>{ confetti(); showToast('🎉 أحسنت! جميع الإجابات صحيحة!','ok'); speak('أحسنت! جميع الإجابات صحيحة!','ar'); },300);
+      setTimeout(()=>{ confetti(); showToast('🎉 أحسنت! Well done! All matched!','ok'); speak('أحسنت! جميع الإجابات صحيحة!','ar'); },300);
     }
   } else {
     el.classList.add('wrong-match');
     matchSelected.el.classList.add('wrong-match');
     speak('حاول مرة أخرى','ar');
-    showToast('❌ حاول مرة أخرى','err');
+    showToast('❌ حاول مرة أخرى! Try again!','err');
     setTimeout(()=>{
       el.classList.remove('wrong-match','selected');
       matchSelected.el.classList.remove('wrong-match','selected');
@@ -392,9 +392,9 @@ function setMode(m,el){
   document.getElementById(m+'Sec').classList.add('on');
   const ab=document.getElementById('actionBtn');
   const sb=document.getElementById('speakBtn');
-  if(m==='rules'){ab.textContent='📋 القواعد';sb.style.display='flex';}
-  else if(m==='quiz'){ab.textContent='⏭️ تخطى';sb.style.display='flex';buildQuiz();}
-  else if(m==='match'){ab.textContent='🔄 لعبة جديدة';sb.style.display='none';buildMatch();}
+  if(m==='rules'){ab.textContent='📋 القواعد · Rules';sb.style.display='flex';}
+  else if(m==='quiz'){ab.textContent='⏭️ تخطى · Skip';sb.style.display='flex';buildQuiz();}
+  else if(m==='match'){ab.textContent='🔄 لعبة جديدة · New Game';sb.style.display='none';buildMatch();}
 }
 
 function doAction(){
