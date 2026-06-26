@@ -3,290 +3,432 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>قواعد الصف – Classroom Rules</title>
+<title>قواعد الصف – Classroom Rules Game</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&family=Nunito:wght@700;800;900&display=swap');
 
-*{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;min-height:100dvh;overflow-x:hidden;}
 
-body{
-  font-family:'Tajawal',sans-serif;
-  background: linear-gradient(135deg,#1a0533 0%,#0d1b6e 50%,#0a3d6b 100%);
-  min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;
-  padding:20px 12px 30px;
-}
-
-/* ── HEADER ── */
-.poster{
-  width:100%;max-width:750px;
-  background:linear-gradient(160deg,#fff9f0 0%,#f0f4ff 50%,#fff0f9 100%);
-  border-radius:32px;
-  overflow:hidden;
-  box-shadow:0 20px 80px rgba(0,0,0,.5);
-  position:relative;
+:root{
+  --purple:#6c3fff;--blue:#3a86ff;--green:#22c55e;--orange:#f97316;
+  --pink:#f43f8a;--yellow:#fbbf24;--teal:#0bbfbf;--red:#ef4444;
+  --bg:#f0f4ff;--white:#fff;--dark:#1a1150;--sub:#6b7280;
 }
 
-/* decorative dots */
-.poster::before{
-  content:'';position:absolute;inset:0;
-  background-image:radial-gradient(circle,rgba(108,63,255,.06) 1px,transparent 1px);
-  background-size:28px 28px;
-  pointer-events:none;
-}
+/* HEADER */
+header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:center;padding:env(safe-area-inset-top,0) 0 0;}
+.header-inner{padding:20px 16px 26px;position:relative;}
+.back-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}
+.header-icon{font-size:clamp(2rem,8vw,3rem);margin-bottom:6px;display:inline-block;animation:float 3s ease-in-out infinite;}
+.header-title{font-size:clamp(1.3rem,5vw,1.9rem);font-weight:900;color:#fff;}
+.header-sub{font-size:clamp(.75rem,3vw,.9rem);color:rgba(255,255,255,.85);margin-top:3px;font-weight:700;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
-.poster-header{
-  background:linear-gradient(135deg,#6c3fff 0%,#3a86ff 50%,#0bbfbf 100%);
-  padding:28px 24px 24px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-}
-.poster-header::after{
-  content:'';position:absolute;bottom:-20px;left:0;right:0;height:40px;
-  background:inherit;
-  clip-path:ellipse(55% 100% at 50% 0%);
-}
-.stars-row{font-size:1.4rem;letter-spacing:6px;margin-bottom:10px;opacity:.85;}
-.poster-title-ar{
-  font-size:clamp(1.8rem,6vw,2.8rem);font-weight:900;color:#fff;
-  text-shadow:0 2px 12px rgba(0,0,0,.2);line-height:1.2;
-}
-.poster-title-en{
-  font-family:'Nunito',sans-serif;
-  font-size:clamp(1rem,3.5vw,1.5rem);font-weight:900;
-  color:rgba(255,255,255,.9);margin-top:4px;letter-spacing:1px;
-}
-.teacher-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);
-  border-radius:50px;padding:7px 18px;margin-top:14px;
-  font-size:.85rem;font-weight:800;color:#fff;
-}
+/* TABS */
+.mode-tabs{display:flex;gap:8px;justify-content:center;padding:14px 12px 6px;flex-wrap:wrap;}
+.mode-tab{padding:8px 16px;border-radius:50px;border:2px solid #e5e7eb;background:#fff;font-size:clamp(.75rem,3vw,.88rem);font-weight:800;color:var(--sub);cursor:pointer;transition:all .2s;font-family:'Tajawal',sans-serif;}
+.mode-tab.active{background:var(--purple);border-color:var(--purple);color:#fff;}
 
-/* ── RULES ── */
-.rules-container{
-  padding:30px 20px 20px;
-  display:flex;flex-direction:column;gap:14px;
-}
+/* SECTION */
+.section{display:none;max-width:560px;margin:0 auto;padding:12px 14px 100px;}
+.section.on{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
+/* ── RULES LIST ── */
 .rule-card{
-  display:flex;align-items:center;gap:14px;
-  background:#fff;
-  border-radius:20px;
-  padding:14px 16px;
-  box-shadow:0 4px 16px rgba(0,0,0,.07);
-  position:relative;
-  overflow:hidden;
-  transition:transform .2s;
-  border-right:6px solid transparent;
+  background:#fff;border-radius:20px;
+  padding:14px 16px;margin-bottom:12px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 4px 14px rgba(0,0,0,.07);
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+  border-right:5px solid var(--purple);
+  position:relative;overflow:hidden;
 }
-.rule-card::before{
-  content:'';position:absolute;right:0;top:0;bottom:0;
-  width:4px;border-radius:0 20px 20px 0;
-}
+.rule-card:active{transform:scale(.97);}
+.rule-num{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;flex-shrink:0;font-family:'Nunito',sans-serif;}
+.rule-emoji-big{font-size:clamp(1.8rem,7vw,2.4rem);flex-shrink:0;}
+.rule-texts{flex:1;}
+.rule-ar{font-size:clamp(.9rem,3.5vw,1.05rem);font-weight:900;color:var(--dark);line-height:1.3;}
+.rule-en{font-family:'Nunito',sans-serif;font-size:clamp(.68rem,2.5vw,.8rem);font-weight:800;margin-top:3px;opacity:.65;}
+.speak-mini{background:none;border:none;font-size:1.1rem;cursor:pointer;flex-shrink:0;opacity:.6;transition:opacity .2s;}
+.speak-mini:active{opacity:1;transform:scale(1.2);}
 
-.rule-num{
-  width:44px;height:44px;border-radius:14px;
+/* ── QUIZ: RIGHT OR WRONG ── */
+.scenario-card{
+  background:#fff;border-radius:24px;padding:22px 18px;
+  box-shadow:0 6px 24px rgba(108,63,255,.12);
+  margin-bottom:16px;text-align:center;
+}
+.scenario-emoji{font-size:clamp(4rem,16vw,6rem);margin:8px 0;display:block;animation:pop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.scenario-text-ar{font-size:clamp(1rem,4vw,1.25rem);font-weight:900;color:var(--dark);margin:10px 0 4px;}
+.scenario-text-en{font-family:'Nunito',sans-serif;font-size:clamp(.78rem,3vw,.95rem);font-weight:800;color:var(--sub);}
+.answer-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.ans-btn{border:3px solid #e5e7eb;border-radius:18px;padding:16px 8px;font-size:clamp(1rem,4vw,1.2rem);font-weight:900;cursor:pointer;transition:all .2s;background:#fff;font-family:'Tajawal',sans-serif;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.ans-btn:active{transform:scale(.94);}
+.ans-btn .ans-icon{font-size:clamp(1.8rem,7vw,2.5rem);}
+.ans-correct{background:#ecfdf5;border-color:var(--green);color:var(--green);}
+.ans-wrong{background:#fef2f2;border-color:var(--red);color:var(--red);animation:shake .3s;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+.feedback-box{
+  border-radius:18px;padding:14px 16px;text-align:center;margin-bottom:12px;
+  font-size:clamp(.9rem,3.5vw,1.05rem);font-weight:900;display:none;
+}
+.feedback-box.ok{background:#ecfdf5;color:#059669;border:2px solid #86efac;}
+.feedback-box.err{background:#fef2f2;color:#dc2626;border:2px solid #fca5a5;}
+
+/* ── MATCH GAME ── */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.match-card{
+  background:#fff;border-radius:16px;padding:14px 10px;text-align:center;
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 3px 12px rgba(0,0,0,.07);
+  border:3px solid #e5e7eb;min-height:70px;
   display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;font-weight:900;color:#fff;
-  flex-shrink:0;
-  font-family:'Nunito',sans-serif;
+  font-size:clamp(.85rem,3.5vw,1rem);font-weight:900;color:var(--dark);
 }
-.rule-emoji{
-  font-size:clamp(1.8rem,6vw,2.5rem);flex-shrink:0;
-}
-.rule-text{flex:1;}
-.rule-ar{
-  font-size:clamp(.95rem,3.5vw,1.15rem);font-weight:900;
-  color:#1a1150;line-height:1.3;
-}
-.rule-en{
-  font-family:'Nunito',sans-serif;
-  font-size:clamp(.72rem,2.5vw,.85rem);font-weight:800;
-  margin-top:3px;opacity:.7;
-}
+.match-card.emoji-card{font-size:clamp(2rem,8vw,2.8rem);}
+.match-card:active{transform:scale(.94);}
+.match-card.selected{border-color:var(--purple);background:#f5f0ff;transform:scale(1.04);}
+.match-card.matched{border-color:var(--green);background:#ecfdf5;pointer-events:none;animation:pop .3s ease;}
+.match-card.wrong-match{border-color:var(--red);background:#fef2f2;animation:shake .3s;}
 
-/* rule colors */
-.r1{border-right-color:#6c3fff;} .r1 .rule-num{background:linear-gradient(135deg,#6c3fff,#8b5cf6);}
-.r2{border-right-color:#3a86ff;} .r2 .rule-num{background:linear-gradient(135deg,#3a86ff,#60a5fa);}
-.r3{border-right-color:#22c55e;} .r3 .rule-num{background:linear-gradient(135deg,#22c55e,#4ade80);}
-.r4{border-right-color:#f97316;} .r4 .rule-num{background:linear-gradient(135deg,#f97316,#fb923c);}
-.r5{border-right-color:#f43f8a;} .r5 .rule-num{background:linear-gradient(135deg,#f43f8a,#f472b6);}
-.r6{border-right-color:#0bbfbf;} .r6 .rule-num{background:linear-gradient(135deg,#0bbfbf,#34d399);}
-.r7{border-right-color:#fbbf24;} .r7 .rule-num{background:linear-gradient(135deg,#fbbf24,#fcd34d);}
-.r8{border-right-color:#8b5cf6;} .r8 .rule-num{background:linear-gradient(135deg,#8b5cf6,#a78bfa);}
+/* SCORE */
+.score-row{display:flex;justify-content:center;gap:12px;margin-bottom:14px;}
+.sc{background:#fff;border-radius:14px;padding:8px 16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.sc-n{font-size:1.4rem;font-weight:900;}
+.sc-l{font-size:.65rem;font-weight:800;color:var(--sub);}
 
-.r1 .rule-en{color:#6c3fff;}
-.r2 .rule-en{color:#3a86ff;}
-.r3 .rule-en{color:#22c55e;}
-.r4 .rule-en{color:#f97316;}
-.r5 .rule-en{color:#f43f8a;}
-.r6 .rule-en{color:#0bbfbf;}
-.r7 .rule-en{color:#d97706;}
-.r8 .rule-en{color:#8b5cf6;}
+/* BOTTOM BAR */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;box-shadow:0 -4px 20px rgba(0,0,0,.1);padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0));display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.bar-btn{border:none;border-radius:50px;padding:11px 22px;font-size:clamp(.82rem,3.5vw,.95rem);font-weight:800;cursor:pointer;transition:all .2s;font-family:'Tajawal',sans-serif;display:flex;align-items:center;gap:7px;}
+.bar-btn:active{transform:scale(.95);}
+.btn-purple{background:var(--purple);color:#fff;box-shadow:0 4px 12px rgba(108,63,255,.3);}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 4px 12px rgba(34,197,94,.3);}
+.btn-gray{background:#f3f4f6;color:var(--dark);}
 
-/* ── FOOTER ── */
-.poster-footer{
-  background:linear-gradient(135deg,#6c3fff,#3a86ff);
-  padding:16px 20px;text-align:center;
-  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
-}
-.footer-text-ar{font-size:1rem;font-weight:900;color:#fff;}
-.footer-text-en{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:800;color:rgba(255,255,255,.85);}
-.heart{animation:heartbeat 1.2s ease-in-out infinite;}
-@keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+/* TOAST */
+.toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--dark);color:#fff;padding:10px 24px;border-radius:50px;font-size:.9rem;font-weight:800;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:999;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.ok{background:var(--green);}
+.toast.err{background:var(--red);}
 
-/* ── CONTROLS ── */
-.controls{
-  margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
-}
-.ctrl-btn{
-  border:none;border-radius:50px;padding:12px 24px;
-  font-family:'Tajawal',sans-serif;font-size:.95rem;font-weight:800;
-  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;
-}
-.ctrl-btn:active{transform:scale(.95);}
-.btn-print{background:#fff;color:#6c3fff;box-shadow:0 4px 16px rgba(108,63,255,.2);}
-.btn-fullscreen{background:rgba(255,255,255,.15);color:#fff;border:2px solid rgba(255,255,255,.3);}
-.btn-back{background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.2);}
-
-/* ── FULLSCREEN ── */
-.poster:fullscreen,.poster:-webkit-full-screen{
-  border-radius:0;max-width:100%;height:100%;overflow-y:auto;
-}
-
-/* ── PRINT ── */
-@media print{
-  body{background:#fff;padding:0;}
-  .controls{display:none;}
-  .poster{box-shadow:none;border-radius:0;max-width:100%;}
-}
-
-@media(max-width:480px){
-  .rule-card{gap:10px;padding:12px 12px;}
-  .rule-num{width:36px;height:36px;font-size:1rem;border-radius:10px;}
-}
+/* CONFETTI */
+.confetti-piece{position:fixed;top:-10px;border-radius:4px;animation:fall linear forwards;pointer-events:none;z-index:9999;}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:0;}}
 </style>
 </head>
 <body>
 
-<!-- CONTROLS -->
-<div class="controls">
-  <a href="index.html" class="ctrl-btn btn-back">← رجوع</a>
-  <button class="ctrl-btn btn-fullscreen" onclick="toggleFS()">⛶ ملء الشاشة</button>
-  <button class="ctrl-btn btn-print" onclick="window.print()">🖨️ طباعة</button>
+<header>
+  <div class="header-inner">
+    <a class="back-btn" href="index.html">→</a>
+    <div class="header-icon">🏫</div>
+    <div class="header-title">قواعد الصف — Classroom Rules</div>
+    <div class="header-sub">Grade 1 – 2 &nbsp;|&nbsp; ثنائي اللغة</div>
+  </div>
+</header>
+
+<div class="mode-tabs">
+  <button class="mode-tab active" onclick="setMode('rules',this)">📋 القواعد</button>
+  <button class="mode-tab" onclick="setMode('quiz',this)">✅ صح أم خطأ؟</button>
+  <button class="mode-tab" onclick="setMode('match',this)">🔗 طابق</button>
 </div>
 
-<!-- POSTER -->
-<div class="poster" id="poster">
-
-  <!-- HEADER -->
-  <div class="poster-header">
-    <div class="stars-row">⭐ ⭐ ⭐ ⭐ ⭐</div>
-    <div class="poster-title-ar">قواعد الصف</div>
-    <div class="poster-title-en">Classroom Rules</div>
-    <div class="teacher-badge">👩‍🏫 Teacher Manal Bazzi</div>
-  </div>
-
-  <!-- RULES -->
-  <div class="rules-container">
-
-    <div class="rule-card r1">
-      <div class="rule-num">1</div>
-      <div class="rule-emoji">🤫</div>
-      <div class="rule-text">
-        <div class="rule-ar">أتحدث بهدوء داخل الصف</div>
-        <div class="rule-en">I speak quietly inside the classroom</div>
-      </div>
-    </div>
-
-    <div class="rule-card r2">
-      <div class="rule-num">2</div>
-      <div class="rule-emoji">🙋</div>
-      <div class="rule-text">
-        <div class="rule-ar">أرفع يدي قبل الكلام</div>
-        <div class="rule-en">I raise my hand before speaking</div>
-      </div>
-    </div>
-
-    <div class="rule-card r3">
-      <div class="rule-num">3</div>
-      <div class="rule-emoji">👂</div>
-      <div class="rule-text">
-        <div class="rule-ar">أستمع باهتمام عندما يتكلم الآخرون</div>
-        <div class="rule-en">I listen carefully when others speak</div>
-      </div>
-    </div>
-
-    <div class="rule-card r4">
-      <div class="rule-num">4</div>
-      <div class="rule-emoji">📚</div>
-      <div class="rule-text">
-        <div class="rule-ar">أحافظ على أدواتي وأدوات زملائي</div>
-        <div class="rule-en">I take care of my belongings and my classmates'</div>
-      </div>
-    </div>
-
-    <div class="rule-card r5">
-      <div class="rule-num">5</div>
-      <div class="rule-emoji">💪</div>
-      <div class="rule-text">
-        <div class="rule-ar">أحترم المعلمة وزملائي دائماً</div>
-        <div class="rule-en">I always respect my teacher and classmates</div>
-      </div>
-    </div>
-
-    <div class="rule-card r6">
-      <div class="rule-num">6</div>
-      <div class="rule-emoji">🧹</div>
-      <div class="rule-text">
-        <div class="rule-ar">أحافظ على نظافة الصف</div>
-        <div class="rule-en">I keep the classroom clean</div>
-      </div>
-    </div>
-
-    <div class="rule-card r7">
-      <div class="rule-num">7</div>
-      <div class="rule-emoji">✏️</div>
-      <div class="rule-text">
-        <div class="rule-ar">أنجز واجباتي في الوقت المحدد</div>
-        <div class="rule-en">I finish my work on time</div>
-      </div>
-    </div>
-
-    <div class="rule-card r8">
-      <div class="rule-num">8</div>
-      <div class="rule-emoji">😊</div>
-      <div class="rule-text">
-        <div class="rule-ar">أكون إيجابياً ومبتسماً دائماً</div>
-        <div class="rule-en">I stay positive and always smile</div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- FOOTER -->
-  <div class="poster-footer">
-    <span class="heart">❤️</span>
-    <div>
-      <div class="footer-text-ar">صفٌّ سعيد = تعلُّم رائع!</div>
-      <div class="footer-text-en">A Happy Class = Amazing Learning!</div>
-    </div>
-    <span class="heart">❤️</span>
-  </div>
-
+<!-- ══ RULES LIST ══ -->
+<div class="section on" id="rulesSec">
+  <div id="rulesList"></div>
 </div>
+
+<!-- ══ QUIZ MODE ══ -->
+<div class="section" id="quizSec">
+  <div class="score-row">
+    <div class="sc"><div class="sc-n" id="qScore" style="color:var(--green)">0</div><div class="sc-l">✅ صح</div></div>
+    <div class="sc"><div class="sc-n" id="qTotal" style="color:var(--purple)">0</div><div class="sc-l">📊 المجموع</div></div>
+    <div class="sc"><div class="sc-n" id="qStreak" style="color:var(--orange)">0</div><div class="sc-l">🔥 سلسلة</div></div>
+  </div>
+  <div class="scenario-card">
+    <span class="scenario-emoji" id="scenEmoji">🙋</span>
+    <div class="scenario-text-ar" id="scenAr">أرفع يدي قبل الكلام</div>
+    <div class="scenario-text-en" id="scenEn">I raise my hand before speaking</div>
+    <div class="answer-btns">
+      <button class="ans-btn" id="btnRight" onclick="answer(true)">
+        <span class="ans-icon">✅</span>
+        <span>صح — Right</span>
+      </button>
+      <button class="ans-btn" id="btnWrong" onclick="answer(false)">
+        <span class="ans-icon">❌</span>
+        <span>خطأ — Wrong</span>
+      </button>
+    </div>
+  </div>
+  <div class="feedback-box" id="feedbackBox"></div>
+</div>
+
+<!-- ══ MATCH MODE ══ -->
+<div class="section" id="matchSec">
+  <div class="score-row">
+    <div class="sc"><div class="sc-n" id="mScore" style="color:var(--green)">0</div><div class="sc-l">✅ مطابق</div></div>
+    <div class="sc"><div class="sc-n" id="mLeft" style="color:var(--purple)">0</div><div class="sc-l">🎯 متبقي</div></div>
+  </div>
+  <div class="match-grid" id="matchGrid"></div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <button class="bar-btn btn-gray" id="speakBtn" onclick="speakCurrent()">🔊 اسمع</button>
+  <button class="bar-btn btn-purple" id="actionBtn" onclick="doAction()">▶ التالي</button>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-function toggleFS(){
-  const el=document.getElementById('poster');
-  if(!document.fullscreenElement && !document.webkitFullscreenElement){
-    (el.requestFullscreen||el.webkitRequestFullscreen).call(el);
+// ── DATA ──
+const RULES = [
+  { emoji:'🤫', ar:'أتحدث بهدوء داخل الصف',           en:'I speak quietly inside the classroom',         color:['#6c3fff','#8b5cf6'], correct:true },
+  { emoji:'🙋', ar:'أرفع يدي قبل الكلام',              en:'I raise my hand before speaking',              color:['#3a86ff','#60a5fa'], correct:true },
+  { emoji:'👂', ar:'أستمع باهتمام عندما يتكلم الآخرون', en:'I listen carefully when others speak',          color:['#22c55e','#4ade80'], correct:true },
+  { emoji:'📚', ar:'أحافظ على أدواتي وأدوات زملائي',   en:'I take care of my belongings and classmates\'', color:['#f97316','#fb923c'], correct:true },
+  { emoji:'💪', ar:'أحترم المعلمة وزملائي دائماً',     en:'I always respect my teacher and classmates',   color:['#f43f8a','#f472b6'], correct:true },
+  { emoji:'🧹', ar:'أحافظ على نظافة الصف',             en:'I keep the classroom clean',                   color:['#0bbfbf','#34d399'], correct:true },
+  { emoji:'✏️', ar:'أنجز واجباتي في الوقت المحدد',     en:'I finish my work on time',                     color:['#fbbf24','#fcd34d'], correct:true },
+  { emoji:'😊', ar:'أكون إيجابياً ومبتسماً دائماً',    en:'I stay positive and always smile',             color:['#8b5cf6','#a78bfa'], correct:true },
+];
+
+const WRONG_SCENARIOS = [
+  { emoji:'📱', ar:'أستخدم هاتفي أثناء الدرس',       en:'I use my phone during the lesson',        correct:false },
+  { emoji:'😤', ar:'أقاطع المعلمة وهي تشرح',         en:'I interrupt the teacher while explaining', correct:false },
+  { emoji:'🗑️', ar:'أرمي الأوراق على الأرض',          en:'I throw papers on the floor',              correct:false },
+  { emoji:'😡', ar:'أشاجر زملائي في الصف',           en:'I fight with my classmates in class',      correct:false },
+  { emoji:'💤', ar:'أنام أثناء الدرس',               en:'I sleep during the lesson',                correct:false },
+  { emoji:'🎮', ar:'ألعب بدلاً من الانتباه للدرس',   en:'I play instead of paying attention',       correct:false },
+];
+
+const ALL_SCENARIOS = [...RULES.map(r=>({...r,type:'rule'})), ...WRONG_SCENARIOS.map(r=>({...r,type:'wrong'}))];
+
+// ── STATE ──
+let mode='rules';
+let qScore=0,qTotal=0,qStreak=0;
+let qIdx=0;
+let qAnswered=false;
+let shuffledQ=[];
+let matchSelected=null;
+let matchScore=0;
+let matchData=[];
+
+const synth=window.speechSynthesis;
+let voices=[];
+if(synth){synth.onvoiceschanged=()=>{voices=synth.getVoices();};voices=synth.getVoices();}
+
+function speak(txt,lang='ar-LB'){
+  if(!synth)return;
+  synth.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang=lang;u.rate=0.88;u.pitch=1.1;u.volume=1;
+  const v=voices.find(v=>v.lang.startsWith(lang.slice(0,2)))||voices[0];
+  if(v)u.voice=v;
+  synth.speak(u);
+}
+
+// ── RULES LIST ──
+function buildRules(){
+  document.getElementById('rulesList').innerHTML = RULES.map((r,i)=>`
+    <div class="rule-card" style="border-right-color:${r.color[0]}" onclick="speakRule(${i})">
+      <div class="rule-num" style="background:linear-gradient(135deg,${r.color[0]},${r.color[1]})">${i+1}</div>
+      <div class="rule-emoji-big">${r.emoji}</div>
+      <div class="rule-texts">
+        <div class="rule-ar">${r.ar}</div>
+        <div class="rule-en" style="color:${r.color[0]}">${r.en}</div>
+      </div>
+      <button class="speak-mini" onclick="event.stopPropagation();speakRule(${i})">🔊</button>
+    </div>`).join('');
+}
+
+function speakRule(i){
+  const r=RULES[i];
+  speak(r.ar+'. '+r.en,'ar');
+}
+
+// ── QUIZ ──
+function buildQuiz(){
+  shuffledQ=[...ALL_SCENARIOS].sort(()=>Math.random()-.5);
+  qIdx=0;qScore=0;qTotal=0;qStreak=0;
+  updateScores();
+  showScenario();
+}
+
+function showScenario(){
+  if(qIdx>=shuffledQ.length){ qIdx=0; shuffledQ.sort(()=>Math.random()-.5); }
+  qAnswered=false;
+  const s=shuffledQ[qIdx];
+  document.getElementById('scenEmoji').textContent=s.emoji;
+  document.getElementById('scenEmoji').style.animation='none';
+  setTimeout(()=>document.getElementById('scenEmoji').style.animation='',10);
+  document.getElementById('scenAr').textContent=s.ar;
+  document.getElementById('scenEn').textContent=s.en;
+  document.getElementById('btnRight').className='ans-btn';
+  document.getElementById('btnWrong').className='ans-btn';
+  document.getElementById('feedbackBox').style.display='none';
+  speak(s.ar,'ar');
+}
+
+function answer(isRight){
+  if(qAnswered)return;
+  qAnswered=true;
+  qTotal++;
+  const s=shuffledQ[qIdx];
+  const correct=(isRight===s.correct);
+  const fb=document.getElementById('feedbackBox');
+
+  if(correct){
+    qScore++;qStreak++;
+    document.getElementById(isRight?'btnRight':'btnWrong').classList.add('ans-correct');
+    fb.className='feedback-box ok';
+    fb.textContent='🌟 ممتاز! Excellent! — '+s.en;
+    fb.style.display='block';
+    showToast('🌟 ممتاز!','ok');
+    if(qStreak%5===0) confetti();
+    speak('ممتاز! صحيح تماماً.','ar');
   } else {
-    (document.exitFullscreen||document.webkitExitFullscreen).call(document);
+    qStreak=0;
+    document.getElementById(isRight?'btnRight':'btnWrong').classList.add('ans-wrong');
+    document.getElementById(s.correct?'btnRight':'btnWrong').classList.add('ans-correct');
+    fb.className='feedback-box err';
+    fb.textContent=(s.correct?'✅ هذا صحيح! This is a GOOD behavior!':'❌ هذا خطأ! This is a BAD behavior!')+' — '+s.en;
+    fb.style.display='block';
+    showToast('حاول مرة أخرى!','err');
+    speak('حاول مرة أخرى.','ar');
+  }
+  updateScores();
+  setTimeout(()=>{ qIdx++; showScenario(); },2000);
+}
+
+function updateScores(){
+  document.getElementById('qScore').textContent=qScore;
+  document.getElementById('qTotal').textContent=qTotal;
+  document.getElementById('qStreak').textContent=qStreak;
+}
+
+// ── MATCH ──
+function buildMatch(){
+  const picked=RULES.slice().sort(()=>Math.random()-.5).slice(0,4);
+  matchData=picked;
+  matchScore=0;
+  document.getElementById('mScore').textContent=0;
+  document.getElementById('mLeft').textContent=picked.length;
+
+  // left: emojis, right: arabic text — shuffled independently
+  const leftItems=picked.map((r,i)=>({id:i,type:'emoji',val:r.emoji,text:r.emoji}));
+  const rightItems=picked.map((r,i)=>({id:i,type:'text',val:r.ar})).sort(()=>Math.random()-.5);
+  const all=[...leftItems,...rightItems].sort(()=>Math.random()-.5);
+
+  matchSelected=null;
+  document.getElementById('matchGrid').innerHTML=all.map((item,j)=>`
+    <div class="match-card ${item.type==='emoji'?'emoji-card':''}"
+      id="mc${j}" data-id="${item.id}" data-type="${item.type}"
+      onclick="selectMatch(${j},'${item.id}','${item.type}')">
+      ${item.type==='emoji'?item.val:item.val}
+    </div>`).join('');
+}
+
+function selectMatch(j,id,type){
+  const el=document.getElementById('mc'+j);
+  if(el.classList.contains('matched'))return;
+
+  if(!matchSelected){
+    matchSelected={j,id,type,el};
+    el.classList.add('selected');
+    speak(matchData[parseInt(id)].ar,'ar');
+    return;
+  }
+
+  // Same card clicked again
+  if(matchSelected.j===j){ el.classList.remove('selected'); matchSelected=null; return; }
+
+  // Same type (two emojis or two texts)
+  if(matchSelected.type===type){
+    matchSelected.el.classList.remove('selected');
+    matchSelected={j,id,type,el};
+    document.querySelectorAll('.match-card').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');
+    return;
+  }
+
+  // Check match
+  if(matchSelected.id===id){
+    el.classList.add('matched');
+    matchSelected.el.classList.remove('selected');
+    matchSelected.el.classList.add('matched');
+    matchScore++;
+    document.getElementById('mScore').textContent=matchScore;
+    document.getElementById('mLeft').textContent=matchData.length-matchScore;
+    speak('ممتاز!','ar');
+    showToast('🌟 صح!','ok');
+    matchSelected=null;
+    if(matchScore===matchData.length){
+      setTimeout(()=>{ confetti(); showToast('🎉 أحسنت! جميع الإجابات صحيحة!','ok'); speak('أحسنت! جميع الإجابات صحيحة!','ar'); },300);
+    }
+  } else {
+    el.classList.add('wrong-match');
+    matchSelected.el.classList.add('wrong-match');
+    speak('حاول مرة أخرى','ar');
+    showToast('❌ حاول مرة أخرى','err');
+    setTimeout(()=>{
+      el.classList.remove('wrong-match','selected');
+      matchSelected.el.classList.remove('wrong-match','selected');
+      matchSelected=null;
+    },700);
   }
 }
+
+// ── MODE ──
+function setMode(m,el){
+  mode=m;
+  document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('on'));
+  document.getElementById(m+'Sec').classList.add('on');
+  const ab=document.getElementById('actionBtn');
+  const sb=document.getElementById('speakBtn');
+  if(m==='rules'){ab.textContent='📋 القواعد';sb.style.display='flex';}
+  else if(m==='quiz'){ab.textContent='⏭️ تخطى';sb.style.display='flex';buildQuiz();}
+  else if(m==='match'){ab.textContent='🔄 لعبة جديدة';sb.style.display='none';buildMatch();}
+}
+
+function doAction(){
+  if(mode==='quiz'){qIdx++;showScenario();}
+  else if(mode==='match'){buildMatch();}
+}
+
+function speakCurrent(){
+  if(mode==='rules') speak(RULES.map(r=>r.ar).join('. '),'ar');
+  else if(mode==='quiz'&&shuffledQ.length) speak(shuffledQ[qIdx].ar,'ar');
+}
+
+// ── TOAST ──
+function showToast(msg,cls=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(cls||'');
+  setTimeout(()=>t.className='toast',2000);
+}
+
+// ── CONFETTI ──
+function confetti(){
+  const colors=['#6c3fff','#3a86ff','#22c55e','#f97316','#f43f8a','#fbbf24'];
+  for(let i=0;i<40;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.cssText=`left:${Math.random()*100}vw;width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${1.5+Math.random()*1.5}s;animation-delay:${Math.random()*.5}s;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),3000);
+  }
+}
+
+// ── INIT ──
+buildRules();
+document.addEventListener('touchstart',()=>synth?.cancel(),{once:true,passive:true});
 </script>
 </body>
 </html>
