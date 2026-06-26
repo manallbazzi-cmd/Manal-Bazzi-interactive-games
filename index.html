@@ -371,7 +371,6 @@ nav {
 </style>
 
 </head>
-<script src="stars-system.js"></script>
 <body>
 
 <!-- NAVBAR -->
@@ -538,26 +537,10 @@ nav {
   </div>
 </section>
 
-<!-- STARS & BADGES SECTION -->
-<section style="max-width:1100px;margin:0 auto 60px;padding:0 20px">
-  <div style="text-align:center;margin-bottom:28px">
-    <h2 style="font-size:1.8rem;font-weight:900;color:#1a1150;display:flex;align-items:center;justify-content:center;gap:10px">
-      ⭐ My Stars &amp; Badges
-    </h2>
-    <p style="color:#6b7280;margin-top:6px;font-size:.95rem">Collect stars in every game and unlock special badges!</p>
-  </div>
-  <div id="badges-container" style="background:white;border-radius:24px;padding:28px;box-shadow:0 4px 20px rgba(108,63,255,.12)">
-    <!-- Rendered by JS -->
-  </div>
-</section>
+
 
 <!-- FEATURES BAR -->
 <div class="features-bar">
-  <div class="feature-item">
-    <div class="feature-emoji">🎉</div>
-    <div class="feature-title">نجوم وكونفيتي</div>
-    <div class="feature-desc">مكافآت بصرية عند الإجابة الصحيحة</div>
-  </div>
   <div class="feature-item">
     <div class="feature-emoji">🔊</div>
     <div class="feature-title">أصوات تفاعلية</div>
@@ -691,8 +674,6 @@ function toggleMusic() {
   }
 }
 renderGames();
-renderBadgesPanel('badges-container');
-injectStarsWidget();
 
 function openAbout() {
   const o = document.getElementById('about-overlay');
@@ -782,9 +763,6 @@ function closeAbout() {
           ✨ مميزات المنصة
         </h3>
         <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;align-items:center;gap:12px;background:#f8fafc;border-radius:12px;padding:12px">
-            <span style="font-size:24px">⭐</span>
-            <div><div style="font-weight:800;font-size:.88rem;color:#1a1150">نظام النجوم والشارات</div><div style="font-size:.78rem;color:#6b7280">اجمع نجوماً وافتح شارات مميزة</div></div>
           </div>
           <div style="display:flex;align-items:center;gap:12px;background:#f8fafc;border-radius:12px;padding:12px">
             <span style="font-size:24px">🌐</span>
