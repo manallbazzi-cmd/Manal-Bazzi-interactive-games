@@ -126,15 +126,22 @@ header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:cen
   <div class="header-inner">
     <a class="back-btn" href="index.html">→</a>
     <div class="header-icon">🏫</div>
-    <div class="header-title">قواعد الصف — Classroom Rules</div>
-    <div class="header-sub">الصف الأول والثاني · Grade 1 – 2</div>
+    <div class="header-title" id="hTitle">قواعد الصف — Classroom Rules</div>
+    <div class="header-sub" id="hSub">الصف الأول والثاني · Grade 1 – 2</div>
+    <button id="langToggle" onclick="toggleLang()" style="
+      position:absolute;left:12px;top:50%;transform:translateY(-50%);
+      background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.4);
+      color:#fff;border-radius:50px;padding:6px 14px;
+      font-size:.8rem;font-weight:900;cursor:pointer;
+      font-family:'Nunito',sans-serif;white-space:nowrap;
+    ">🌐 EN</button>
   </div>
 </header>
 
 <div class="mode-tabs">
-  <button class="mode-tab active" onclick="setMode('rules',this)">📋 القواعد · Rules</button>
-  <button class="mode-tab" onclick="setMode('quiz',this)">✅ صح أم خطأ؟ · Right or Wrong?</button>
-  <button class="mode-tab" onclick="setMode('match',this)">🔗 طابق · Match</button>
+  <button class="mode-tab active" id="tab0" onclick="setMode('rules',this)">📋 القواعد</button>
+  <button class="mode-tab" id="tab1" onclick="setMode('quiz',this)">✅ صح أم خطأ؟</button>
+  <button class="mode-tab" id="tab2" onclick="setMode('match',this)">🔗 طابق</button>
 </div>
 
 <!-- ══ RULES LIST ══ -->
@@ -145,9 +152,9 @@ header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:cen
 <!-- ══ QUIZ MODE ══ -->
 <div class="section" id="quizSec">
   <div class="score-row">
-    <div class="sc"><div class="sc-n" id="qScore" style="color:var(--green)">0</div><div class="sc-l">✅ صح · Correct</div></div>
-    <div class="sc"><div class="sc-n" id="qTotal" style="color:var(--purple)">0</div><div class="sc-l">📊 المجموع · Total</div></div>
-    <div class="sc"><div class="sc-n" id="qStreak" style="color:var(--orange)">0</div><div class="sc-l">🔥 سلسلة · Streak</div></div>
+    <div class="sc"><div class="sc-n" id="qScore" style="color:var(--green)">0</div><div class="sc-l" id="lCorrect">✅ صح</div></div>
+    <div class="sc"><div class="sc-n" id="qTotal" style="color:var(--purple)">0</div><div class="sc-l" id="lTotal">📊 المجموع</div></div>
+    <div class="sc"><div class="sc-n" id="qStreak" style="color:var(--orange)">0</div><div class="sc-l" id="lStreak">🔥 سلسلة</div></div>
   </div>
   <div class="scenario-card">
     <span class="scenario-emoji" id="scenEmoji">🙋</span>
@@ -156,11 +163,11 @@ header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:cen
     <div class="answer-btns">
       <button class="ans-btn" id="btnRight" onclick="answer(true)">
         <span class="ans-icon">✅</span>
-        <span>صح<br><small style="font-family:'Nunito',sans-serif;font-size:.75em;opacity:.8">Right ✓</small></span>
+        <span id="lRight">صح</span>
       </button>
       <button class="ans-btn" id="btnWrong" onclick="answer(false)">
         <span class="ans-icon">❌</span>
-        <span>خطأ<br><small style="font-family:'Nunito',sans-serif;font-size:.75em;opacity:.8">Wrong ✗</small></span>
+        <span id="lWrong">خطأ</span>
       </button>
     </div>
   </div>
@@ -170,16 +177,16 @@ header{background:linear-gradient(135deg,#6c3fff,#3a86ff,#0bbfbf);text-align:cen
 <!-- ══ MATCH MODE ══ -->
 <div class="section" id="matchSec">
   <div class="score-row">
-    <div class="sc"><div class="sc-n" id="mScore" style="color:var(--green)">0</div><div class="sc-l">✅ مطابق · Matched</div></div>
-    <div class="sc"><div class="sc-n" id="mLeft" style="color:var(--purple)">0</div><div class="sc-l">🎯 متبقي · Left</div></div>
+    <div class="sc"><div class="sc-n" id="mScore" style="color:var(--green)">0</div><div class="sc-l" id="lMatched">✅ مطابق</div></div>
+    <div class="sc"><div class="sc-n" id="mLeft" style="color:var(--purple)">0</div><div class="sc-l" id="lLeft">🎯 متبقي</div></div>
   </div>
   <div class="match-grid" id="matchGrid"></div>
 </div>
 
 <!-- BOTTOM BAR -->
 <div class="bottom-bar">
-  <button class="bar-btn btn-gray" id="speakBtn" onclick="speakCurrent()">🔊 اسمع · Listen</button>
-  <button class="bar-btn btn-purple" id="actionBtn" onclick="doAction()">▶ التالي · Next</button>
+  <button class="bar-btn btn-gray" id="speakBtn" onclick="speakCurrent()">🔊 <span id="lListen">اسمع</span></button>
+  <button class="bar-btn btn-purple" id="actionBtn" onclick="doAction()">▶ <span id="lNext">التالي</span></button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -234,13 +241,14 @@ function speak(txt,lang='ar-LB'){
 
 // ── RULES LIST ──
 function buildRules(){
+  const isEn=lang==='en';
   document.getElementById('rulesList').innerHTML = RULES.map((r,i)=>`
-    <div class="rule-card" style="border-right-color:${r.color[0]}" onclick="speakRule(${i})">
+    <div class="rule-card" style="border-right-color:${r.color[0]};${isEn?'border-right:none;border-left:5px solid '+r.color[0]:''}" onclick="speakRule(${i})">
       <div class="rule-num" style="background:linear-gradient(135deg,${r.color[0]},${r.color[1]})">${i+1}</div>
       <div class="rule-emoji-big">${r.emoji}</div>
       <div class="rule-texts">
-        <div class="rule-ar">${r.ar}</div>
-        <div class="rule-en" style="color:${r.color[0]}">${r.en}</div>
+        <div class="rule-ar">${isEn?r.en:r.ar}</div>
+        <div class="rule-en" style="color:${r.color[0]}">${isEn?r.ar:r.en}</div>
       </div>
       <button class="speak-mini" onclick="event.stopPropagation();speakRule(${i})">🔊</button>
     </div>`).join('');
@@ -248,7 +256,7 @@ function buildRules(){
 
 function speakRule(i){
   const r=RULES[i];
-  speak(r.ar+'. '+r.en,'ar');
+  speak(lang==='ar'?r.ar:r.en, lang==='ar'?'ar':'en-US');
 }
 
 // ── QUIZ ──
@@ -266,12 +274,12 @@ function showScenario(){
   document.getElementById('scenEmoji').textContent=s.emoji;
   document.getElementById('scenEmoji').style.animation='none';
   setTimeout(()=>document.getElementById('scenEmoji').style.animation='',10);
-  document.getElementById('scenAr').textContent=s.ar;
-  document.getElementById('scenEn').textContent=s.en;
+  document.getElementById('scenAr').textContent=lang==='ar'?s.ar:s.en;
+  document.getElementById('scenEn').textContent=lang==='ar'?s.en:s.ar;
   document.getElementById('btnRight').className='ans-btn';
   document.getElementById('btnWrong').className='ans-btn';
   document.getElementById('feedbackBox').style.display='none';
-  speak(s.ar,'ar');
+  speak(lang==='ar'?s.ar:s.en, lang==='ar'?'ar':'en-US');
 }
 
 function answer(isRight){
@@ -288,18 +296,18 @@ function answer(isRight){
     fb.className='feedback-box ok';
     fb.textContent='🌟 ممتاز! Excellent! — '+s.en;
     fb.style.display='block';
-    showToast('🌟 ممتاز! Excellent!','ok');
+    showToast(T[lang].toastOk,'ok');
     if(qStreak%5===0) confetti();
-    speak('ممتاز! صحيح تماماً.','ar');
+    speak(T[lang].speakOk, lang==='ar'?'ar':'en-US');
   } else {
     qStreak=0;
     document.getElementById(isRight?'btnRight':'btnWrong').classList.add('ans-wrong');
     document.getElementById(s.correct?'btnRight':'btnWrong').classList.add('ans-correct');
     fb.className='feedback-box err';
-    fb.textContent=(s.correct?'✅ هذا سلوك صحيح! This is a GOOD behavior!':'❌ هذا سلوك خاطئ! This is a BAD behavior!')+'\n'+s.en;
+    fb.textContent=(s.correct?T[lang].feedOk:T[lang].feedErr);
     fb.style.display='block';
-    showToast('❌ حاول مرة أخرى! Try again!','err');
-    speak('حاول مرة أخرى.','ar');
+    showToast(T[lang].toastErr,'err');
+    speak(T[lang].speakErr, lang==='ar'?'ar':'en-US');
   }
   updateScores();
   setTimeout(()=>{ qIdx++; showScenario(); },2000);
@@ -364,17 +372,17 @@ function selectMatch(j,id,type){
     matchScore++;
     document.getElementById('mScore').textContent=matchScore;
     document.getElementById('mLeft').textContent=matchData.length-matchScore;
-    speak('ممتاز!','ar');
-    showToast('🌟 صح! Correct!','ok');
+    speak(T[lang].speakMatch, lang==='ar'?'ar':'en-US');
+    showToast(T[lang].toastMatch,'ok');
     matchSelected=null;
     if(matchScore===matchData.length){
-      setTimeout(()=>{ confetti(); showToast('🎉 أحسنت! Well done! All matched!','ok'); speak('أحسنت! جميع الإجابات صحيحة!','ar'); },300);
+      setTimeout(()=>{ confetti(); showToast(T[lang].toastMatchAll,'ok'); speak(T[lang].speakMatchAll, lang==='ar'?'ar':'en-US'); },300);
     }
   } else {
     el.classList.add('wrong-match');
     matchSelected.el.classList.add('wrong-match');
-    speak('حاول مرة أخرى','ar');
-    showToast('❌ حاول مرة أخرى! Try again!','err');
+    speak(T[lang].speakErr, lang==='ar'?'ar':'en-US');
+    showToast(T[lang].toastMatchErr,'err');
     setTimeout(()=>{
       el.classList.remove('wrong-match','selected');
       matchSelected.el.classList.remove('wrong-match','selected');
@@ -392,9 +400,9 @@ function setMode(m,el){
   document.getElementById(m+'Sec').classList.add('on');
   const ab=document.getElementById('actionBtn');
   const sb=document.getElementById('speakBtn');
-  if(m==='rules'){ab.textContent='📋 القواعد · Rules';sb.style.display='flex';}
-  else if(m==='quiz'){ab.textContent='⏭️ تخطى · Skip';sb.style.display='flex';buildQuiz();}
-  else if(m==='match'){ab.textContent='🔄 لعبة جديدة · New Game';sb.style.display='none';buildMatch();}
+  if(m==='rules'){ab.querySelector('#lNext').textContent=T[lang].modeRules;sb.style.display='flex';}
+  else if(m==='quiz'){ab.querySelector('#lNext').textContent=T[lang].modeSkip;sb.style.display='flex';buildQuiz();}
+  else if(m==='match'){ab.querySelector('#lNext').textContent=T[lang].modeNew;sb.style.display='none';buildMatch();}
 }
 
 function doAction(){
@@ -403,8 +411,9 @@ function doAction(){
 }
 
 function speakCurrent(){
-  if(mode==='rules') speak(RULES.map(r=>r.ar).join('. '),'ar');
-  else if(mode==='quiz'&&shuffledQ.length) speak(shuffledQ[qIdx].ar,'ar');
+  const isEn=lang==='en';
+  if(mode==='rules') speak(RULES.map(r=>isEn?r.en:r.ar).join('. '), isEn?'en-US':'ar');
+  else if(mode==='quiz'&&shuffledQ.length) speak(isEn?shuffledQ[qIdx].en:shuffledQ[qIdx].ar, isEn?'en-US':'ar');
 }
 
 // ── TOAST ──
@@ -425,6 +434,80 @@ function confetti(){
     setTimeout(()=>el.remove(),3000);
   }
 }
+
+// ── LANGUAGE ──
+let lang='ar';
+
+const T = {
+  ar:{
+    title:'قواعد الصف — Classroom Rules',
+    sub:'الصف الأول والثاني · Grade 1 – 2',
+    tab0:'📋 القواعد', tab1:'✅ صح أم خطأ؟', tab2:'🔗 طابق',
+    correct:'✅ صح', total:'📊 المجموع', streak:'🔥 سلسلة',
+    right:'صح', wrong:'خطأ',
+    matched:'✅ مطابق', left:'🎯 متبقي',
+    listen:'اسمع', next:'التالي',
+    toggle:'🌐 EN', dir:'rtl',
+    toastOk:'🌟 ممتاز!', toastErr:'❌ حاول مرة أخرى!',
+    toastMatch:'🌟 صح!', toastMatchAll:'🎉 أحسنت! جميع الإجابات صحيحة!',
+    toastMatchErr:'❌ حاول مرة أخرى!',
+    feedOk:'✅ هذا سلوك صحيح! This is a GOOD behavior!',
+    feedErr:'❌ هذا سلوك خاطئ! This is a BAD behavior!',
+    speakOk:'ممتاز! صحيح تماماً.', speakErr:'حاول مرة أخرى.',
+    speakMatch:'ممتاز!', speakMatchAll:'أحسنت! جميع الإجابات صحيحة!',
+    modeRules:'📋 القواعد', modeSkip:'⏭️ تخطى', modeNew:'🔄 لعبة جديدة',
+  },
+  en:{
+    title:'Classroom Rules — قواعد الصف',
+    sub:'Grade 1 – 2 · الصف الأول والثاني',
+    tab0:'📋 Rules', tab1:'✅ Right or Wrong?', tab2:'🔗 Match',
+    correct:'✅ Correct', total:'📊 Total', streak:'🔥 Streak',
+    right:'Right ✓', wrong:'Wrong ✗',
+    matched:'✅ Matched', left:'🎯 Left',
+    listen:'Listen', next:'Next',
+    toggle:'🌐 AR', dir:'ltr',
+    toastOk:'🌟 Excellent!', toastErr:'❌ Try again!',
+    toastMatch:'🌟 Correct!', toastMatchAll:'🎉 Well done! All matched!',
+    toastMatchErr:'❌ Try again!',
+    feedOk:'✅ This is a GOOD behavior! سلوك صحيح!',
+    feedErr:'❌ This is a BAD behavior! سلوك خاطئ!',
+    speakOk:'Excellent! Correct!', speakErr:'Try again.',
+    speakMatch:'Excellent!', speakMatchAll:'Well done! All answers are correct!',
+    modeRules:'📋 Rules', modeSkip:'⏭️ Skip', modeNew:'🔄 New Game',
+  }
+};
+
+function applyLang(){
+  const t=T[lang];
+  document.documentElement.dir=t.dir;
+  document.documentElement.lang=lang==='ar'?'ar':'en';
+  document.getElementById('hTitle').textContent=t.title;
+  document.getElementById('hSub').textContent=t.sub;
+  document.getElementById('tab0').textContent=t.tab0;
+  document.getElementById('tab1').textContent=t.tab1;
+  document.getElementById('tab2').textContent=t.tab2;
+  document.getElementById('lCorrect').textContent=t.correct;
+  document.getElementById('lTotal').textContent=t.total;
+  document.getElementById('lStreak').textContent=t.streak;
+  document.getElementById('lRight').textContent=t.right;
+  document.getElementById('lWrong').textContent=t.wrong;
+  document.getElementById('lMatched').textContent=t.matched;
+  document.getElementById('lLeft').textContent=t.left;
+  document.getElementById('lListen').textContent=t.listen;
+  document.getElementById('lNext').textContent=t.next;
+  document.getElementById('langToggle').textContent=t.toggle;
+  // rebuild current section
+  if(mode==='rules') buildRules();
+  else if(mode==='quiz') showScenario();
+}
+
+function toggleLang(){
+  lang = lang==='ar'?'en':'ar';
+  applyLang();
+}
+
+// patch speak to use correct lang
+function speakInLang(txt){ speak(txt, lang==='ar'?'ar':'en-US'); }
 
 // ── INIT ──
 buildRules();
