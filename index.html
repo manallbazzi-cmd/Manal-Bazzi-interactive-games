@@ -25,6 +25,24 @@
   --card-hover: 0 8px 32px rgba(108,63,255,.22);
 }
 
+/* ── DARK MODE ── */
+body.dark-mode {
+  --bg: #0f0e1a;
+  --white: #1a1830;
+  --dark: #e8e4ff;
+  --sub: #9ca3af;
+  --card-shadow: 0 4px 20px rgba(0,0,0,.4);
+  --card-hover: 0 8px 32px rgba(108,63,255,.35);
+}
+body.dark-mode nav { background: #1a1830; border-bottom: 1px solid #2d2b4e; }
+body.dark-mode .grade-tab { background: #1a1830; border-color: #2d2b4e; color: #9ca3af; }
+body.dark-mode .grade-tab.active { background: var(--purple); color: white; border-color: var(--purple); }
+body.dark-mode .search-bar { background: #1a1830; border-color: #2d2b4e; color: #e8e4ff; }
+body.dark-mode .search-bar::placeholder { color: #6b7280; }
+body.dark-mode .search-wrap { background: #1a1830; border: 1px solid #2d2b4e; }
+body.dark-mode .features-bar { background: #1a1830; border-top: 1px solid #2d2b4e; }
+body.dark-mode .subject-card { background: #1a1830; }
+
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 body {
@@ -224,9 +242,64 @@ nav {
 }
 .games-header p { color: var(--sub); margin-top: 6px; font-size: .95rem; }
 
+/* ── SEARCH BAR ── */
+.search-section {
+  max-width: 600px;
+  margin: 0 auto 24px;
+  padding: 0 20px;
+}
+.search-wrap {
+  display: flex; align-items: center; gap: 10px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 50px;
+  padding: 6px 16px;
+  box-shadow: 0 2px 12px rgba(108,63,255,.08);
+  transition: border-color .2s, box-shadow .2s;
+}
+.search-wrap:focus-within {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px rgba(108,63,255,.12);
+}
+.search-icon { font-size: 1.1rem; color: var(--sub); flex-shrink: 0; }
+.search-bar {
+  flex: 1; border: none; outline: none;
+  font-size: .95rem; font-family: 'Tajawal', sans-serif;
+  background: transparent; color: var(--dark);
+  padding: 6px 0;
+}
+.search-clear {
+  cursor: pointer; font-size: 1rem; color: var(--sub);
+  background: none; border: none; padding: 4px;
+  border-radius: 50%; display: none;
+  transition: background .15s;
+}
+.search-clear:hover { background: #f3f4f6; }
+.search-count {
+  text-align: center; font-size: .85rem; color: var(--sub);
+  margin-bottom: 16px; font-weight: 600; min-height: 20px;
+}
+.no-results {
+  text-align: center; padding: 60px 20px; color: var(--sub);
+}
+.no-results .no-results-icon { font-size: 3.5rem; margin-bottom: 12px; }
+.no-results h3 { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+
+/* ── DARK MODE TOGGLE ── */
+.dark-toggle {
+  background: #f3f4f6; border: none; border-radius: 50px;
+  padding: 8px 16px; cursor: pointer; font-size: .88rem; font-weight: 700;
+  color: var(--dark); display: flex; align-items: center; gap: 6px;
+  transition: all .2s;
+}
+.dark-toggle:hover { background: #e5e7eb; }
+body.dark-mode .dark-toggle { background: #2d2b4e; color: #e8e4ff; }
+body.dark-mode .dark-toggle:hover { background: #3d3b5e; }
+
 /* Grade tabs */
 .grade-tabs {
   display: flex; justify-content: center; gap: 8px; margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 .grade-tab {
   padding: 8px 22px; border-radius: 30px;
@@ -245,6 +318,17 @@ nav {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+}
+@media(max-width:900px){
+  .games-grid { grid-template-columns: repeat(3,1fr); }
+  .subjects-grid { grid-template-columns: repeat(2,1fr) !important; }
+}
+@media(max-width:600px){
+  .games-grid { grid-template-columns: repeat(2,1fr); gap:12px; }
+  .subjects-grid { grid-template-columns: repeat(2,1fr) !important; }
+  nav { padding: 0 16px; }
+  .nav-links { display: none; }
+  .hero h1 { font-size: 1.7rem; }
 }
 .game-card {
   background: var(--white);
@@ -388,6 +472,7 @@ nav {
     <a class="nav-link" href="#">🎮 Games</a>
     <a class="nav-link" href="#">📖 Subjects</a>
     <a class="nav-link" href="#" onclick="openAbout();return false;">ℹ️ About</a>
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Dark Mode">🌙 Dark</button>
     <a class="nav-btn" href="#">🔒 Teacher Panel</a>
   </div>
 </nav>
@@ -523,6 +608,16 @@ nav {
     <p>Choose a game and start learning!</p>
   </div>
 
+  <!-- SEARCH -->
+  <div class="search-section">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-bar" id="searchInput" type="text" placeholder="Search games... (Math, Arabic, Grade 1...)" oninput="onSearch(this.value)" />
+      <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+    </div>
+  </div>
+  <div class="search-count" id="searchCount"></div>
+
   <div class="grade-tabs">
     <button class="grade-tab active" onclick="switchGrade(0,this)">All Grades</button>
     <button class="grade-tab" onclick="switchGrade(1,this)">🌱 Grade 1</button>
@@ -629,25 +724,46 @@ const ALL_GAMES = [
 
 let currentGrade = 0;
 let currentSubject = 'all';
+let currentSearch = '';
 
 function renderGames() {
   const grid = document.getElementById('gamesGrid');
+  const countEl = document.getElementById('searchCount');
   let filtered = ALL_GAMES;
   if (currentGrade > 0) filtered = filtered.filter(g => g.grade === currentGrade);
   if (currentSubject !== 'all') filtered = filtered.filter(g => g.subject === currentSubject);
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    filtered = filtered.filter(g =>
+      g.title.toLowerCase().includes(q) ||
+      g.desc.toLowerCase().includes(q) ||
+      g.subject.toLowerCase().includes(q) ||
+      g.tags.some(t => t.toLowerCase().includes(q))
+    );
+  }
 
-  grid.innerHTML = filtered.map((g,i) => `
-    <a class="game-card" href="${g.link}">
-      <div class="new-badge">NEW</div>
-      <div class="game-icon-wrap" style="background:${g.colors[0]};color:${g.colors[1]};font-size:${g.isAr?'2rem':'2rem'}">${g.icon}</div>
-      <div class="game-card-title">${g.title}</div>
-      <div class="game-card-desc">${g.desc}</div>
-      <div class="game-tags">
-        ${g.tags.map((t,ti) => `<span class="game-tag ${ti===1&&(g.subject==='arabic')?'arabic-tag':''}">${t}</span>`).join('')}
-      </div>
-      <div class="play-btn">▶ Play</div>
-    </a>
-  `).join('');
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="no-results" style="grid-column:1/-1">
+      <div class="no-results-icon">🔍</div>
+      <h3>No games found</h3>
+      <p>Try a different search or clear the filters</p>
+    </div>`;
+    countEl.textContent = '';
+  } else {
+    grid.innerHTML = filtered.map((g,i) => `
+      <a class="game-card" href="${g.link}">
+        <div class="new-badge">NEW</div>
+        <div class="game-icon-wrap" style="background:${g.colors[0]};color:${g.colors[1]};font-size:2rem">${g.icon}</div>
+        <div class="game-card-title">${g.title}</div>
+        <div class="game-card-desc">${g.desc}</div>
+        <div class="game-tags">
+          ${g.tags.map((t,ti) => `<span class="game-tag ${ti===1&&(g.subject==='arabic')?'arabic-tag':''}">${t}</span>`).join('')}
+        </div>
+        <div class="play-btn">▶ Play</div>
+      </a>
+    `).join('');
+    countEl.textContent = currentSearch ? `${filtered.length} game${filtered.length!==1?'s':''} found` : '';
+  }
 }
 
 function switchGrade(g, el) {
@@ -660,6 +776,33 @@ function switchGrade(g, el) {
 function filterSubject(s) {
   currentSubject = s;
   renderGames();
+}
+
+function onSearch(val) {
+  currentSearch = val.trim();
+  document.getElementById('searchClear').style.display = val ? 'block' : 'none';
+  renderGames();
+}
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  onSearch('');
+}
+
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  const btn = document.getElementById('darkToggle');
+  btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('darkMode', isDark ? '1' : '0');
+}
+
+// Restore dark mode preference
+if (localStorage.getItem('darkMode') === '1') {
+  document.body.classList.add('dark-mode');
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('darkToggle');
+    if (btn) btn.textContent = '☀️ Light';
+  });
 }
 
 
