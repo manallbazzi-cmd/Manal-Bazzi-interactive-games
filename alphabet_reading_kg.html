@@ -443,7 +443,7 @@
         tile.classList.remove('playing');
         void tile.offsetWidth;
         tile.classList.add('playing');
-        speak('The letter '+item.letter+'. '+item.letter+' says '+item.letter.toLowerCase()+'. '+item.word, 0.82, 1.1);
+        speak(item.letter, 0.75, 1.1);
         tile.addEventListener('animationend', function(){ tile.classList.remove('playing'); }, { once:true });
       });
       alphaGridEl.appendChild(tile);
