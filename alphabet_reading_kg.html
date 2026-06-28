@@ -58,7 +58,23 @@
   .mode-btn:active{ transform:translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.18); }
   .mode-letter{ background:linear-gradient(160deg,#a78bfa,var(--purple-deep)); }
   .mode-word  { background:linear-gradient(160deg,#fb923c,var(--orange)); }
-  .mode-mix   { background:linear-gradient(160deg,#4ade80,var(--green-dark)); grid-column:span 2; }
+  .mode-pic   { background:linear-gradient(160deg,#f472b6,#be185d); }
+  .mode-mix   { background:linear-gradient(160deg,#4ade80,var(--green-dark)); grid-column:span 3; }
+
+  /* Picture name mode */
+  .pic-emoji{
+    font-size:clamp(5rem,20vw,8rem); line-height:1; display:block;
+    margin-bottom:10px; cursor:pointer; transition:transform .15s;
+    filter:drop-shadow(0 6px 12px rgba(0,0,0,.15));
+  }
+  .pic-emoji:hover{ transform:scale(1.08); }
+  .pic-emoji:active{ transform:scale(.92); }
+  .pic-emoji.pop{ animation:emojiPop .3s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes emojiPop{ 0%{ transform:scale(1); } 50%{ transform:scale(1.22); } 100%{ transform:scale(1); } }
+
+  /* Word-name choices wider text */
+  .choices-grid.word-choices{ grid-template-columns:1fr 1fr; }
+  .choices-grid.word-choices .choice-btn{ font-size:clamp(1rem,3.5vw,1.3rem); padding:14px 10px; }
 
   /* ===== HUD ===== */
   .hud{ display:flex; gap:10px; }
@@ -245,6 +261,7 @@
       <div class="mode-grid">
         <button class="mode-btn mode-letter" data-mode="letter">🔤<br>Letter<br>Sounds</button>
         <button class="mode-btn mode-word"   data-mode="word"  >🖼️<br>Word<br>Starter</button>
+        <button class="mode-btn mode-pic"    data-mode="pic"   >🎨<br>Picture<br>Name</button>
         <button class="mode-btn mode-mix"    data-mode="mix"   >🔀 Mix It All!</button>
       </div>
       <button class="back-to-abc" id="backToABCBtn">⬅️ Back to Alphabet</button>
@@ -279,6 +296,11 @@
       <div id="wordContent" class="hidden">
         <span class="word-emoji" id="wordEmoji" title="Tap to hear">🍎</span>
         <p class="word-text" id="wordText"><span class="first-letter">A</span>pple</p>
+      </div>
+
+      <!-- Picture Name mode content -->
+      <div id="picContent" class="hidden">
+        <span class="pic-emoji" id="picEmoji" title="Tap to hear">🍎</span>
       </div>
 
       <button class="sound-btn" id="soundBtn">🔊 Hear It!</button>
@@ -361,9 +383,11 @@
   var modeChipEl    = document.getElementById('modeChip');
   var letterContent = document.getElementById('letterContent');
   var wordContent   = document.getElementById('wordContent');
+  var picContent    = document.getElementById('picContent');
   var bigLetterEl   = document.getElementById('bigLetter');
   var wordEmojiEl   = document.getElementById('wordEmoji');
   var wordTextEl    = document.getElementById('wordText');
+  var picEmojiEl    = document.getElementById('picEmoji');
   var soundBtnEl    = document.getElementById('soundBtn');
   var cardEyebrowEl = document.getElementById('cardEyebrow');
   var choicesEl     = document.getElementById('choicesGrid');
@@ -447,6 +471,8 @@
     if(!currentItem) return;
     if(currentType === 'letter'){
       speak('The letter ' + currentItem.letter + '. ' + currentItem.letter + ' says ' + currentItem.letter.toLowerCase(), 0.8, 1.1);
+    } else if(currentType === 'pic'){
+      speak(currentItem.word, 0.8, 1.1);
     } else {
       speak(currentItem.word + '. ' + currentItem.word + ' starts with the letter ' + currentItem.letter, 0.8, 1.1);
     }
@@ -479,7 +505,8 @@
       var type;
       if(mode==='letter') type='letter';
       else if(mode==='word') type='word';
-      else type = Math.random()<0.5 ? 'letter' : 'word';
+      else if(mode==='pic') type='pic';
+      else{ var r=Math.random(); type = r<0.33?'letter':r<0.66?'word':'pic'; }
       result.push({ item:item, type:type });
     });
     return result;
@@ -497,14 +524,21 @@
     updateProgress(qIndex, queue.length);
 
     // show correct content panel
+    letterContent.classList.add('hidden');
+    wordContent.classList.add('hidden');
+    picContent.classList.add('hidden');
+
     if(currentType === 'letter'){
       letterContent.classList.remove('hidden');
-      wordContent.classList.add('hidden');
       bigLetterEl.textContent = currentItem.letter + currentItem.letter.toLowerCase();
       modeChipEl.textContent = '🔤 Letter Sounds';
       cardEyebrowEl.textContent = 'Which letter is this?';
+    } else if(currentType === 'pic'){
+      picContent.classList.remove('hidden');
+      picEmojiEl.textContent = currentItem.emoji;
+      modeChipEl.textContent = '🎨 Picture Name';
+      cardEyebrowEl.textContent = 'What is this? Tap the picture to hear!';
     } else {
-      letterContent.classList.add('hidden');
       wordContent.classList.remove('hidden');
       wordEmojiEl.textContent = currentItem.emoji;
       var w = currentItem.word;
@@ -519,20 +553,59 @@
 
   function renderChoices(){
     choicesEl.innerHTML = '';
-    // pick 3 wrong letters
     var wrongPool = shuffleArray(LETTERS.filter(function(l){ return l.letter !== currentItem.letter; })).slice(0,3);
     var options = shuffleArray([currentItem].concat(wrongPool));
-    options.forEach(function(opt){
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'choice-btn';
-      btn.textContent = opt.letter;
-      btn.addEventListener('click', function(){ handleAnswer(opt.letter, btn); });
-      choicesEl.appendChild(btn);
-    });
+
+    if(currentType === 'pic'){
+      // Show word names as choices
+      choicesEl.className = 'choices-grid word-choices';
+      options.forEach(function(opt){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'choice-btn';
+        btn.textContent = opt.word;
+        btn.addEventListener('click', function(){ handlePicAnswer(opt.word, btn); });
+        choicesEl.appendChild(btn);
+      });
+    } else {
+      choicesEl.className = 'choices-grid';
+      options.forEach(function(opt){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'choice-btn';
+        btn.textContent = opt.letter;
+        btn.addEventListener('click', function(){ handleAnswer(opt.letter, btn); });
+        choicesEl.appendChild(btn);
+      });
+    }
   }
 
   // ---------- Answer ----------
+  function handlePicAnswer(word, btn){
+    if(!answering || !gameActive) return;
+    answering = false;
+    var btns = choicesEl.querySelectorAll('.choice-btn');
+    btns.forEach(function(b){ b.disabled = true; });
+
+    if(word === currentItem.word){
+      btn.classList.add('correct');
+      score += 10; correctCount++;
+      scoreValEl.textContent = String(score);
+      playSuccess(); spawnStars(); spawnConfetti(16);
+      showFlash('✓ ' + currentItem.word + '!', 'correct');
+      speak('Yes! This is a ' + currentItem.word, 0.9, 1.2);
+    } else {
+      btn.classList.add('incorrect');
+      btns.forEach(function(b){ if(b.textContent === currentItem.word) b.classList.add('reveal'); });
+      wrongCount++;
+      playError();
+      showFlash('It is ' + currentItem.word, 'incorrect');
+      speak('This is a ' + currentItem.word, 0.85, 1.0);
+    }
+    qIndex++;
+    later(function(){ if(gameActive) loadQuestion(); }, 2000);
+  }
+
   function handleAnswer(letter, btn){
     if(!answering || !gameActive) return;
     answering = false;
@@ -695,6 +768,13 @@
   bigLetterEl.addEventListener('click', speakCurrent);
   wordEmojiEl.addEventListener('click', speakCurrent);
   wordTextEl.addEventListener('click', speakCurrent);
+  picEmojiEl.addEventListener('click', function(){
+    picEmojiEl.classList.remove('pop');
+    void picEmojiEl.offsetWidth;
+    picEmojiEl.classList.add('pop');
+    speakCurrent();
+    picEmojiEl.addEventListener('animationend', function(){ picEmojiEl.classList.remove('pop'); }, { once:true });
+  });
 
   backBtn.addEventListener('click', goToExplorer);
   retryBtn.addEventListener('click', function(){ clearAll(); if(synth) synth.cancel(); startGame(); });
