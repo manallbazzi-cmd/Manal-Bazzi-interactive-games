@@ -362,7 +362,10 @@
     if(opDef.op==='+'){
       a=randInt(10,99); b=randInt(10,99); correct=a+b;
     } else if(opDef.op==='-'){
-      a=randInt(20,99); b=randInt(10,a); correct=a-b;
+      var aTens=randInt(3,9); var aUnits=randInt(1,9);
+      a=aTens*10+aUnits;
+      var bTens=randInt(1,aTens-1); var bUnits=randInt(0,aUnits);
+      b=bTens*10+bUnits; correct=a-b;
     } else if(opDef.op==='×'){
       a=randInt(2,12); b=randInt(2,12); correct=a*b;
     } else { // division
