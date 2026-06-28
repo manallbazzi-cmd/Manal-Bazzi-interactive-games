@@ -65,16 +65,22 @@
     font-family:'Baloo 2', sans-serif; font-weight:700; font-size:.9rem;
     box-shadow:0 4px 0 rgba(0,0,0,.15);
   }
-  .start-btn{
-    font-family:'Baloo 2', sans-serif; font-weight:800; font-size:1.3rem;
-    background:linear-gradient(90deg, var(--orange), var(--gold-deep));
-    color:#fff; border:none; border-radius:50px; padding:16px 48px;
-    cursor:pointer; box-shadow:0 6px 0 rgba(0,0,0,.18);
-    transition:transform .12s, box-shadow .12s;
-    letter-spacing:1px;
+  .mode-label{ font-size:.8rem; text-transform:uppercase; letter-spacing:2px; color:#8A8499; font-weight:700; margin:0 0 12px; }
+  .mode-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:360px; margin:0 auto 8px; }
+  .mode-btn{
+    font-family:'Baloo 2', sans-serif; font-weight:800; font-size:1rem;
+    color:#fff; border:none; border-radius:18px; padding:14px 8px;
+    cursor:pointer; box-shadow:0 5px 0 rgba(0,0,0,.18);
+    transition:transform .12s, box-shadow .12s; line-height:1.5;
   }
-  .start-btn:hover{ transform:translateY(-3px); box-shadow:0 9px 0 rgba(0,0,0,.18); }
-  .start-btn:active{ transform:translateY(2px); box-shadow:0 3px 0 rgba(0,0,0,.18); }
+  .mode-btn:hover{ transform:translateY(-3px); box-shadow:0 8px 0 rgba(0,0,0,.18); }
+  .mode-btn:active{ transform:translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.18); }
+  .mode-btn.selected{ outline:4px solid var(--gold); transform:translateY(-3px); }
+  .mode-add{ background:linear-gradient(160deg,#4ade80,#16a34a); }
+  .mode-sub{ background:linear-gradient(160deg,#f87171,#dc2626); }
+  .mode-mul{ background:linear-gradient(160deg,#fb923c,#ea580c); }
+  .mode-div{ background:linear-gradient(160deg,#60a5fa,#2563eb); }
+  .mode-mix{ background:linear-gradient(160deg,#c084fc,var(--purple-deep)); grid-column:span 3; }
 
   /* Timer + Score bar */
   .hud{
@@ -209,13 +215,19 @@
     <div class="start-card">
       <div class="start-emoji">⚡🧮</div>
       <h2 class="start-title">Math Speed Challenge</h2>
-      <p class="start-desc">Answer as many math questions as you can before time runs out! Mix of addition, subtraction, multiplication &amp; division.</p>
+      <p class="start-desc">Choose your operation, then answer as many questions as you can in 90 seconds!</p>
       <div class="start-info">
         <span class="info-pill">⏱️ 90 Seconds</span>
         <span class="info-pill">📚 Grade 3</span>
-        <span class="info-pill">➕➖✖️➗ Mixed</span>
       </div>
-      <button class="start-btn" id="startBtn">START CHALLENGE ⚡</button>
+      <p class="mode-label">Choose a mode:</p>
+      <div class="mode-grid">
+        <button class="mode-btn mode-add"  data-mode="+"  >➕<br>Addition</button>
+        <button class="mode-btn mode-sub"  data-mode="-"  >➖<br>Subtraction</button>
+        <button class="mode-btn mode-mul"  data-mode="×"  >✖️<br>Multiplication</button>
+        <button class="mode-btn mode-div"  data-mode="÷"  >➗<br>Division</button>
+        <button class="mode-btn mode-mix"  data-mode="mix">🔀<br>Mixed</button>
+      </div>
     </div>
   </div>
 
@@ -296,7 +308,7 @@
   // ---------- DOM ----------
   var startScreen = document.getElementById('startScreen');
   var gameScreen  = document.getElementById('gameScreen');
-  var startBtn    = document.getElementById('startBtn');
+  var modeBtns    = document.querySelectorAll('.mode-btn');
   var scoreValEl  = document.getElementById('scoreVal');
   var timerValEl  = document.getElementById('timerVal');
   var timerRingEl = document.getElementById('timerRing');
@@ -320,6 +332,7 @@
   var menuBtn     = document.getElementById('menuBtn');
 
   // ---------- State ----------
+  var selectedMode = 'mix';
   var score=0, correctCount=0, wrongCount=0, streak=0;
   var timeLeft=TOTAL_TIME;
   var gameActive=false, answering=false;
@@ -355,7 +368,8 @@
   ];
 
   function generateQuestion(){
-    var opIdx = randInt(0,3);
+    var opIdx = selectedMode==='mix' ? randInt(0,3) : ['+','-','×','÷'].indexOf(selectedMode);
+    if(opIdx<0) opIdx=randInt(0,3);
     var opDef = OPS[opIdx];
     var a,b,correct;
 
@@ -554,13 +568,21 @@
   }
 
   // ---------- Wire up ----------
-  startBtn.addEventListener('click', startGame);
+  modeBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      selectedMode = btn.getAttribute('data-mode');
+      modeBtns.forEach(function(b){ b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      later(function(){ startGame(); }, 180);
+    });
+  });
   retryBtn.addEventListener('click', function(){ clearAll(); startGame(); });
   menuBtn.addEventListener('click', function(){
     clearAll();
     resultOverlay.classList.remove('show');
     gameScreen.classList.add('hidden');
     startScreen.classList.remove('hidden');
+    modeBtns.forEach(function(b){ b.classList.remove('selected'); });
   });
 
 })();
