@@ -374,7 +374,9 @@
     var a,b,correct;
 
     if(opDef.op==='+'){
-      a=randInt(10,99); b=randInt(10,99); correct=a+b;
+      var aT=randInt(1,4); var aU=randInt(0,9);
+      var bT=randInt(1,Math.min(4,9-aT)); var bU=randInt(0,9-aU);
+      a=aT*10+aU; b=bT*10+bU; correct=a+b;
     } else if(opDef.op==='-'){
       var aTens=randInt(3,9); var aUnits=randInt(1,9);
       a=aTens*10+aUnits;
