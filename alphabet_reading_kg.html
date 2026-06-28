@@ -173,6 +173,36 @@
   .overlay-btn.secondary{ background:#fff; color:var(--purple-deep); box-shadow:0 5px 0 #DCD3F2; }
   .overlay-btn.secondary:active{ box-shadow:0 2px 0 #DCD3F2; }
 
+  /* Alphabet explorer grid */
+  .alpha-grid{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:8px;
+    margin:14px auto 4px; max-width:440px;
+  }
+  .alpha-tile{
+    font-family:'Baloo 2', sans-serif; font-weight:800;
+    font-size:1.2rem; line-height:1.15;
+    border:none; border-radius:14px; padding:10px 4px 8px;
+    cursor:pointer; color:#fff;
+    box-shadow:0 4px 0 rgba(0,0,0,.18);
+    transition:transform .12s, box-shadow .12s;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .alpha-tile:hover{ transform:translateY(-3px); box-shadow:0 7px 0 rgba(0,0,0,.18); }
+  .alpha-tile:active{ transform:translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.18); }
+  .alpha-tile .tile-letter{ font-size:1.35rem; }
+  .alpha-tile .tile-emoji{ font-size:.95rem; }
+  .alpha-tile.playing{ animation:tileGlow .4s ease-in-out; }
+  @keyframes tileGlow{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.18); box-shadow:0 0 16px rgba(255,200,87,.8); } }
+
+  .back-to-abc{
+    display:inline-block; margin-top:12px;
+    font-family:'Baloo 2', sans-serif; font-weight:700; font-size:.9rem;
+    background:none; border:2px solid #DCD3F2; border-radius:50px;
+    color:var(--purple-deep); padding:8px 20px; cursor:pointer;
+    transition:background .15s;
+  }
+  .back-to-abc:hover{ background:#F3EFFC; }
+
   footer.brand-footer{ margin:6px 0 18px; font-size:.7rem; letter-spacing:2px; color:var(--purple); font-weight:700; text-align:center; }
 
   @media(max-width:480px){
@@ -194,8 +224,19 @@
 
 <div class="game-wrap">
 
-  <!-- START -->
-  <div id="startScreen">
+  <!-- ALPHABET EXPLORER -->
+  <div id="explorerScreen">
+    <div class="start-card">
+      <div class="start-emoji">🔤</div>
+      <h2 class="start-title">The Alphabet</h2>
+      <p class="start-desc">Tap any letter to hear it! 🔊</p>
+      <div class="alpha-grid" id="alphaGrid"></div>
+      <button class="start-btn" id="playGameBtn" style="margin-top:18px;">🎮 Play the Game!</button>
+    </div>
+  </div>
+
+  <!-- START / MODE -->
+  <div id="startScreen" class="hidden">
     <div class="start-card">
       <div class="start-emoji">🔤🎧</div>
       <h2 class="start-title">Alphabet Adventure</h2>
@@ -206,6 +247,7 @@
         <button class="mode-btn mode-word"   data-mode="word"  >🖼️<br>Word<br>Starter</button>
         <button class="mode-btn mode-mix"    data-mode="mix"   >🔀 Mix It All!</button>
       </div>
+      <button class="back-to-abc" id="backToABCBtn">⬅️ Back to Alphabet</button>
     </div>
   </div>
 
@@ -306,8 +348,12 @@
   ];
 
   // ---------- DOM ----------
+  var explorerScreen= document.getElementById('explorerScreen');
   var startScreen   = document.getElementById('startScreen');
   var gameScreen    = document.getElementById('gameScreen');
+  var alphaGridEl   = document.getElementById('alphaGrid');
+  var playGameBtn   = document.getElementById('playGameBtn');
+  var backToABCBtn  = document.getElementById('backToABCBtn');
   var backBtn       = document.getElementById('backBtn');
   var scoreValEl    = document.getElementById('scoreVal');
   var qNumValEl     = document.getElementById('qNumVal');
@@ -349,6 +395,36 @@
   function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
   function shuffleArray(arr){ var a=arr.slice(); for(var i=a.length-1;i>0;i--){ var j=randInt(0,i); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
   function prefersReducedMotion(){ return window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches; }
+
+  // ---------- Tile colors ----------
+  var TILE_COLORS = [
+    '#e74c3c','#e67e22','#f1c40f','#2ecc71','#1abc9c','#3498db',
+    '#9b59b6','#e91e63','#ff5722','#4caf50','#2196f3','#ff9800',
+    '#8bc34a','#00bcd4','#673ab7','#f44336','#009688','#ff4081',
+    '#ffc107','#607d8b','#795548','#e040fb','#00e676','#2979ff',
+    '#ff6d00','#76ff03'
+  ];
+
+  // ---------- Build alphabet explorer ----------
+  function buildAlphaGrid(){
+    alphaGridEl.innerHTML = '';
+    LETTERS.forEach(function(item, idx){
+      var tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'alpha-tile';
+      tile.style.background = TILE_COLORS[idx % TILE_COLORS.length];
+      tile.style.boxShadow = '0 4px 0 rgba(0,0,0,.22)';
+      tile.innerHTML = '<span class="tile-letter">'+item.letter+'<span style="opacity:.7;font-size:.9em">'+item.letter.toLowerCase()+'</span></span><span class="tile-emoji">'+item.emoji+'</span>';
+      tile.addEventListener('click', function(){
+        tile.classList.remove('playing');
+        void tile.offsetWidth;
+        tile.classList.add('playing');
+        speak('The letter '+item.letter+'. '+item.letter+' says '+item.letter.toLowerCase()+'. '+item.word, 0.82, 1.1);
+        tile.addEventListener('animationend', function(){ tile.classList.remove('playing'); }, { once:true });
+      });
+      alphaGridEl.appendChild(tile);
+    });
+  }
 
   // ---------- Speech ----------
   var synth = window.speechSynthesis;
@@ -572,17 +648,40 @@
     later(function(){ resultOverlay.classList.add('show'); }, 400);
   }
 
+  function goToExplorer(){
+    clearAll();
+    if(synth) synth.cancel();
+    gameActive = false; answering = false;
+    resultOverlay.classList.remove('show');
+    gameScreen.classList.add('hidden');
+    startScreen.classList.add('hidden');
+    explorerScreen.classList.remove('hidden');
+    modeBtns.forEach(function(b){ b.classList.remove('selected'); });
+  }
+
   function goToMenu(){
     clearAll();
     if(synth) synth.cancel();
     gameActive = false; answering = false;
     resultOverlay.classList.remove('show');
     gameScreen.classList.add('hidden');
+    explorerScreen.classList.add('hidden');
     startScreen.classList.remove('hidden');
     modeBtns.forEach(function(b){ b.classList.remove('selected'); });
   }
 
   // ---------- Wire up ----------
+  playGameBtn.addEventListener('click', function(){
+    explorerScreen.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+  });
+
+  backToABCBtn.addEventListener('click', function(){
+    if(synth) synth.cancel();
+    startScreen.classList.add('hidden');
+    explorerScreen.classList.remove('hidden');
+  });
+
   modeBtns.forEach(function(btn){
     btn.addEventListener('click', function(){
       selectedMode = btn.getAttribute('data-mode');
@@ -597,9 +696,12 @@
   wordEmojiEl.addEventListener('click', speakCurrent);
   wordTextEl.addEventListener('click', speakCurrent);
 
-  backBtn.addEventListener('click', goToMenu);
+  backBtn.addEventListener('click', goToExplorer);
   retryBtn.addEventListener('click', function(){ clearAll(); if(synth) synth.cancel(); startGame(); });
-  menuBtn.addEventListener('click', goToMenu);
+  menuBtn.addEventListener('click', goToExplorer);
+
+  // ---------- Init ----------
+  buildAlphaGrid();
 
 })();
 </script>
