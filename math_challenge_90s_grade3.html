@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>90-Second Math Challenge ⚡</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Poppins:wght@500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-top:#6EC6FF;
+    --sky-bottom:#FFE9A8;
+    --gold:#FFC857;
+    --gold-deep:#F2A900;
+    --purple:#7B2CBF;
+    --purple-deep:#5A1A99;
+    --cream:#FFF7E6;
+    --ink:#2B2540;
+    --success:#2ECC71;
+    --danger:#FF4757;
+    --blue:#3867FF;
+    --blue-dark:#2748C9;
+    --orange:#FF7A00;
+    --radius-lg:24px;
+    --radius-md:16px;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:'Poppins', sans-serif;
+    min-height:100vh;
+    background:linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bottom) 100%);
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    overflow-x:hidden;
+  }
+  .hidden{ display:none !important; }
+
+  /* Brand */
+  .brand-bar{
+    width:100%; background:linear-gradient(90deg, var(--purple-deep), var(--purple));
+    border-bottom:6px solid var(--gold); padding:14px 16px 10px;
+    text-align:center; box-shadow:0 4px 14px rgba(0,0,0,.18); position:relative; z-index:5;
+  }
+  .brand-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:clamp(1.6rem,5vw,2.4rem); color:#fff; margin:0; text-shadow:0 3px 0 var(--purple-deep); letter-spacing:1px; }
+  .brand-byline{ font-family:'Pacifico', cursive; color:var(--gold); font-size:clamp(.85rem,2.6vw,1.1rem); margin:2px 0 0; }
+  .brand-tagline{ font-size:.68rem; letter-spacing:3px; color:var(--gold); opacity:.9; margin:4px 0 0; font-weight:600; }
+
+  .game-wrap{ width:100%; max-width:600px; padding:16px; display:flex; flex-direction:column; gap:14px; }
+
+  /* Start screen */
+  .start-card{
+    background:#fff; border-radius:var(--radius-lg); padding:32px 24px; text-align:center;
+    box-shadow:0 8px 0 rgba(0,0,0,.1);
+  }
+  .start-emoji{ font-size:4rem; margin-bottom:8px; }
+  .start-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:2rem; color:var(--purple-deep); margin:0 0 8px; }
+  .start-desc{ color:#6B6480; font-size:.95rem; margin:0 0 20px; line-height:1.6; }
+  .start-info{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:28px; }
+  .info-pill{
+    background:linear-gradient(135deg,var(--purple-deep),var(--purple));
+    color:#fff; border-radius:50px; padding:8px 18px;
+    font-family:'Baloo 2', sans-serif; font-weight:700; font-size:.9rem;
+    box-shadow:0 4px 0 rgba(0,0,0,.15);
+  }
+  .start-btn{
+    font-family:'Baloo 2', sans-serif; font-weight:800; font-size:1.3rem;
+    background:linear-gradient(90deg, var(--orange), var(--gold-deep));
+    color:#fff; border:none; border-radius:50px; padding:16px 48px;
+    cursor:pointer; box-shadow:0 6px 0 rgba(0,0,0,.18);
+    transition:transform .12s, box-shadow .12s;
+    letter-spacing:1px;
+  }
+  .start-btn:hover{ transform:translateY(-3px); box-shadow:0 9px 0 rgba(0,0,0,.18); }
+  .start-btn:active{ transform:translateY(2px); box-shadow:0 3px 0 rgba(0,0,0,.18); }
+
+  /* Timer + Score bar */
+  .hud{
+    display:flex; gap:12px; align-items:stretch;
+  }
+  .hud-card{
+    background:#fff; border-radius:var(--radius-md); padding:12px 18px;
+    box-shadow:0 4px 0 rgba(0,0,0,.08); flex:1; text-align:center;
+  }
+  .hud-label{ font-size:.65rem; text-transform:uppercase; letter-spacing:1.5px; color:#8A8499; font-weight:700; margin-bottom:2px; }
+  .hud-value{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:2.2rem; color:var(--purple-deep); line-height:1; }
+  .hud-value.timer{ color:var(--orange); }
+  .hud-value.timer.danger{ color:var(--danger); animation:pulse .5s ease-in-out infinite alternate; }
+  @keyframes pulse{ from{ transform:scale(1); } to{ transform:scale(1.12); } }
+
+  /* Timer ring */
+  .timer-wrap{ position:relative; display:inline-flex; align-items:center; justify-content:center; }
+  .timer-svg{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) rotate(-90deg); }
+  .timer-ring-bg{ fill:none; stroke:#EEE; stroke-width:5; }
+  .timer-ring-fill{ fill:none; stroke:var(--orange); stroke-width:5; stroke-linecap:round; transition:stroke-dashoffset .9s linear, stroke .3s; }
+  .timer-ring-fill.danger{ stroke:var(--danger); }
+
+  /* Streak */
+  .streak-bar{
+    background:#fff; border-radius:var(--radius-md); padding:10px 18px;
+    box-shadow:0 4px 0 rgba(0,0,0,.08); display:flex; align-items:center; gap:10px;
+  }
+  .streak-label{ font-size:.72rem; text-transform:uppercase; letter-spacing:1px; color:#8A8499; font-weight:700; }
+  .streak-dots{ display:flex; gap:6px; }
+  .streak-dots .dot{ width:13px; height:13px; border-radius:50%; background:#E5E1F2; border:2px solid #D3CDE8; transition:background .2s, transform .2s; }
+  .streak-dots .dot.filled{ background:var(--gold); border-color:var(--gold-deep); transform:scale(1.2); box-shadow:0 0 8px rgba(255,200,87,.8); }
+  .streak-bonus{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size:.85rem; color:var(--gold-deep); margin-left:auto; }
+
+  /* Op badge */
+  .op-badge{
+    display:inline-block; background:linear-gradient(135deg,var(--purple-deep),var(--purple));
+    color:#fff; border-radius:50px; padding:4px 14px;
+    font-family:'Baloo 2', sans-serif; font-weight:700; font-size:.8rem; margin-bottom:6px;
+    letter-spacing:1px;
+  }
+
+  /* Question card */
+  .question-card{
+    background:#fff; border-radius:var(--radius-lg); padding:22px 18px 24px;
+    box-shadow:0 6px 0 rgba(0,0,0,.08); text-align:center;
+  }
+  .question-eyebrow{ font-size:.72rem; letter-spacing:2px; text-transform:uppercase; color:#A79CC9; font-weight:700; margin:0 0 4px; }
+  .question-text{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:clamp(2.2rem,9vw,3.2rem); color:var(--purple-deep); margin:0 0 18px; }
+  .choices-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:440px; margin:0 auto; }
+  .choice-btn{
+    font-family:'Baloo 2', sans-serif; font-size:clamp(1.3rem,4.5vw,1.8rem); font-weight:700;
+    color:var(--ink); background:linear-gradient(180deg,#fff,#F3EFFC);
+    border:3px solid #DCD3F2; border-radius:16px; padding:16px 8px;
+    cursor:pointer; transition:transform .12s, box-shadow .12s, background .15s;
+    box-shadow:0 4px 0 #DCD3F2;
+  }
+  .choice-btn:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 6px 0 #C9BCEF; border-color:#C9BCEF; }
+  .choice-btn:active:not(:disabled){ transform:translateY(2px); box-shadow:0 2px 0 #C9BCEF; }
+  .choice-btn:disabled{ cursor:default; }
+  .choice-btn.correct{ background:linear-gradient(180deg,#C9F7D8,var(--success)); border-color:#27AE60; color:#0B3D24; box-shadow:0 4px 0 #27AE60; }
+  .choice-btn.incorrect{ background:linear-gradient(180deg,#FFD3D6,#FF8A93); border-color:#E0535E; color:#5A0B12; box-shadow:0 4px 0 #E0535E; }
+  .choice-btn.reveal-correct{ background:linear-gradient(180deg,#C9F7D8,var(--success)); border-color:#27AE60; color:#0B3D24; }
+
+  /* Feedback flash */
+  .feedback-flash{
+    position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(.5);
+    font-family:'Baloo 2', sans-serif; font-weight:800; font-size:2.6rem;
+    padding:14px 32px; border-radius:60px; color:#fff;
+    opacity:0; pointer-events:none; z-index:80;
+    transition:opacity .15s, transform .18s;
+    box-shadow:0 8px 24px rgba(0,0,0,.3);
+  }
+  .feedback-flash.show{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+  .feedback-flash.correct{ background:linear-gradient(90deg,#27AE60,#2ECC71); }
+  .feedback-flash.incorrect{ background:linear-gradient(90deg,#C0392B,#E74C3C); }
+
+  /* Effects */
+  .effects-layer{ position:fixed; inset:0; pointer-events:none; z-index:50; overflow:hidden; }
+  .confetti-piece{ position:absolute; top:-20px; width:9px; height:14px; border-radius:2px; animation:confettiFall 1.4s ease-in forwards; }
+  @keyframes confettiFall{ 0%{ transform:translateY(0) rotate(0deg); opacity:1; } 100%{ transform:translateY(100vh) rotate(540deg); opacity:0; } }
+  .star-pop{ position:absolute; font-size:1.8rem; animation:starPop .9s ease-out forwards; }
+  @keyframes starPop{ 0%{ transform:translateY(0) scale(.4); opacity:1; } 60%{ transform:translateY(-60px) scale(1.3); opacity:1; } 100%{ transform:translateY(-110px) scale(.8); opacity:0; } }
+
+  /* Result overlay */
+  .overlay{ position:fixed; inset:0; background:rgba(43,37,64,.75); display:flex; align-items:center; justify-content:center; z-index:60; opacity:0; pointer-events:none; transition:opacity .35s; padding:20px; }
+  .overlay.show{ opacity:1; pointer-events:auto; }
+  .overlay-card{ background:var(--cream); border-radius:28px; padding:32px 28px; text-align:center; max-width:420px; width:100%; box-shadow:0 20px 50px rgba(0,0,0,.4); transform:scale(.85); transition:transform .3s; border:6px solid var(--gold); }
+  .overlay.show .overlay-card{ transform:scale(1); }
+  .overlay-emoji{ font-size:4rem; margin-bottom:6px; }
+  .overlay-title{ font-family:'Baloo 2', sans-serif; font-weight:800; font-size:1.8rem; color:var(--purple-deep); margin:0 0 6px; }
+  .overlay-grade{ font-family:'Baloo 2', sans-serif; font-size:1.1rem; font-weight:700; margin:0 0 14px; padding:8px 20px; border-radius:50px; display:inline-block; }
+  .grade-s{ background:#FFD700; color:#5A3A00; }
+  .grade-a{ background:#2ECC71; color:#0B3D24; }
+  .grade-b{ background:#3867FF; color:#fff; }
+  .grade-c{ background:#FF7A00; color:#fff; }
+  .grade-d{ background:#FF4757; color:#fff; }
+
+  .result-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:18px; }
+  .result-box{ background:#fff; border-radius:var(--radius-md); padding:12px 8px; box-shadow:0 3px 0 rgba(0,0,0,.07); }
+  .result-box .rl{ font-size:.65rem; text-transform:uppercase; letter-spacing:1px; color:#8A8499; font-weight:700; margin-bottom:2px; }
+  .result-box .rv{ font-family:'Baloo 2', sans-serif; font-size:1.5rem; font-weight:800; color:var(--purple-deep); }
+
+  .overlay-buttons{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+  .overlay-btn{ font-family:'Baloo 2', sans-serif; font-weight:700; font-size:1rem; color:#fff; background:linear-gradient(90deg,var(--purple-deep),var(--purple)); border:none; border-radius:50px; padding:12px 28px; cursor:pointer; box-shadow:0 5px 0 var(--purple-deep); transition:transform .12s, box-shadow .12s; }
+  .overlay-btn:hover{ transform:translateY(-2px); }
+  .overlay-btn:active{ transform:translateY(2px); box-shadow:0 2px 0 var(--purple-deep); }
+  .overlay-btn.retry{ background:linear-gradient(90deg,var(--orange),var(--gold-deep)); box-shadow:0 5px 0 #c45e00; }
+
+  footer.brand-footer{ margin:6px 0 18px; font-size:.7rem; letter-spacing:2px; color:var(--purple); font-weight:700; text-align:center; }
+
+  @media(max-width:480px){
+    .choices-grid{ gap:9px; }
+    .choice-btn{ padding:13px 6px; }
+  }
+  @media(prefers-reduced-motion:reduce){
+    .choice-btn, .feedback-flash, .hud-value.timer.danger{ transition:none !important; animation:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <h1 class="brand-title">⚡ 90-Second Math Challenge</h1>
+  <p class="brand-byline">by Teacher Manal Bazzi</p>
+  <p class="brand-tagline">INSPIRE • EDUCATE • EMPOWER</p>
+</div>
+
+<div class="game-wrap">
+
+  <!-- START SCREEN -->
+  <div id="startScreen">
+    <div class="start-card">
+      <div class="start-emoji">⚡🧮</div>
+      <h2 class="start-title">Math Speed Challenge</h2>
+      <p class="start-desc">Answer as many math questions as you can before time runs out! Mix of addition, subtraction, multiplication &amp; division.</p>
+      <div class="start-info">
+        <span class="info-pill">⏱️ 90 Seconds</span>
+        <span class="info-pill">📚 Grade 3</span>
+        <span class="info-pill">➕➖✖️➗ Mixed</span>
+      </div>
+      <button class="start-btn" id="startBtn">START CHALLENGE ⚡</button>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="gameScreen" class="hidden">
+
+    <div class="hud">
+      <div class="hud-card">
+        <div class="hud-label">Score</div>
+        <div class="hud-value" id="scoreVal">0</div>
+      </div>
+      <div class="hud-card" style="flex:0 0 auto;">
+        <div class="hud-label">Time</div>
+        <div class="timer-wrap">
+          <svg class="timer-svg" width="64" height="64" viewBox="0 0 64 64">
+            <circle class="timer-ring-bg" cx="32" cy="32" r="27"/>
+            <circle class="timer-ring-fill" id="timerRing" cx="32" cy="32" r="27" stroke-dasharray="169.6" stroke-dashoffset="0"/>
+          </svg>
+          <div class="hud-value timer" id="timerVal">90</div>
+        </div>
+      </div>
+      <div class="hud-card">
+        <div class="hud-label">Correct</div>
+        <div class="hud-value" id="correctVal">0</div>
+      </div>
+    </div>
+
+    <div class="streak-bar">
+      <span class="streak-label">🔥 Streak</span>
+      <div class="streak-dots" id="streakDots">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+      <span class="streak-bonus" id="streakBonus"></span>
+    </div>
+
+    <div class="question-card">
+      <p class="question-eyebrow">What is the answer?</p>
+      <div id="opBadge" class="op-badge">➕ Addition</div>
+      <p class="question-text" id="questionText" aria-live="polite">? ○ ? = ?</p>
+      <div class="choices-grid" id="choicesGrid"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<footer class="brand-footer">INSPIRE • EDUCATE • EMPOWER</footer>
+
+<div class="effects-layer" id="effectsLayer"></div>
+<div class="feedback-flash" id="feedbackFlash"></div>
+
+<!-- RESULT OVERLAY -->
+<div class="overlay" id="resultOverlay">
+  <div class="overlay-card">
+    <div class="overlay-emoji" id="resultEmoji">🏆</div>
+    <h2 class="overlay-title" id="resultTitle">Time's Up!</h2>
+    <div class="overlay-grade" id="resultGrade">Grade A</div>
+    <div class="result-grid">
+      <div class="result-box"><div class="rl">Score</div><div class="rv" id="resScore">0</div></div>
+      <div class="result-box"><div class="rl">Correct</div><div class="rv" id="resCorrect">0</div></div>
+      <div class="result-box"><div class="rl">Wrong</div><div class="rv" id="resWrong">0</div></div>
+      <div class="result-box"><div class="rl">Accuracy</div><div class="rv" id="resAccuracy">0%</div></div>
+    </div>
+    <div class="overlay-buttons">
+      <button class="overlay-btn retry" id="retryBtn">Play Again ⚡</button>
+      <button class="overlay-btn" id="menuBtn">🏠 Menu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var TOTAL_TIME = 90;
+  var STREAK_BONUS_AT = 5;
+
+  // ---------- DOM ----------
+  var startScreen = document.getElementById('startScreen');
+  var gameScreen  = document.getElementById('gameScreen');
+  var startBtn    = document.getElementById('startBtn');
+  var scoreValEl  = document.getElementById('scoreVal');
+  var timerValEl  = document.getElementById('timerVal');
+  var timerRingEl = document.getElementById('timerRing');
+  var correctValEl= document.getElementById('correctVal');
+  var streakDotsEl= document.getElementById('streakDots');
+  var streakBonusEl=document.getElementById('streakBonus');
+  var opBadgeEl   = document.getElementById('opBadge');
+  var questionEl  = document.getElementById('questionText');
+  var choicesEl   = document.getElementById('choicesGrid');
+  var effectsEl   = document.getElementById('effectsLayer');
+  var flashEl     = document.getElementById('feedbackFlash');
+  var resultOverlay=document.getElementById('resultOverlay');
+  var resultEmojiEl=document.getElementById('resultEmoji');
+  var resultTitleEl=document.getElementById('resultTitle');
+  var resultGradeEl=document.getElementById('resultGrade');
+  var resScoreEl  = document.getElementById('resScore');
+  var resCorrectEl= document.getElementById('resCorrect');
+  var resWrongEl  = document.getElementById('resWrong');
+  var resAccEl    = document.getElementById('resAccuracy');
+  var retryBtn    = document.getElementById('retryBtn');
+  var menuBtn     = document.getElementById('menuBtn');
+
+  // ---------- State ----------
+  var score=0, correctCount=0, wrongCount=0, streak=0;
+  var timeLeft=TOTAL_TIME;
+  var gameActive=false, answering=false;
+  var currentQ=null;
+  var timerInterval=null;
+  var pendingTimers=[];
+
+  var CIRC = 2 * Math.PI * 27; // ~169.6
+
+  function later(fn,ms){ var id=setTimeout(fn,ms); pendingTimers.push(id); return id; }
+  function clearAll(){ pendingTimers.forEach(clearTimeout); pendingTimers=[]; if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } }
+
+  function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+  function shuffleArray(arr){ for(var i=arr.length-1;i>0;i--){ var j=randInt(0,i); var t=arr[i];arr[i]=arr[j];arr[j]=t; } return arr; }
+  function prefersReducedMotion(){ return window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches; }
+
+  // ---------- Sound ----------
+  var audioCtx=null;
+  function getCtx(){ if(!audioCtx){ var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null; audioCtx=new AC(); } if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }
+  function tone(freq,start,dur,type,vol){ var ctx=getCtx(); if(!ctx) return; var osc=ctx.createOscillator(); var gain=ctx.createGain(); osc.type=type||'sine'; osc.frequency.value=freq; var t0=ctx.currentTime+start; gain.gain.setValueAtTime(0.0001,t0); gain.gain.exponentialRampToValueAtTime(Math.max(vol,0.001),t0+0.025); gain.gain.exponentialRampToValueAtTime(0.0001,t0+dur); osc.connect(gain).connect(ctx.destination); osc.start(t0); osc.stop(t0+dur+0.03); }
+  function playSuccess(){ tone(523.25,0,0.12,'triangle',0.2); tone(659.25,0.09,0.12,'triangle',0.2); tone(783.99,0.18,0.18,'triangle',0.24); }
+  function playBonus(){ [523.25,659.25,783.99,1046.5].forEach(function(f,i){ tone(f,i*0.12,0.22,'triangle',0.22); }); }
+  function playError(){ tone(233,0,0.18,'sine',0.12); tone(207,0.12,0.22,'sine',0.1); }
+  function playEnd(){ tone(392,0,0.24,'sine',0.16); tone(330,0.18,0.28,'sine',0.14); tone(294,0.42,0.38,'sine',0.12); }
+  function playStart(){ tone(660,0,0.1,'triangle',0.18); tone(880,0.08,0.16,'triangle',0.2); tone(1100,0.2,0.22,'triangle',0.22); }
+
+  // ---------- Question generation ----------
+  var OPS = [
+    { op:'+', label:'➕ Addition' },
+    { op:'-', label:'➖ Subtraction' },
+    { op:'×', label:'✖️ Multiplication' },
+    { op:'÷', label:'➗ Division' }
+  ];
+
+  function generateQuestion(){
+    var opIdx = randInt(0,3);
+    var opDef = OPS[opIdx];
+    var a,b,correct;
+
+    if(opDef.op==='+'){
+      a=randInt(10,99); b=randInt(10,99); correct=a+b;
+    } else if(opDef.op==='-'){
+      a=randInt(20,99); b=randInt(10,a); correct=a-b;
+    } else if(opDef.op==='×'){
+      a=randInt(2,12); b=randInt(2,12); correct=a*b;
+    } else { // division
+      b=randInt(2,10); correct=randInt(2,12); a=b*correct;
+    }
+
+    var choiceSet={};
+    choiceSet[correct]=true;
+    var size=1;
+    var pool=shuffleArray([correct+1,correct-1,correct+2,correct-2,correct+10,correct-10,correct+5,correct-5]);
+    for(var k=0;k<pool.length&&size<4;k++){ var d=pool[k]; if(d>0&&!choiceSet[d]){ choiceSet[d]=true; size++; } }
+    var guard=0;
+    while(size<4&&guard<200){ var r=correct+randInt(-15,15); if(r>0&&!choiceSet[r]){ choiceSet[r]=true; size++; } guard++; }
+    var choices=shuffleArray(Object.keys(choiceSet).map(Number));
+
+    var qText;
+    if(opDef.op==='×') qText=a+' × '+b+' = ?';
+    else if(opDef.op==='÷') qText=a+' ÷ '+b+' = ?';
+    else if(opDef.op==='+') qText=a+' + '+b+' = ?';
+    else qText=a+' − '+b+' = ?';
+
+    return { op:opDef, qText:qText, correct:correct, choices:choices };
+  }
+
+  // ---------- Render ----------
+  function loadQuestion(){
+    currentQ=generateQuestion();
+    opBadgeEl.textContent=currentQ.op.label;
+    questionEl.textContent=currentQ.qText;
+    choicesEl.innerHTML='';
+    currentQ.choices.forEach(function(choice){
+      var btn=document.createElement('button');
+      btn.type='button';
+      btn.className='choice-btn';
+      btn.textContent=String(choice);
+      btn.addEventListener('click',function(){ handleAnswer(choice,btn); });
+      choicesEl.appendChild(btn);
+    });
+    answering=true;
+  }
+
+  function handleAnswer(choice,btn){
+    if(!answering||!gameActive) return;
+    answering=false;
+    var buttons=choicesEl.querySelectorAll('.choice-btn');
+    buttons.forEach(function(b){ b.disabled=true; });
+
+    if(choice===currentQ.correct){
+      btn.classList.add('correct');
+      correctCount++;
+      streak++;
+      var bonus=(streak>=STREAK_BONUS_AT)?20:10;
+      score+=bonus;
+      scoreValEl.textContent=String(score);
+      correctValEl.textContent=String(correctCount);
+      updateStreak();
+      playSuccess();
+      if(streak>0&&streak%STREAK_BONUS_AT===0) playBonus();
+      spawnStars();
+      spawnConfetti(12);
+      showFlash('✓ +'+bonus, 'correct');
+    } else {
+      btn.classList.add('incorrect');
+      buttons.forEach(function(b){ if(Number(b.textContent)===currentQ.correct) b.classList.add('reveal-correct'); });
+      wrongCount++;
+      streak=0;
+      updateStreak();
+      playError();
+      showFlash('✗', 'incorrect');
+    }
+
+    later(function(){ if(gameActive) loadQuestion(); }, 900);
+  }
+
+  function updateStreak(){
+    var dots=streakDotsEl.querySelectorAll('.dot');
+    var filled=streak%STREAK_BONUS_AT || (streak>0&&streak%STREAK_BONUS_AT===0 ? STREAK_BONUS_AT : streak%STREAK_BONUS_AT);
+    if(streak>=STREAK_BONUS_AT && streak%STREAK_BONUS_AT===0 && streak>0) filled=STREAK_BONUS_AT;
+    dots.forEach(function(d,i){ d.classList.toggle('filled', i < (streak % STREAK_BONUS_AT === 0 && streak > 0 ? STREAK_BONUS_AT : streak % STREAK_BONUS_AT)); });
+    streakBonusEl.textContent = streak>=STREAK_BONUS_AT ? '🔥 +20 pts/Q!' : (streak>0 ? streak+' in a row' : '');
+  }
+
+  function showFlash(text, type){
+    flashEl.textContent=text;
+    flashEl.className='feedback-flash '+type+' show';
+    later(function(){ flashEl.classList.remove('show'); }, 480);
+  }
+
+  // ---------- Timer ----------
+  function startTimer(){
+    timeLeft=TOTAL_TIME;
+    timerValEl.textContent=String(timeLeft);
+    timerRingEl.style.strokeDashoffset='0';
+    timerRingEl.classList.remove('danger');
+    timerValEl.classList.remove('danger');
+
+    timerInterval=setInterval(function(){
+      timeLeft--;
+      timerValEl.textContent=String(timeLeft);
+      var ratio=(TOTAL_TIME-timeLeft)/TOTAL_TIME;
+      timerRingEl.style.strokeDashoffset=String(CIRC*ratio);
+
+      if(timeLeft<=15){
+        timerRingEl.classList.add('danger');
+        timerValEl.classList.add('danger');
+      }
+      if(timeLeft<=0){
+        clearInterval(timerInterval);
+        timerInterval=null;
+        endGame();
+      }
+    },1000);
+  }
+
+  // ---------- Lifecycle ----------
+  function startGame(){
+    score=0; correctCount=0; wrongCount=0; streak=0;
+    scoreValEl.textContent='0';
+    correctValEl.textContent='0';
+    updateStreak();
+    gameActive=true; answering=false;
+    startScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+    resultOverlay.classList.remove('show');
+    playStart();
+    later(function(){ loadQuestion(); startTimer(); }, 400);
+  }
+
+  function endGame(){
+    gameActive=false; answering=false;
+    clearAll();
+
+    var total=correctCount+wrongCount;
+    var accuracy=total>0?Math.round((correctCount/total)*100):0;
+
+    resScoreEl.textContent=String(score);
+    resCorrectEl.textContent=String(correctCount);
+    resWrongEl.textContent=String(wrongCount);
+    resAccEl.textContent=accuracy+'%';
+
+    var grade,emoji,title;
+    if(accuracy>=95&&correctCount>=20){ grade='S — Legend!'; emoji='👑'; title='Unstoppable!'; resultGradeEl.className='overlay-grade grade-s'; }
+    else if(accuracy>=85&&correctCount>=15){ grade='A — Excellent!'; emoji='🏆'; title='Amazing Work!'; resultGradeEl.className='overlay-grade grade-a'; }
+    else if(accuracy>=70&&correctCount>=10){ grade='B — Great Job!'; emoji='🌟'; title='Well Done!'; resultGradeEl.className='overlay-grade grade-b'; }
+    else if(accuracy>=55){ grade='C — Good Try!'; emoji='👍'; title='Keep Practicing!'; resultGradeEl.className='overlay-grade grade-c'; }
+    else { grade='D — Keep Going!'; emoji='💪'; title='You Can Do It!'; resultGradeEl.className='overlay-grade grade-d'; }
+
+    resultEmojiEl.textContent=emoji;
+    resultTitleEl.textContent=title;
+    resultGradeEl.textContent=grade;
+
+    if(accuracy>=70) spawnConfetti(50);
+    playEnd();
+    later(function(){ resultOverlay.classList.add('show'); }, 300);
+  }
+
+  // ---------- Effects ----------
+  function spawnConfetti(count){
+    if(prefersReducedMotion()) return;
+    var colors=['#FF4757','#FFC857','#5FD068','#3867FF','#7B2CBF','#FFD700'];
+    for(var i=0;i<count;i++){
+      var p=document.createElement('div');
+      p.className='confetti-piece';
+      p.style.left=randInt(2,98)+'%';
+      p.style.background=colors[randInt(0,colors.length-1)];
+      p.style.animationDuration=(1+Math.random())+'s';
+      p.style.animationDelay=(Math.random()*0.3)+'s';
+      effectsEl.appendChild(p);
+      p.addEventListener('animationend',function(){ this.remove(); });
+    }
+  }
+
+  function spawnStars(){
+    if(prefersReducedMotion()) return;
+    var rect=(document.querySelector('.question-card')||document.body).getBoundingClientRect();
+    for(var i=0;i<5;i++){
+      var s=document.createElement('div');
+      s.className='star-pop';
+      s.textContent='⭐';
+      s.style.left=(rect.left+rect.width/2+randInt(-60,60))+'px';
+      s.style.top=(rect.top+20)+'px';
+      s.style.animationDelay=(Math.random()*0.2)+'s';
+      effectsEl.appendChild(s);
+      s.addEventListener('animationend',function(){ this.remove(); });
+    }
+  }
+
+  // ---------- Wire up ----------
+  startBtn.addEventListener('click', startGame);
+  retryBtn.addEventListener('click', function(){ clearAll(); startGame(); });
+  menuBtn.addEventListener('click', function(){
+    clearAll();
+    resultOverlay.classList.remove('show');
+    gameScreen.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+  });
+
+})();
+</script>
+</body>
+</html>
