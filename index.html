@@ -179,6 +179,9 @@ nav {
 .subject-card.french { border-color: #dbeafe; }
 .subject-card.geometry { border-color: #ffedd5; }
 .subject-card.science { border-color: #d1fae5; }
+.subject-card.kg { border-color: #fce7f3; }
+.kg .subject-icon { background: #fdf2f8; }
+.kg .grade-tag { background: #fce7f3; color: #be185d; }
 .subject-card.english { border-color: #dbeafe; }
 .english .subject-icon { background: #eff6ff; }
 .english .grade-tag { background: #dbeafe; color: #2563eb; }
@@ -460,6 +463,13 @@ nav {
   <!-- SUBJECT CARDS -->
 
   <div class="subjects-grid">
+    <div class="subject-card kg" onclick="filterSubject('kg')">
+      <div class="subject-icon">🌸</div>
+      <div class="subject-name-ar">Kindergarten</div>
+      <div class="subject-grades">
+        <span class="grade-tag">KG</span>
+      </div>
+    </div>
     <div class="subject-card math" onclick="filterSubject('math')">
       <div class="subject-icon">📊</div>
       <div class="subject-name-ar">Mathematics</div>
@@ -603,7 +613,7 @@ const ALL_GAMES = [
   { title:'French Worksheets', desc:'French language exercises', grade:2, subject:'french', icon:'🇫🇷', colors:['#dbeafe','#2563eb'], tags:['CE1','French'], link:'french_worksheets_new.html' },
   // English
   { title:'English Alphabet', desc:'Learn English letters interactively', grade:1, subject:'english', icon:'🔤', colors:['#eff6ff','#2563eb'], tags:['Grade 1','English'], link:'alphabet_english grade 1.html' },
-  { title:'Alphabet Adventure 🔤', desc:'Hear & read letters and words – Kindergarten', grade:-1, subject:'english', icon:'🎧', colors:['#fdf4ff','#9333ea'], tags:['KG','English'], link:'alphabet_reading_kg.html' },
+  { title:'Alphabet Adventure 🔤', desc:'Hear & read letters and words – Kindergarten', grade:-1, subject:'kg', icon:'🎧', colors:['#fdf2f8','#be185d'], tags:['KG','English'], link:'alphabet_reading_kg.html' },
   { title:'Animal World & Babies', desc:'Animals and their babies in English', grade:1, subject:'english', icon:'🐾', colors:['#fff0f8','#A855F7'], tags:['Grade 1','English'], link:'animals_and_babies_english.html' },
   // Science
   { title:'Animal World & Babies', desc:'Learn animals and their babies', grade:1, subject:'science', icon:'🐾', colors:['#fff0f8','#A855F7'], tags:['Grade 1','Science'], link:'animals_and_babies_english.html' },
