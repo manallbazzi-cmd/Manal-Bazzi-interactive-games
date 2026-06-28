@@ -524,6 +524,7 @@ nav {
 
   <div class="grade-tabs">
     <button class="grade-tab active" onclick="switchGrade(0,this)">All Grades</button>
+    <button class="grade-tab" onclick="switchGrade(-1,this)">🌸 KG</button>
     <button class="grade-tab" onclick="switchGrade(1,this)">🌱 Grade 1</button>
     <button class="grade-tab" onclick="switchGrade(2,this)">🌿 Grade 2</button>
     <button class="grade-tab" onclick="switchGrade(3,this)">🌳 Grade 3</button>
@@ -602,7 +603,7 @@ const ALL_GAMES = [
   { title:'French Worksheets', desc:'French language exercises', grade:2, subject:'french', icon:'🇫🇷', colors:['#dbeafe','#2563eb'], tags:['CE1','French'], link:'french_worksheets_new.html' },
   // English
   { title:'English Alphabet', desc:'Learn English letters interactively', grade:1, subject:'english', icon:'🔤', colors:['#eff6ff','#2563eb'], tags:['Grade 1','English'], link:'alphabet_english grade 1.html' },
-  { title:'Alphabet Adventure 🔤', desc:'Hear & read letters and words – Kindergarten', grade:1, subject:'english', icon:'🎧', colors:['#fdf4ff','#9333ea'], tags:['KG','English'], link:'alphabet_reading_kg.html' },
+  { title:'Alphabet Adventure 🔤', desc:'Hear & read letters and words – Kindergarten', grade:-1, subject:'english', icon:'🎧', colors:['#fdf4ff','#9333ea'], tags:['KG','English'], link:'alphabet_reading_kg.html' },
   { title:'Animal World & Babies', desc:'Animals and their babies in English', grade:1, subject:'english', icon:'🐾', colors:['#fff0f8','#A855F7'], tags:['Grade 1','English'], link:'animals_and_babies_english.html' },
   // Science
   { title:'Animal World & Babies', desc:'Learn animals and their babies', grade:1, subject:'science', icon:'🐾', colors:['#fff0f8','#A855F7'], tags:['Grade 1','Science'], link:'animals_and_babies_english.html' },
@@ -620,7 +621,7 @@ let currentSubject = 'all';
 function renderGames() {
   const grid = document.getElementById('gamesGrid');
   let filtered = ALL_GAMES;
-  if (currentGrade > 0) filtered = filtered.filter(g => g.grade === currentGrade);
+  if (currentGrade !== 0) filtered = filtered.filter(g => g.grade === currentGrade);
   if (currentSubject !== 'all') filtered = filtered.filter(g => g.subject === currentSubject);
 
   grid.innerHTML = filtered.map((g,i) => `
