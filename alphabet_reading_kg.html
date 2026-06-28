@@ -505,7 +505,7 @@
       if(mode==='letter') type='letter';
       else if(mode==='word') type='word';
       else if(mode==='pic') type='pic';
-      else{ var r=Math.random(); type = r<0.33?'letter':r<0.66?'word':'pic'; }
+      else{ type = Math.random()<0.5 ? 'word' : 'pic'; }
       result.push({ item:item, type:type });
     });
     return result;
