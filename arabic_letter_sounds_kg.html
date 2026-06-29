@@ -298,10 +298,13 @@ let answered = false;
 let synth = window.speechSynthesis;
 let arabicVoice = null;
 
-// ── Find Arabic voice ─────────────────────────────────────
+// ── Find best Arabic voice (prefer female/child-like) ────
 function loadVoices() {
   const voices = synth.getVoices();
-  arabicVoice = voices.find(v => v.lang.startsWith('ar')) || null;
+  const ar = voices.filter(v => v.lang.startsWith('ar'));
+  // Prefer female-sounding voices
+  arabicVoice = ar.find(v => /female|maged|tarik|layla|sara|hala/i.test(v.name))
+             || ar[0] || null;
 }
 if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
 loadVoices();
@@ -369,19 +372,34 @@ function playLetterSound() {
   const correct = order[qi];
   const btn = document.getElementById('speakerBtn');
 
-  // Speak the letter name in Arabic
+  // Speak letter name — child-friendly: high pitch, slow, clear
   const utt = new SpeechSynthesisUtterance(correct.name);
-  utt.lang = 'ar-SA';
-  utt.rate = 0.82;
-  utt.pitch = 1.1;
+  utt.lang  = 'ar-SA';
+  utt.rate  = 0.65;   // slower = clearer for kids
+  utt.pitch = 1.6;    // higher = child-like voice
+  utt.volume = 1;
   if (arabicVoice) utt.voice = arabicVoice;
 
   utt.onstart  = () => btn.classList.add('playing');
-  utt.onend    = () => btn.classList.remove('playing');
+  utt.onend    = () => { btn.classList.remove('playing'); repeatOnce(correct.name); };
   utt.onerror  = () => btn.classList.remove('playing');
 
   synth.speak(utt);
   playTick();
+}
+
+// Repeat letter name once after short pause for clarity
+function repeatOnce(name) {
+  setTimeout(() => {
+    if (answered) return;
+    const u2 = new SpeechSynthesisUtterance(name);
+    u2.lang  = 'ar-SA';
+    u2.rate  = 0.6;
+    u2.pitch = 1.6;
+    u2.volume = 1;
+    if (arabicVoice) u2.voice = arabicVoice;
+    synth.speak(u2);
+  }, 700);
 }
 
 // ── Handle choice ─────────────────────────────────────────
