@@ -8,109 +8,110 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{
   font-family:'Times New Roman',Times,serif;
-  background:linear-gradient(135deg,#0D0D2B,#1A1A4E,#0D0D2B);
   min-height:100vh;color:#fff;
   overflow-x:hidden;direction:rtl;
+  transition:background 1s ease;
 }
 
-/* ── STARS BACKGROUND ── */
-.sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
-.sky-star{
-  position:absolute;background:#fff;border-radius:50%;
-  animation:twinkle linear infinite;
-}
-@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1);}50%{opacity:1;transform:scale(1.3);}}
+/* ── SKY ── */
+.sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;transition:background 1s;}
+.sky-star{position:absolute;background:#fff;border-radius:50%;animation:twinkle linear infinite;}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1);}50%{opacity:1;transform:scale(1.4);}}
 
 /* ── HEADER ── */
 header{
   position:relative;z-index:2;
-  background:linear-gradient(90deg,#6B2FD9,#D946EF,#F59E0B);
-  text-align:center;padding:16px 16px 12px;
+  text-align:center;padding:14px 16px 10px;
   box-shadow:0 4px 20px rgba(0,0,0,.4);
+  transition:background 1s;
 }
-.h-title{font-size:clamp(1.5rem,5vw,2.2rem);font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.3);}
-.h-sub{font-size:.85rem;opacity:.92;margin-top:4px;font-weight:700;}
+.h-title{font-size:clamp(1.3rem,4.5vw,2rem);font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.3);}
+.h-sub{font-size:.8rem;opacity:.9;margin-top:3px;font-weight:700;}
+
+/* ── LEVEL BADGE ── */
+.level-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.2);border-radius:50px;
+  padding:4px 14px;font-size:.82rem;font-weight:900;
+  margin-top:6px;border:2px solid rgba(255,255,255,.3);
+}
 
 /* ── SCORE BAR ── */
 .scorebar{
   position:relative;z-index:2;
-  background:rgba(255,255,255,.1);
-  backdrop-filter:blur(10px);
-  padding:10px 20px;
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:rgba(0,0,0,.25);backdrop-filter:blur(10px);
+  padding:8px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
   border-bottom:1px solid rgba(255,255,255,.1);
 }
 .score-box{
-  display:flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,.15);
-  border-radius:50px;padding:6px 16px;
-  font-weight:900;font-size:1rem;color:#FFD700;
+  display:flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.15);border-radius:50px;
+  padding:5px 14px;font-weight:900;font-size:.95rem;color:#FFD700;
 }
-.progress-wrap{flex:1;background:rgba(255,255,255,.15);border-radius:50px;height:12px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,#F59E0B,#D946EF);border-radius:50px;transition:width .5s ease;}
-.q-counter{font-size:.85rem;font-weight:700;color:rgba(255,255,255,.8);white-space:nowrap;}
+.progress-wrap{flex:1;background:rgba(255,255,255,.15);border-radius:50px;height:10px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:50px;transition:width .5s ease;}
+.q-counter{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.85);white-space:nowrap;}
 
 /* ── MAIN ── */
-.main{position:relative;z-index:2;max-width:600px;margin:0 auto;padding:20px 14px 80px;}
+.main{position:relative;z-index:2;max-width:600px;margin:0 auto;padding:16px 12px 60px;}
 
-/* ── STARS DISPLAY CARD ── */
-.stars-card{
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(10px);
-  border:2px solid rgba(255,255,255,.15);
-  border-radius:28px;
-  padding:24px 16px;
-  margin-bottom:18px;
-  text-align:center;
-  min-height:220px;
+/* ── LEVEL INTRO ── */
+.level-intro{
+  display:none;text-align:center;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(16px);
+  border:2px solid rgba(255,255,255,.2);border-radius:28px;
+  padding:40px 24px;
+  animation:popIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+.level-intro.visible{display:block;}
+.li-emoji{font-size:5rem;margin-bottom:12px;}
+.li-level{font-size:.9rem;font-weight:700;opacity:.8;margin-bottom:4px;}
+.li-title{font-size:1.8rem;font-weight:900;margin-bottom:6px;color:#FFD700;}
+.li-title-en{font-size:1.1rem;font-weight:700;opacity:.85;margin-bottom:16px;}
+.li-desc{font-size:.95rem;opacity:.85;margin-bottom:24px;line-height:1.6;}
+.li-start{
+  border:none;border-radius:50px;padding:14px 44px;
+  font-size:1.1rem;font-weight:900;cursor:pointer;color:#fff;
+  box-shadow:0 6px 24px rgba(0,0,0,.3);
+  font-family:'Times New Roman',Times,serif;
+  transition:transform .15s;
+}
+.li-start:active{transform:scale(.96);}
+
+/* ── GAME CARD ── */
+.game-card{
+  background:rgba(255,255,255,.08);backdrop-filter:blur(10px);
+  border:2px solid rgba(255,255,255,.15);border-radius:28px;
+  padding:20px 14px;margin-bottom:14px;text-align:center;
+  min-height:200px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
 .instruction{
-  font-size:1rem;font-weight:700;
-  color:rgba(255,255,255,.85);
-  margin-bottom:16px;
-  background:rgba(255,255,255,.1);
-  border-radius:14px;padding:8px 16px;
-  display:inline-block;
+  font-size:.95rem;font-weight:700;color:rgba(255,255,255,.9);
+  margin-bottom:14px;background:rgba(255,255,255,.1);
+  border-radius:14px;padding:8px 16px;display:inline-block;
 }
-.stars-grid{
+.objects-grid{
   display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
-  gap:10px;
-  max-width:320px;margin:0 auto;
+  gap:8px;max-width:340px;margin:0 auto;
 }
-.star-item{
-  font-size:clamp(2rem,8vw,3rem);
+.obj-item{
   line-height:1;
   animation:starPop .4s cubic-bezier(.34,1.56,.64,1) both;
-  cursor:default;
-  filter:drop-shadow(0 0 6px rgba(255,215,0,.8));
+  filter:drop-shadow(0 0 6px rgba(255,215,0,.6));
 }
 @keyframes starPop{from{transform:scale(0) rotate(-30deg);opacity:0;}to{transform:scale(1) rotate(0deg);opacity:1;}}
-
-/* ── QUESTION ── */
-.q-label{
-  font-size:1rem;font-weight:900;
-  color:#FFD700;margin-top:14px;
-  letter-spacing:1px;
-}
+.q-label{font-size:.95rem;font-weight:900;color:#FFD700;margin-top:12px;}
 
 /* ── CHOICES ── */
-.choices{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-bottom:12px;
-}
+.choices{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;}
 .choice{
-  border-radius:20px;
-  border:3px solid rgba(255,255,255,.2);
-  padding:16px 8px;
+  border-radius:18px;border:3px solid rgba(255,255,255,.2);
+  padding:14px 6px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;
-  transition:transform .2s,box-shadow .2s,border-color .2s;
-  user-select:none;
-  background:rgba(255,255,255,.1);
-  backdrop-filter:blur(6px);
+  cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;
+  user-select:none;background:rgba(255,255,255,.1);backdrop-filter:blur(6px);
   -webkit-tap-highlight-color:transparent;
 }
 .choice:hover{transform:scale(1.08);border-color:#FFD700;background:rgba(255,215,0,.15);}
@@ -125,93 +126,95 @@ header{
   background:linear-gradient(135deg,#EF4444,#F87171)!important;
   border-color:#fff!important;
   box-shadow:0 0 0 4px rgba(239,68,68,.5)!important;
-  animation:shake .35s ease;
-  opacity:.7;
+  animation:shake .35s ease;opacity:.65;
 }
 .choice.disabled{pointer-events:none;}
 @keyframes popIn{from{transform:scale(.7);}to{transform:scale(1);}}
 @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
-
-.choice-num{
-  font-size:clamp(1.8rem,7vw,2.8rem);
-  font-weight:900;line-height:1;
-  font-family:'Times New Roman',Times,serif;
-  color:#fff;
-  text-shadow:0 2px 8px rgba(0,0,0,.3);
-}
-.choice-word{
-  font-size:clamp(.55rem,2vw,.75rem);
-  font-weight:700;
-  color:rgba(255,255,255,.8);
-  margin-top:4px;
-  font-family:'Times New Roman',Times,serif;
-}
+.choice-num{font-size:clamp(1.7rem,6.5vw,2.6rem);font-weight:900;line-height:1;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.3);}
+.choice-en{font-size:clamp(.5rem,1.8vw,.7rem);font-weight:700;color:rgba(255,255,255,.85);margin-top:3px;}
+.choice-ar{font-size:clamp(.5rem,1.8vw,.7rem);font-weight:700;color:rgba(255,255,255,.7);margin-top:1px;}
 
 /* ── FEEDBACK ── */
-.feedback{
-  min-height:44px;text-align:center;
-  font-size:1.2rem;font-weight:900;
-  margin:12px 0;
-}
+.feedback{min-height:40px;text-align:center;font-size:1.1rem;font-weight:900;margin:10px 0;}
 .feedback.good{color:#4ADE80;text-shadow:0 0 12px rgba(74,222,128,.5);}
 .feedback.bad{color:#F87171;text-shadow:0 0 12px rgba(248,113,113,.5);}
 
 /* ── NEXT BTN ── */
 .next-btn{
-  border:none;border-radius:50px;
-  padding:14px 44px;
-  font-family:'Times New Roman',Times,serif;
-  font-size:1.1rem;font-weight:900;
-  cursor:pointer;
-  background:linear-gradient(135deg,#F59E0B,#D946EF);
-  color:#fff;
-  box-shadow:0 6px 24px rgba(217,70,239,.4);
-  transition:transform .15s;
+  border:none;border-radius:50px;padding:13px 40px;
+  font-family:'Times New Roman',Times,serif;font-size:1rem;font-weight:900;
+  cursor:pointer;color:#fff;
+  box-shadow:0 6px 24px rgba(0,0,0,.3);transition:transform .15s;
   display:none;margin:0 auto;
 }
 .next-btn:active{transform:scale(.96);}
 .next-btn.visible{display:block;}
 
-/* ── RESULT ── */
-.result-screen{
-  display:none;position:relative;z-index:2;
-  background:rgba(255,255,255,.1);
-  backdrop-filter:blur(16px);
-  border:2px solid rgba(255,255,255,.2);
-  border-radius:28px;
-  padding:40px 24px;text-align:center;
-  max-width:600px;margin:20px auto;
+/* ── LEVEL COMPLETE ── */
+.level-complete{
+  display:none;text-align:center;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(16px);
+  border:2px solid rgba(255,255,255,.2);border-radius:28px;padding:36px 24px;
 }
-.result-screen.visible{display:block;animation:popIn .5s ease;}
-.result-trophy{font-size:5rem;margin-bottom:12px;}
-.result-title{font-size:1.8rem;font-weight:900;color:#FFD700;margin-bottom:8px;}
-.result-stars{font-size:2rem;letter-spacing:6px;margin-bottom:16px;}
-.result-score{font-size:1rem;color:rgba(255,255,255,.8);margin-bottom:24px;}
-.restart-btn{
+.level-complete.visible{display:block;animation:popIn .5s ease;}
+.lc-trophy{font-size:4rem;margin-bottom:10px;}
+.lc-title{font-size:1.6rem;font-weight:900;color:#FFD700;margin-bottom:4px;}
+.lc-title-en{font-size:1rem;font-weight:700;opacity:.85;margin-bottom:12px;}
+.lc-stars{font-size:1.8rem;letter-spacing:5px;margin-bottom:14px;}
+.lc-score{font-size:.9rem;opacity:.8;margin-bottom:20px;}
+.lc-next{
+  border:none;border-radius:50px;padding:13px 40px;
+  font-size:1rem;font-weight:900;cursor:pointer;color:#fff;
+  box-shadow:0 6px 24px rgba(0,0,0,.3);
+  font-family:'Times New Roman',Times,serif;margin:0 5px 8px;
+  display:inline-block;
+}
+
+/* ── FINAL RESULT ── */
+.final-screen{
+  display:none;text-align:center;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(16px);
+  border:2px solid rgba(255,255,255,.2);border-radius:28px;padding:40px 24px;
+}
+.final-screen.visible{display:block;animation:popIn .6s ease;}
+.final-trophy{font-size:5rem;margin-bottom:12px;}
+.final-title{font-size:1.8rem;font-weight:900;color:#FFD700;margin-bottom:6px;}
+.final-title-en{font-size:1.1rem;font-weight:700;opacity:.85;margin-bottom:10px;}
+.final-stars{font-size:2.2rem;letter-spacing:6px;margin-bottom:12px;}
+.final-score{font-size:.95rem;opacity:.85;margin-bottom:24px;line-height:1.7;}
+.final-restart{
   border:none;border-radius:50px;padding:14px 44px;
-  font-size:1.1rem;font-weight:900;cursor:pointer;
-  background:linear-gradient(135deg,#F59E0B,#D946EF);
-  color:#fff;box-shadow:0 6px 24px rgba(217,70,239,.4);
-  font-family:'Times New Roman',Times,serif;
+  font-size:1.1rem;font-weight:900;cursor:pointer;color:#fff;
+  box-shadow:0 6px 24px rgba(0,0,0,.3);font-family:'Times New Roman',Times,serif;
 }
+
+/* ── LEVEL DOTS ── */
+.level-dots{
+  display:flex;justify-content:center;gap:8px;margin-bottom:14px;
+}
+.ldot{
+  width:12px;height:12px;border-radius:50%;
+  background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.3);
+  transition:all .3s;
+}
+.ldot.done{background:#FFD700;border-color:#FFD700;box-shadow:0 0 8px rgba(255,215,0,.6);}
+.ldot.active{background:#fff;border-color:#fff;transform:scale(1.3);}
 
 /* ── CONFETTI ── */
 .confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;}
-.confetti-piece{
-  position:absolute;top:-20px;
-  animation:fall linear forwards;
-}
+.confetti-piece{position:absolute;top:-20px;animation:fall linear forwards;}
 @keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 </style>
 </head>
 <body>
 
-<!-- Sky background -->
 <div class="sky" id="sky"></div>
 
-<header>
-  <div class="h-title">⭐ Count the Stars! عد النجوم ⭐</div>
+<header id="mainHeader">
+  <div class="h-title" id="headerTitle">⭐ Count the Stars! عد النجوم ⭐</div>
   <div class="h-sub">Teacher Manal Bazzi — KG / روضة الأطفال</div>
+  <div class="level-badge" id="levelBadge">🌟 Level 1</div>
 </header>
 
 <div class="scorebar">
@@ -219,127 +222,261 @@ header{
   <div class="progress-wrap">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <div class="q-counter" id="qCounter">1 / 10</div>
+  <div class="q-counter" id="qCounter">1 / 5</div>
 </div>
 
 <div class="main">
-  <div id="gameArea">
-    <div class="stars-card">
-      <div class="instruction">👀 How many stars? كم عدد النجوم؟</div>
-      <div class="stars-grid" id="starsGrid"></div>
-      <div class="q-label" id="qLabel">Count the stars! عدّ النجوم ⬆</div>
+
+  <!-- Level dots -->
+  <div class="level-dots" id="levelDots"></div>
+
+  <!-- Level intro -->
+  <div class="level-intro" id="levelIntro">
+    <div class="li-emoji" id="liEmoji">⭐</div>
+    <div class="li-level" id="liLevel">المرحلة الأولى — Level 1</div>
+    <div class="li-title" id="liTitle">النجوم</div>
+    <div class="li-title-en" id="liTitleEn">Counting Stars</div>
+    <div class="li-desc" id="liDesc">عدّ النجوم واختر الرقم الصحيح!<br>Count the stars and pick the right number!</div>
+    <button class="li-start" id="liStart" onclick="startLevel()">▶ ابدأ / Start</button>
+  </div>
+
+  <!-- Game area -->
+  <div id="gameArea" style="display:none;">
+    <div class="game-card">
+      <div class="instruction" id="instruction">👀 How many? كم عدد؟</div>
+      <div class="objects-grid" id="objectsGrid"></div>
+      <div class="q-label" id="qLabel">Count them! عدّها ⬆</div>
     </div>
-
     <div class="choices" id="choicesGrid"></div>
-
     <div class="feedback" id="feedback"></div>
-
     <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next / التالي ←</button>
   </div>
 
-  <div class="result-screen" id="resultScreen">
-    <div class="result-trophy" id="resultTrophy">🏆</div>
-    <div class="result-title" id="resultTitle">أحسنت!</div>
-    <div class="result-stars" id="resultStars">⭐⭐⭐</div>
-    <div class="result-score" id="resultScore"></div>
-    <button class="restart-btn" onclick="startGame()">🔄 Play Again / العب مجدداً</button>
+  <!-- Level complete -->
+  <div class="level-complete" id="levelComplete">
+    <div class="lc-trophy" id="lcTrophy">🏆</div>
+    <div class="lc-title" id="lcTitle">أحسنت!</div>
+    <div class="lc-title-en" id="lcTitleEn">Level Complete!</div>
+    <div class="lc-stars" id="lcStars">⭐⭐⭐</div>
+    <div class="lc-score" id="lcScore"></div>
+    <button class="lc-next" id="lcNextBtn" onclick="goNextLevel()">Next Level / المرحلة التالية ▶</button>
   </div>
+
+  <!-- Final result -->
+  <div class="final-screen" id="finalScreen">
+    <div class="final-trophy">🏆</div>
+    <div class="final-title">Champion! بطل!</div>
+    <div class="final-title-en">You completed all levels!</div>
+    <div class="final-stars" id="finalStars">⭐⭐⭐⭐</div>
+    <div class="final-score" id="finalScore"></div>
+    <button class="final-restart" id="finalRestart" onclick="initGame()">🔄 Play Again / العب مجدداً</button>
+  </div>
+
 </div>
 
 <div class="confetti-wrap" id="confettiWrap"></div>
 
 <script>
-// ── Number words bilingual ────────────────────────────────
-const NUM_WORDS_AR = ['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة'];
-const NUM_WORDS_EN = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
-const TOTAL_ROUNDS = 10;
-const MAX_NUM = 10;
-const CONF_COLORS = ['#FFD700','#FF6B9D','#C44DFF','#4D94FF','#22C55E','#FF5757','#fff'];
+// ══════════════════════════════════════════════
+//  LEVELS CONFIG
+// ══════════════════════════════════════════════
+const LEVELS = [
+  {
+    id: 1,
+    emoji: '⭐',
+    titleAr: 'النجوم',
+    titleEn: 'Twinkling Stars',
+    descAr: 'عدّ النجوم اللامعة!',
+    descEn: 'Count the shining stars!',
+    object: '⭐',
+    objectSize: '2.5rem',
+    max: 5,
+    questions: 5,
+    bg: 'linear-gradient(135deg,#0D0D2B,#1A1A4E)',
+    headerBg: 'linear-gradient(90deg,#3B0D8C,#7B2FD9)',
+    progressColor: 'linear-gradient(90deg,#F59E0B,#D946EF)',
+  },
+  {
+    id: 2,
+    emoji: '🌙',
+    titleAr: 'أقمار الفضاء',
+    titleEn: 'Space Moons',
+    descAr: 'عدّ الأقمار في السماء!',
+    descEn: 'Count the moons in the sky!',
+    object: '🌙',
+    objectSize: '2.3rem',
+    max: 8,
+    questions: 7,
+    bg: 'linear-gradient(135deg,#0A1628,#1B2D50)',
+    headerBg: 'linear-gradient(90deg,#1B4F8C,#3B7DD8)',
+    progressColor: 'linear-gradient(90deg,#56CCF2,#2F80ED)',
+  },
+  {
+    id: 3,
+    emoji: '🚀',
+    titleAr: 'صواريخ الفضاء',
+    titleEn: 'Space Rockets',
+    descAr: 'كم صاروخاً في الفضاء؟',
+    descEn: 'How many rockets in space?',
+    object: '🚀',
+    objectSize: '2rem',
+    max: 12,
+    questions: 8,
+    bg: 'linear-gradient(135deg,#0B1B0A,#1A3018)',
+    headerBg: 'linear-gradient(90deg,#0D6B1A,#22C55E)',
+    progressColor: 'linear-gradient(90deg,#22C55E,#86EFAC)',
+  },
+  {
+    id: 4,
+    emoji: '💎',
+    titleAr: 'الجواهر الثمينة',
+    titleEn: 'Precious Gems',
+    descAr: 'عدّ الجواهر — بطل الأرقام!',
+    descEn: 'Count the gems — number champion!',
+    object: '💎',
+    objectSize: '1.9rem',
+    max: 15,
+    questions: 10,
+    bg: 'linear-gradient(135deg,#1A0B28,#2D1050)',
+    headerBg: 'linear-gradient(90deg,#7B0D8C,#D946EF)',
+    progressColor: 'linear-gradient(90deg,#D946EF,#F9A8D4)',
+  },
+];
 
-let questions = [];
+// ── Number words ──────────────────────────────
+const NUM_AR = ['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة','أحد عشر','اثنا عشر','ثلاثة عشر','أربعة عشر','خمسة عشر'];
+const NUM_EN = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen'];
+
+let currentLevel = 0;
 let qi = 0;
-let score = 0;
+let levelScore = 0;
+let totalScore = 0;
 let answered = false;
+let questions = [];
+let levelScores = [];
 
-// ── Generate sky background stars ────────────────────────
-function buildSky() {
-  const sky = document.getElementById('sky');
-  for (let i = 0; i < 80; i++) {
-    const s = document.createElement('div');
-    s.className = 'sky-star';
-    const size = Math.random() * 3 + 1;
-    s.style.cssText = `
-      width:${size}px;height:${size}px;
-      top:${Math.random()*100}%;left:${Math.random()*100}%;
-      animation-duration:${2+Math.random()*4}s;
-      animation-delay:${Math.random()*4}s;
-      opacity:${Math.random()*.5+.1};
-    `;
-    sky.appendChild(s);
-  }
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+function initGame() {
+  currentLevel = 0;
+  totalScore = 0;
+  levelScores = [];
+  hideAll();
+  buildSky();
+  buildLevelDots();
+  showLevelIntro();
 }
 
-// ── Shuffle ───────────────────────────────────────────────
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i>0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
-
-// ── Generate questions (no repeats) ──────────────────────
-function generateQuestions() {
-  const nums = [];
-  // Ensure all numbers 1-10 appear at least once
-  for (let n = 1; n <= MAX_NUM; n++) nums.push(n);
-  return shuffle(nums).slice(0, TOTAL_ROUNDS);
-}
-
-// ── Start game ────────────────────────────────────────────
-function startGame() {
-  questions = generateQuestions();
-  qi = 0; score = 0; answered = false;
-  document.getElementById('resultScreen').classList.remove('visible');
-  document.getElementById('gameArea').style.display = '';
+function hideAll() {
+  document.getElementById('levelIntro').classList.remove('visible');
+  document.getElementById('gameArea').style.display = 'none';
+  document.getElementById('levelComplete').classList.remove('visible');
+  document.getElementById('finalScreen').classList.remove('visible');
   document.getElementById('confettiWrap').innerHTML = '';
+}
+
+// ══════════════════════════════════════════════
+//  LEVEL DOTS
+// ══════════════════════════════════════════════
+function buildLevelDots() {
+  const wrap = document.getElementById('levelDots');
+  wrap.innerHTML = '';
+  LEVELS.forEach((l, i) => {
+    const d = document.createElement('div');
+    d.className = 'ldot' + (i < currentLevel ? ' done' : i === currentLevel ? ' active' : '');
+    d.title = `Level ${l.id}`;
+    wrap.appendChild(d);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  LEVEL INTRO
+// ══════════════════════════════════════════════
+function showLevelIntro() {
+  hideAll();
+  const lv = LEVELS[currentLevel];
+
+  // Update theme
+  applyTheme(lv);
+
+  document.getElementById('liEmoji').textContent = lv.emoji;
+  document.getElementById('liLevel').textContent = `المرحلة ${toArabicNum(lv.id)} — Level ${lv.id}`;
+  document.getElementById('liTitle').textContent = lv.titleAr;
+  document.getElementById('liTitleEn').textContent = lv.titleEn;
+  document.getElementById('liDesc').innerHTML = `${lv.descAr}<br>${lv.descEn}`;
+  document.getElementById('liStart').style.background = lv.headerBg;
+  document.getElementById('levelBadge').textContent = `${lv.emoji} Level ${lv.id}`;
+  document.getElementById('qCounter').textContent = `1 / ${lv.questions}`;
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('progressFill').style.background = lv.progressColor;
+  buildLevelDots();
+
+  document.getElementById('levelIntro').classList.add('visible');
+}
+
+// ══════════════════════════════════════════════
+//  START LEVEL
+// ══════════════════════════════════════════════
+function startLevel() {
+  const lv = LEVELS[currentLevel];
+  qi = 0; levelScore = 0; answered = false;
+  questions = generateQuestions(lv.max, lv.questions);
+  hideAll();
+  document.getElementById('gameArea').style.display = '';
+  document.getElementById('scoreVal').textContent = totalScore;
   loadQuestion();
 }
 
-// ── Load question ─────────────────────────────────────────
+// ══════════════════════════════════════════════
+//  GENERATE QUESTIONS
+// ══════════════════════════════════════════════
+function generateQuestions(max, count) {
+  const pool = [];
+  for (let n = 1; n <= max; n++) pool.push(n);
+  const shuffled = shuffle(pool);
+  // Cycle if count > max
+  const result = [];
+  for (let i = 0; i < count; i++) result.push(shuffled[i % shuffled.length]);
+  return result;
+}
+
+// ══════════════════════════════════════════════
+//  LOAD QUESTION
+// ══════════════════════════════════════════════
 function loadQuestion() {
   answered = false;
+  const lv = LEVELS[currentLevel];
   const correct = questions[qi];
 
-  // Update progress
-  document.getElementById('scoreVal').textContent = score;
-  document.getElementById('qCounter').textContent = `${qi+1} / ${TOTAL_ROUNDS}`;
-  document.getElementById('progressFill').style.width = `${(qi/TOTAL_ROUNDS)*100}%`;
+  document.getElementById('qCounter').textContent = `${qi+1} / ${lv.questions}`;
+  document.getElementById('progressFill').style.width = `${(qi/lv.questions)*100}%`;
+  document.getElementById('instruction').textContent = `👀 How many ${lv.titleEn}? كم عدد ${lv.titleAr}؟`;
 
-  // Draw stars with staggered animation
-  const grid = document.getElementById('starsGrid');
+  // Draw objects
+  const grid = document.getElementById('objectsGrid');
   grid.innerHTML = '';
   for (let i = 0; i < correct; i++) {
     const span = document.createElement('span');
-    span.className = 'star-item';
-    span.textContent = '⭐';
-    span.style.animationDelay = `${i * 0.08}s`;
+    span.className = 'obj-item';
+    span.textContent = lv.object;
+    span.style.fontSize = lv.objectSize;
+    span.style.animationDelay = `${i * 0.07}s`;
     grid.appendChild(span);
   }
+  document.getElementById('qLabel').textContent = `Count them! عدّها ⬆`;
 
-  // Generate 3 wrong choices near correct
+  // Generate choices
   const wrongs = new Set();
-  while (wrongs.size < 3) {
-    const off = Math.floor(Math.random()*5)+1;
-    const candidate = Math.random()<0.5 ? correct+off : correct-off;
-    if (candidate >= 1 && candidate <= MAX_NUM+3 && candidate !== correct) {
-      wrongs.add(candidate);
-    }
+  let attempts = 0;
+  while (wrongs.size < 3 && attempts < 100) {
+    attempts++;
+    const off = Math.floor(Math.random()*4)+1;
+    const c = Math.random()<0.5 ? correct+off : correct-off;
+    if (c >= 1 && c !== correct) wrongs.add(c);
   }
   const options = shuffle([correct, ...wrongs]);
 
-  // Render choices
   const choicesEl = document.getElementById('choicesGrid');
   choicesEl.innerHTML = '';
   options.forEach(num => {
@@ -347,8 +484,8 @@ function loadQuestion() {
     div.className = 'choice';
     div.innerHTML = `
       <span class="choice-num">${num}</span>
-      <span class="choice-word">${NUM_WORDS_EN[num] || num}</span>
-      <span class="choice-word">${NUM_WORDS_AR[num] || num}</span>
+      <span class="choice-en">${NUM_EN[num] || num}</span>
+      <span class="choice-ar">${NUM_AR[num] || num}</span>
     `;
     div.onclick = () => handleChoice(div, num === correct);
     choicesEl.appendChild(div);
@@ -357,29 +494,34 @@ function loadQuestion() {
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('nextBtn').classList.remove('visible');
-  document.getElementById('qLabel').textContent = 'Count the stars! عدّ النجوم ⬆';
 }
 
-// ── Handle choice ─────────────────────────────────────────
+// ══════════════════════════════════════════════
+//  HANDLE CHOICE
+// ══════════════════════════════════════════════
 function handleChoice(el, isCorrect) {
   if (answered) return;
   answered = true;
+  const lv = LEVELS[currentLevel];
 
   document.querySelectorAll('.choice').forEach(c => c.classList.add('disabled'));
 
   if (isCorrect) {
     el.classList.add('correct');
-    score++;
-    const msgs = ['Excellent! ممتاز! 🌟','Well done! أحسنت! 🎉','Correct! صحيح! ✅','Amazing! رائع! 🥳','Great! عظيم! 🌈'];
+    levelScore++; totalScore++;
+    document.getElementById('scoreVal').textContent = totalScore;
+    const msgs = [
+      'Excellent! ممتاز! 🌟','Well done! أحسنت! 🎉',
+      'Correct! صحيح! ✅','Amazing! رائع! 🥳','Great! عظيم! 🌈'
+    ];
     document.getElementById('feedback').textContent = msgs[Math.floor(Math.random()*msgs.length)];
     document.getElementById('feedback').className = 'feedback good';
     playCorrect();
-    if (score % 3 === 0) spawnConfetti();
+    if (totalScore % 5 === 0) spawnConfetti();
   } else {
     el.classList.add('wrong');
-    // Show correct answer
     document.querySelectorAll('.choice').forEach(c => {
-      if (c.querySelector('.choice-num').textContent == questions[qi]) {
+      if (parseInt(c.querySelector('.choice-num').textContent) === questions[qi]) {
         c.classList.remove('disabled');
         c.classList.add('correct');
       }
@@ -389,91 +531,156 @@ function handleChoice(el, isCorrect) {
     playWrong();
   }
 
-  document.getElementById('scoreVal').textContent = score;
-  const isLast = qi === TOTAL_ROUNDS - 1;
+  const isLast = qi === lv.questions - 1;
   const btn = document.getElementById('nextBtn');
-  btn.textContent = isLast ? '🏆 Results / النتيجة' : 'Next / التالي ←';
+  btn.textContent = isLast ? `🏆 Results / النتيجة` : `Next / التالي ←`;
+  btn.style.background = lv.headerBg;
   btn.classList.add('visible');
 }
 
-// ── Next question ─────────────────────────────────────────
+// ══════════════════════════════════════════════
+//  NEXT QUESTION
+// ══════════════════════════════════════════════
 function nextQuestion() {
   qi++;
-  if (qi >= TOTAL_ROUNDS) showResult();
+  const lv = LEVELS[currentLevel];
+  if (qi >= lv.questions) showLevelComplete();
   else loadQuestion();
 }
 
-// ── Show result ───────────────────────────────────────────
-function showResult() {
-  document.getElementById('gameArea').style.display = 'none';
-  const rs = document.getElementById('resultScreen');
-  rs.classList.add('visible');
+// ══════════════════════════════════════════════
+//  LEVEL COMPLETE
+// ══════════════════════════════════════════════
+function showLevelComplete() {
+  hideAll();
+  const lv = LEVELS[currentLevel];
+  const pct = levelScore / lv.questions;
+  const isLast = currentLevel === LEVELS.length - 1;
 
-  const pct = score / TOTAL_ROUNDS;
-  let trophy='🏆', title='Well done! أحسنت!', stars='⭐⭐⭐';
-  if (pct < 0.5) { trophy='😊'; title='Try again! حاول مجدداً!'; stars='⭐'; }
-  else if (pct < 0.8) { trophy='🌟'; title='Good job! جيد جداً!'; stars='⭐⭐'; }
+  let trophy = '🏆', titleAr = 'أحسنت!', stars = '⭐⭐⭐';
+  if (pct < 0.5) { trophy='😊'; titleAr='حاول مجدداً!'; stars='⭐'; }
+  else if (pct < 0.8) { trophy='🌟'; titleAr='جيد جداً!'; stars='⭐⭐'; }
 
-  document.getElementById('resultTrophy').textContent = trophy;
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultStars').textContent = stars;
-  document.getElementById('resultScore').textContent = `You got ${score} out of ${TOTAL_ROUNDS} correct! — أجبت صحيحاً على ${score} من ${TOTAL_ROUNDS}`;
+  document.getElementById('lcTrophy').textContent = trophy;
+  document.getElementById('lcTitle').textContent = titleAr;
+  document.getElementById('lcTitleEn').textContent = isLast ? 'All Levels Complete! 🎉' : `Level ${lv.id} Complete!`;
+  document.getElementById('lcStars').textContent = stars;
+  document.getElementById('lcScore').textContent = `${levelScore} / ${lv.questions} correct — صحيح`;
 
+  const btn = document.getElementById('lcNextBtn');
+  btn.style.background = lv.headerBg;
+  if (isLast) {
+    btn.textContent = '🏆 Final Results / النتيجة النهائية';
+  } else {
+    const next = LEVELS[currentLevel + 1];
+    btn.textContent = `${next.emoji} Level ${next.id}: ${next.titleEn} / التالي ▶`;
+  }
+
+  levelScores.push(levelScore);
+  document.getElementById('levelComplete').classList.add('visible');
   spawnConfetti();
   playComplete();
 }
 
-// ── Audio ─────────────────────────────────────────────────
-let actx = null;
-function getCtx(){
-  if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();
-  if(actx.state==='suspended') actx.resume();
-  return actx;
-}
-function tone(f,type,dur,vol,t,c){
-  const o=c.createOscillator(),g=c.createGain();
-  o.connect(g);g.connect(c.destination);
-  o.type=type;o.frequency.setValueAtTime(f,t);
-  g.gain.setValueAtTime(vol,t);
-  g.gain.exponentialRampToValueAtTime(.001,t+dur);
-  o.start(t);o.stop(t+dur);
-}
-function playCorrect(){
-  try{const c=getCtx(),t=c.currentTime;
-    [523,659,784,1047].forEach((f,i)=>tone(f,'sine',.2,.22,t+i*.1,c));}catch(e){}
-}
-function playWrong(){
-  try{const c=getCtx(),t=c.currentTime;
-    tone(200,'sawtooth',.12,.18,t,c);tone(160,'sawtooth',.12,.18,t+.13,c);}catch(e){}
-}
-function playComplete(){
-  try{const c=getCtx(),t=c.currentTime;
-    [[523,0],[659,.1],[784,.2],[1047,.32],[784,.44],[1047,.54],[1319,.64]]
-      .forEach(([f,d])=>tone(f,'sine',.22,.28,t+d,c));}catch(e){}
+// ══════════════════════════════════════════════
+//  GO NEXT LEVEL
+// ══════════════════════════════════════════════
+function goNextLevel() {
+  currentLevel++;
+  if (currentLevel >= LEVELS.length) {
+    showFinalResult();
+  } else {
+    showLevelIntro();
+  }
 }
 
-// ── Confetti ──────────────────────────────────────────────
+// ══════════════════════════════════════════════
+//  FINAL RESULT
+// ══════════════════════════════════════════════
+function showFinalResult() {
+  hideAll();
+  const total = LEVELS.reduce((s, l) => s + l.questions, 0);
+  const pct = totalScore / total;
+
+  let stars = '⭐⭐⭐⭐';
+  if (pct < 0.5) stars = '⭐';
+  else if (pct < 0.7) stars = '⭐⭐';
+  else if (pct < 0.9) stars = '⭐⭐⭐';
+
+  document.getElementById('finalStars').textContent = stars;
+  document.getElementById('finalScore').innerHTML =
+    `Total: ${totalScore} / ${total} correct<br>المجموع: ${totalScore} من ${total}<br><br>` +
+    LEVELS.map((l,i) => `${l.emoji} Level ${l.id}: ${levelScores[i] || 0}/${l.questions}`).join(' &nbsp;|&nbsp; ');
+  document.getElementById('finalRestart').style.background = 'linear-gradient(135deg,#F59E0B,#D946EF)';
+
+  document.getElementById('finalScreen').classList.add('visible');
+  spawnConfetti();
+  spawnConfetti();
+  playComplete();
+}
+
+// ══════════════════════════════════════════════
+//  THEME
+// ══════════════════════════════════════════════
+function applyTheme(lv) {
+  document.body.style.background = lv.bg;
+  document.getElementById('sky').style.background = lv.bg;
+  document.getElementById('mainHeader').style.background = lv.headerBg;
+  document.getElementById('progressFill').style.background = lv.progressColor;
+}
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function toArabicNum(n) {
+  return ['','الأولى','الثانية','الثالثة','الرابعة'][n] || n;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// ── Sky background ────────────────────────────
+function buildSky() {
+  const sky = document.getElementById('sky');
+  sky.innerHTML = '';
+  for (let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='sky-star';
+    const size=Math.random()*3+1;
+    s.style.cssText=`width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;opacity:${Math.random()*.5+.1};`;
+    sky.appendChild(s);
+  }
+}
+
+// ── Audio ─────────────────────────────────────
+let actx=null;
+function getCtx(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();return actx;}
+function tone(f,type,dur,vol,t,c){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.start(t);o.stop(t+dur);}
+function playCorrect(){try{const c=getCtx(),t=c.currentTime;[523,659,784,1047].forEach((f,i)=>tone(f,'sine',.2,.22,t+i*.1,c));}catch(e){}}
+function playWrong(){try{const c=getCtx(),t=c.currentTime;tone(200,'sawtooth',.12,.18,t,c);tone(160,'sawtooth',.12,.18,t+.13,c);}catch(e){}}
+function playComplete(){try{const c=getCtx(),t=c.currentTime;[[523,0],[659,.1],[784,.2],[1047,.32],[784,.44],[1047,.54],[1319,.64]].forEach(([f,d])=>tone(f,'sine',.22,.28,t+d,c));}catch(e){}}
+
+// ── Confetti ──────────────────────────────────
 function spawnConfetti(){
   const wrap=document.getElementById('confettiWrap');
-  const shapes=['⭐','🌟','✨','💫'];
-  for(let i=0;i<40;i++){
+  const shapes=['⭐','🌟','✨','💫','🎉','🌙','💎','🚀'];
+  for(let i=0;i<50;i++){
     const p=document.createElement('div');
     p.className='confetti-piece';
     p.textContent=shapes[Math.floor(Math.random()*shapes.length)];
-    p.style.cssText=`
-      left:${Math.random()*100}%;
-      font-size:${1+Math.random()*1.5}rem;
-      animation-duration:${1.2+Math.random()*1.8}s;
-      animation-delay:${Math.random()*.6}s;
-    `;
+    p.style.cssText=`left:${Math.random()*100}%;font-size:${1+Math.random()*1.5}rem;animation-duration:${1.2+Math.random()*2}s;animation-delay:${Math.random()*.8}s;`;
     wrap.appendChild(p);
     p.addEventListener('animationend',()=>p.remove());
   }
 }
 
-// ── Init ──────────────────────────────────────────────────
-buildSky();
-startGame();
+// ══════════════════════════════════════════════
+//  START
+// ══════════════════════════════════════════════
+initGame();
 </script>
 </body>
 </html>
