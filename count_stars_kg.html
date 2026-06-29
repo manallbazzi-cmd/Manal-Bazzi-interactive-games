@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>عد النجوم ⭐ - روضة الأطفال - المعلمة منال بزي</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:'Times New Roman',Times,serif;
+  background:linear-gradient(135deg,#0D0D2B,#1A1A4E,#0D0D2B);
+  min-height:100vh;color:#fff;
+  overflow-x:hidden;direction:rtl;
+}
+
+/* ── STARS BACKGROUND ── */
+.sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.sky-star{
+  position:absolute;background:#fff;border-radius:50%;
+  animation:twinkle linear infinite;
+}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1);}50%{opacity:1;transform:scale(1.3);}}
+
+/* ── HEADER ── */
+header{
+  position:relative;z-index:2;
+  background:linear-gradient(90deg,#6B2FD9,#D946EF,#F59E0B);
+  text-align:center;padding:16px 16px 12px;
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+.h-title{font-size:clamp(1.5rem,5vw,2.2rem);font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.3);}
+.h-sub{font-size:.85rem;opacity:.92;margin-top:4px;font-weight:700;}
+
+/* ── SCORE BAR ── */
+.scorebar{
+  position:relative;z-index:2;
+  background:rgba(255,255,255,.1);
+  backdrop-filter:blur(10px);
+  padding:10px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.score-box{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.15);
+  border-radius:50px;padding:6px 16px;
+  font-weight:900;font-size:1rem;color:#FFD700;
+}
+.progress-wrap{flex:1;background:rgba(255,255,255,.15);border-radius:50px;height:12px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#F59E0B,#D946EF);border-radius:50px;transition:width .5s ease;}
+.q-counter{font-size:.85rem;font-weight:700;color:rgba(255,255,255,.8);white-space:nowrap;}
+
+/* ── MAIN ── */
+.main{position:relative;z-index:2;max-width:600px;margin:0 auto;padding:20px 14px 80px;}
+
+/* ── STARS DISPLAY CARD ── */
+.stars-card{
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);
+  border:2px solid rgba(255,255,255,.15);
+  border-radius:28px;
+  padding:24px 16px;
+  margin-bottom:18px;
+  text-align:center;
+  min-height:220px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.instruction{
+  font-size:1rem;font-weight:700;
+  color:rgba(255,255,255,.85);
+  margin-bottom:16px;
+  background:rgba(255,255,255,.1);
+  border-radius:14px;padding:8px 16px;
+  display:inline-block;
+}
+.stars-grid{
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+  gap:10px;
+  max-width:320px;margin:0 auto;
+}
+.star-item{
+  font-size:clamp(2rem,8vw,3rem);
+  line-height:1;
+  animation:starPop .4s cubic-bezier(.34,1.56,.64,1) both;
+  cursor:default;
+  filter:drop-shadow(0 0 6px rgba(255,215,0,.8));
+}
+@keyframes starPop{from{transform:scale(0) rotate(-30deg);opacity:0;}to{transform:scale(1) rotate(0deg);opacity:1;}}
+
+/* ── QUESTION ── */
+.q-label{
+  font-size:1rem;font-weight:900;
+  color:#FFD700;margin-top:14px;
+  letter-spacing:1px;
+}
+
+/* ── CHOICES ── */
+.choices{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:12px;
+}
+.choice{
+  border-radius:20px;
+  border:3px solid rgba(255,255,255,.2);
+  padding:16px 8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+  user-select:none;
+  background:rgba(255,255,255,.1);
+  backdrop-filter:blur(6px);
+  -webkit-tap-highlight-color:transparent;
+}
+.choice:hover{transform:scale(1.08);border-color:#FFD700;background:rgba(255,215,0,.15);}
+.choice:active{transform:scale(1.13);}
+.choice.correct{
+  background:linear-gradient(135deg,#22C55E,#4ADE80)!important;
+  border-color:#fff!important;
+  box-shadow:0 0 0 4px rgba(34,197,94,.5),0 8px 24px rgba(34,197,94,.4)!important;
+  animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
+}
+.choice.wrong{
+  background:linear-gradient(135deg,#EF4444,#F87171)!important;
+  border-color:#fff!important;
+  box-shadow:0 0 0 4px rgba(239,68,68,.5)!important;
+  animation:shake .35s ease;
+  opacity:.7;
+}
+.choice.disabled{pointer-events:none;}
+@keyframes popIn{from{transform:scale(.7);}to{transform:scale(1);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+
+.choice-num{
+  font-size:clamp(1.8rem,7vw,2.8rem);
+  font-weight:900;line-height:1;
+  font-family:'Times New Roman',Times,serif;
+  color:#fff;
+  text-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.choice-word{
+  font-size:clamp(.55rem,2vw,.75rem);
+  font-weight:700;
+  color:rgba(255,255,255,.8);
+  margin-top:4px;
+  font-family:'Times New Roman',Times,serif;
+}
+
+/* ── FEEDBACK ── */
+.feedback{
+  min-height:44px;text-align:center;
+  font-size:1.2rem;font-weight:900;
+  margin:12px 0;
+}
+.feedback.good{color:#4ADE80;text-shadow:0 0 12px rgba(74,222,128,.5);}
+.feedback.bad{color:#F87171;text-shadow:0 0 12px rgba(248,113,113,.5);}
+
+/* ── NEXT BTN ── */
+.next-btn{
+  border:none;border-radius:50px;
+  padding:14px 44px;
+  font-family:'Times New Roman',Times,serif;
+  font-size:1.1rem;font-weight:900;
+  cursor:pointer;
+  background:linear-gradient(135deg,#F59E0B,#D946EF);
+  color:#fff;
+  box-shadow:0 6px 24px rgba(217,70,239,.4);
+  transition:transform .15s;
+  display:none;margin:0 auto;
+}
+.next-btn:active{transform:scale(.96);}
+.next-btn.visible{display:block;}
+
+/* ── RESULT ── */
+.result-screen{
+  display:none;position:relative;z-index:2;
+  background:rgba(255,255,255,.1);
+  backdrop-filter:blur(16px);
+  border:2px solid rgba(255,255,255,.2);
+  border-radius:28px;
+  padding:40px 24px;text-align:center;
+  max-width:600px;margin:20px auto;
+}
+.result-screen.visible{display:block;animation:popIn .5s ease;}
+.result-trophy{font-size:5rem;margin-bottom:12px;}
+.result-title{font-size:1.8rem;font-weight:900;color:#FFD700;margin-bottom:8px;}
+.result-stars{font-size:2rem;letter-spacing:6px;margin-bottom:16px;}
+.result-score{font-size:1rem;color:rgba(255,255,255,.8);margin-bottom:24px;}
+.restart-btn{
+  border:none;border-radius:50px;padding:14px 44px;
+  font-size:1.1rem;font-weight:900;cursor:pointer;
+  background:linear-gradient(135deg,#F59E0B,#D946EF);
+  color:#fff;box-shadow:0 6px 24px rgba(217,70,239,.4);
+  font-family:'Times New Roman',Times,serif;
+}
+
+/* ── CONFETTI ── */
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden;}
+.confetti-piece{
+  position:absolute;top:-20px;
+  animation:fall linear forwards;
+}
+@keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+</style>
+</head>
+<body>
+
+<!-- Sky background -->
+<div class="sky" id="sky"></div>
+
+<header>
+  <div class="h-title">⭐ عد النجوم! ⭐</div>
+  <div class="h-sub">المعلمة منال بزي — روضة الأطفال</div>
+</header>
+
+<div class="scorebar">
+  <div class="score-box">🌟 <span id="scoreVal">0</span></div>
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="q-counter" id="qCounter">1 / 10</div>
+</div>
+
+<div class="main">
+  <div id="gameArea">
+    <div class="stars-card">
+      <div class="instruction">👀 كم عدد النجوم؟ اعدّها ثم اختر الجواب!</div>
+      <div class="stars-grid" id="starsGrid"></div>
+      <div class="q-label" id="qLabel">عدّ النجوم ⬆</div>
+    </div>
+
+    <div class="choices" id="choicesGrid"></div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">التالي ←</button>
+  </div>
+
+  <div class="result-screen" id="resultScreen">
+    <div class="result-trophy" id="resultTrophy">🏆</div>
+    <div class="result-title" id="resultTitle">أحسنت!</div>
+    <div class="result-stars" id="resultStars">⭐⭐⭐</div>
+    <div class="result-score" id="resultScore"></div>
+    <button class="restart-btn" onclick="startGame()">🔄 العب مجدداً</button>
+  </div>
+</div>
+
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<script>
+// ── Number words in Arabic ────────────────────────────────
+const NUM_WORDS = ['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة'];
+const TOTAL_ROUNDS = 10;
+const MAX_NUM = 10;
+const CONF_COLORS = ['#FFD700','#FF6B9D','#C44DFF','#4D94FF','#22C55E','#FF5757','#fff'];
+
+let questions = [];
+let qi = 0;
+let score = 0;
+let answered = false;
+
+// ── Generate sky background stars ────────────────────────
+function buildSky() {
+  const sky = document.getElementById('sky');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'sky-star';
+    const size = Math.random() * 3 + 1;
+    s.style.cssText = `
+      width:${size}px;height:${size}px;
+      top:${Math.random()*100}%;left:${Math.random()*100}%;
+      animation-duration:${2+Math.random()*4}s;
+      animation-delay:${Math.random()*4}s;
+      opacity:${Math.random()*.5+.1};
+    `;
+    sky.appendChild(s);
+  }
+}
+
+// ── Shuffle ───────────────────────────────────────────────
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+// ── Generate questions (no repeats) ──────────────────────
+function generateQuestions() {
+  const nums = [];
+  // Ensure all numbers 1-10 appear at least once
+  for (let n = 1; n <= MAX_NUM; n++) nums.push(n);
+  return shuffle(nums).slice(0, TOTAL_ROUNDS);
+}
+
+// ── Start game ────────────────────────────────────────────
+function startGame() {
+  questions = generateQuestions();
+  qi = 0; score = 0; answered = false;
+  document.getElementById('resultScreen').classList.remove('visible');
+  document.getElementById('gameArea').style.display = '';
+  document.getElementById('confettiWrap').innerHTML = '';
+  loadQuestion();
+}
+
+// ── Load question ─────────────────────────────────────────
+function loadQuestion() {
+  answered = false;
+  const correct = questions[qi];
+
+  // Update progress
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('qCounter').textContent = `${qi+1} / ${TOTAL_ROUNDS}`;
+  document.getElementById('progressFill').style.width = `${(qi/TOTAL_ROUNDS)*100}%`;
+
+  // Draw stars with staggered animation
+  const grid = document.getElementById('starsGrid');
+  grid.innerHTML = '';
+  for (let i = 0; i < correct; i++) {
+    const span = document.createElement('span');
+    span.className = 'star-item';
+    span.textContent = '⭐';
+    span.style.animationDelay = `${i * 0.08}s`;
+    grid.appendChild(span);
+  }
+
+  // Generate 3 wrong choices near correct
+  const wrongs = new Set();
+  while (wrongs.size < 3) {
+    const off = Math.floor(Math.random()*5)+1;
+    const candidate = Math.random()<0.5 ? correct+off : correct-off;
+    if (candidate >= 1 && candidate <= MAX_NUM+3 && candidate !== correct) {
+      wrongs.add(candidate);
+    }
+  }
+  const options = shuffle([correct, ...wrongs]);
+
+  // Render choices
+  const choicesEl = document.getElementById('choicesGrid');
+  choicesEl.innerHTML = '';
+  options.forEach(num => {
+    const div = document.createElement('div');
+    div.className = 'choice';
+    div.innerHTML = `
+      <span class="choice-num">${num}</span>
+      <span class="choice-word">${NUM_WORDS[num] || num}</span>
+    `;
+    div.onclick = () => handleChoice(div, num === correct);
+    choicesEl.appendChild(div);
+  });
+
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('qLabel').textContent = 'عدّ النجوم ⬆';
+}
+
+// ── Handle choice ─────────────────────────────────────────
+function handleChoice(el, isCorrect) {
+  if (answered) return;
+  answered = true;
+
+  document.querySelectorAll('.choice').forEach(c => c.classList.add('disabled'));
+
+  if (isCorrect) {
+    el.classList.add('correct');
+    score++;
+    const msgs = ['رائع! 🌟','ممتاز! 🎉','أحسنت! 👏','صحيح! ✅','بالضبط! 🥳','عظيم! 🌈'];
+    document.getElementById('feedback').textContent = msgs[Math.floor(Math.random()*msgs.length)];
+    document.getElementById('feedback').className = 'feedback good';
+    playCorrect();
+    if (score % 3 === 0) spawnConfetti();
+  } else {
+    el.classList.add('wrong');
+    // Show correct answer
+    document.querySelectorAll('.choice').forEach(c => {
+      if (c.querySelector('.choice-num').textContent == questions[qi]) {
+        c.classList.remove('disabled');
+        c.classList.add('correct');
+      }
+    });
+    document.getElementById('feedback').textContent = 'حاول مرة أخرى! 💪';
+    document.getElementById('feedback').className = 'feedback bad';
+    playWrong();
+  }
+
+  document.getElementById('scoreVal').textContent = score;
+  const isLast = qi === TOTAL_ROUNDS - 1;
+  const btn = document.getElementById('nextBtn');
+  btn.textContent = isLast ? '🏆 النتيجة' : 'التالي ←';
+  btn.classList.add('visible');
+}
+
+// ── Next question ─────────────────────────────────────────
+function nextQuestion() {
+  qi++;
+  if (qi >= TOTAL_ROUNDS) showResult();
+  else loadQuestion();
+}
+
+// ── Show result ───────────────────────────────────────────
+function showResult() {
+  document.getElementById('gameArea').style.display = 'none';
+  const rs = document.getElementById('resultScreen');
+  rs.classList.add('visible');
+
+  const pct = score / TOTAL_ROUNDS;
+  let trophy='🏆', title='أحسنت!', stars='⭐⭐⭐';
+  if (pct < 0.5) { trophy='😊'; title='حاول مجدداً!'; stars='⭐'; }
+  else if (pct < 0.8) { trophy='🌟'; title='جيد جداً!'; stars='⭐⭐'; }
+
+  document.getElementById('resultTrophy').textContent = trophy;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultStars').textContent = stars;
+  document.getElementById('resultScore').textContent = `أجبت صحيحاً على ${score} من ${TOTAL_ROUNDS} سؤال`;
+
+  spawnConfetti();
+  playComplete();
+}
+
+// ── Audio ─────────────────────────────────────────────────
+let actx = null;
+function getCtx(){
+  if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended') actx.resume();
+  return actx;
+}
+function tone(f,type,dur,vol,t,c){
+  const o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);
+  o.type=type;o.frequency.setValueAtTime(f,t);
+  g.gain.setValueAtTime(vol,t);
+  g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.start(t);o.stop(t+dur);
+}
+function playCorrect(){
+  try{const c=getCtx(),t=c.currentTime;
+    [523,659,784,1047].forEach((f,i)=>tone(f,'sine',.2,.22,t+i*.1,c));}catch(e){}
+}
+function playWrong(){
+  try{const c=getCtx(),t=c.currentTime;
+    tone(200,'sawtooth',.12,.18,t,c);tone(160,'sawtooth',.12,.18,t+.13,c);}catch(e){}
+}
+function playComplete(){
+  try{const c=getCtx(),t=c.currentTime;
+    [[523,0],[659,.1],[784,.2],[1047,.32],[784,.44],[1047,.54],[1319,.64]]
+      .forEach(([f,d])=>tone(f,'sine',.22,.28,t+d,c));}catch(e){}
+}
+
+// ── Confetti ──────────────────────────────────────────────
+function spawnConfetti(){
+  const wrap=document.getElementById('confettiWrap');
+  const shapes=['⭐','🌟','✨','💫'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.textContent=shapes[Math.floor(Math.random()*shapes.length)];
+    p.style.cssText=`
+      left:${Math.random()*100}%;
+      font-size:${1+Math.random()*1.5}rem;
+      animation-duration:${1.2+Math.random()*1.8}s;
+      animation-delay:${Math.random()*.6}s;
+    `;
+    wrap.appendChild(p);
+    p.addEventListener('animationend',()=>p.remove());
+  }
+}
+
+// ── Init ──────────────────────────────────────────────────
+buildSky();
+startGame();
+</script>
+</body>
+</html>
