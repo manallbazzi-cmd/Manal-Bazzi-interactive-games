@@ -239,7 +239,23 @@ header{position:relative;z-index:2;background:linear-gradient(90deg,#4B0082,#9B2
 // ── DATA ─────────────────────────────────────
 const NUM_EN=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
 const NUM_AR=['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة'];
-const OBJS=['⭐','🌙','🚀','💎','🎈','🌺','🦋','🍭','🐠','🌈','🍎','🐸'];
+const OBJS=['⭐','🌙','🚀','💎','🎈','🌺','🦋','🍭','🐠','🌈','🍎','🐸','🐥','🌸','🍦','🎵','🏀','🐢','🍓','🎀'];
+
+// random number 1-10
+function rndN(){return 1+(0|Math.random()*10);}
+// random object — ensure different from previous
+var _lastObj='';
+function rndObj(){
+  var pool=OBJS.filter(function(o){return o!==_lastObj;});
+  var o=pool[0|Math.random()*pool.length];
+  _lastObj=o; return o;
+}
+// generate question list: array of {n, obj}
+function genQs(total){
+  var list=[];
+  for(var i=0;i<total;i++) list.push({n:rndN(), obj:rndObj()});
+  return list;
+}
 
 // ── SHUFFLE ───────────────────────────────────
 function sh(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
@@ -282,15 +298,14 @@ var L0={qi:0,score:0,qs:[],ans:false};
 const L0_TOTAL=8;
 
 function startL0(){
-  L0={qi:0,score:0,qs:sh([1,2,3,4,5,6,7,8,9,10]).slice(0,L0_TOTAL),ans:false};
+  L0={qi:0,score:0,qs:genQs(L0_TOTAL),ans:false};
   document.getElementById('res0').classList.remove('show');
   document.getElementById('game0').style.display='';
   loadQ0();
 }
 function loadQ0(){
   L0.ans=false;
-  const n=L0.qs[L0.qi];
-  const obj=OBJS[L0.qi%OBJS.length];
+  var q=L0.qs[L0.qi]; var n=q.n; var obj=q.obj;
   setBar(L0.score,L0.qi,L0_TOTAL);
   document.getElementById('instr0').textContent='👀 How many '+obj+'? كم عدد؟';
 
@@ -327,7 +342,7 @@ function ansQ0(el,ok){
     playOK(); if(L0.score%3===0)confetti();
   }else{
     el.classList.add('wrong');
-    document.querySelectorAll('#choices0 .ch').forEach(function(c){if(c.querySelector('.c-num').textContent==L0.qs[L0.qi])c.classList.add('correct');});
+    document.querySelectorAll('#choices0 .ch').forEach(function(c){if(c.querySelector('.c-num').textContent==L0.qs[L0.qi].n)c.classList.add('correct');});
     document.getElementById('fb0').textContent='Try again! حاول مرة أخرى! 💪';
     document.getElementById('fb0').className='feedback bad';
     playErr();
@@ -351,15 +366,14 @@ var L1={qi:0,score:0,qs:[],ans:false};
 const L1_TOTAL=8;
 
 function startL1(){
-  L1={qi:0,score:0,qs:sh([1,2,3,4,5,6,7,8,9,10]).slice(0,L1_TOTAL),ans:false};
+  L1={qi:0,score:0,qs:genQs(L1_TOTAL),ans:false};
   document.getElementById('res1').classList.remove('show');
   document.getElementById('game1').style.display='';
   loadQ1();
 }
 function loadQ1(){
   L1.ans=false;
-  const n=L1.qs[L1.qi];
-  const obj=OBJS[(L1.qi+4)%OBJS.length];
+  var q=L1.qs[L1.qi]; var n=q.n; var obj=q.obj;
   setBar(L1.score,L1.qi,L1_TOTAL);
   document.getElementById('instr1').textContent='✏️ Count the '+obj+' and write! عدّ واكتب!';
 
@@ -382,7 +396,7 @@ function checkWrite(){
   const val=parseInt(inp.value);
   if(isNaN(val)||val<1){inp.className='write-inp bad';return;}
   L1.ans=true;
-  const n=L1.qs[L1.qi];
+  const n=L1.qs[L1.qi].n;
   if(val===n){
     inp.className='write-inp ok'; L1.score++;
     document.getElementById('fb1').textContent=sh(['Excellent! ممتاز! 🌟','Correct! صحيح! ✅','Well done! أحسنت! 🎉','Great! عظيم! 🥳'])[0];
@@ -434,7 +448,7 @@ function loadRound(){
   // objects column
   const objCol=document.getElementById('mObjs'); objCol.innerHTML='';
   objOrder.forEach(function(n,i){
-    const obj=OBJS[(L2.round*PAIRS+i)%OBJS.length];
+    const obj=rndObj();
     const d=document.createElement('div'); d.className='m-card'; d.dataset.val=n; d.dataset.side='o';
     d.innerHTML='<div class="m-emoji">'+obj.repeat(n)+'</div>';
     d.onclick=function(){pickMatch(d,'o',n);};
