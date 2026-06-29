@@ -232,6 +232,19 @@ header::after{content:'';position:absolute;bottom:-30px;left:-20px;width:90px;he
   <div class="game-card" id="gameCard">
     <div class="instruction">👂 اضغط على السماعة واستمع، ثم اختر الحرف الصحيح!</div>
 
+    <!-- Picture card -->
+    <div id="pictureCard" style="
+      margin:0 auto 18px;
+      background:linear-gradient(135deg,#FFF5FB,#F0F8FF);
+      border-radius:24px;border:3px solid #EDD5FF;
+      padding:18px 12px 12px;
+      text-align:center;
+      animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+    ">
+      <div id="pictureEmoji" style="font-size:5rem;line-height:1;margin-bottom:8px;">🌟</div>
+      <div id="pictureWord" style="font-size:1.3rem;font-weight:900;color:#C44DFF;font-family:'Times New Roman',Times,serif;letter-spacing:2px;"></div>
+    </div>
+
     <button class="speaker-btn" id="speakerBtn" onclick="playLetterSound()">
       <span class="speaker-icon">🔊</span>
       <span class="speaker-label">اضغط للسماع</span>
@@ -258,34 +271,34 @@ header::after{content:'';position:absolute;bottom:-30px;left:-20px;width:90px;he
 <script>
 // ── Arabic letters data ──────────────────────────────────
 const LETTERS = [
-  {letter:'أ', name:'ألف',    word:'أسد'},
-  {letter:'ب', name:'باء',    word:'بطة'},
-  {letter:'ت', name:'تاء',    word:'تفاحة'},
-  {letter:'ث', name:'ثاء',    word:'ثعلب'},
-  {letter:'ج', name:'جيم',    word:'جمل'},
-  {letter:'ح', name:'حاء',    word:'حصان'},
-  {letter:'خ', name:'خاء',    word:'خروف'},
-  {letter:'د', name:'دال',    word:'دجاجة'},
-  {letter:'ذ', name:'ذال',    word:'ذئب'},
-  {letter:'ر', name:'راء',    word:'رمانة'},
-  {letter:'ز', name:'زاي',    word:'زرافة'},
-  {letter:'س', name:'سين',    word:'سمكة'},
-  {letter:'ش', name:'شين',    word:'شمس'},
-  {letter:'ص', name:'صاد',    word:'صقر'},
-  {letter:'ض', name:'ضاد',    word:'ضفدع'},
-  {letter:'ط', name:'طاء',    word:'طاووس'},
-  {letter:'ظ', name:'ظاء',    word:'ظبي'},
-  {letter:'ع', name:'عين',    word:'عصفور'},
-  {letter:'غ', name:'غين',    word:'غزال'},
-  {letter:'ف', name:'فاء',    word:'فيل'},
-  {letter:'ق', name:'قاف',    word:'قطة'},
-  {letter:'ك', name:'كاف',    word:'كلب'},
-  {letter:'ل', name:'لام',    word:'ليمون'},
-  {letter:'م', name:'ميم',    word:'موز'},
-  {letter:'ن', name:'نون',    word:'نملة'},
-  {letter:'ه', name:'هاء',    word:'هرة'},
-  {letter:'و', name:'واو',    word:'وردة'},
-  {letter:'ي', name:'ياء',    word:'يمامة'},
+  {letter:'أ', name:'ألف',  word:'أسد',    emoji:'🦁'},
+  {letter:'ب', name:'باء',  word:'بطة',    emoji:'🦆'},
+  {letter:'ت', name:'تاء',  word:'تفاحة',  emoji:'🍎'},
+  {letter:'ث', name:'ثاء',  word:'ثعلب',   emoji:'🦊'},
+  {letter:'ج', name:'جيم',  word:'جمل',    emoji:'🐪'},
+  {letter:'ح', name:'حاء',  word:'حصان',   emoji:'🐴'},
+  {letter:'خ', name:'خاء',  word:'خروف',   emoji:'🐑'},
+  {letter:'د', name:'دال',  word:'دجاجة',  emoji:'🐔'},
+  {letter:'ذ', name:'ذال',  word:'ذئب',    emoji:'🐺'},
+  {letter:'ر', name:'راء',  word:'رمانة',  emoji:'🍎'},
+  {letter:'ز', name:'زاي',  word:'زرافة',  emoji:'🦒'},
+  {letter:'س', name:'سين',  word:'سمكة',   emoji:'🐟'},
+  {letter:'ش', name:'شين',  word:'شمس',    emoji:'☀️'},
+  {letter:'ص', name:'صاد',  word:'صقر',    emoji:'🦅'},
+  {letter:'ض', name:'ضاد',  word:'ضفدع',   emoji:'🐸'},
+  {letter:'ط', name:'طاء',  word:'طاووس',  emoji:'🦚'},
+  {letter:'ظ', name:'ظاء',  word:'ظبي',    emoji:'🦌'},
+  {letter:'ع', name:'عين',  word:'عصفور',  emoji:'🐦'},
+  {letter:'غ', name:'غين',  word:'غزال',   emoji:'🦌'},
+  {letter:'ف', name:'فاء',  word:'فيل',    emoji:'🐘'},
+  {letter:'ق', name:'قاف',  word:'قطة',    emoji:'🐱'},
+  {letter:'ك', name:'كاف',  word:'كلب',    emoji:'🐶'},
+  {letter:'ل', name:'لام',  word:'ليمون',  emoji:'🍋'},
+  {letter:'م', name:'ميم',  word:'موز',    emoji:'🍌'},
+  {letter:'ن', name:'نون',  word:'نملة',   emoji:'🐜'},
+  {letter:'ه', name:'هاء',  word:'هلال',   emoji:'🌙'},
+  {letter:'و', name:'واو',  word:'وردة',   emoji:'🌹'},
+  {letter:'ي', name:'ياء',  word:'يمامة',  emoji:'🕊️'},
 ];
 
 const COLORS = ['lc0','lc1','lc2','lc3','lc4','lc5'];
@@ -357,6 +370,10 @@ function loadQuestion() {
     div.onclick = () => handleChoice(div, opt.letter === correct.letter, i, options.length);
     grid.appendChild(div);
   });
+
+  // Show picture for the correct letter
+  document.getElementById('pictureEmoji').textContent = correct.emoji;
+  document.getElementById('pictureWord').textContent = correct.word;
 
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
