@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>عد النجوم ⭐ - روضة الأطفال - المعلمة منال بزي</title>
+<title>Count the Stars ⭐ عد النجوم - KG - Teacher Manal Bazzi</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{
@@ -210,8 +210,8 @@ header{
 <div class="sky" id="sky"></div>
 
 <header>
-  <div class="h-title">⭐ عد النجوم! ⭐</div>
-  <div class="h-sub">المعلمة منال بزي — روضة الأطفال</div>
+  <div class="h-title">⭐ Count the Stars! عد النجوم ⭐</div>
+  <div class="h-sub">Teacher Manal Bazzi — KG / روضة الأطفال</div>
 </header>
 
 <div class="scorebar">
@@ -225,16 +225,16 @@ header{
 <div class="main">
   <div id="gameArea">
     <div class="stars-card">
-      <div class="instruction">👀 كم عدد النجوم؟ اعدّها ثم اختر الجواب!</div>
+      <div class="instruction">👀 How many stars? كم عدد النجوم؟</div>
       <div class="stars-grid" id="starsGrid"></div>
-      <div class="q-label" id="qLabel">عدّ النجوم ⬆</div>
+      <div class="q-label" id="qLabel">Count the stars! عدّ النجوم ⬆</div>
     </div>
 
     <div class="choices" id="choicesGrid"></div>
 
     <div class="feedback" id="feedback"></div>
 
-    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">التالي ←</button>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next / التالي ←</button>
   </div>
 
   <div class="result-screen" id="resultScreen">
@@ -242,15 +242,16 @@ header{
     <div class="result-title" id="resultTitle">أحسنت!</div>
     <div class="result-stars" id="resultStars">⭐⭐⭐</div>
     <div class="result-score" id="resultScore"></div>
-    <button class="restart-btn" onclick="startGame()">🔄 العب مجدداً</button>
+    <button class="restart-btn" onclick="startGame()">🔄 Play Again / العب مجدداً</button>
   </div>
 </div>
 
 <div class="confetti-wrap" id="confettiWrap"></div>
 
 <script>
-// ── Number words in Arabic ────────────────────────────────
-const NUM_WORDS = ['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة'];
+// ── Number words bilingual ────────────────────────────────
+const NUM_WORDS_AR = ['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة'];
+const NUM_WORDS_EN = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
 const TOTAL_ROUNDS = 10;
 const MAX_NUM = 10;
 const CONF_COLORS = ['#FFD700','#FF6B9D','#C44DFF','#4D94FF','#22C55E','#FF5757','#fff'];
@@ -346,7 +347,8 @@ function loadQuestion() {
     div.className = 'choice';
     div.innerHTML = `
       <span class="choice-num">${num}</span>
-      <span class="choice-word">${NUM_WORDS[num] || num}</span>
+      <span class="choice-word">${NUM_WORDS_EN[num] || num}</span>
+      <span class="choice-word">${NUM_WORDS_AR[num] || num}</span>
     `;
     div.onclick = () => handleChoice(div, num === correct);
     choicesEl.appendChild(div);
@@ -355,7 +357,7 @@ function loadQuestion() {
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('nextBtn').classList.remove('visible');
-  document.getElementById('qLabel').textContent = 'عدّ النجوم ⬆';
+  document.getElementById('qLabel').textContent = 'Count the stars! عدّ النجوم ⬆';
 }
 
 // ── Handle choice ─────────────────────────────────────────
@@ -368,7 +370,7 @@ function handleChoice(el, isCorrect) {
   if (isCorrect) {
     el.classList.add('correct');
     score++;
-    const msgs = ['رائع! 🌟','ممتاز! 🎉','أحسنت! 👏','صحيح! ✅','بالضبط! 🥳','عظيم! 🌈'];
+    const msgs = ['Excellent! ممتاز! 🌟','Well done! أحسنت! 🎉','Correct! صحيح! ✅','Amazing! رائع! 🥳','Great! عظيم! 🌈'];
     document.getElementById('feedback').textContent = msgs[Math.floor(Math.random()*msgs.length)];
     document.getElementById('feedback').className = 'feedback good';
     playCorrect();
@@ -382,7 +384,7 @@ function handleChoice(el, isCorrect) {
         c.classList.add('correct');
       }
     });
-    document.getElementById('feedback').textContent = 'حاول مرة أخرى! 💪';
+    document.getElementById('feedback').textContent = 'Try again! حاول مرة أخرى! 💪';
     document.getElementById('feedback').className = 'feedback bad';
     playWrong();
   }
@@ -390,7 +392,7 @@ function handleChoice(el, isCorrect) {
   document.getElementById('scoreVal').textContent = score;
   const isLast = qi === TOTAL_ROUNDS - 1;
   const btn = document.getElementById('nextBtn');
-  btn.textContent = isLast ? '🏆 النتيجة' : 'التالي ←';
+  btn.textContent = isLast ? '🏆 Results / النتيجة' : 'Next / التالي ←';
   btn.classList.add('visible');
 }
 
@@ -408,14 +410,14 @@ function showResult() {
   rs.classList.add('visible');
 
   const pct = score / TOTAL_ROUNDS;
-  let trophy='🏆', title='أحسنت!', stars='⭐⭐⭐';
-  if (pct < 0.5) { trophy='😊'; title='حاول مجدداً!'; stars='⭐'; }
-  else if (pct < 0.8) { trophy='🌟'; title='جيد جداً!'; stars='⭐⭐'; }
+  let trophy='🏆', title='Well done! أحسنت!', stars='⭐⭐⭐';
+  if (pct < 0.5) { trophy='😊'; title='Try again! حاول مجدداً!'; stars='⭐'; }
+  else if (pct < 0.8) { trophy='🌟'; title='Good job! جيد جداً!'; stars='⭐⭐'; }
 
   document.getElementById('resultTrophy').textContent = trophy;
   document.getElementById('resultTitle').textContent = title;
   document.getElementById('resultStars').textContent = stars;
-  document.getElementById('resultScore').textContent = `أجبت صحيحاً على ${score} من ${TOTAL_ROUNDS} سؤال`;
+  document.getElementById('resultScore').textContent = `You got ${score} out of ${TOTAL_ROUNDS} correct! — أجبت صحيحاً على ${score} من ${TOTAL_ROUNDS}`;
 
   spawnConfetti();
   playComplete();
