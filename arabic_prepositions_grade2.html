@@ -326,6 +326,43 @@
     .home-card{padding:26px 16px; border-radius:26px;}
     .map-wrap, .game-wrap{padding:16px; border-radius:24px;}
   }
+
+  /* ===== NEW ACTIVITY TYPES (classify / drag&drop / build / find-error / identify / timed / mixed) ===== */
+  .activity-label{text-align:center; font-weight:900; color:var(--purple-dark); font-size:14px; margin-bottom:8px;}
+  .timer-wrap{width:100%; height:10px; background:#ffe8cc; border-radius:8px; overflow:hidden; margin-bottom:14px; display:none;}
+  .timer-bar{height:100%; background:linear-gradient(90deg,var(--green),var(--gold)); width:100%; border-radius:8px; transition:width .1s linear;}
+
+  .drag-card{
+    background:#fff; border:3px solid var(--orange); border-radius:18px; padding:16px;
+    text-align:center; font-size:24px; font-weight:900; color:var(--orange);
+    margin-bottom:14px; cursor:grab; touch-action:none; user-select:none;
+  }
+  .drop-zones{display:flex; gap:12px;}
+  .drop-zone{
+    flex:1; min-height:90px; border:3px dashed var(--orange); border-radius:18px;
+    display:flex; align-items:center; justify-content:center; font-weight:900; color:var(--purple-dark);
+    font-size:16px; text-align:center; padding:8px; background:#fff5e8; transition:background .2s,border-style .2s;
+  }
+  .drop-zone.zone-accompany{border-color:var(--gold); background:#fff3da;}
+  .drop-zone.hover{border-style:solid;}
+
+  .answer-slot{
+    min-height:64px; border:2px solid var(--orange); border-radius:16px; background:#fff5e8;
+    display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:10px; margin-bottom:12px;
+  }
+  .word-tile{
+    background:#fff; border:2px solid var(--orange); color:var(--orange); border-radius:12px;
+    padding:9px 14px; font-size:16px; font-weight:900; cursor:pointer; transition:transform .1s ease; font-family:inherit;
+  }
+  .word-tile:active{transform:scale(0.94);}
+  .word-bank{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:10px;}
+  .answer-slot .word-tile{background:var(--orange); color:#fff;}
+
+  .word-click{cursor:pointer; padding:3px 7px; border-radius:10px; transition:background .15s;}
+  .word-click:hover{background:#ffe4c0;}
+  .word-click.picked-correct{background:var(--green); color:#fff;}
+  .word-click.picked-wrong{background:var(--red); color:#fff;}
+  .word-click.reveal-correct{background:var(--green); color:#fff;}
 </style>
 </head>
 <body>
@@ -377,8 +414,35 @@
         <button class="game-tile tile-memory" id="goMemory"><span>🧠</span>لعبة الذاكرة</button>
         <button class="game-tile tile-match" id="goMatch"><span>🔗</span>لعبة المطابقة</button>
         <button class="game-tile tile-race" id="goRace"><span>⚡</span>سباق السرعة</button>
+        <button class="game-tile tile-balloon" id="goClassify"><span>📍</span>صنّف: مكان أم مصاحبة؟</button>
+        <button class="game-tile tile-memory" id="goDragdrop"><span>✋</span>اسحب وصنّف</button>
+        <button class="game-tile tile-match" id="goBuild"><span>🧩</span>ركّب الجملة</button>
+        <button class="game-tile tile-race" id="goFinderror"><span>🔍</span>اكتشف الخطأ</button>
+        <button class="game-tile tile-balloon" id="goIdentify"><span>👆</span>حدّد حرف الجر</button>
+        <button class="game-tile tile-memory" id="goTimed"><span>⏱️</span>تحدي الوقت</button>
+        <button class="game-tile tile-race" id="goMixed" style="grid-column:1/-1;"><span>🎯</span>التحدي الشامل (مزيج من كل الألعاب)</button>
       </div>
       <button class="big-btn btn-secondary" id="gamesBackBtn" style="max-width:200px; margin:0 auto;">⬅️ الرئيسية</button>
+    </div>
+  </div>
+
+  <!-- GENERIC ACTIVITY SCREEN -->
+  <div class="screen" id="screen-activity">
+    <div class="games-wrap">
+      <div class="game-top">
+        <span class="stage-label" id="activityTitle">📍 صنّف: مكان أم مصاحبة؟</span>
+        <span class="stars-counter" id="activityScore">⭐ 0</span>
+      </div>
+      <div class="progress-bar-bg" style="margin:0 0 10px;"><div class="progress-bar-fill" id="activityProgress" style="width:0%"></div></div>
+      <div class="timer-wrap" id="activityTimerWrap"><div class="timer-bar" id="activityTimerBar"></div></div>
+      <div class="activity-label" id="activityHint"></div>
+
+      <div id="activityContent"></div>
+
+      <div class="feedback" id="activityFeedback"></div>
+      <div class="lesson-actions">
+        <button class="big-btn btn-secondary" id="activityBackBtn">⬅️ الألعاب</button>
+      </div>
     </div>
   </div>
 
@@ -727,6 +791,278 @@ document.getElementById("matchBackBtn").addEventListener("click", ()=>{ sfxClick
 document.getElementById("raceBackBtn").addEventListener("click", ()=>{ sfxClick(); stopRace(); showScreen("screen-games"); });
 document.getElementById("memoryRestartBtn").addEventListener("click", ()=>{ sfxClick(); initMemory(); });
 document.getElementById("matchRestartBtn").addEventListener("click", ()=>{ sfxClick(); initMatch(); });
+
+document.getElementById("goClassify").addEventListener("click", ()=>{ sfxClick(); launchActivity("classify"); });
+document.getElementById("goDragdrop").addEventListener("click", ()=>{ sfxClick(); launchActivity("dragdrop"); });
+document.getElementById("goBuild").addEventListener("click", ()=>{ sfxClick(); launchActivity("build"); });
+document.getElementById("goFinderror").addEventListener("click", ()=>{ sfxClick(); launchActivity("finderror"); });
+document.getElementById("goIdentify").addEventListener("click", ()=>{ sfxClick(); launchActivity("identify"); });
+document.getElementById("goTimed").addEventListener("click", ()=>{ sfxClick(); launchActivity("timed"); });
+document.getElementById("goMixed").addEventListener("click", ()=>{ sfxClick(); launchActivity("mixed"); });
+document.getElementById("activityBackBtn").addEventListener("click", ()=>{ sfxClick(); clearInterval(actTimerInterval); showScreen("screen-games"); });
+
+/* ===================== NEW ACTIVITIES: shared sentence bank ===================== */
+/* Built from the 5 adventure stages: each item = full sentence words + the preposition + its category (place/accompany) */
+const ACT_BANK = [
+  {words:["وضعَ","الطالبُ","الكتابَ","في","الحقيبةِ"], demo:"في", cat:"place"},
+  {words:["الكتابُ","على","الطاولةِ"], demo:"على", cat:"place"},
+  {words:["ذهبَ","الولدُ","إلى","المدرسةِ"], demo:"إلى", cat:"place"},
+  {words:["خرجَ","المعلمُ","من","الفصلِ"], demo:"من", cat:"place"},
+  {words:["كتبَ","الطالبُ","بـ","القلمِ"], demo:"بـ", cat:"accompany"},
+  {words:["لعبَ","الأطفالُ","مع","أصدقائهم"], demo:"مع", cat:"accompany"},
+  {words:["تحدَّثَ","الولدُ","عن","الطيورِ"], demo:"عن", cat:"place"},
+  {words:["طارَ","العصفورُ","على","الغصنِ"], demo:"على", cat:"place"},
+  {words:["رجعَ","الأطفالُ","إلى","البيتِ"], demo:"إلى", cat:"place"},
+  {words:["الطعامُ","على","الطاولةِ"], demo:"على", cat:"place"},
+  {words:["النومُ","في","الغرفةِ"], demo:"في", cat:"place"},
+  {words:["هذا","البيتُ","لـ","أبي"], demo:"لـ", cat:"accompany"},
+  {words:["جاءَ","الأبُ","من","العملِ"], demo:"من", cat:"place"},
+  {words:["جلستِ","الأسرةُ","مع","بعضِها"], demo:"مع", cat:"accompany"},
+  {words:["ذهبتِ","الأمُّ","إلى","السوقِ"], demo:"إلى", cat:"place"},
+  {words:["اشترتِ","الفاكهةَ","من","البائعِ"], demo:"من", cat:"place"},
+  {words:["الخبزُ","على","الرفِّ"], demo:"على", cat:"place"},
+  {words:["دفعَ","بالنقودِ","لـ","البائعِ"], demo:"لـ", cat:"accompany"},
+  {words:["تكلَّمَ","مع","جارِه","في","السوقِ"], demo:"مع", cat:"accompany"},
+  {words:["الكنزُ","في","الصندوقِ","الذهبيِّ"], demo:"في", cat:"place"},
+  {words:["الفارسُ","شجاعٌ","كـ","الأسدِ"], demo:"كـ", cat:"accompany"},
+  {words:["صعدَ","الفارسُ","إلى","القلعةِ"], demo:"إلى", cat:"place"},
+  {words:["قاتلَ","الفارسُ","بـ","السيفِ"], demo:"بـ", cat:"accompany"},
+  {words:["انتصرَ","الأبطالُ","حتى","الظلامِ"], demo:"حتى", cat:"accompany"}
+];
+function actSentence(q){ return q.words.join(" "); }
+
+const ACT_NAMES = {
+  classify:"📍 صنّف: مكان أم مصاحبة؟", dragdrop:"✋ اسحب وصنّف", build:"🧩 ركّب الجملة",
+  finderror:"🔍 اكتشف الخطأ", identify:"👆 حدّد حرف الجر", timed:"⏱️ تحدي الوقت", mixed:"🎯 التحدي الشامل"
+};
+
+let actMode="classify", actQuestions=[], actIndex=0, actScore=0, actTimerInterval=null, actTimerStart=0;
+const ACT_TIME_LIMIT = 10000;
+
+function launchActivity(mode){
+  actMode = mode;
+  actScore = 0; actIndex = 0;
+  document.getElementById("activityScore").textContent = "⭐ 0";
+  document.getElementById("activityTitle").textContent = ACT_NAMES[mode];
+  const useTimer = (mode==="timed" || mode==="mixed");
+  document.getElementById("activityTimerWrap").style.display = useTimer ? "block" : "none";
+
+  let count = (mode==="mixed") ? 12 : 10;
+  if(mode==="mixed"){
+    const types=["classify","dragdrop","build","finderror","identify"];
+    actQuestions = shuffleArr(ACT_BANK).slice(0,count).map(q=>({...q, activityType: types[Math.floor(Math.random()*types.length)]}));
+  } else {
+    const realType = (mode==="timed") ? "classify" : mode;
+    actQuestions = shuffleArr(ACT_BANK).slice(0,count).map(q=>({...q, activityType: realType}));
+  }
+  showScreen("screen-activity");
+  loadActQuestion();
+}
+
+function loadActQuestion(){
+  clearInterval(actTimerInterval);
+  document.getElementById("activityFeedback").textContent = "";
+  const pct = (actIndex/actQuestions.length)*100;
+  document.getElementById("activityProgress").style.width = pct+"%";
+  const q = actQuestions[actIndex];
+  document.getElementById("activityTitle").textContent = ACT_NAMES[actMode==="mixed" ? q.activityType : actMode];
+  const content = document.getElementById("activityContent");
+  const hint = document.getElementById("activityHint");
+  content.innerHTML = ""; hint.textContent = "";
+
+  if(q.activityType==="classify") renderActClassify(q, content, hint);
+  else if(q.activityType==="dragdrop") renderActDragdrop(q, content, hint);
+  else if(q.activityType==="build") renderActBuild(q, content, hint);
+  else if(q.activityType==="finderror") renderActFinderror(q, content, hint);
+  else if(q.activityType==="identify") renderActIdentify(q, content, hint);
+
+  const useTimer = (actMode==="timed" || actMode==="mixed");
+  if(useTimer){
+    const bar = document.getElementById("activityTimerBar");
+    bar.style.width="100%"; bar.style.background="linear-gradient(90deg,#3ddc84,#ffb627)";
+    actTimerStart = Date.now();
+    actTimerInterval = setInterval(()=>{
+      const elapsed = Date.now()-actTimerStart;
+      const remain = Math.max(0, 1-elapsed/ACT_TIME_LIMIT);
+      bar.style.width=(remain*100)+"%";
+      if(remain<0.3) bar.style.background="linear-gradient(90deg,#ff5c6c,#c43a48)";
+      if(elapsed>=ACT_TIME_LIMIT){
+        clearInterval(actTimerInterval);
+        actDisableAll();
+        document.getElementById("activityFeedback").textContent = "⏰ انتهى الوقت! الصحيح: " + (q.activityType==="build" ? actSentence(q) : (q.cat==="place"?"مكان/اتجاه ("+q.demo+")":"مصاحبة/تعليل ("+q.demo+")"));
+        document.getElementById("activityFeedback").className="feedback bad";
+        sfxWrong();
+        setTimeout(actAdvance, 1700);
+      }
+    }, 100);
+  }
+}
+function actDisableAll(){
+  document.querySelectorAll("#activityContent button, #activityContent .word-tile, #activityContent .word-click").forEach(el=> el.style.pointerEvents="none");
+}
+function actRegisterCorrect(msg){
+  actScore++;
+  document.getElementById("activityScore").textContent = "⭐ "+actScore;
+  const fb = document.getElementById("activityFeedback");
+  fb.textContent = msg; fb.className="feedback good";
+  sfxCorrect();
+}
+function actRegisterWrong(msg){
+  const fb = document.getElementById("activityFeedback");
+  fb.textContent = msg; fb.className="feedback bad";
+  sfxWrong();
+}
+function actAdvance(){
+  actIndex++;
+  if(actIndex >= actQuestions.length){
+    document.getElementById("activityProgress").style.width="100%";
+    document.getElementById("activityContent").innerHTML = "";
+    document.getElementById("activityHint").textContent = "";
+    document.getElementById("activityFeedback").textContent = "🏁 انتهت الجولة! نتيجتك: "+actScore+" / "+actQuestions.length;
+    document.getElementById("activityFeedback").className="feedback good";
+    sfxWin();
+    launchConfetti();
+  } else {
+    loadActQuestion();
+  }
+}
+
+/* ----- Activity: classify (place/accompany) ----- */
+function renderActClassify(q, content, hint){
+  hint.textContent = "هل حرف الجر هذا للمكان والاتجاه أم للمصاحبة والتعليل؟";
+  content.innerHTML = `
+    <div class="question-card"><div class="question-sentence" style="background:#fff5e8;">${q.demo}</div></div>
+    <div class="options-grid">
+      <button class="option-btn" id="actPlace">مكان واتجاه 📍</button>
+      <button class="option-btn" id="actAccompany">مصاحبة وتعليل 🤝</button>
+    </div>`;
+  document.getElementById("actPlace").onclick = ()=> answerActClassify(q,"place");
+  document.getElementById("actAccompany").onclick = ()=> answerActClassify(q,"accompany");
+}
+function answerActClassify(q, choice){
+  clearInterval(actTimerInterval);
+  actDisableAll();
+  const correctBtn = document.getElementById(q.cat==="place"?"actPlace":"actAccompany");
+  const chosenBtn = document.getElementById(choice==="place"?"actPlace":"actAccompany");
+  if(choice===q.cat){ chosenBtn.classList.add("correct"); actRegisterCorrect("🎉 صحيح! "+q.demo+" "+(q.cat==="place"?"للمكان والاتجاه":"للمصاحبة والتعليل")); }
+  else { chosenBtn.classList.add("wrong"); correctBtn.classList.add("correct"); actRegisterWrong("❌ الصحيح: "+(q.cat==="place"?"مكان واتجاه":"مصاحبة وتعليل")); }
+  setTimeout(actAdvance, 1500);
+}
+
+/* ----- Activity: drag & drop ----- */
+function renderActDragdrop(q, content, hint){
+  hint.textContent = "اسحب حرف الجر إلى الصندوق الصحيح";
+  content.innerHTML = `
+    <div class="drag-card" id="actDragCard">${q.demo}</div>
+    <div class="drop-zones">
+      <div class="drop-zone" id="actZonePlace">مكان واتجاه 📍</div>
+      <div class="drop-zone zone-accompany" id="actZoneAccompany">مصاحبة وتعليل 🤝</div>
+    </div>`;
+  const card = document.getElementById("actDragCard");
+  const zP = document.getElementById("actZonePlace");
+  const zA = document.getElementById("actZoneAccompany");
+  card.draggable = true;
+  card.addEventListener("dragstart", e=> e.dataTransfer.setData("text","x"));
+  [zP,zA].forEach(zone=>{
+    zone.addEventListener("dragover", e=>{ e.preventDefault(); zone.classList.add("hover"); });
+    zone.addEventListener("dragleave", ()=> zone.classList.remove("hover"));
+    zone.addEventListener("drop", e=>{ e.preventDefault(); zone.classList.remove("hover"); finishActDrop(zone===zP?"place":"accompany"); });
+  });
+  let dragging=false, ox=0, oy=0;
+  card.addEventListener("touchstart", e=>{ dragging=true; card.style.position="relative"; card.style.zIndex=50; const t=e.touches[0]; ox=t.clientX; oy=t.clientY; }, {passive:true});
+  card.addEventListener("touchmove", e=>{
+    if(!dragging) return; const t=e.touches[0]; const dx=t.clientX-ox, dy=t.clientY-oy;
+    card.style.transform=`translate(${dx}px,${dy}px)`;
+    [zP,zA].forEach(zone=>{ const r=zone.getBoundingClientRect(); const inside = t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom; zone.classList.toggle("hover", inside); });
+  }, {passive:true});
+  card.addEventListener("touchend", e=>{
+    if(!dragging) return; dragging=false; const t=e.changedTouches[0]; let landed=null;
+    [[zP,"place"],[zA,"accompany"]].forEach(([zone,val])=>{ const r=zone.getBoundingClientRect(); if(t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom) landed=val; zone.classList.remove("hover"); });
+    if(landed) finishActDrop(landed); else card.style.transform="translate(0,0)";
+  });
+  function finishActDrop(choice){
+    clearInterval(actTimerInterval); card.draggable=false; actDisableAll();
+    if(choice===q.cat){ (choice==="place"?zP:zA).style.background="#cdeed9"; actRegisterCorrect("🎉 أحسنت! وضعتها في المكان الصحيح"); }
+    else { (choice==="place"?zP:zA).style.background="#ffd6d6"; actRegisterWrong("❌ الصحيح: "+(q.cat==="place"?"مكان واتجاه":"مصاحبة وتعليل")); }
+    setTimeout(actAdvance, 1500);
+  }
+}
+
+/* ----- Activity: build the sentence ----- */
+function renderActBuild(q, content, hint){
+  hint.textContent = "رتّب الكلمات لتكوين جملة صحيحة";
+  content.innerHTML = `
+    <div class="answer-slot" id="actAnswerSlot"></div>
+    <div class="word-bank" id="actWordBank"></div>
+    <button class="big-btn btn-secondary" id="actResetBtn" style="max-width:200px;margin:6px auto;">↺ إعادة الترتيب</button>
+    <button class="big-btn btn-play" id="actCheckBtn" style="max-width:240px;margin:6px auto 0;">✅ تحقق من الجملة</button>`;
+  const shuffled = shuffleArr(q.words);
+  const bank = document.getElementById("actWordBank");
+  const slot = document.getElementById("actAnswerSlot");
+  function buildTiles(){
+    bank.innerHTML="";
+    shuffled.forEach(w=>{
+      const t=document.createElement("div"); t.className="word-tile"; t.textContent=w; t.dataset.word=w;
+      t.onclick = ()=>{ slot.appendChild(t); t.onclick=()=>{ bank.appendChild(t); }; };
+      bank.appendChild(t);
+    });
+  }
+  buildTiles();
+  document.getElementById("actResetBtn").onclick = ()=>{ slot.innerHTML=""; buildTiles(); };
+  document.getElementById("actCheckBtn").onclick = ()=>{
+    clearInterval(actTimerInterval);
+    const built = Array.from(slot.children).map(t=>t.dataset.word);
+    actDisableAll();
+    document.getElementById("actResetBtn").style.pointerEvents="auto";
+    const ok = built.length===q.words.length && built.every((w,i)=>w===q.words[i]);
+    if(ok) actRegisterCorrect("🎉 أحسنت! الجملة صحيحة: "+actSentence(q));
+    else actRegisterWrong("❌ الترتيب الصحيح: "+actSentence(q));
+    setTimeout(actAdvance, 1800);
+  };
+}
+
+/* ----- Activity: find the error ----- */
+function renderActFinderror(q, content, hint){
+  const showWrong = Math.random()<0.5;
+  const shownCat = showWrong ? (q.cat==="place"?"accompany":"place") : q.cat;
+  const isStatementCorrect = (shownCat===q.cat);
+  hint.textContent = "هل التصنيف المقترح صحيح؟";
+  content.innerHTML = `
+    <div class="question-card"><div class="question-sentence" style="background:#fff5e8;">${q.demo}</div></div>
+    <div style="text-align:center; font-weight:900; color:var(--purple-dark); margin-bottom:10px;">التصنيف المقترح: ${shownCat==="place"?"مكان واتجاه 📍":"مصاحبة وتعليل 🤝"}</div>
+    <div class="options-grid">
+      <button class="option-btn" id="actTrue">صحيح ✔️</button>
+      <button class="option-btn" id="actFalse">خطأ ✖️</button>
+    </div>`;
+  document.getElementById("actTrue").onclick = ()=> answerActFinderror(q, true, isStatementCorrect);
+  document.getElementById("actFalse").onclick = ()=> answerActFinderror(q, false, isStatementCorrect);
+}
+function answerActFinderror(q, studentSaysTrue, isStatementCorrect){
+  clearInterval(actTimerInterval); actDisableAll();
+  const right = (studentSaysTrue===isStatementCorrect);
+  if(right) actRegisterCorrect("🎉 أحسنت! تحليل صحيح");
+  else actRegisterWrong("❌ التصنيف الصحيح لـ "+q.demo+": "+(q.cat==="place"?"مكان واتجاه":"مصاحبة وتعليل"));
+  setTimeout(actAdvance, 1500);
+}
+
+/* ----- Activity: identify the preposition inside the sentence ----- */
+function renderActIdentify(q, content, hint){
+  hint.textContent = "اضغط على حرف الجر داخل الجملة 👆";
+  const wordsHtml = q.words.map(w=>`<span class="word-click" data-word="${w}">${w}</span>`).join(" ");
+  content.innerHTML = `<div class="question-card"><div class="question-sentence" style="background:#fff5e8;">${wordsHtml}</div></div>`;
+  content.querySelectorAll(".word-click").forEach(el=>{ el.onclick = ()=> answerActIdentify(q, el); });
+}
+function answerActIdentify(q, el){
+  clearInterval(actTimerInterval); actDisableAll();
+  const chosen = el.dataset.word;
+  if(chosen===q.demo){ el.classList.add("picked-correct"); actRegisterCorrect("🎉 أحسنت! هذه هي الكلمة الصحيحة"); }
+  else {
+    el.classList.add("picked-wrong");
+    document.querySelectorAll("#activityContent .word-click").forEach(w=>{ if(w.dataset.word===q.demo) w.classList.add("reveal-correct"); });
+    actRegisterWrong("❌ الكلمة الصحيحة: "+q.demo);
+  }
+  setTimeout(actAdvance, 1500);
+}
 
 document.getElementById("soundBtn").addEventListener("click", function(){
   soundOn = !soundOn;
