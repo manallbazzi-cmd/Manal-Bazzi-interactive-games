@@ -329,6 +329,43 @@
     .home-card{padding:26px 16px; border-radius:26px;}
     .map-wrap, .game-wrap{padding:16px; border-radius:24px;}
   }
+
+  /* ===== NEW ACTIVITY TYPES (classify / drag&drop / build / find-error / identify / timed / mixed) ===== */
+  .activity-label{text-align:center; font-weight:900; color:var(--purple-dark); font-size:14px; margin-bottom:8px;}
+  .timer-wrap{width:100%; height:10px; background:#eee2ff; border-radius:8px; overflow:hidden; margin-bottom:14px; display:none;}
+  .timer-bar{height:100%; background:linear-gradient(90deg,var(--green),var(--gold)); width:100%; border-radius:8px; transition:width .1s linear;}
+
+  .drag-card{
+    background:#fff; border:3px solid var(--purple); border-radius:18px; padding:16px;
+    text-align:center; font-size:24px; font-weight:900; color:var(--purple-dark);
+    margin-bottom:14px; cursor:grab; touch-action:none; user-select:none;
+  }
+  .drop-zones{display:flex; gap:12px;}
+  .drop-zone{
+    flex:1; min-height:90px; border:3px dashed var(--purple); border-radius:18px;
+    display:flex; align-items:center; justify-content:center; font-weight:900; color:var(--purple-dark);
+    font-size:16px; text-align:center; padding:8px; background:#f3ecff; transition:background .2s,border-style .2s;
+  }
+  .drop-zone.zone-far{border-color:var(--gold); background:#fff3da;}
+  .drop-zone.hover{border-style:solid;}
+
+  .answer-slot{
+    min-height:64px; border:2px solid var(--purple); border-radius:16px; background:#f3ecff;
+    display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:10px; margin-bottom:12px;
+  }
+  .word-tile{
+    background:#fff; border:2px solid var(--purple); color:var(--purple-dark); border-radius:12px;
+    padding:9px 14px; font-size:16px; font-weight:900; cursor:pointer; transition:transform .1s ease; font-family:inherit;
+  }
+  .word-tile:active{transform:scale(0.94);}
+  .word-bank{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:10px;}
+  .answer-slot .word-tile{background:var(--purple); color:#fff;}
+
+  .word-click{cursor:pointer; padding:3px 7px; border-radius:10px; transition:background .15s;}
+  .word-click:hover{background:#ece0ff;}
+  .word-click.picked-correct{background:var(--green); color:#fff;}
+  .word-click.picked-wrong{background:var(--red); color:#fff;}
+  .word-click.reveal-correct{background:var(--green); color:#fff;}
 </style>
 </head>
 <body>
@@ -376,89 +413,38 @@
         <p>اختر لعبة لتتدرّب أكثر على أسماء الإشارة</p>
       </div>
       <div class="games-grid">
-        <button class="game-tile tile-balloon" id="goBalloon"><span>🎈</span>لعبة البالونات</button>
-        <button class="game-tile tile-memory" id="goMemory"><span>🧠</span>لعبة الذاكرة</button>
-        <button class="game-tile tile-match" id="goMatch"><span>🔗</span>لعبة المطابقة</button>
-        <button class="game-tile tile-race" id="goRace"><span>⚡</span>سباق السرعة</button>
+        <button class="game-tile tile-balloon" id="goClassify"><span>📍</span>صنّف: قريب أم بعيد؟</button>
+        <button class="game-tile tile-memory" id="goDragdrop"><span>✋</span>اسحب وصنّف</button>
+        <button class="game-tile tile-match" id="goBuild"><span>🧩</span>ركّب الجملة</button>
+        <button class="game-tile tile-race" id="goFinderror"><span>🔍</span>اكتشف الخطأ</button>
+        <button class="game-tile tile-balloon" id="goIdentify"><span>👆</span>حدّد اسم الإشارة</button>
+        <button class="game-tile tile-memory" id="goTimed"><span>⏱️</span>تحدي الوقت</button>
+        <button class="game-tile tile-race" id="goMixed" style="grid-column:1/-1;"><span>🎯</span>التحدي الشامل (مزيج من كل الألعاب)</button>
       </div>
       <button class="big-btn btn-secondary" id="gamesBackBtn" style="max-width:200px; margin:0 auto;">⬅️ الرئيسية</button>
     </div>
   </div>
 
-  <!-- BALLOON GAME -->
-  <div class="screen" id="screen-balloon">
+  <!-- GENERIC ACTIVITY SCREEN (replaces balloon/memory/match/race) -->
+  <div class="screen" id="screen-activity">
     <div class="games-wrap">
       <div class="game-top">
-        <span class="stage-label">🎈 لعبة البالونات</span>
-        <span class="stars-counter" id="balloonScore">⭐ 0</span>
+        <span class="stage-label" id="activityTitle">📍 صنّف: قريب أم بعيد؟</span>
+        <span class="stars-counter" id="activityScore">⭐ 0</span>
       </div>
-      <div class="balloon-target" id="balloonTarget">اضغط ابدأ لتظهر الأسئلة</div>
-      <div class="balloon-stage" id="balloonStage"></div>
-      <div class="feedback" id="balloonFeedback"></div>
+      <div class="progress-bar-bg" style="margin:0 0 10px;"><div class="progress-bar-fill" id="activityProgress" style="width:0%"></div></div>
+      <div class="timer-wrap" id="activityTimerWrap"><div class="timer-bar" id="activityTimerBar"></div></div>
+      <div class="activity-label" id="activityHint"></div>
+
+      <div id="activityContent"></div>
+
+      <div class="feedback" id="activityFeedback"></div>
       <div class="lesson-actions">
-        <button class="big-btn btn-play" id="balloonStartBtn">▶️ ابدأ</button>
-        <button class="big-btn btn-secondary" id="balloonBackBtn">⬅️ الألعاب</button>
+        <button class="big-btn btn-secondary" id="activityBackBtn">⬅️ الألعاب</button>
       </div>
     </div>
   </div>
 
-  <!-- MEMORY GAME -->
-  <div class="screen" id="screen-memory">
-    <div class="games-wrap">
-      <div class="game-top">
-        <span class="stage-label">🧠 لعبة الذاكرة</span>
-        <span class="stars-counter" id="memoryMoves">المحاولات: 0</span>
-      </div>
-      <div class="memory-grid" id="memoryGrid"></div>
-      <div class="feedback" id="memoryFeedback"></div>
-      <div class="lesson-actions">
-        <button class="big-btn btn-play" id="memoryRestartBtn">🔁 لعبة جديدة</button>
-        <button class="big-btn btn-secondary" id="memoryBackBtn">⬅️ الألعاب</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MATCHING GAME -->
-  <div class="screen" id="screen-match">
-    <div class="games-wrap">
-      <div class="game-top">
-        <span class="stage-label">🔗 لعبة المطابقة</span>
-        <span class="stars-counter" id="matchScore">⭐ 0</span>
-      </div>
-      <div class="question-card" style="margin-bottom:14px;">
-        <div class="question-text">طابق اسم الإشارة بمعناه الصحيح!</div>
-      </div>
-      <div class="match-board">
-        <div class="match-col" id="matchColWords"></div>
-        <div class="match-col" id="matchColMeanings"></div>
-      </div>
-      <div class="feedback" id="matchFeedback"></div>
-      <div class="lesson-actions">
-        <button class="big-btn btn-play" id="matchRestartBtn">🔁 لعبة جديدة</button>
-        <button class="big-btn btn-secondary" id="matchBackBtn">⬅️ الألعاب</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SPEED RACE -->
-  <div class="screen" id="screen-race">
-    <div class="games-wrap">
-      <div class="game-top">
-        <span class="stage-label">⚡ سباق السرعة</span>
-        <span id="raceTimeLabel" class="hearts">⏱️ 60</span>
-      </div>
-      <div class="race-timer-bg"><div class="race-timer-fill" id="raceTimerFill" style="width:100%"></div></div>
-      <div class="race-score" id="raceScore">⭐ النقاط: 0</div>
-      <div class="question-card">
-        <div class="question-sentence" id="raceSentence">اضغط ابدأ السباق</div>
-      </div>
-      <div class="options-grid" id="raceOptions"></div>
-      <div class="lesson-actions">
-        <button class="big-btn btn-play" id="raceStartBtn">▶️ ابدأ السباق</button>
-        <button class="big-btn btn-secondary" id="raceBackBtn">⬅️ الألعاب</button>
-      </div>
-    </div>
-  </div>
 
   <!-- LESSON SCREEN -->
   <div class="screen" id="screen-lesson">
@@ -717,250 +703,276 @@ const balloonNouns = [
 
 document.getElementById("extraGamesBtn").addEventListener("click", ()=>{ sfxClick(); showScreen("screen-games"); });
 document.getElementById("gamesBackBtn").addEventListener("click", ()=>{ sfxClick(); showScreen("screen-home"); });
-document.getElementById("goBalloon").addEventListener("click", ()=>{ sfxClick(); showScreen("screen-balloon"); resetBalloon(); });
-document.getElementById("goMemory").addEventListener("click", ()=>{ sfxClick(); showScreen("screen-memory"); initMemory(); });
-document.getElementById("goMatch").addEventListener("click", ()=>{ sfxClick(); showScreen("screen-match"); initMatch(); });
-document.getElementById("goRace").addEventListener("click", ()=>{ sfxClick(); showScreen("screen-race"); resetRace(); });
-document.getElementById("balloonBackBtn").addEventListener("click", ()=>{ sfxClick(); stopBalloon(); showScreen("screen-games"); });
-document.getElementById("memoryBackBtn").addEventListener("click", ()=>{ sfxClick(); showScreen("screen-games"); });
-document.getElementById("matchBackBtn").addEventListener("click", ()=>{ sfxClick(); showScreen("screen-games"); });
-document.getElementById("raceBackBtn").addEventListener("click", ()=>{ sfxClick(); stopRace(); showScreen("screen-games"); });
-document.getElementById("memoryRestartBtn").addEventListener("click", ()=>{ sfxClick(); initMemory(); });
-document.getElementById("matchRestartBtn").addEventListener("click", ()=>{ sfxClick(); initMatch(); });
+document.getElementById("goClassify").addEventListener("click", ()=>{ sfxClick(); launchActivity("classify"); });
+document.getElementById("goDragdrop").addEventListener("click", ()=>{ sfxClick(); launchActivity("dragdrop"); });
+document.getElementById("goBuild").addEventListener("click", ()=>{ sfxClick(); launchActivity("build"); });
+document.getElementById("goFinderror").addEventListener("click", ()=>{ sfxClick(); launchActivity("finderror"); });
+document.getElementById("goIdentify").addEventListener("click", ()=>{ sfxClick(); launchActivity("identify"); });
+document.getElementById("goTimed").addEventListener("click", ()=>{ sfxClick(); launchActivity("timed"); });
+document.getElementById("goMixed").addEventListener("click", ()=>{ sfxClick(); launchActivity("mixed"); });
+document.getElementById("activityBackBtn").addEventListener("click", ()=>{ sfxClick(); clearInterval(actTimerInterval); showScreen("screen-games"); });
 
-/* ===================== GAME 1: BALLOON POP ===================== */
-let balloonScore=0, balloonRound=0;
-function resetBalloon(){
-  balloonScore=0; balloonRound=0;
-  document.getElementById("balloonScore").textContent = "⭐ 0";
-  document.getElementById("balloonFeedback").textContent = "";
-  document.getElementById("balloonStage").innerHTML = "";
-  document.getElementById("balloonTarget").textContent = "اضغط ابدأ لتظهر الأسئلة";
-}
-function stopBalloon(){ /* no timers to clear in static mode */ }
-document.getElementById("balloonStartBtn").addEventListener("click", ()=>{
-  sfxClick(); resetBalloon(); balloonNextRound();
-});
-const balloonColors=["#ffb627","#3ddc84","#5ec8f7","#ff5c6c","#ff7eb6","#7c4fe0"];
-function balloonNextRound(){
-  if(balloonRound>=8){
-    document.getElementById("balloonTarget").textContent = "🏁 انتهت الجولة! نتيجتك: "+balloonScore+" / 8";
-    document.getElementById("balloonStage").innerHTML = "";
-    document.getElementById("balloonFeedback").textContent = "اضغط ابدأ لإعادة اللعب";
-    document.getElementById("balloonFeedback").className="feedback good";
-    sfxWin();
-    return;
-  }
-  balloonRound++;
-  const item = shuffleArr(balloonNouns)[0];
-  document.getElementById("balloonTarget").textContent = "أشر إلى " + item.phrase + ":";
-  document.getElementById("balloonFeedback").textContent = "";
-  const stage = document.getElementById("balloonStage");
-  stage.innerHTML = "";
+/* ===================== NEW ACTIVITIES: shared sentence bank ===================== */
+/* Built from the 5 adventure stages: each item = full sentence words + the demonstrative + its category */
+const ACT_BANK = [
+  {words:["هذا","ولدٌ","مجتهد"], demo:"هذا", cat:"near"},
+  {words:["هذه","معلمةٌ","لطيفة"], demo:"هذه", cat:"near"},
+  {words:["هذان","كتابان","جديدان"], demo:"هذان", cat:"near"},
+  {words:["هاتان","طالبتان","مهذبتان"], demo:"هاتان", cat:"near"},
+  {words:["هؤلاء","تلاميذُ","يلعبون","في","الساحة"], demo:"هؤلاء", cat:"near"},
+  {words:["تلك","شجرةٌ","كبيرة"], demo:"تلك", cat:"far"},
+  {words:["ذلك","طائرٌ","جميل"], demo:"ذلك", cat:"far"},
+  {words:["هاتان","زهرتان","حمراوان"], demo:"هاتان", cat:"near"},
+  {words:["هذان","ولدان","يركضان"], demo:"هذان", cat:"near"},
+  {words:["هؤلاء","أطفالٌ","يلعبون","بالكرة"], demo:"هؤلاء", cat:"near"},
+  {words:["هذا","بيتٌ","جميل"], demo:"هذا", cat:"near"},
+  {words:["هذه","طاولةٌ","خشبية"], demo:"هذه", cat:"near"},
+  {words:["تلك","قطةٌ","صغيرة"], demo:"تلك", cat:"far"},
+  {words:["ذلك","بيتٌ","كبير"], demo:"ذلك", cat:"far"},
+  {words:["أولئك","أولادٌ","يساعدون","أمهم"], demo:"أولئك", cat:"far"},
+  {words:["هذه","قصةٌ","ممتعة"], demo:"هذه", cat:"near"},
+  {words:["ذلك","كتابٌ","مفيد"], demo:"ذلك", cat:"far"},
+  {words:["هاتان","مجلتان","ملونتان"], demo:"هاتان", cat:"near"},
+  {words:["أولئك","قارئون","مجتهدون"], demo:"أولئك", cat:"far"},
+  {words:["هذان","قلمان","جديدان"], demo:"هذان", cat:"near"},
+  {words:["هذا","صندوقُ","كنزٍ","ذهبي"], demo:"هذا", cat:"near"},
+  {words:["تلك","جزيرةٌ","بعيدة"], demo:"تلك", cat:"far"},
+  {words:["هذان","مفتاحان","سحريان"], demo:"هذان", cat:"near"},
+  {words:["هؤلاء","أبطالٌ","منتصرون"], demo:"هؤلاء", cat:"near"}
+];
+function actSentence(q){ return q.words.join(" "); }
 
-  const distractors = shuffleArr(vocab.map(v=>v.word).filter(w=>w!==item.answer)).slice(0,3);
-  const choices = shuffleArr([item.answer, ...distractors]);
-  choices.forEach((word,i)=>{
-    const b = document.createElement("button");
-    b.className="balloon";
-    b.textContent=word;
-    b.style.background = balloonColors[i % balloonColors.length];
-    b.addEventListener("click", ()=>{
-      if(b.classList.contains("popped") || b.disabled) return;
-      if(word === item.answer){
-        b.classList.add("popped");
-        balloonScore++;
-        document.getElementById("balloonScore").textContent = "⭐ "+balloonScore;
-        document.getElementById("balloonFeedback").textContent = "🎉 صحيح!";
-        document.getElementById("balloonFeedback").className="feedback good";
-        sfxCorrect();
-        stage.querySelectorAll(".balloon").forEach(o=>o.disabled=true);
-        setTimeout(balloonNextRound, 700);
-      } else {
-        b.classList.add("popped");
-        b.disabled = true;
-        document.getElementById("balloonFeedback").textContent = "❌ حاول مرة أخرى!";
-        document.getElementById("balloonFeedback").className="feedback bad";
-        sfxWrong();
-      }
-    });
-    stage.appendChild(b);
-  });
-}
+const ACT_NAMES = {
+  classify:"📍 صنّف: قريب أم بعيد؟", dragdrop:"✋ اسحب وصنّف", build:"🧩 ركّب الجملة",
+  finderror:"🔍 اكتشف الخطأ", identify:"👆 حدّد اسم الإشارة", timed:"⏱️ تحدي الوقت", mixed:"🎯 التحدي الشامل"
+};
 
-/* ===================== GAME 2: MEMORY ===================== */
-let memFlipped=[], memMatched=0, memMoves=0, memLock=false;
-function initMemory(){
-  const pairs = shuffleArr(vocab).slice(0,6);
-  let cards = [];
-  pairs.forEach(p=>{
-    cards.push({type:"word", text:p.word, key:p.word});
-    cards.push({type:"meaning", text:p.meaning, key:p.word});
-  });
-  cards = shuffleArr(cards);
-  memFlipped=[]; memMatched=0; memMoves=0; memLock=false;
-  document.getElementById("memoryMoves").textContent = "المحاولات: 0";
-  document.getElementById("memoryFeedback").textContent = "";
-  const grid = document.getElementById("memoryGrid");
-  grid.innerHTML="";
-  cards.forEach((c,idx)=>{
-    const el = document.createElement("div");
-    el.className="mem-card";
-    el.dataset.key=c.key; el.dataset.idx=idx;
-    el.innerHTML = `<span class="mem-back">❓</span><span class="mem-face">${c.text}</span>`;
-    el.addEventListener("click", ()=>flipMemCard(el));
-    grid.appendChild(el);
-  });
-}
-function flipMemCard(el){
-  if(memLock || el.classList.contains("flipped") || el.classList.contains("matched")) return;
-  el.classList.add("flipped");
-  sfxClick();
-  memFlipped.push(el);
-  if(memFlipped.length===2){
-    memMoves++;
-    document.getElementById("memoryMoves").textContent = "المحاولات: "+memMoves;
-    memLock=true;
-    const [a,b] = memFlipped;
-    if(a.dataset.key===b.dataset.key && a!==b){
-      setTimeout(()=>{
-        a.classList.add("matched"); b.classList.add("matched");
-        memMatched++; memFlipped=[]; memLock=false;
-        sfxCorrect();
-        if(memMatched===6){
-          document.getElementById("memoryFeedback").textContent = "🏆 أحسنت! أكملت اللعبة في "+memMoves+" محاولة";
-          document.getElementById("memoryFeedback").className="feedback good";
-          sfxWin();
-        }
-      }, 400);
-    } else {
-      sfxWrong();
-      setTimeout(()=>{
-        a.classList.remove("flipped"); b.classList.remove("flipped");
-        memFlipped=[]; memLock=false;
-      }, 800);
-    }
-  }
-}
+let actMode="classify", actQuestions=[], actIndex=0, actScore=0, actTimerInterval=null, actTimerStart=0;
+const ACT_TIME_LIMIT = 10000;
 
-/* ===================== GAME 3: MATCHING ===================== */
-let matchSelWord=null, matchSelMeaning=null, matchScore=0, matchPairsLeft=0;
-function initMatch(){
-  const pairs = shuffleArr(vocab).slice(0,5);
-  matchScore=0; matchPairsLeft=pairs.length; matchSelWord=null; matchSelMeaning=null;
-  document.getElementById("matchScore").textContent = "⭐ 0";
-  document.getElementById("matchFeedback").textContent = "";
-  const wordsCol = document.getElementById("matchColWords");
-  const meanCol = document.getElementById("matchColMeanings");
-  wordsCol.innerHTML=""; meanCol.innerHTML="";
-  const wordsShuffled = shuffleArr(pairs);
-  const meaningsShuffled = shuffleArr(pairs);
-  wordsShuffled.forEach(p=>{
-    const d=document.createElement("div");
-    d.className="match-item"; d.textContent=p.word; d.dataset.key=p.word;
-    d.addEventListener("click", ()=>selectMatch(d,"word"));
-    wordsCol.appendChild(d);
-  });
-  meaningsShuffled.forEach(p=>{
-    const d=document.createElement("div");
-    d.className="match-item"; d.textContent=p.meaning; d.dataset.key=p.word;
-    d.addEventListener("click", ()=>selectMatch(d,"meaning"));
-    meanCol.appendChild(d);
-  });
-}
-function selectMatch(el, type){
-  if(el.classList.contains("matched")) return;
-  sfxClick();
-  if(type==="word"){
-    if(matchSelWord) matchSelWord.classList.remove("selected");
-    matchSelWord = el; el.classList.add("selected");
+function launchActivity(mode){
+  actMode = mode;
+  actScore = 0; actIndex = 0;
+  document.getElementById("activityScore").textContent = "⭐ 0";
+  document.getElementById("activityTitle").textContent = ACT_NAMES[mode];
+  const useTimer = (mode==="timed" || mode==="mixed");
+  document.getElementById("activityTimerWrap").style.display = useTimer ? "block" : "none";
+
+  let count = (mode==="mixed") ? 12 : 10;
+  if(mode==="mixed"){
+    const types=["classify","dragdrop","build","finderror","identify"];
+    actQuestions = shuffleArr(ACT_BANK).slice(0,count).map(q=>({...q, activityType: types[Math.floor(Math.random()*types.length)]}));
   } else {
-    if(matchSelMeaning) matchSelMeaning.classList.remove("selected");
-    matchSelMeaning = el; el.classList.add("selected");
+    const realType = (mode==="timed") ? "classify" : mode;
+    actQuestions = shuffleArr(ACT_BANK).slice(0,count).map(q=>({...q, activityType: realType}));
   }
-  if(matchSelWord && matchSelMeaning){
-    if(matchSelWord.dataset.key === matchSelMeaning.dataset.key){
-      matchSelWord.classList.add("matched"); matchSelMeaning.classList.add("matched");
-      matchSelWord.classList.remove("selected"); matchSelMeaning.classList.remove("selected");
-      matchScore++; matchPairsLeft--;
-      document.getElementById("matchScore").textContent = "⭐ "+matchScore;
-      sfxCorrect();
-      matchSelWord=null; matchSelMeaning=null;
-      if(matchPairsLeft===0){
-        document.getElementById("matchFeedback").textContent = "🎉 أحسنت! طابقت كل الأزواج";
-        document.getElementById("matchFeedback").className="feedback good";
-        sfxWin();
+  showScreen("screen-activity");
+  loadActQuestion();
+}
+
+function loadActQuestion(){
+  clearInterval(actTimerInterval);
+  document.getElementById("activityFeedback").textContent = "";
+  const pct = (actIndex/actQuestions.length)*100;
+  document.getElementById("activityProgress").style.width = pct+"%";
+  const q = actQuestions[actIndex];
+  document.getElementById("activityTitle").textContent = ACT_NAMES[actMode==="mixed" ? q.activityType : actMode];
+  const content = document.getElementById("activityContent");
+  const hint = document.getElementById("activityHint");
+  content.innerHTML = ""; hint.textContent = "";
+
+  if(q.activityType==="classify") renderActClassify(q, content, hint);
+  else if(q.activityType==="dragdrop") renderActDragdrop(q, content, hint);
+  else if(q.activityType==="build") renderActBuild(q, content, hint);
+  else if(q.activityType==="finderror") renderActFinderror(q, content, hint);
+  else if(q.activityType==="identify") renderActIdentify(q, content, hint);
+
+  const useTimer = (actMode==="timed" || actMode==="mixed");
+  if(useTimer){
+    const bar = document.getElementById("activityTimerBar");
+    bar.style.width="100%"; bar.style.background="linear-gradient(90deg,#3ddc84,#ffb627)";
+    actTimerStart = Date.now();
+    actTimerInterval = setInterval(()=>{
+      const elapsed = Date.now()-actTimerStart;
+      const remain = Math.max(0, 1-elapsed/ACT_TIME_LIMIT);
+      bar.style.width=(remain*100)+"%";
+      if(remain<0.3) bar.style.background="linear-gradient(90deg,#ff5c6c,#c43a48)";
+      if(elapsed>=ACT_TIME_LIMIT){
+        clearInterval(actTimerInterval);
+        actDisableAll();
+        document.getElementById("activityFeedback").textContent = "⏰ انتهى الوقت! الصحيح: " + (q.activityType==="build" ? actSentence(q) : (q.cat==="near"?"قريب ("+q.demo+")":"بعيد ("+q.demo+")"));
+        document.getElementById("activityFeedback").className="feedback bad";
+        sfxWrong();
+        setTimeout(actAdvance, 1700);
       }
-    } else {
-      matchSelWord.classList.add("wrong"); matchSelMeaning.classList.add("wrong");
-      sfxWrong();
-      const w=matchSelWord, m=matchSelMeaning;
-      setTimeout(()=>{
-        w.classList.remove("wrong","selected"); m.classList.remove("wrong","selected");
-      }, 500);
-      matchSelWord=null; matchSelMeaning=null;
-    }
+    }, 100);
+  }
+}
+function actDisableAll(){
+  document.querySelectorAll("#activityContent button, #activityContent .word-tile, #activityContent .word-click").forEach(el=> el.style.pointerEvents="none");
+}
+function actRegisterCorrect(msg){
+  actScore++;
+  document.getElementById("activityScore").textContent = "⭐ "+actScore;
+  const fb = document.getElementById("activityFeedback");
+  fb.textContent = msg; fb.className="feedback good";
+  sfxCorrect();
+}
+function actRegisterWrong(msg){
+  const fb = document.getElementById("activityFeedback");
+  fb.textContent = msg; fb.className="feedback bad";
+  sfxWrong();
+}
+function actAdvance(){
+  actIndex++;
+  if(actIndex >= actQuestions.length){
+    document.getElementById("activityProgress").style.width="100%";
+    document.getElementById("activityContent").innerHTML = "";
+    document.getElementById("activityHint").textContent = "";
+    document.getElementById("activityFeedback").textContent = "🏁 انتهت الجولة! نتيجتك: "+actScore+" / "+actQuestions.length;
+    document.getElementById("activityFeedback").className="feedback good";
+    sfxWin();
+    launchConfetti();
+  } else {
+    loadActQuestion();
   }
 }
 
-/* ===================== GAME 4: SPEED RACE ===================== */
-let raceTimer=null, raceTime=60, raceScoreVal=0, raceActive=false;
-function resetRace(){
-  stopRace();
-  raceTime=60; raceScoreVal=0;
-  document.getElementById("raceTimeLabel").textContent = "⏱️ 60";
-  document.getElementById("raceTimerFill").style.width="100%";
-  document.getElementById("raceScore").textContent = "⭐ النقاط: 0";
-  document.getElementById("raceSentence").textContent = "اضغط ابدأ السباق";
-  document.getElementById("raceOptions").innerHTML="";
+/* ----- Activity: classify (near/far) ----- */
+function renderActClassify(q, content, hint){
+  hint.textContent = "هل هذا اسم الإشارة للقريب أم للبعيد؟";
+  content.innerHTML = `
+    <div class="question-card"><div class="question-sentence">${q.demo}</div></div>
+    <div class="options-grid">
+      <button class="option-btn" id="actNear">قريب 🙋</button>
+      <button class="option-btn" id="actFar">بعيد 🙆</button>
+    </div>`;
+  document.getElementById("actNear").onclick = ()=> answerActClassify(q,"near");
+  document.getElementById("actFar").onclick = ()=> answerActClassify(q,"far");
 }
-function stopRace(){
-  if(raceTimer){ clearInterval(raceTimer); raceTimer=null; }
-  raceActive=false;
+function answerActClassify(q, choice){
+  clearInterval(actTimerInterval);
+  actDisableAll();
+  const correctBtn = document.getElementById(q.cat==="near"?"actNear":"actFar");
+  const chosenBtn = document.getElementById(choice==="near"?"actNear":"actFar");
+  if(choice===q.cat){ chosenBtn.classList.add("correct"); actRegisterCorrect("🎉 صحيح! "+q.demo+" "+(q.cat==="near"?"للقريب":"للبعيد")); }
+  else { chosenBtn.classList.add("wrong"); correctBtn.classList.add("correct"); actRegisterWrong("❌ الصحيح: "+(q.cat==="near"?"قريب":"بعيد")); }
+  setTimeout(actAdvance, 1500);
 }
-document.getElementById("raceStartBtn").addEventListener("click", ()=>{
-  sfxClick(); resetRace(); raceActive=true;
-  raceTimer = setInterval(()=>{
-    raceTime--;
-    document.getElementById("raceTimeLabel").textContent = "⏱️ "+raceTime;
-    document.getElementById("raceTimerFill").style.width = (raceTime/60*100)+"%";
-    if(raceTime<=0){
-      stopRace();
-      document.getElementById("raceSentence").textContent = "🏁 انتهى الوقت! نتيجتك: "+raceScoreVal;
-      document.getElementById("raceOptions").innerHTML="";
-      sfxWin();
-    }
-  }, 1000);
-  raceNextQuestion();
-});
-function raceNextQuestion(){
-  if(!raceActive) return;
-  const target = vocab[Math.floor(Math.random()*vocab.length)];
-  const askWord = Math.random()<0.5;
-  document.getElementById("raceSentence").textContent = askWord
-    ? ("ما معنى: " + target.word + " ؟")
-    : ("اختر الكلمة المناسبة لـ: " + target.meaning);
-  const correct = askWord ? target.meaning : target.word;
-  const pool = askWord ? vocab.map(v=>v.meaning) : vocab.map(v=>v.word);
-  const opts = shuffleArr([correct, ...shuffleArr(pool.filter(p=>p!==correct)).slice(0,3)]);
-  const grid = document.getElementById("raceOptions");
-  grid.innerHTML="";
-  opts.forEach(opt=>{
-    const btn=document.createElement("button");
-    btn.className="option-btn"; btn.textContent=opt;
-    btn.addEventListener("click", ()=>{
-      if(!raceActive) return;
-      if(opt===correct){
-        raceScoreVal++;
-        document.getElementById("raceScore").textContent = "⭐ النقاط: "+raceScoreVal;
-        sfxCorrect();
-      } else {
-        sfxWrong();
-      }
-      raceNextQuestion();
-    });
-    grid.appendChild(btn);
+
+/* ----- Activity: drag & drop ----- */
+function renderActDragdrop(q, content, hint){
+  hint.textContent = "اسحب اسم الإشارة إلى الصندوق الصحيح";
+  content.innerHTML = `
+    <div class="drag-card" id="actDragCard">${q.demo}</div>
+    <div class="drop-zones">
+      <div class="drop-zone" id="actZoneNear">قريب 🙋</div>
+      <div class="drop-zone zone-far" id="actZoneFar">بعيد 🙆</div>
+    </div>`;
+  const card = document.getElementById("actDragCard");
+  const zN = document.getElementById("actZoneNear");
+  const zF = document.getElementById("actZoneFar");
+  card.draggable = true;
+  card.addEventListener("dragstart", e=> e.dataTransfer.setData("text","x"));
+  [zN,zF].forEach(zone=>{
+    zone.addEventListener("dragover", e=>{ e.preventDefault(); zone.classList.add("hover"); });
+    zone.addEventListener("dragleave", ()=> zone.classList.remove("hover"));
+    zone.addEventListener("drop", e=>{ e.preventDefault(); zone.classList.remove("hover"); finishActDrop(zone===zN?"near":"far"); });
   });
+  let dragging=false, ox=0, oy=0;
+  card.addEventListener("touchstart", e=>{ dragging=true; card.style.position="relative"; card.style.zIndex=50; const t=e.touches[0]; ox=t.clientX; oy=t.clientY; }, {passive:true});
+  card.addEventListener("touchmove", e=>{
+    if(!dragging) return; const t=e.touches[0]; const dx=t.clientX-ox, dy=t.clientY-oy;
+    card.style.transform=`translate(${dx}px,${dy}px)`;
+    [zN,zF].forEach(zone=>{ const r=zone.getBoundingClientRect(); const inside = t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom; zone.classList.toggle("hover", inside); });
+  }, {passive:true});
+  card.addEventListener("touchend", e=>{
+    if(!dragging) return; dragging=false; const t=e.changedTouches[0]; let landed=null;
+    [[zN,"near"],[zF,"far"]].forEach(([zone,val])=>{ const r=zone.getBoundingClientRect(); if(t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top&&t.clientY<=r.bottom) landed=val; zone.classList.remove("hover"); });
+    if(landed) finishActDrop(landed); else card.style.transform="translate(0,0)";
+  });
+  function finishActDrop(choice){
+    clearInterval(actTimerInterval); card.draggable=false; actDisableAll();
+    if(choice===q.cat){ (choice==="near"?zN:zF).style.background="#cdeed9"; actRegisterCorrect("🎉 أحسنت! وضعتها في المكان الصحيح"); }
+    else { (choice==="near"?zN:zF).style.background="#ffd6d6"; actRegisterWrong("❌ الصحيح: "+(q.cat==="near"?"قريب":"بعيد")); }
+    setTimeout(actAdvance, 1500);
+  }
+}
+
+/* ----- Activity: build the sentence ----- */
+function renderActBuild(q, content, hint){
+  hint.textContent = "رتّب الكلمات لتكوين جملة صحيحة";
+  content.innerHTML = `
+    <div class="answer-slot" id="actAnswerSlot"></div>
+    <div class="word-bank" id="actWordBank"></div>
+    <button class="big-btn btn-secondary" id="actResetBtn" style="max-width:200px;margin:6px auto;">↺ إعادة الترتيب</button>
+    <button class="big-btn btn-play" id="actCheckBtn" style="max-width:240px;margin:6px auto 0;">✅ تحقق من الجملة</button>`;
+  const shuffled = shuffleArr(q.words);
+  const bank = document.getElementById("actWordBank");
+  const slot = document.getElementById("actAnswerSlot");
+  function buildTiles(){
+    bank.innerHTML="";
+    shuffled.forEach(w=>{
+      const t=document.createElement("div"); t.className="word-tile"; t.textContent=w; t.dataset.word=w;
+      t.onclick = ()=>{ slot.appendChild(t); t.onclick=()=>{ bank.appendChild(t); }; };
+      bank.appendChild(t);
+    });
+  }
+  buildTiles();
+  document.getElementById("actResetBtn").onclick = ()=>{ slot.innerHTML=""; buildTiles(); };
+  document.getElementById("actCheckBtn").onclick = ()=>{
+    clearInterval(actTimerInterval);
+    const built = Array.from(slot.children).map(t=>t.dataset.word);
+    actDisableAll();
+    document.getElementById("actResetBtn").style.pointerEvents="auto";
+    const ok = built.length===q.words.length && built.every((w,i)=>w===q.words[i]);
+    if(ok) actRegisterCorrect("🎉 أحسنت! الجملة صحيحة: "+actSentence(q));
+    else actRegisterWrong("❌ الترتيب الصحيح: "+actSentence(q));
+    setTimeout(actAdvance, 1800);
+  };
+}
+
+/* ----- Activity: find the error ----- */
+function renderActFinderror(q, content, hint){
+  const showWrong = Math.random()<0.5;
+  const shownCat = showWrong ? (q.cat==="near"?"far":"near") : q.cat;
+  const isStatementCorrect = (shownCat===q.cat);
+  hint.textContent = "هل التصنيف المقترح صحيح؟";
+  content.innerHTML = `
+    <div class="question-card"><div class="question-sentence">${q.demo}</div></div>
+    <div style="text-align:center; font-weight:900; color:var(--purple-dark); margin-bottom:10px;">التصنيف المقترح: ${shownCat==="near"?"قريب 🙋":"بعيد 🙆"}</div>
+    <div class="options-grid">
+      <button class="option-btn" id="actTrue">صحيح ✔️</button>
+      <button class="option-btn" id="actFalse">خطأ ✖️</button>
+    </div>`;
+  document.getElementById("actTrue").onclick = ()=> answerActFinderror(q, true, isStatementCorrect);
+  document.getElementById("actFalse").onclick = ()=> answerActFinderror(q, false, isStatementCorrect);
+}
+function answerActFinderror(q, studentSaysTrue, isStatementCorrect){
+  clearInterval(actTimerInterval); actDisableAll();
+  const right = (studentSaysTrue===isStatementCorrect);
+  if(right) actRegisterCorrect("🎉 أحسنت! تحليل صحيح");
+  else actRegisterWrong("❌ التصنيف الصحيح لـ "+q.demo+": "+(q.cat==="near"?"قريب":"بعيد"));
+  setTimeout(actAdvance, 1500);
+}
+
+/* ----- Activity: identify the demonstrative inside the sentence ----- */
+function renderActIdentify(q, content, hint){
+  hint.textContent = "اضغط على اسم الإشارة داخل الجملة 👆";
+  const wordsHtml = q.words.map(w=>`<span class="word-click" data-word="${w}">${w}</span>`).join(" ");
+  content.innerHTML = `<div class="question-card"><div class="question-sentence">${wordsHtml}</div></div>`;
+  content.querySelectorAll(".word-click").forEach(el=>{ el.onclick = ()=> answerActIdentify(q, el); });
+}
+function answerActIdentify(q, el){
+  clearInterval(actTimerInterval); actDisableAll();
+  const chosen = el.dataset.word;
+  if(chosen===q.demo){ el.classList.add("picked-correct"); actRegisterCorrect("🎉 أحسنت! هذه هي الكلمة الصحيحة"); }
+  else {
+    el.classList.add("picked-wrong");
+    document.querySelectorAll("#activityContent .word-click").forEach(w=>{ if(w.dataset.word===q.demo) w.classList.add("reveal-correct"); });
+    actRegisterWrong("❌ الكلمة الصحيحة: "+q.demo);
+  }
+  setTimeout(actAdvance, 1500);
 }
 
 document.getElementById("playBtn").addEventListener("click", ()=>{ sfxClick(); renderMap(); showScreen("screen-map"); });
