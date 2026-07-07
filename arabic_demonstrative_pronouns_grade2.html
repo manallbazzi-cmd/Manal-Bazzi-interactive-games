@@ -671,6 +671,21 @@ const vocab = [
   {word:"تلك", meaning:"مؤنث مفرد بعيد", emoji:"👩"},
   {word:"أولئك", meaning:"جمع بعيد", emoji:"👥"}
 ];
+// ── SPEECH (read feedback aloud, Arabic) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'ar-SA'; utt.rate = 0.85; utt.pitch = 1.05;
+  const ar = ttsVoices.find(v=>v.lang.startsWith('ar'));
+  if(ar) utt.voice = ar;
+  window.speechSynthesis.speak(utt);
+}
+
 function shuffleArr(arr){
   const a=[...arr];
   for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
@@ -800,9 +815,11 @@ function loadActQuestion(){
       if(elapsed>=ACT_TIME_LIMIT){
         clearInterval(actTimerInterval);
         actDisableAll();
-        document.getElementById("activityFeedback").textContent = "⏰ انتهى الوقت! الصحيح: " + (q.activityType==="build" ? actSentence(q) : (q.cat==="near"?"قريب ("+q.demo+")":"بعيد ("+q.demo+")"));
+        const timeUpMsg = "⏰ انتهى الوقت! الصحيح: " + (q.activityType==="build" ? actSentence(q) : (q.cat==="near"?"قريب ("+q.demo+")":"بعيد ("+q.demo+")"));
+        document.getElementById("activityFeedback").textContent = timeUpMsg;
         document.getElementById("activityFeedback").className="feedback bad";
         sfxWrong();
+        speak(timeUpMsg);
         setTimeout(actAdvance, 1700);
       }
     }, 100);
@@ -817,11 +834,13 @@ function actRegisterCorrect(msg){
   const fb = document.getElementById("activityFeedback");
   fb.textContent = msg; fb.className="feedback good";
   sfxCorrect();
+  speak(msg);
 }
 function actRegisterWrong(msg){
   const fb = document.getElementById("activityFeedback");
   fb.textContent = msg; fb.className="feedback bad";
   sfxWrong();
+  speak(msg);
 }
 function actAdvance(){
   actIndex++;
@@ -1047,6 +1066,7 @@ function loadQuestion(){
   document.getElementById("nextBtn").style.display = "none";
   document.getElementById("heartsDisplay").textContent = "❤️".repeat(curHearts) + "🖤".repeat(3-curHearts);
   document.getElementById("progressFill").style.width = Math.round((curQIdx/stage.questions.length)*100) + "%";
+  setTimeout(()=>speak(q.sentence.replace("___","فراغ")),300);
 
   // shuffle options
   const opts = [...q.options];
@@ -1076,6 +1096,7 @@ function handleAnswer(btn, chosen, correctAnswer){
     fb.textContent = "🎉 أحسنت! إجابة صحيحة";
     fb.className = "feedback good";
     sfxCorrect();
+    speak("أحسنت! إجابة صحيحة");
     curStars++;
     totalStars++;
     flyStar(btn);
@@ -1084,6 +1105,7 @@ function handleAnswer(btn, chosen, correctAnswer){
     fb.textContent = "❌ حاول مرة أخرى! الإجابة الصحيحة: " + correctAnswer;
     fb.className = "feedback bad";
     sfxWrong();
+    speak("حاول مرة أخرى! الإجابة الصحيحة: " + correctAnswer);
     curHearts = Math.max(0, curHearts-1);
     document.getElementById("heartsDisplay").textContent = "❤️".repeat(curHearts) + "🖤".repeat(3-curHearts);
     allBtns.forEach(b=>{ if(b.textContent===correctAnswer) b.classList.add("correct"); });

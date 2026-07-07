@@ -795,6 +795,23 @@ let studentName='Explorer', studentAv='👦';
 let totalCoins=0;
 
 function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+
+// ── SPEECH (read questions + feedback aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
 function rndNum(){return rnd(1,999);}
 function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function addCoins(n){totalCoins+=n;document.getElementById('coinCount').textContent=totalCoins;document.getElementById('totalCoins').textContent=totalCoins;}
@@ -918,23 +935,27 @@ function pvChallenge(){
   const n_el=document.getElementById('pvChalNum');
   const opts_el=document.getElementById('pvChalOpts');
 
-  let showTxt, correctAns, makeOpt;
+  let showTxt, correctAns, makeOpt, spokenQ;
   if(t==='std'){
     q_el.textContent='What is the standard form?';
     n_el.textContent=getExpanded(num);
     correctAns=String(num);
     makeOpt=n=>String(n);
+    spokenQ=`What is the standard form of ${getExpanded(num)}?`;
   } else if(t==='exp'){
     q_el.textContent='What is the expanded form?';
     n_el.textContent=String(num);
     correctAns=getExpanded(num);
     makeOpt=n=>getExpanded(n);
+    spokenQ=`What is the expanded form of ${num}?`;
   } else {
     q_el.textContent='What number is this?';
     n_el.textContent=numToWords(num);
     correctAns=String(num);
     makeOpt=n=>String(n);
+    spokenQ=`What number is ${numToWords(num)}?`;
   }
+  setTimeout(()=>speak(spokenQ),300);
 
   const wrongs=wrongNums(num,3);
   const allOpts=shuffle([correctAns,...wrongs.map(makeOpt)]).slice(0,4);
@@ -947,12 +968,14 @@ function pvChallenge(){
         b.classList.add('correct');
         showFb('pvChalFb','ok','✅ Correct! +2 coins! 🪙');
         addCoins(2);document.getElementById('pvCoins').textContent+=2; playSound('win');
+        speak('Correct!');
         setTimeout(pvChallenge,1800);
       } else {
         b.classList.add('wrong');
         opts_el.querySelectorAll('button').forEach(x=>{if(x.textContent===correctAns)x.classList.add('correct');});
         showFb('pvChalFb','no','❌ Not quite! See the green answer.');
         playSound('wrong');
+        speak(`Not quite. The answer is ${correctAns}.`);
         setTimeout(pvChallenge,2200);
       }
     };
@@ -996,6 +1019,7 @@ function loadNL(){
   // set thumb to middle
   setNLThumb(50);
   setupNLDrag();
+  setTimeout(()=>speak(`Place ${nlTarget} on the number line!`),300);
 }
 
 let nlPct=50;
@@ -1032,6 +1056,7 @@ function checkNL(){
     nlScore++;document.getElementById('nlScore').textContent=nlScore;
     showFb('nlFb','ok',`✅ Great! ${nlTarget} is at the right spot! +2 coins 🪙`);
     addCoins(2); playSound('win');
+    speak('Correct! Great job!');
   } else {
     const correctPct=(nlTarget-nlRangeMin)/(nlRangeMax-nlRangeMin)*100;
     document.getElementById('nlThumb').style.left=correctPct+'%';
@@ -1039,6 +1064,7 @@ function checkNL(){
     document.getElementById('nlValDisp').textContent=nlTarget;
     showFb('nlFb','no',`❌ The correct position for ${nlTarget} is shown in gold.`);
     playSound('wrong');
+    speak(`Not quite. The correct position is ${nlTarget}.`);
   }
   nlCurrent++;
   setTimeout(loadNL,2400);
@@ -1064,28 +1090,33 @@ function loadQz(){
   const num=rndNum();
   const qTypes=['std_to_word','word_to_std','exp_to_std','std_to_exp','compare'];
   const qt=qTypes[rnd(0,3)]; // avoid compare for simplicity
-  let target,correct,makeOpt;
+  let target,correct,makeOpt,spokenQ;
 
   if(qt==='std_to_word'){
     document.getElementById('qzInstr').textContent='What is this number in words?';
     document.getElementById('qzTarget').textContent=num;
     correct=numToWords(num);makeOpt=n=>numToWords(n);
+    spokenQ=`What is ${num} in words?`;
   } else if(qt==='word_to_std'){
     document.getElementById('qzInstr').textContent='Which number matches these words?';
     document.getElementById('qzTarget').textContent=numToWords(num);
     document.getElementById('qzTarget').style.fontSize='clamp(20px,5vw,32px)';
     correct=String(num);makeOpt=n=>String(n);
+    spokenQ=`Which number matches: ${numToWords(num)}?`;
   } else if(qt==='exp_to_std'){
     document.getElementById('qzInstr').textContent='Which number is this?';
     document.getElementById('qzTarget').textContent=getExpanded(num);
     document.getElementById('qzTarget').style.fontSize='clamp(26px,7vw,42px)';
     correct=String(num);makeOpt=n=>String(n);
+    spokenQ=`Which number is ${getExpanded(num)}?`;
   } else {
     document.getElementById('qzInstr').textContent='What is the expanded form?';
     document.getElementById('qzTarget').textContent=num;
     document.getElementById('qzTarget').style.fontSize='clamp(42px,11vw,68px)';
     correct=getExpanded(num);makeOpt=n=>getExpanded(n);
+    spokenQ=`What is the expanded form of ${num}?`;
   }
+  setTimeout(()=>speak(spokenQ),300);
 
   const wrongs=wrongNums(num,3);
   const allOpts=shuffle([correct,...wrongs.map(makeOpt)]).slice(0,4);
@@ -1111,12 +1142,14 @@ function answerQz(sel,btn,correct){
     showFb('qzFb','ok',qzStreak>=3?`🔥 On Fire! +${bonus} coins! Streak: ${qzStreak}!`:`✅ Correct! +${bonus} coin!`);
     if(qzStreak===5) miniConfetti();
     playSound('win');
+    speak('Correct!');
   } else {
     btn.classList.add('wrong');qzStreak=0;
     document.getElementById('qzOpts').querySelectorAll('button').forEach(b=>{if(b.textContent===correct)b.classList.add('correct');});
     document.getElementById('qzStreak').textContent=0;renderStreak();
     showFb('qzFb','no',`❌ The answer is: ${correct}`);
     playSound('wrong');
+    speak(`Not quite. The answer is ${correct}.`);
   }
   qzCurrent++;setTimeout(loadQz,1800);
 }
@@ -1142,6 +1175,7 @@ function loadBalloon(){
 
   blAns=ans;
   document.getElementById('blQuestion').textContent=qText;
+  setTimeout(()=>speak(qText),300);
 
   const arena=document.getElementById('balloonArena');
   arena.querySelectorAll('.balloon').forEach(b=>b.remove());
@@ -1171,10 +1205,12 @@ function popBalloon(opt,el){
     document.getElementById('blFb').innerHTML='<div class="fb ok">💥 POP! Correct! +1 coin 🪙</div>';
     blScore++;addCoins(1);document.getElementById('blScore').textContent=blScore;
     miniConfetti(); playSound('win');
+    speak('Correct!');
   } else {
     el.querySelector('.balloon-body').style.filter='grayscale(1)';
     document.getElementById('blFb').innerHTML=`<div class="fb no">❌ Not quite! The answer was: ${blAns}</div>`;
     playSound('wrong');
+    speak(`Not quite. The answer was ${blAns}.`);
   }
   blCurrent++;const t=setTimeout(loadBalloon,1800);blTimers.push(t);
 }
@@ -1213,6 +1249,7 @@ function loadFillB(){
     ans=h*100;
   }
   fbAns=ans;
+  setTimeout(()=>speak('Fill in the missing number!'),300);
 
   // Build pad options
   const wrongs=[];
@@ -1237,10 +1274,12 @@ function answerFillB(sel,btn){
     blank.textContent=sel;blank.style.background='rgba(6,214,160,.2)';blank.style.borderColor='var(--cyan)';blank.style.color='var(--cyan)';
     fbScore++;addCoins(1);document.getElementById('fbScore').textContent=fbScore;
     showFb('fbFb','ok','✅ Correct! +1 coin 🪙'); playSound('win');
+    speak('Correct!');
     if(fbScore%5===0) miniConfetti();
   } else {
     btn.classList.add('wrong');blank.textContent=fbAns;blank.style.background='rgba(6,214,160,.2)';blank.style.borderColor='var(--cyan)';blank.style.color='var(--cyan)';
     showFb('fbFb','no',`❌ The answer was ${fbAns}`); playSound('wrong');
+    speak(`Not quite. The answer was ${fbAns}.`);
   }
   fbCurrent++;setTimeout(loadFillB,1900);
 }
@@ -1311,10 +1350,12 @@ function checkOrdering(){
     ordScore+=ordDropped.length;addCoins(ordDropped.length);document.getElementById('ordScore').textContent=ordScore;
     showFb('ordFb','ok',`🎉 Perfect order! +${ordDropped.length} coins! ${sorted.join(' < ')}`);
     miniConfetti(); playSound('win');
+    speak('Perfect order!');
     setTimeout(resetOrdering,2200);
   } else {
     showFb('ordFb','no',`❌ Not quite! Correct order would be: ${sorted.join(' < ')}`);
     playSound('wrong');
+    speak('Not quite the right order.');
   }
 }
 

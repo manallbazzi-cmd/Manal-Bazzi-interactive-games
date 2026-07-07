@@ -813,10 +813,12 @@ function checkColor(i) {
     colorScore++;
     soundCorrect();
     scores.color = colorScore;
+    speak('Correct! Great job!');
   } else {
     fb.textContent = `❌ Try again! Color exactly ${t.correct} part${t.correct>1?'s':''}`;
     fb.style.color = 'var(--red)';
     soundWrong();
+    speak(`Try again! Color exactly ${t.correct} part${t.correct>1?'s':''}.`);
   }
   updateColorScore();
 }
@@ -844,6 +846,23 @@ const QUIZ_COLORS = ['#7c3aed','#ec4899','#f97316','#22c55e','#06b6d4'];
 let quizQ = [], quizIdx = 0, quizScore = 0, quizAnswered = false;
 
 function shuffle(arr) { return arr.slice().sort(()=>Math.random()-0.5); }
+
+// ── SPEECH (read questions + feedback aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
 
 function initQuiz() {
   quizQ = shuffle(allQuestions);
@@ -881,6 +900,7 @@ function renderQuiz() {
     <div class="quiz-choices">${btns}</div>
     <div class="quiz-feedback" id="quizFb"></div>
     <button class="next-btn" id="quizNext" onclick="nextQuiz()" style="display:none">Next ➡️</button>`;
+  setTimeout(()=>speak('What fraction is shaded?'),300);
 }
 
 function answerQuiz(choice, answer, btn) {
@@ -893,6 +913,7 @@ function answerQuiz(choice, answer, btn) {
     fb.style.color = 'var(--green)';
     quizScore++;
     soundCorrect();
+    speak('Correct! Amazing!');
   } else {
     btn.classList.add('wrong');
     fb.textContent = `❌ The answer is ${answer}. Keep trying!`;
@@ -901,6 +922,7 @@ function answerQuiz(choice, answer, btn) {
       if (b.textContent === answer) b.classList.add('correct');
     });
     soundWrong();
+    speak(`Not quite. The answer is ${answer}.`);
   }
   document.getElementById('quizNext').style.display = 'block';
   scores.quiz = quizScore;
@@ -977,10 +999,12 @@ function selectMatch(el) {
       document.getElementById('matchScore').textContent = `Matched: ${matchedCount} / 6`;
       scores.match = matchedCount;
       soundCorrect();
+      speak('Correct match!');
     } else {
       const l = matchSelected.left, r = matchSelected.right;
       l.classList.add('wrong'); r.classList.add('wrong');
       soundWrong();
+      speak('Try again!');
       setTimeout(() => {
         l.classList.remove('wrong','selected');
         r.classList.remove('wrong','selected');
@@ -1020,6 +1044,7 @@ function initWord() {
       <div class="wp-header">
         <span class="wp-emoji">${p.emoji}</span>
         <span class="wp-num">Q${i+1}</span>
+        <button type="button" onclick="speak('${p.text.replace(/'/g,"\\'")}')" title="Read aloud" style="border:none;background:#f4f0ff;color:#7c3aed;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:13px;margin-left:auto;">🔊</button>
       </div>
       <div class="wp-text">${p.text}</div>
       <div class="wp-choices">${btns}</div>
@@ -1039,11 +1064,13 @@ function answerWP(i, choice, answer, btn) {
     fb.style.color = 'var(--green)';
     wpScore++;
     soundCorrect();
+    speak('Correct! Well done!');
   } else {
     btn.classList.add('wrong');
     fb.textContent = `❌ The answer is ${answer}!`;
     fb.style.color = 'var(--red)';
     soundWrong();
+    speak(`Not quite. The answer is ${answer}.`);
   }
   scores.word = wpScore;
   updateWPScore();
