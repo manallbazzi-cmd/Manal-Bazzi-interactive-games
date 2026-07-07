@@ -240,6 +240,7 @@ header{position:relative;z-index:2;background:linear-gradient(90deg,#4B0082,#9B2
 const NUM_EN=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
 const NUM_AR=['','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة','عشرة'];
 const OBJS=['⭐','🌙','🚀','💎','🎈','🌺','🦋','🍭','🐠','🌈','🍎','🐸','🐥','🌸','🍦','🎵','🏀','🐢','🍓','🎀'];
+const OBJ_NAMES={'⭐':'stars','🌙':'moons','🚀':'rockets','💎':'diamonds','🎈':'balloons','🌺':'flowers','🦋':'butterflies','🍭':'lollipops','🐠':'fish','🌈':'rainbows','🍎':'apples','🐸':'frogs','🐥':'chicks','🌸':'blossoms','🍦':'ice creams','🎵':'music notes','🏀':'basketballs','🐢':'turtles','🍓':'strawberries','🎀':'ribbons'};
 
 // random number 1-10
 function rndN(){return 1+(0|Math.random()*10);}
@@ -259,6 +260,23 @@ function genQs(total){
 
 // ── SHUFFLE ───────────────────────────────────
 function sh(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=0|Math.random()*(i+1);[b[i],b[j]]=[b[j],b[i]];}return b;}
+
+// ── SPEECH (read questions + feedback aloud) ──
+var speechAvailable = 'speechSynthesis' in window;
+var ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  var utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.82; utt.pitch = 1.15;
+  var en = ttsVoices.find(function(v){ return v.lang.indexOf('en')===0 && v.name.toLowerCase().indexOf('samantha')>-1; })
+    || ttsVoices.find(function(v){ return v.lang.indexOf('en')===0 && v.name.toLowerCase().indexOf('google')<0; })
+    || ttsVoices.find(function(v){ return v.lang.indexOf('en')===0; }) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
 
 // ── TAB SWITCH ────────────────────────────────
 function goTab(t) {
@@ -331,6 +349,7 @@ function loadQ0(){
 
   document.getElementById('fb0').textContent=''; document.getElementById('fb0').className='feedback';
   document.getElementById('nxt0').classList.remove('show');
+  setTimeout(function(){speak('How many '+(OBJ_NAMES[obj]||'things')+'?');},300);
 }
 function ansQ0(el,ok){
   if(L0.ans)return; L0.ans=true;
@@ -340,12 +359,14 @@ function ansQ0(el,ok){
     document.getElementById('fb0').textContent=sh(['Excellent! ممتاز! 🌟','Well done! أحسنت! 🎉','Correct! صحيح! ✅','Amazing! رائع! 🥳'])[0];
     document.getElementById('fb0').className='feedback good';
     playOK(); if(L0.score%3===0)confetti();
+    speak('Correct!');
   }else{
     el.classList.add('wrong');
     document.querySelectorAll('#choices0 .ch').forEach(function(c){if(c.querySelector('.c-num').textContent==L0.qs[L0.qi].n)c.classList.add('correct');});
     document.getElementById('fb0').textContent='Try again! حاول مرة أخرى! 💪';
     document.getElementById('fb0').className='feedback bad';
     playErr();
+    speak('Try again! The answer is '+L0.qs[L0.qi].n+'.');
   }
   setBar(L0.score,L0.qi,L0_TOTAL);
   var last=L0.qi===L0_TOTAL-1;
@@ -389,6 +410,7 @@ function loadQ1(){
   document.getElementById('fb1').textContent=''; document.getElementById('fb1').className='feedback';
   document.getElementById('nxt1').classList.remove('show');
   setTimeout(function(){inp.focus();},300);
+  setTimeout(function(){speak('Count the '+(OBJ_NAMES[obj]||'things')+' and write the number!');},300);
 }
 function checkWrite(){
   if(L1.ans)return;
@@ -402,11 +424,13 @@ function checkWrite(){
     document.getElementById('fb1').textContent=sh(['Excellent! ممتاز! 🌟','Correct! صحيح! ✅','Well done! أحسنت! 🎉','Great! عظيم! 🥳'])[0];
     document.getElementById('fb1').className='feedback good';
     playOK(); if(L1.score%3===0)confetti();
+    speak('Correct! The number is '+n+'!');
   }else{
     inp.className='write-inp bad';
     document.getElementById('fb1').textContent='Answer is '+n+' — الجواب '+(NUM_AR[n]||n)+' 💪';
     document.getElementById('fb1').className='feedback bad';
     playErr();
+    speak('Try again! The answer is '+n+'.');
   }
   setBar(L1.score,L1.qi,L1_TOTAL);
   var last=L1.qi===L1_TOTAL-1;
@@ -438,6 +462,7 @@ function loadRound(){
   document.getElementById('fb2').textContent=''; document.getElementById('fb2').className='feedback';
   document.getElementById('nxt2').classList.remove('show');
   document.getElementById('mScore').textContent='Matched: 0 / '+PAIRS;
+  setTimeout(function(){speak('Match the objects with their numbers!');},300);
 
   // pick 4 random numbers
   const nums=sh([1,2,3,4,5,6,7,8,9,10]).slice(0,PAIRS);
@@ -483,6 +508,7 @@ function pickMatch(el, side, val){
       document.getElementById('fb2').textContent=sh(['Great match! توصيل رائع! 🌟','Correct! صحيح! ✅','Well done! أحسنت! 🎉'])[0];
       document.getElementById('fb2').className='feedback good';
       playOK();
+      speak('Great match!');
       if(L2.matched===PAIRS){
         L2.round++;
         confetti();
@@ -507,6 +533,7 @@ function pickMatch(el, side, val){
       document.getElementById('fb2').textContent='Try again! حاول مرة أخرى! 💪';
       document.getElementById('fb2').className='feedback bad';
       playErr();
+      speak('Try again!');
     }
   }
 }
