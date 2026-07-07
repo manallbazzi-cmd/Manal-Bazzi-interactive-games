@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Worksheets — Teacher Manal Bazzi</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Tajawal:wght@700;800&display=swap');
+
+:root {
+  --bg:#f5faff; --card:#ffffff; --card2:#eef6ff;
+  --blue:#2563eb; --mint:#059669; --sky:#0284c7;
+  --pink:#db2777; --gold:#d97706; --teal:#0891b2;
+  --rose:#e11d48; --text:#0f1b3d; --sub:#6b7280;
+  --green:#059669; --orange:#ea580c;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 0%,rgba(37,99,235,.14) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 10%,rgba(8,145,178,.12) 0%,transparent 60%),
+    radial-gradient(ellipse 70% 60% at 50% 100%,rgba(167,243,208,.15) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%,rgba(251,191,36,.12) 0%,transparent 60%);
+}
+
+/* ── HEADER ── */
+header{
+  position:relative;z-index:10;
+  text-align:center;padding:36px 20px 28px;
+  background:linear-gradient(135deg,#dbeafe 0%,#e0f2fe 50%,#ecfeff 100%);
+  border-bottom:2px solid rgba(37,99,235,.12);
+}
+.teacher-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(217,119,6,.12);border:1.5px solid rgba(217,119,6,.4);
+  border-radius:30px;padding:6px 18px;font-size:.82rem;
+  color:#92400e;margin-bottom:16px;letter-spacing:.5px;
+  font-family:'Tajawal',sans-serif;
+}
+h1{
+  font-size:clamp(1.8rem,5vw,2.8rem);font-weight:900;
+  background:linear-gradient(135deg,#2563eb,#0891b2,#059669);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:8px;line-height:1.2;
+}
+.subtitle{color:var(--sub);font-size:.95rem;margin-bottom:24px;}
+
+/* ── STUDENT INPUT ── */
+.student-row{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:10px;}
+.student-row input{
+  background:#fff;border:1.5px solid #bfdbfe;
+  border-radius:12px;padding:9px 16px;color:var(--text);
+  font-family:'Nunito',sans-serif;font-size:.95rem;
+  outline:none;transition:border-color .2s;width:220px;
+  box-shadow:0 2px 8px rgba(37,99,235,.08);
+}
+.student-row input:focus{border-color:#2563eb;}
+.student-row input::placeholder{color:#9ca3af;}
+
+/* ── SELECTORS ── */
+.selectors{
+  position:relative;z-index:10;
+  display:flex;flex-wrap:wrap;justify-content:center;
+  gap:20px;padding:28px 20px;
+  background:#fff;border-bottom:1px solid #dbeafe;
+}
+.selector-group{display:flex;flex-direction:column;gap:10px;align-items:center;}
+.selector-label{font-size:.75rem;color:var(--sub);font-weight:800;text-transform:uppercase;letter-spacing:1.5px;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.sel-btn{
+  padding:9px 18px;border-radius:12px;border:1.5px solid #dbeafe;
+  background:#f5faff;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-size:.92rem;font-weight:700;
+  color:#6b7280;transition:all .22s;
+}
+.sel-btn:hover{border-color:#60a5fa;color:var(--text);background:#dbeafe;}
+.grade-btn.active{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.3);}
+.topic-btn[data-topic="alphabet"].active{background:#059669;border-color:#059669;color:#fff;box-shadow:0 4px 14px rgba(5,150,105,.3);}
+.topic-btn[data-topic="vocab"].active{background:#0284c7;border-color:#0284c7;color:#fff;box-shadow:0 4px 14px rgba(2,132,199,.3);}
+.topic-btn[data-topic="tobe"].active{background:#db2777;border-color:#db2777;color:#fff;box-shadow:0 4px 14px rgba(219,39,119,.3);}
+.topic-btn[data-topic="plurals"].active{background:#0891b2;border-color:#0891b2;color:#fff;box-shadow:0 4px 14px rgba(8,145,178,.3);}
+.topic-btn[data-topic="sentences"].active{background:#2563eb;border-color:#2563eb;color:#fff;box-shadow:0 4px 14px rgba(37,99,235,.3);}
+
+/* ── START ── */
+.start-wrap{text-align:center;padding:24px 20px 32px;position:relative;z-index:10;background:#f5faff;}
+.start-btn{
+  background:linear-gradient(135deg,#2563eb,#0891b2);
+  border:none;border-radius:16px;padding:14px 44px;
+  font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:900;
+  color:#fff;cursor:pointer;transition:all .22s;
+  box-shadow:0 6px 24px rgba(37,99,235,.35);letter-spacing:.5px;
+}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(37,99,235,.45);}
+
+/* ── WORKSHEET ── */
+#worksheet-area{display:none;position:relative;z-index:10;padding:0 16px 40px;max-width:900px;margin:0 auto;}
+.ws-header{
+  background:linear-gradient(135deg,#dbeafe,#e0f2fe);
+  border:1.5px solid #bfdbfe;border-radius:20px;
+  padding:20px 24px;margin-bottom:24px;
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;
+}
+.ws-title{font-size:1.3rem;font-weight:900;color:var(--text);}
+.ws-badges{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{padding:4px 14px;border-radius:20px;font-size:.75rem;font-weight:700;letter-spacing:.5px;}
+.badge-grade{background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;}
+.badge-topic{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;}
+
+.stats-bar{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:24px;}
+.stat-card{
+  background:#fff;border:1.5px solid #dbeafe;
+  border-radius:14px;padding:12px 20px;text-align:center;flex:1;min-width:100px;
+  box-shadow:0 2px 10px rgba(37,99,235,.07);
+}
+.stat-num{font-size:1.6rem;font-weight:900;color:#2563eb;line-height:1;}
+.stat-lbl{font-size:.72rem;color:var(--sub);margin-top:3px;}
+
+.progress-wrap{background:#dbeafe;border-radius:20px;height:9px;overflow:hidden;margin-bottom:24px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#2563eb,#0891b2);border-radius:20px;transition:width .5s ease;width:0%;}
+
+.questions-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px;}
+.q-card{
+  background:#fff;border:1.5px solid #dbeafe;
+  border-radius:18px;padding:20px 18px;
+  position:relative;overflow:hidden;transition:all .22s;
+  box-shadow:0 3px 14px rgba(37,99,235,.08);
+}
+.q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,#2563eb,#0891b2);}
+.q-card:hover{box-shadow:0 6px 22px rgba(37,99,235,.14);transform:translateY(-2px);}
+.q-card.correct{border-color:#6ee7b7;background:#f0fdf4;}
+.q-card.correct::before{background:linear-gradient(90deg,#059669,#34d399);}
+.q-card.wrong{border-color:#fca5a5;background:#fff1f2;}
+.q-card.wrong::before{background:linear-gradient(90deg,#e11d48,#f87171);}
+
+.q-number{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#0891b2);color:white;font-size:.78rem;font-weight:900;margin-bottom:10px;}
+.q-big{font-size:2.6rem;font-weight:900;color:#2563eb;text-align:center;margin:6px 0 10px;line-height:1;}
+.q-question{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:14px;line-height:1.5;}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.choice-btn{
+  background:#f5faff;border:1.5px solid #dbeafe;
+  border-radius:10px;padding:9px 10px;
+  font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;
+  color:var(--text);cursor:pointer;transition:all .18s;text-align:center;
+}
+.choice-btn:hover:not(:disabled){border-color:#2563eb;background:#dbeafe;transform:translateY(-2px);}
+.choice-btn.selected{border-color:#0284c7;background:#e0f2fe;color:#0c4a6e;}
+.choice-btn.correct-choice{border-color:#059669;background:#d1fae5;color:#065f46;}
+.choice-btn.wrong-choice{border-color:#e11d48;background:#ffe4e6;color:#9f1239;}
+.q-feedback{font-size:.85rem;font-weight:800;margin-top:10px;min-height:20px;text-align:center;}
+.hint-text{font-size:.72rem;color:#9ca3af;margin-top:6px;text-align:center;font-style:italic;}
+
+.action-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;}
+.check-btn{background:linear-gradient(135deg,#059669,#0284c7);border:none;border-radius:14px;padding:13px 36px;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 4px 18px rgba(5,150,105,.3);transition:all .2s;}
+.check-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(5,150,105,.4);}
+.reset-btn{background:#f5faff;border:1.5px solid #dbeafe;border-radius:14px;padding:13px 28px;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:700;color:var(--sub);cursor:pointer;transition:all .2s;}
+.reset-btn:hover{border-color:#e11d48;color:#e11d48;}
+.new-btn{background:linear-gradient(135deg,#2563eb,#0891b2);border:none;border-radius:14px;padding:13px 28px;font-family:'Nunito',sans-serif;font-size:1.05rem;font-weight:900;color:white;cursor:pointer;box-shadow:0 4px 18px rgba(37,99,235,.3);transition:all .2s;}
+.new-btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(37,99,235,.4);}
+
+.result-panel{
+  display:none;
+  background:linear-gradient(135deg,#dbeafe,#e0f2fe);
+  border:2px solid #bfdbfe;border-radius:22px;
+  padding:30px;text-align:center;margin-bottom:28px;
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+.result-emoji{font-size:3.5rem;display:block;margin-bottom:8px;}
+.result-score{font-size:2.8rem;font-weight:900;background:linear-gradient(135deg,#2563eb,#0891b2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:4px 0;}
+.result-stars{font-size:1.8rem;margin-bottom:8px;letter-spacing:4px;}
+.result-msg{font-size:1rem;color:#4b5563;font-weight:700;}
+.result-name{font-size:1.1rem;color:#92400e;font-weight:900;margin-top:6px;}
+
+.float-star{position:fixed;pointer-events:none;z-index:9999;font-size:1.5rem;animation:starFloat 1.2s ease-out forwards;}
+@keyframes starFloat{0%{transform:translateY(0) scale(1);opacity:1;}100%{transform:translateY(-90px) scale(1.5);opacity:0;}}
+.confetti-p{position:fixed;width:9px;height:9px;pointer-events:none;z-index:9999;border-radius:2px;animation:cFall 1.5s linear forwards;}
+@keyframes cFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+
+.sound-btn{
+  position:absolute;top:14px;right:14px;
+  background:rgba(37,99,235,.1);border:1.5px solid #bfdbfe;
+  color:#2563eb;border-radius:12px;padding:7px 12px;
+  font-size:1.1rem;cursor:pointer;transition:all .2s;z-index:20;
+}
+.sound-btn:hover{background:rgba(37,99,235,.18);}
+
+@media(max-width:480px){
+  .questions-grid{grid-template-columns:1fr;}
+  .choices{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="Mute/Sound">🔊</button>
+  <div class="teacher-badge">👩‍🏫 Teacher Manal Bazzi &nbsp;|&nbsp; 🌟 Interactive Worksheets</div>
+  <h1>🇬🇧 English</h1>
+  <p class="subtitle">Choose your grade and topic, then start!</p>
+  <div class="student-row">
+    <span style="color:var(--sub);font-weight:700;font-size:.9rem">👤 Your name:</span>
+    <input type="text" id="studentName" placeholder="Type your name..." />
+  </div>
+</header>
+
+<div class="selectors">
+  <div class="selector-group">
+    <span class="selector-label">📚 Grade</span>
+    <div class="btn-row">
+      <button class="sel-btn grade-btn active" data-grade="1">Grade 1</button>
+      <button class="sel-btn grade-btn" data-grade="2">Grade 2</button>
+      <button class="sel-btn grade-btn" data-grade="3">Grade 3</button>
+    </div>
+  </div>
+  <div class="selector-group">
+    <span class="selector-label">📝 Topic</span>
+    <div class="btn-row">
+      <button class="sel-btn topic-btn active" data-topic="alphabet">🔤 Alphabet</button>
+      <button class="sel-btn topic-btn" data-topic="vocab">📖 Vocabulary</button>
+      <button class="sel-btn topic-btn" data-topic="tobe">🔵 Verb "to be"</button>
+      <button class="sel-btn topic-btn" data-topic="plurals">➕ Plurals</button>
+      <button class="sel-btn topic-btn" data-topic="sentences">💬 Sentences</button>
+    </div>
+  </div>
+</div>
+
+<div class="start-wrap">
+  <button class="start-btn" onclick="startWorksheet()">🚀 Start the Worksheet</button>
+</div>
+
+<div id="worksheet-area">
+  <div class="ws-header">
+    <div>
+      <div class="ws-title" id="ws-title">Alphabet Worksheet</div>
+      <div style="color:var(--sub);font-size:.8rem;margin-top:4px" id="ws-student-label"></div>
+    </div>
+    <div class="ws-badges">
+      <span class="badge badge-grade" id="ws-grade-badge">Grade 1</span>
+      <span class="badge badge-topic" id="ws-topic-badge">🔤 Alphabet</span>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-num" id="score-val">0</div>
+      <div class="stat-lbl">✅ Correct</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="answered-count">0</div>
+      <div class="stat-lbl">✏️ Answered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="score-total">10</div>
+      <div class="stat-lbl">📝 Total</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <div class="result-panel" id="result-panel">
+    <span class="result-emoji" id="result-emoji">🏆</span>
+    <div class="result-score" id="result-score">10 / 10</div>
+    <div class="result-stars" id="result-stars">⭐⭐⭐</div>
+    <div class="result-msg" id="result-msg">Excellent!</div>
+    <div class="result-name" id="result-name"></div>
+  </div>
+
+  <div class="questions-grid" id="questions-grid"></div>
+
+  <div class="action-row">
+    <button class="check-btn" onclick="checkAll()">🔍 Check My Answers</button>
+    <button class="new-btn" onclick="startWorksheet()">🔄 New Questions</button>
+    <button class="reset-btn" onclick="resetAll()">↺ Start Over</button>
+  </div>
+</div>
+
+<script>
+// ═══ SOUND ═══
+let soundOn=true,_actx=null;
+function getACtx(){if(!_actx)_actx=new(window.AudioContext||window.webkitAudioContext)();if(_actx.state==='suspended')_actx.resume();return _actx;}
+function tone(freq,type,dur,vol=.35,delay=0){
+  try{const c=getACtx(),o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);o.type=type;
+  o.frequency.setValueAtTime(freq,c.currentTime+delay);
+  g.gain.setValueAtTime(0,c.currentTime+delay);
+  g.gain.linearRampToValueAtTime(vol,c.currentTime+delay+.01);
+  g.gain.exponentialRampToValueAtTime(.001,c.currentTime+delay+dur);
+  o.start(c.currentTime+delay);o.stop(c.currentTime+delay+dur+.05);}catch(e){}
+}
+function sndCorrect(){if(!soundOn)return;[523,659,784,1047].forEach((f,i)=>tone(f,'sine',.18,.32,i*.09));}
+function sndWrong(){if(!soundOn)return;tone(220,'sawtooth',.12,.28);tone(180,'sawtooth',.18,.22,.1);}
+function sndStart(){if(!soundOn)return;[440,660,880].forEach((f,i)=>tone(f,'sine',.1,.28,i*.07));}
+function sndWin(){if(!soundOn)return;[[523,0],[659,.1],[784,.2],[1047,.35],[784,.55],[1047,.7],[1319,.85]].forEach(([f,d])=>tone(f,'sine',.22,.35,d));[1319,1568,2093].forEach((f,i)=>tone(f,'triangle',.15,.18,.95+i*.1));}
+function sndClick(){if(!soundOn)return;tone(700,'sine',.07,.14);}
+function toggleSound(){soundOn=!soundOn;document.getElementById('soundBtn').textContent=soundOn?'🔊':'🔇';if(soundOn)sndClick();}
+
+// ═══ DATA ═══
+const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const alphaNames={A:'A is for Apple',B:'B is for Ball',C:'C is for Cat',D:'D is for Dog',E:'E is for Elephant',F:'F is for Fish',G:'G is for Giraffe',H:'H is for Hat',I:'I is for Ice Cream',J:'J is for Juice',K:'K is for Kite',L:'L is for Lion',M:'M is for Moon',N:'N is for Nest',O:'O is for Orange',P:'P is for Pig',Q:'Q is for Queen',R:'R is for Rabbit',S:'S is for Sun',T:'T is for Tree',U:'U is for Umbrella',V:'V is for Van',W:'W is for Watch',X:'X is for X-ray',Y:'Y is for Yo-yo',Z:'Z is for Zebra'};
+
+const vocabColors=[
+  {en:'red',ar:'أحمر',emoji:'🔴'},{en:'blue',ar:'أزرق',emoji:'🔵'},
+  {en:'green',ar:'أخضر',emoji:'🟢'},{en:'yellow',ar:'أصفر',emoji:'🟡'},
+  {en:'orange',ar:'برتقالي',emoji:'🟠'},{en:'purple',ar:'بنفسجي',emoji:'🟣'},
+  {en:'white',ar:'أبيض',emoji:'⬜'},{en:'black',ar:'أسود',emoji:'⬛'},
+  {en:'pink',ar:'وردي',emoji:'🌸'},{en:'brown',ar:'بني',emoji:'🟤'},
+];
+const vocabAnimals=[
+  {en:'cat',img:'🐱'},{en:'dog',img:'🐶'},{en:'rabbit',img:'🐰'},
+  {en:'bird',img:'🐦'},{en:'fish',img:'🐟'},{en:'lion',img:'🦁'},
+  {en:'elephant',img:'🐘'},{en:'snake',img:'🐍'},{en:'horse',img:'🐴'},
+  {en:'cow',img:'🐮'},{en:'sheep',img:'🐑'},{en:'pig',img:'🐷'},
+];
+const vocabNumbers=[
+  {n:1,en:'one'},{n:2,en:'two'},{n:3,en:'three'},{n:4,en:'four'},{n:5,en:'five'},
+  {n:6,en:'six'},{n:7,en:'seven'},{n:8,en:'eight'},{n:9,en:'nine'},{n:10,en:'ten'},
+  {n:11,en:'eleven'},{n:12,en:'twelve'},{n:13,en:'thirteen'},{n:14,en:'fourteen'},{n:15,en:'fifteen'},
+  {n:20,en:'twenty'},{n:30,en:'thirty'},{n:40,en:'forty'},{n:50,en:'fifty'},{n:100,en:'one hundred'},
+];
+const vocabFamily=[
+  {en:'mother',emoji:'👩'},{en:'father',emoji:'👨'},{en:'sister',emoji:'👧'},
+  {en:'brother',emoji:'👦'},{en:'grandmother',emoji:'👵'},{en:'grandfather',emoji:'👴'},
+  {en:'uncle',emoji:'🧔'},{en:'aunt',emoji:'👩‍🦱'},
+];
+
+const tobe1=[
+  {q:'I ___ happy.',ans:'am',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'She ___ nice.',ans:'is',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'They ___ students.',ans:'are',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'We ___ friends.',ans:'are',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'He ___ a doctor.',ans:'is',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'It ___ big.',ans:'is',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'You ___ smart.',ans:'are',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'I ___ six years old.',ans:'am',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'The dog ___ small.',ans:'is',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'My brothers ___ tall.',ans:'are',choices:['am','is','are','be'],hint:'Verb to be'},
+];
+const tobe2=[
+  {q:'I ___ not tired.',ans:'am',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'She ___ not here.',ans:'is',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'He ___ not late.',ans:'is',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'We ___ not hungry.',ans:'are',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'It ___ not cold today.',ans:'is',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'They ___ not at home.',ans:'are',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'I ___ not sad.',ans:'am',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'You ___ not alone.',ans:'are',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'The cat ___ not hungry.',ans:'is',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'We ___ not late for school.',ans:'are',choices:['am','is','are','be'],hint:'Negative: to be'},
+];
+const tobe3=[
+  {q:'___ you happy?',ans:'Are',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ she your sister?',ans:'Is',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ they your friends?',ans:'Are',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ I late?',ans:'Am',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ it raining?',ans:'Is',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ we ready?',ans:'Are',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ he a teacher?',ans:'Is',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ the boys tired?',ans:'Are',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ your mom home?',ans:'Is',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+  {q:'___ you and your friends coming?',ans:'Are',choices:['Are','Is','Am','Be'],hint:'Question: to be'},
+];
+
+const plurals1=[
+  {s:'cat',p:'cats'},{s:'dog',p:'dogs'},{s:'book',p:'books'},{s:'pen',p:'pens'},
+  {s:'ball',p:'balls'},{s:'car',p:'cars'},{s:'hat',p:'hats'},{s:'cup',p:'cups'},
+  {s:'toy',p:'toys'},{s:'bird',p:'birds'},
+];
+const plurals2=[
+  {s:'box',p:'boxes'},{s:'bus',p:'buses'},{s:'dish',p:'dishes'},{s:'watch',p:'watches'},
+  {s:'baby',p:'babies'},{s:'city',p:'cities'},{s:'lady',p:'ladies'},
+  {s:'leaf',p:'leaves'},{s:'knife',p:'knives'},{s:'wolf',p:'wolves'},
+];
+const plurals3=[
+  {s:'child',p:'children'},{s:'man',p:'men'},{s:'woman',p:'women'},{s:'mouse',p:'mice'},
+  {s:'foot',p:'feet'},{s:'tooth',p:'teeth'},{s:'person',p:'people'},
+  {s:'goose',p:'geese'},{s:'sheep',p:'sheep'},{s:'fish',p:'fish'},
+];
+
+const sentences1=[
+  {q:'Complete: "I ___ a student."',ans:'am',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'What color is this? 🔴',ans:'red',choices:['red','blue','green','yellow'],hint:'Color'},
+  {q:'What animal is this? 🐱',ans:'cat',choices:['cat','dog','rabbit','lion'],hint:'Animal'},
+  {q:'Which number is "five"?',ans:'5',choices:['3','4','5','6'],hint:'Number word'},
+  {q:'Choose the article: "___ apple"',ans:'an',choices:['a','an','the','some'],hint:'a or an'},
+  {q:'Choose the article: "___ dog"',ans:'a',choices:['a','an','the','some'],hint:'a or an'},
+  {q:'What color is this? 🟡',ans:'yellow',choices:['orange','yellow','green','purple'],hint:'Color'},
+  {q:'Complete: "She ___ happy."',ans:'is',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'What is the plural of "cat"?',ans:'cats',choices:['cats','cates',"cat's",'cat'],hint:'Add -s'},
+  {q:'Complete: "They ___ friends."',ans:'are',choices:['am','is','are','be'],hint:'Verb to be'},
+];
+const sentences2=[
+  {q:'What is the opposite of "big"?',ans:'small',choices:['small','tall','fast','heavy'],hint:'Opposite'},
+  {q:'What is the opposite of "hot"?',ans:'cold',choices:['cold','warm','cool','wet'],hint:'Opposite'},
+  {q:'What day comes after "Monday"?',ans:'Tuesday',choices:['Tuesday','Wednesday','Thursday','Friday'],hint:'Days of the week'},
+  {q:'What month comes after "January"?',ans:'February',choices:['February','March','April','May'],hint:'Months'},
+  {q:'What is the plural of "box"?',ans:'boxes',choices:['boxes','boxs','box','boxies'],hint:'Add -es'},
+  {q:'Complete: "We ___ not late."',ans:'are',choices:['am','is','are','be'],hint:'Negative: to be'},
+  {q:'What is the plural of "baby"?',ans:'babies',choices:['babies','babys',"baby's",'babyes'],hint:'y → ies'},
+  {q:'Complete: "He ___ my brother."',ans:'is',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'What is the opposite of "happy"?',ans:'sad',choices:['sad','angry','tired','sleepy'],hint:'Opposite'},
+  {q:'What day comes before "Sunday"?',ans:'Saturday',choices:['Saturday','Friday','Monday','Thursday'],hint:'Days of the week'},
+];
+const sentences3=[
+  {q:'What is the plural of "child"?',ans:'children',choices:['children','childs','childes','child'],hint:'Irregular plural'},
+  {q:'Ask a question: "___ you ready?"',ans:'Are',choices:['Are','Is','Am','Do'],hint:'Question form'},
+  {q:'What is the plural of "mouse"?',ans:'mice',choices:['mice','mouses','mices','mouse'],hint:'Irregular plural'},
+  {q:'What is the opposite of "difficult"?',ans:'easy',choices:['easy','simple','soft','light'],hint:'Opposite'},
+  {q:'Complete: "___ she your teacher?"',ans:'Is',choices:['Is','Are','Am','Does'],hint:'Question form'},
+  {q:'What is the plural of "foot"?',ans:'feet',choices:['feet','foots','feets','foot'],hint:'Irregular plural'},
+  {q:'"It\'s raining cats and dogs" means:',ans:'It is raining heavily',choices:['It is raining heavily','Animals are falling','It is sunny','It is snowing'],hint:'Expression'},
+  {q:'What is the opposite of "clean"?',ans:'dirty',choices:['dirty','messy','wet','old'],hint:'Opposite'},
+  {q:'Complete: "We ___ going to the park."',ans:'are',choices:['am','is','are','be'],hint:'Verb to be'},
+  {q:'"Good morning" is used:',ans:'in the morning',choices:['in the morning','in the evening','at night','in the afternoon'],hint:'Greeting'},
+];
+
+// ═══ STATE ═══
+let currentGrade=1,currentTopic='alphabet',questions=[];
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+function pick(a,n){return shuffle(a).slice(0,n);}
+
+// ── SPEECH (read questions + feedback aloud, English) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+function speakQuestion(qi){
+  const q=questions[qi];
+  if(!q) return;
+  speak((q.big?q.big+'. ':'')+q.q);
+}
+
+document.querySelectorAll('.grade-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.grade-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');currentGrade=parseInt(btn.dataset.grade);sndClick();
+  });
+});
+document.querySelectorAll('.topic-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');currentTopic=btn.dataset.topic;sndClick();
+  });
+});
+
+// ═══ GENERATE ═══
+function generateQuestions(){
+  const qs=[];
+  if(currentTopic==='alphabet'){
+    pick(alphabet,10).forEach(l=>{
+      const type=rand(0,2);
+      if(type===0){
+        const wrong=pick(alphabet.filter(x=>x!==l),3).map(x=>alphaNames[x]);
+        qs.push({type:'mc',big:l,q:`What word is this letter for?`,ans:alphaNames[l],choices:shuffle([alphaNames[l],...wrong]),hint:'Letter word'});
+      } else if(type===1){
+        const idx=alphabet.indexOf(l);
+        if(idx<alphabet.length-1){
+          const next=alphabet[idx+1];
+          const wrong=pick(alphabet.filter(x=>x!==next),3);
+          qs.push({type:'mc',big:l,q:`Which letter comes after "${l}"?`,ans:next,choices:shuffle([next,...wrong]),hint:'Alphabet order'});
+        } else {
+          const wrong=pick(alphabet.filter(x=>x!==l),3).map(x=>alphaNames[x]);
+          qs.push({type:'mc',big:l,q:`What word is this letter for?`,ans:alphaNames[l],choices:shuffle([alphaNames[l],...wrong]),hint:'Letter word'});
+        }
+      } else {
+        const name=alphaNames[l];
+        const wrong=pick(Object.values(alphaNames).filter(x=>x!==name),3);
+        qs.push({type:'mc',big:l,q:`Which word matches "${l}"?`,ans:name,choices:shuffle([name,...wrong]),hint:'Example word'});
+      }
+    });
+  } else if(currentTopic==='vocab'){
+    const subtype=rand(0,3);
+    if(subtype===0){
+      pick(vocabColors,10).forEach(c=>{
+        const wrong=pick(vocabColors.filter(x=>x!==c),3).map(x=>x.en);
+        qs.push({type:'mc',big:c.emoji,q:`What color is this?`,ans:c.en,choices:shuffle([c.en,...wrong]),hint:'Color'});
+      });
+    } else if(subtype===1){
+      pick(vocabAnimals,10).forEach(a=>{
+        const wrong=pick(vocabAnimals.filter(x=>x!==a),3).map(x=>x.en);
+        qs.push({type:'mc',big:a.img,q:`What animal is this?`,ans:a.en,choices:shuffle([a.en,...wrong]),hint:'Animal'});
+      });
+    } else if(subtype===2){
+      pick(vocabNumbers,10).forEach(c=>{
+        if(rand(0,1)===0){
+          const wrong=pick(vocabNumbers.filter(x=>x!==c),3).map(x=>x.en);
+          qs.push({type:'mc',big:String(c.n),q:`How do you say "${c.n}" in English?`,ans:c.en,choices:shuffle([c.en,...wrong]),hint:'Number → word'});
+        } else {
+          const wrong=pick(vocabNumbers.filter(x=>x!==c),3).map(x=>String(x.n));
+          qs.push({type:'mc',big:c.en,q:`Which number is this?`,ans:String(c.n),choices:shuffle([String(c.n),...wrong]),hint:'Word → number'});
+        }
+      });
+    } else {
+      pick(vocabFamily,8).forEach(f=>{
+        const wrong=pick(vocabFamily.filter(x=>x!==f),3).map(x=>x.en);
+        qs.push({type:'mc',big:f.emoji,q:`Which family member is this?`,ans:f.en,choices:shuffle([f.en,...wrong]),hint:'Family'});
+      });
+    }
+  } else if(currentTopic==='tobe'){
+    const pool=currentGrade===1?tobe1:currentGrade===2?tobe2:tobe3;
+    pick(pool,Math.min(10,pool.length)).forEach(t=>{
+      qs.push({type:'mc',q:t.q,ans:t.ans,choices:shuffle(t.choices),hint:t.hint});
+    });
+  } else if(currentTopic==='plurals'){
+    const pool=currentGrade===1?plurals1:currentGrade===2?plurals2:plurals3;
+    pick(pool,Math.min(10,pool.length)).forEach(pl=>{
+      const wrong=pick(pool.filter(x=>x!==pl),3).map(x=>x.p);
+      qs.push({type:'mc',q:`What is the plural of "${pl.s}"?`,ans:pl.p,choices:shuffle([pl.p,...wrong]),hint:'Plural form'});
+    });
+  } else if(currentTopic==='sentences'){
+    const pool=currentGrade===1?sentences1:currentGrade===2?sentences2:sentences3;
+    pick(pool,Math.min(10,pool.length)).forEach(p=>{
+      qs.push({type:'mc',q:p.q,ans:p.ans,choices:shuffle(p.choices),hint:p.hint});
+    });
+  }
+  return qs.slice(0,10).map((q,i)=>({...q,id:i,answered:false,userAns:null}));
+}
+
+// ═══ LABELS ═══
+const topicNames={alphabet:'Alphabet',vocab:'Vocabulary',tobe:'Verb "to be"',plurals:'Plurals',sentences:'Sentences'};
+const topicEmojis={alphabet:'🔤',vocab:'📖',tobe:'🔵',plurals:'➕',sentences:'💬'};
+const gradeNames={1:'Grade 1',2:'Grade 2',3:'Grade 3'};
+
+// ═══ MAIN FUNCTIONS ═══
+function startWorksheet(){
+  sndStart();
+  questions=generateQuestions();
+  const name=document.getElementById('studentName').value.trim();
+  document.getElementById('ws-title').textContent=`${topicEmojis[currentTopic]} ${topicNames[currentTopic]} Worksheet`;
+  document.getElementById('ws-grade-badge').textContent=gradeNames[currentGrade];
+  document.getElementById('ws-topic-badge').textContent=`${topicEmojis[currentTopic]} ${topicNames[currentTopic]}`;
+  document.getElementById('ws-student-label').textContent=name?`👤 ${name}`:'';
+  document.getElementById('score-val').textContent='0';
+  document.getElementById('score-total').textContent=questions.length;
+  document.getElementById('answered-count').textContent='0';
+  document.getElementById('progress-fill').style.width='0%';
+  document.getElementById('result-panel').style.display='none';
+  renderQuestions();
+  const area=document.getElementById('worksheet-area');
+  area.style.display='block';
+  setTimeout(()=>area.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>speakQuestion(0),700);
+}
+
+function renderQuestions(){
+  const grid=document.getElementById('questions-grid');
+  grid.innerHTML='';
+  questions.forEach((q,i)=>{
+    const card=document.createElement('div');
+    card.className='q-card';card.id=`card-${i}`;
+    const bigHtml=q.big?`<div class="q-big">${q.big}</div>`:'';
+    const choicesHtml=`<div class="choices">${q.choices.map(c=>`<button class="choice-btn" onclick="selectChoice(${i},'${c.replace(/'/g,"\\'")}')">${c}</button>`).join('')}</div>`;
+    card.innerHTML=`<span class="q-number">${i+1}</span>${bigHtml}<div class="q-question">${q.q} <button type="button" onclick="speakQuestion(${i})" title="Listen" style="border:none;background:#eef6ff;color:#2563eb;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;vertical-align:middle;">🔊</button></div>${choicesHtml}<div class="q-feedback" id="fb-${i}"></div><div class="hint-text">💡 ${q.hint}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function selectChoice(qi,choice){
+  const q=questions[qi];if(q.answered)return;
+  q.userAns=choice;
+  document.querySelectorAll(`#card-${qi} .choice-btn`).forEach(btn=>{
+    btn.classList.remove('selected');
+    if(btn.textContent.trim()===choice)btn.classList.add('selected');
+  });
+  document.getElementById('answered-count').textContent=questions.filter(q=>q.userAns).length;
+  sndClick();
+}
+
+function checkAll(){
+  let correct=0;
+  questions.forEach((q,i)=>{
+    const card=document.getElementById(`card-${i}`);
+    const fb=document.getElementById(`fb-${i}`);
+    card.classList.remove('correct','wrong');
+    if(!q.userAns){fb.textContent='✏️ Not answered yet';fb.style.color='var(--sub)';return;}
+    q.answered=true;
+    const ok=q.userAns===q.ans;
+    document.querySelectorAll(`#card-${i} .choice-btn`).forEach(btn=>{
+      btn.disabled=true;
+      const t=btn.textContent.trim();
+      if(t===q.ans)btn.classList.add('correct-choice');
+      else if(t===q.userAns&&!ok)btn.classList.add('wrong-choice');
+    });
+    if(ok){card.classList.add('correct');fb.textContent='✅ Well done!';fb.style.color='var(--mint)';correct++;spawnStar(card);}
+    else{card.classList.add('wrong');fb.textContent=`❌ Answer: ${q.ans}`;fb.style.color='var(--rose)';}
+  });
+  document.getElementById('score-val').textContent=correct;
+  document.getElementById('progress-fill').style.width=(correct/questions.length*100)+'%';
+  showResult(correct,questions.length);
+}
+
+function showResult(score,total){
+  const pct=score/total;
+  let emoji,msg,stars;
+  if(pct===1){emoji='🏆';msg='Perfect! You are a star! 🌟';stars='⭐⭐⭐';sndWin();confetti();}
+  else if(pct>=.8){emoji='🎉';msg='Excellent! Great work!';stars='⭐⭐⭐';sndWin();confetti();}
+  else if(pct>=.6){emoji='👍';msg='Good! Try again!';stars='⭐⭐';sndCorrect();}
+  else if(pct>=.4){emoji='💪';msg='Keep trying!';stars='⭐';sndCorrect();}
+  else{emoji='📖';msg='Review the lesson and try again!';stars='';sndWrong();}
+  document.getElementById('result-emoji').textContent=emoji;
+  document.getElementById('result-stars').textContent=stars;
+  document.getElementById('result-score').textContent=`${score} / ${total}`;
+  document.getElementById('result-msg').textContent=msg;
+  const name=document.getElementById('studentName').value.trim();
+  document.getElementById('result-name').textContent=name?`🌟 Well done, ${name}!`:'';
+  speak(`${msg} You got ${score} out of ${total}.`);
+  const panel=document.getElementById('result-panel');
+  panel.style.display='block';
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'center'}),100);
+}
+
+function resetAll(){
+  questions.forEach((q,i)=>{
+    q.userAns=null;q.answered=false;
+    const card=document.getElementById(`card-${i}`);
+    card.classList.remove('correct','wrong');
+    document.getElementById(`fb-${i}`).textContent='';
+    card.querySelectorAll('.choice-btn').forEach(btn=>{btn.classList.remove('selected','correct-choice','wrong-choice');btn.disabled=false;});
+  });
+  document.getElementById('score-val').textContent='0';
+  document.getElementById('progress-fill').style.width='0%';
+  document.getElementById('answered-count').textContent='0';
+  document.getElementById('result-panel').style.display='none';
+  sndClick();
+}
+
+function spawnStar(el){
+  const rect=el.getBoundingClientRect();
+  const star=document.createElement('div');star.className='float-star';
+  star.textContent=['⭐','✨','🌟'][Math.floor(Math.random()*3)];
+  star.style.left=(rect.left+rect.width/2-14)+'px';
+  star.style.top=(rect.top+window.scrollY)+'px';
+  document.body.appendChild(star);setTimeout(()=>star.remove(),1300);
+}
+
+function confetti(){
+  const cols=['#60a5fa','#38bdf8','#34d399','#fbbf24','#f472b6','#a78bfa','#22d3ee'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');p.className='confetti-p';
+    p.style.left=Math.random()*100+'vw';p.style.top='0';
+    p.style.background=cols[Math.floor(Math.random()*cols.length)];
+    p.style.animationDuration=(1.2+Math.random()*.8)+'s';
+    p.style.animationDelay=Math.random()*.4+'s';
+    p.style.borderRadius=Math.random()>.5?'50%':'3px';
+    document.body.appendChild(p);setTimeout(()=>p.remove(),2200);
+  }
+}
+</script>
+</body>
+</html>
