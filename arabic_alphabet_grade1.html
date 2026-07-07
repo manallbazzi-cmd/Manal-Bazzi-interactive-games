@@ -575,12 +575,14 @@ function pickM(el,role,letter){
   if(prev.letter===letter){
     prev.el.classList.add('ok');el.classList.add('ok');sfxSuccess();
     document.getElementById('MSR').textContent='✅ إجابة صحيحة! أحسنت!';
+    speak('صحيح! أحسنت!');
     if([...document.querySelectorAll('.mi')].every(x=>x.classList.contains('ok'))){
       setTimeout(()=>{pop('🌟','ربطت كل الأزواج! رائع!');confetti();},200);
     }
   } else {
     prev.el.classList.add('bad');el.classList.add('bad');sfxWrong();
     document.getElementById('MINSTR').textContent='❌ حاول مرة أخرى!';
+    speak('حاول مرة أخرى!');
     setTimeout(()=>{prev.el.classList.remove('bad');el.classList.remove('bad');document.getElementById('MINSTR').textContent='اضغط على حرف ثم اضغط على الصورة المناسبة! 🎯';},800);
   }
 }
@@ -633,6 +635,7 @@ function doDrop(zi,letter,si){
       s.done=true;
       document.getElementById('DFB').innerHTML=`<span style="color:#5EC4A0">🎉 أحسنت! هجّيت كلمة "${s.label}"! ${s.e}</span>`;
       sfxWin();confetti();pop(s.e,'كلمة '+s.label+' صحيحة!');
+      speak(`أحسنت! هجّيت كلمة ${s.label}!`);
     }
   } else {
     z.classList.add('derr');sfxWrong();
@@ -771,12 +774,14 @@ function setupFindMiss(){
       if(d.L===correct.L){
         sfxWin();b.classList.add('fmok');
         document.getElementById('FMFB').innerHTML=`<span style="color:#5EC4A0">🎉 صحيح! الحرف الناقص هو (${correct.L}) كما في كلمة ${correct.w}! ${correct.e}</span>`;
+        speak(`صحيح! الحرف الناقص هو ${correct.L}!`);
         const blank=document.querySelector('.fmblank');
         if(blank){blank.textContent=correct.L;blank.className='fmtile '+CL[fmBI%6];blank.style.animation='pi .35s cubic-bezier(.34,1.56,.64,1)';}
         confetti();
       } else {
         sfxWrong();b.classList.add('fmbad');
         document.getElementById('FMFB').innerHTML=`<span style="color:#FF4B6E">❌ الإجابة الصحيحة هي (${correct.L}) ${correct.e}</span>`;
+        speak(`الإجابة الصحيحة هي ${correct.L}.`);
         setTimeout(()=>{document.querySelectorAll('.fmopt').forEach(x=>x.style.pointerEvents='');b.classList.remove('fmbad');},800);
       }
     };oc.appendChild(b);
@@ -816,8 +821,10 @@ function checkQ(chosen,correct,container){
   if(chosen.L===correct.L){
     sfxSuccess();qS++;document.getElementById('QS').textContent='⭐ '+toArabicNum(qS);
     document.getElementById('QFB').innerHTML=`<span style="color:#5EC4A0">🎉 صحيح! ${correct.L} كما في ${correct.w}!</span>`;
+    speak(`صحيح! ${correct.L} كما في ${correct.w}!`);
   } else {
     sfxWrong();document.getElementById('QFB').innerHTML=`<span style="color:#FF4B6E">❌ الإجابة هي ${correct.e} ${correct.w}!</span>`;
+    speak(`الإجابة الصحيحة هي ${correct.w}.`);
   }
   document.getElementById('QNXT').classList.add('show');
 }

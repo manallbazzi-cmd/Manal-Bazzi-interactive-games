@@ -277,6 +277,7 @@
                 feedbackEl.innerText = "🎉 Great job! You built the number correctly.";
                 feedbackEl.className = "mt-4 text-xl font-bold h-8 text-green-600 transition-all";
                 fireConfetti();
+                speak('Great job! You built the number correctly!');
                 // Choose a new target after a few seconds
                 setTimeout(() => {
                     currentTarget = targets[Math.floor(Math.random() * targets.length)];
@@ -289,6 +290,7 @@
             } else {
                 feedbackEl.innerText = "❌ Not quite. Remember: each rod = 10, and each cube = 1.";
                 feedbackEl.className = "mt-4 text-xl font-bold h-8 text-red-600 transition-all shake";
+                speak('Not quite. Remember, each rod is ten, and each cube is one.');
                 setTimeout(() => { feedbackEl.classList.remove('shake'); }, 500);
             }
         }
@@ -412,7 +414,8 @@
                 feedbackEl.innerText = "🌟 Excellent! The order is correct from smallest to largest.";
                 feedbackEl.className = "mt-4 text-xl font-bold h-8 text-green-600 transition-all";
                 fireConfetti();
-                
+                speak('Excellent! The order is correct!');
+
                 // Move to the next set after a few seconds
                 setTimeout(() => {
                     currentSetIndex = (currentSetIndex + 1) % orderSets.length;
@@ -421,6 +424,7 @@
             } else {
                 feedbackEl.innerText = "❌ Incorrect order. Make sure to start with the smallest number!";
                 feedbackEl.className = "mt-4 text-xl font-bold h-8 text-red-600 transition-all shake";
+                speak('Not quite. Make sure to start with the smallest number!');
                 setTimeout(() => { feedbackEl.classList.remove('shake'); }, 500);
             }
         }

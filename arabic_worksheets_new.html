@@ -648,6 +648,7 @@ function showResult(score,total){
   const panel=document.getElementById('result-panel');
   panel.style.display='block';
   setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'center'}),100);
+  speak(`${msg} حصلت على ${score} من ${total}.`);
 }
 
 function resetAll(){

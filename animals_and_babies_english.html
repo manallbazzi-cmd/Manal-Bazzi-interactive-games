@@ -537,12 +537,14 @@ function matchTap(el,side,id){
       el.classList.add('ok2');
       const a=ANIMALS.find(x=>x.id===id);
       document.getElementById('MFB2').innerHTML=`<span style="color:#2ED573">✅ Correct! ${a.emoji} ${a.name} → ${a.babyEmoji} ${a.baby}</span>`;
+      speak('Correct!');
       matchSelAnimal=null;
       if(matchDone.size===5){setTimeout(()=>{pop('🎉','Well done! You matched every pair!');confetti();sndCelebration();},300);}
     } else {
       sndWrong();el.classList.add('bad2');
       setTimeout(()=>el.classList.remove('bad2'),350);
       document.getElementById('MFB2').innerHTML='<span style="color:#FF4757">❌ Try again!</span>';
+      speak('Try again!');
     }
   }
 }
@@ -658,9 +660,11 @@ function answerQ(btn,correct,a){
     sndCorrect();btn.classList.add('qcor');qScore++;
     document.getElementById('QS2').textContent='⭐ '+qScore;
     document.getElementById('QFB2').innerHTML=`<span style="color:#2ED573">🎉 Correct! ${a.emoji} → ${a.babyEmoji} ${a.baby}</span>`;
+    speak('Correct!');
   } else {
     sndWrong();btn.classList.add('qwrg');
     document.getElementById('QFB2').innerHTML=`<span style="color:#FF4757">❌ The answer: ${a.baby} ${a.babyEmoji}</span>`;
+    speak(`Not quite. The answer is ${a.baby}.`);
   }
   document.getElementById('QNXT2').classList.add('show');
 }
@@ -795,12 +799,14 @@ function setupFindMiss(){
       if(d.id===correct.id){
         sndCorrect();b.classList.add('fmok2');
         document.getElementById('FMFB2').innerHTML=`<span style="color:#2ED573">🎉 Correct! The missing one is ${fmType==='animal'?correct.name:correct.baby}! 🎊</span>`;
+        speak(`Correct! The missing one is ${fmType==='animal'?correct.name:correct.baby}!`);
         const blank=document.querySelector('.fm-blank');
         if(blank){blank.style.background=`linear-gradient(135deg,${correct.hex},${correct.hex}AA)`;blank.textContent=fmType==='animal'?correct.emoji:correct.babyEmoji;blank.className='fm-tile';}
         confetti();sndCelebration();
       } else {
         sndWrong();b.classList.add('fmbad2');
         document.getElementById('FMFB2').innerHTML=`<span style="color:#FF4757">❌ The answer is ${fmType==='animal'?correct.name:correct.baby} ${fmType==='animal'?correct.emoji:correct.babyEmoji}</span>`;
+        speak(`Not quite. The answer is ${fmType==='animal'?correct.name:correct.baby}.`);
         setTimeout(()=>{document.querySelectorAll('.fmopt2').forEach(x=>x.style.pointerEvents='');b.classList.remove('fmbad2');},800);
       }
     };oc.appendChild(b);

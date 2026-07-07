@@ -724,10 +724,12 @@ function checkPractice() {
     addXP(15);
     practiceCount++;
     if(practiceCount>=5&&!achieveData.practice5.unlocked){ achieveData.practice5.unlocked=true; showToast('💪 5 Practices unlocked!'); }
+    speak(`Correct! ${pStart} minus ${pTarget} equals ${r}.`);
     setTimeout(newPractice,1800);
   } else {
     fb.textContent=`Try again! Remove exactly ${pTarget} items 👆`;
     fb.className='feedback bad show';
+    speak(`Try again! Remove exactly ${pTarget} items.`);
   }
 }
 
@@ -787,10 +789,12 @@ function checkQuiz(sel, btn) {
     quizCount++;
     if(quizCount>=10&&!achieveData.quiz10.unlocked){ achieveData.quiz10.unlocked=true; showToast('🎯 10 Quiz questions done!'); }
     if(qStreak>=5&&!achieveData.quizStreak5.unlocked){ achieveData.quizStreak5.unlocked=true; showToast('🔥 5 Streak!'); }
+    speak('Correct! Awesome!');
   } else {
     btn.classList.add('wrong'); qStreak=0;
     fb.textContent=`Not quite! The answer was ${qAnswer} 💡`;
     fb.className='feedback bad show';
+    speak(`Not quite. The answer was ${qAnswer}.`);
     setTimeout(()=>{
       document.querySelectorAll('.q-opt').forEach(b=>{ if(+b.textContent===qAnswer) b.classList.add('correct'); });
     },500);
@@ -863,11 +867,13 @@ function checkNL(val,dotEl) {
     document.getElementById('nlScore').textContent=nlScore;
     nlCount++;
     if(nlCount>=5&&!achieveData.nlMaster.unlocked){ achieveData.nlMaster.unlocked=true; showToast('📏 Number Line Master!'); }
+    speak('Correct! Great jump!');
     setTimeout(newNL,1800);
   } else {
     dotEl.style.background='var(--red)';
     fb.textContent=`Not quite — try again! Look for ${nlAnswer} 🔍`;
     fb.className='feedback bad show';
+    speak(`Not quite. Look for ${nlAnswer}.`);
     setTimeout(()=>{ nlAnswered=false; fb.className='feedback'; dotEl.style.background=''; },1200);
   }
 }
@@ -926,6 +932,7 @@ function checkSpeed(){
     fb.textContent='✅ Correct!';
     fb.className='feedback ok show';
     addXP(5);
+    speak('Correct!');
     setTimeout(()=>{ fb.className='feedback'; newSpeedQ(); },400);
   } else {
     // wrong only if enter pressed — wait for full input
@@ -944,12 +951,14 @@ document.addEventListener('DOMContentLoaded',()=>{
         fb.textContent='✅ Correct!';
         fb.className='feedback ok show';
         addXP(5);
+        speak('Correct!');
         setTimeout(()=>{ fb.className='feedback'; newSpeedQ(); },300);
       } else {
         speedWrong++;
         document.getElementById('speedWrong').textContent=speedWrong;
         fb.textContent=`❌ It was ${speedAnswer}!`;
         fb.className='feedback bad show';
+        speak(`It was ${speedAnswer}.`);
         setTimeout(()=>{ fb.className='feedback'; newSpeedQ(); },700);
       }
     }

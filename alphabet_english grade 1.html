@@ -614,6 +614,7 @@ function pickM(el,role,letter){
     prev.el.classList.add('ok');el.classList.add('ok');
     sndMatch();
     document.getElementById('MSR').textContent='✅ Great match! Keep going!';
+    speak('Great match!');
     if([...document.querySelectorAll('.mi')].every(x=>x.classList.contains('ok'))){
       setTimeout(()=>{pop('🌟','All matched! Amazing!');confetti();sndCelebration();},200);
     }
@@ -621,6 +622,7 @@ function pickM(el,role,letter){
     sndWrong();
     prev.el.classList.add('bad');el.classList.add('bad');
     document.getElementById('MINSTR').textContent='❌ Not quite — try again!';
+    speak('Not quite, try again!');
     setTimeout(()=>{prev.el.classList.remove('bad');el.classList.remove('bad');document.getElementById('MINSTR').textContent='Tap a letter, then tap the matching picture! 🎯';},800);
   }
 }
@@ -811,6 +813,7 @@ function setupFindMiss(){
         sndCorrect();
         b.classList.add('fmok');
         document.getElementById('FMFB').innerHTML=`<span style="color:var(--mint)">🎉 Correct! The missing letter is ${correct.L} for ${correct.w}! ${correct.e}</span>`;
+        speak(`Correct! The missing letter is ${correct.L}!`);
         // Fill blank
         const blank=document.querySelector('.fmblank');
         if(blank){blank.textContent=correct.L;blank.className='fmtile '+CL[fmBlankIdx%6];blank.style.animation='pi .35s cubic-bezier(.34,1.56,.64,1)';}
@@ -819,6 +822,7 @@ function setupFindMiss(){
         sndWrong();
         b.classList.add('fmbad');
         document.getElementById('FMFB').innerHTML=`<span style="color:#FF4B6E">❌ Not quite! The answer was ${correct.L} for ${correct.w} ${correct.e}</span>`;
+        speak(`Not quite. The answer was ${correct.L}.`);
         setTimeout(()=>{document.querySelectorAll('.fmopt').forEach(x=>x.style.pointerEvents='');b.classList.remove('fmbad');},800);
       }
     };oc.appendChild(b);
@@ -859,9 +863,11 @@ function checkQ(chosen,correct,container){
     sndCorrect();
     qS++;document.getElementById('QS').textContent='⭐ '+qS;
     document.getElementById('QFB').innerHTML=`<span style="color:var(--mint)">🎉 Yes! ${correct.L} is for ${correct.w}!</span>`;
+    speak(`Correct! ${correct.L} is for ${correct.w}!`);
   } else {
     sndWrong();
     document.getElementById('QFB').innerHTML=`<span style="color:#FF4B6E">❌ It was ${correct.e} ${correct.w}!</span>`;
+    speak(`Not quite. It was ${correct.w}.`);
   }
   document.getElementById('QNXT').classList.add('show');
 }
