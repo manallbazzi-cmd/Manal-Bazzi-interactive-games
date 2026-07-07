@@ -537,7 +537,7 @@ function renderQuestions(){
     const card=document.createElement('div');
     card.className='q-card';card.id=`card-${i}`;
     const bigHtml=q.big?`<div class="q-big">${q.big}</div>`:'';
-    const choicesHtml=`<div class="choices">${q.choices.map(c=>`<button class="choice-btn" onclick="selectChoice(${i},${JSON.stringify(c)})">${c}</button>`).join('')}</div>`;
+    const choicesHtml=`<div class="choices">${q.choices.map(c=>`<button class="choice-btn" onclick="selectChoice(${i},'${c.replace(/'/g,"\\'")}')">${c}</button>`).join('')}</div>`;
     card.innerHTML=`<span class="q-number">${i+1}</span>${bigHtml}<div class="q-question">${q.q} <button type="button" onclick="speakQuestion(${i})" title="Écouter" style="border:none;background:#f4f0ff;color:#6c3fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;vertical-align:middle;">🔊</button></div>${choicesHtml}<div class="q-feedback" id="fb-${i}"></div><div class="hint-text">💡 ${q.hint}</div>`;
     grid.appendChild(card);
   });
