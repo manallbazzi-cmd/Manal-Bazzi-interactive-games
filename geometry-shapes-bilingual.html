@@ -893,6 +893,7 @@ function checkAllMatch() {
   const fb=document.getElementById('fb');
   fb.textContent=`${t('match_result')} ${ok} ${t('of')} ${tot}!`;
   fb.className='feedback show '+(ok===tot?'correct':'wrong');
+  speak(fb.textContent);
   if(ok===tot) confetti();
 }
 
@@ -962,6 +963,7 @@ function dDrop(e,cat){
   const fb=document.getElementById('fb');
   fb.textContent=ok?`✅ ${sName(key)} ${t('correct_sort')}`:`❌ ${sName(key)} ${t('wrong_sort')}`;
   fb.className='feedback show '+(ok?'correct':'wrong');
+  speak(fb.textContent);
   if(ok){score++;confetti();}
   document.querySelectorAll('.draggable-shape').forEach(d=>{if(d.dataset.key===key)d.remove();});
   zone.innerHTML+=`<span style="font-size:.72rem;font-weight:700;color:#333;margin-top:2px">${sName(key)}</span>`;
@@ -1130,8 +1132,8 @@ function checkSym(btn,chosen,correct) {
   if(document.querySelector('.option-btn.correct')) return;
   lockOptions();
   const fb=document.getElementById('fb'),nxt=document.getElementById('nxt');
-  if(chosen===correct){btn.classList.add('correct');fb.textContent='✅ '+t('res_excellent').split('!')[0]+'!';fb.className='feedback show correct';score++;confetti();}
-  else{btn.classList.add('wrong');fb.textContent='❌';fb.className='feedback show wrong';}
+  if(chosen===correct){btn.classList.add('correct');fb.textContent='✅ '+t('res_excellent').split('!')[0]+'!';fb.className='feedback show correct';score++;confetti();speak(t('correct'));}
+  else{btn.classList.add('wrong');fb.textContent='❌';fb.className='feedback show wrong';speak(lang==='ar'?'ليس صحيحاً':'Not quite');}
   nxt.classList.add('show');
 }
 
@@ -1197,6 +1199,7 @@ function checkOpt(btn,chosen,correct,type) {
     document.querySelectorAll('.option-btn').forEach(b=>{if(b.textContent.trim().startsWith(sName(correct))) b.classList.add('correct');});
     fb.textContent=t('wrong_prefix')+sName(correct); fb.className='feedback show wrong';
   }
+  speak(fb.textContent);
   nxt.classList.add('show');
 }
 function checkNum(btn,chosen,correct,type) {
@@ -1211,6 +1214,7 @@ function checkNum(btn,chosen,correct,type) {
     document.querySelectorAll('.option-btn').forEach(b=>{const txt=b.textContent.trim();if(txt==correct||txt.startsWith(correct+' ')) b.classList.add('correct');});
     fb.textContent=t('wrong_sides')+correct; fb.className='feedback show wrong';
   }
+  speak(fb.textContent);
   nxt.classList.add('show');
 }
 

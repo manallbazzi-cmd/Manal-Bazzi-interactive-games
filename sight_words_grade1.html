@@ -491,12 +491,14 @@ function quizAnswer(chosen,ans,btn){
     qScore++;
     document.getElementById('Q_FB').textContent='✅ Correct! Great job!';
     sndCorrect();
+    speak('Correct! Great job!');
     if(qScore%3===0) showPop('⭐','Keep it up!');
   } else {
     btn.classList.add('qwrg');
     document.querySelectorAll('.qo').forEach(b=>{ if(b.textContent===ans) b.classList.add('qcor'); });
     document.getElementById('Q_FB').textContent=`❌ The answer is: "${ans}"`;
     sndWrong();
+    speak(`Not quite. The answer is: ${ans}`);
   }
   document.getElementById('Q_SCORE').textContent=`⭐ ${qScore}`;
   document.getElementById('Q_NEXT').classList.add('show');
@@ -563,6 +565,7 @@ function matchClick(el){
       matchSel.classList.add('ok'); el.classList.add('ok');
       matchSel=null; matchDone++;
       sndCorrect();
+      speak('Correct match!');
       document.getElementById('MATCH_FB').textContent=`✅ Matched! ${matchDone}/${matchTotal}`;
       if(matchDone===matchTotal){
         sndCelebration(); launchConfetti();
@@ -574,6 +577,7 @@ function matchClick(el){
       matchSel.classList.remove('sel');
       matchSel.classList.add('bad'); el.classList.add('bad');
       sndWrong();
+      speak('Try again!');
       document.getElementById('MATCH_FB').textContent='❌ Try again!';
       const s1=matchSel,s2=el;
       setTimeout(()=>{s1.classList.remove('bad');s2.classList.remove('bad');},600);
@@ -672,6 +676,7 @@ function fillAnswer(chosen,ans,btn){
     blank.textContent=ans;blank.classList.add('filled');
     document.getElementById('FB_FB').textContent='✅ Correct!';
     sndCorrect();
+    speak('Correct!');
     document.querySelectorAll('.fopt').forEach(b=>b.classList.add('used-p'));
     setTimeout(()=>{ fillIdx++; fillRender(); },900);
   } else {
@@ -680,6 +685,7 @@ function fillAnswer(chosen,ans,btn){
     blank.classList.add('wrong');
     document.getElementById('FB_FB').textContent='❌ Try another!';
     sndWrong();
+    speak('Try another!');
     setTimeout(()=>blank.classList.remove('wrong'),500);
   }
 }

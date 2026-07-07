@@ -999,9 +999,11 @@ function answerQuiz(chosen,btn){
     addStars(bonus);
     fb.textContent=qStreak>=3?`🔥 ${bonus} Bonus Stars! On fire!`:'⭐ Correct! +1 Star!';fb.className='fb-msg fb-good';
     if(qStreak===5)fireConfetti(true);else fireConfetti();
+    speak('Correct!');
   }else{
     btn.classList.add('wrong');qWrong++;qStreak=0;qScore=Math.max(0,qScore-5);
     fb.textContent=`❌ The answer was ${qAns}`;fb.className='fb-msg fb-bad';
+    speak(`Not quite. The answer was ${qAns}.`);
   }
   updateQuizUI();renderStreak();
   setTimeout(()=>{qIdx++;renderQuizQ();},1500);
@@ -1082,10 +1084,12 @@ function popBalloon(chosen,el,color){
     bRight++;bPopped++;bScore+=15;addStars(1);
     fb.textContent='💥 POP! Correct! +1 Star!';fb.className='feedback fb-success';
     fireConfetti();
+    speak('Correct!');
   }else{
     el.style.filter='grayscale(1)';
     bScore=Math.max(0,bScore-5);
     fb.textContent=`❌ Wrong balloon! The answer was ${bAns}`;fb.className='feedback fb-error';
+    speak(`Not quite. The answer was ${bAns}.`);
   }
   updateBalloonUI();
   const t=setTimeout(()=>{bIdx++;renderBalloonQ();},1600);bTimers.push(t);
@@ -1157,9 +1161,11 @@ function answerFill(chosen,btn){
     fScore++;addStars(1);
     fb.textContent='✅ Correct! Well done! +1 Star!';fb.className='feedback fb-success';
     fireConfetti();
+    speak('Correct! Well done!');
   }else{
     btn.style.background='#FFEBEE';btn.style.borderColor='#E53935';btn.style.color='#B71C1C';
     fb.textContent=`❌ The answer was ${fAns}. Keep going!`;fb.className='feedback fb-error';
+    speak(`Not quite. The answer was ${fAns}.`);
   }
   document.getElementById('fill-score').textContent=fScore;
   setTimeout(()=>{fIdx++;renderFillQ();},1500);

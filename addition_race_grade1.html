@@ -661,12 +661,14 @@
     if(isCorrect){
       btn.classList.add('correct');
       handleCorrect();
+      speak('Correct!');
     } else {
       btn.classList.add('incorrect');
       buttons.forEach(function(b){
         if(Number(b.textContent) === currentQuestion.correct) b.classList.add('reveal-correct');
       });
       handleIncorrect();
+      speak('Not quite. The answer was ' + currentQuestion.correct + '.');
     }
 
     later(function(){ if(gameActive) computerMove(); }, 650);

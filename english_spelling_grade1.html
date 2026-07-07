@@ -508,6 +508,7 @@ function spellTap(letter, btnIdx){
       launchConfetti();
       showPop('🎉',w.toUpperCase()+'!');
       document.getElementById('SP_FB').textContent='🎉 You spelled it correctly!';
+      speak(`Correct! You spelled ${w}!`);
       setTimeout(()=>{ spellIdx++; spellRender(); },1400);
     }
   } else {
@@ -515,6 +516,7 @@ function spellTap(letter, btnIdx){
     const blank=document.getElementById('sb-'+spellLetterIdx);
     blank.classList.add('wrong-b');
     document.getElementById('SP_FB').textContent=`❌ Try again! Look for "${w[spellLetterIdx].toUpperCase()}"`;
+    speak(`Try again! Look for the letter ${w[spellLetterIdx].toUpperCase()}.`);
     setTimeout(()=>blank.classList.remove('wrong-b'),500);
   }
 }
@@ -556,12 +558,14 @@ function quizAnswer(chosen,ans,btn){
     qScore++;
     document.getElementById('Q_FB').textContent='✅ Correct spelling!';
     sndCorrect();
+    speak('Correct spelling!');
     if(qScore%3===0) showPop('⭐','Spelling star!');
   } else {
     btn.classList.add('qwrg');
     document.querySelectorAll('.qo').forEach(b=>{ if(b.textContent===ans) b.classList.add('qcor'); });
     document.getElementById('Q_FB').textContent=`❌ It's "${ans}"`;
     sndWrong();
+    speak(`Not quite. It's ${ans}.`);
   }
   document.getElementById('Q_SCORE').textContent=`⭐ ${qScore}`;
   document.getElementById('Q_NEXT').classList.add('show');
@@ -624,6 +628,7 @@ function matchClick(el){
       matchSel.classList.remove('sel');matchSel.classList.add('ok');el.classList.add('ok');
       matchSel=null;matchDone++;
       sndCorrect();
+      speak('Correct match!');
       document.getElementById('MATCH_FB').textContent=`✅ Matched! ${matchDone}/${matchTotal}`;
       if(matchDone===matchTotal){
         sndCelebration();launchConfetti();showPop('🎉','Round complete!');
@@ -633,6 +638,7 @@ function matchClick(el){
     } else {
       matchSel.classList.remove('sel');matchSel.classList.add('bad');el.classList.add('bad');
       sndWrong();
+      speak('Try again!');
       document.getElementById('MATCH_FB').textContent='❌ Try again!';
       const s1=matchSel,s2=el;
       setTimeout(()=>{s1.classList.remove('bad');s2.classList.remove('bad');},600);

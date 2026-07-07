@@ -527,6 +527,7 @@ function checkAnswer(symbol){
     coins+=earned; score+=earned; correct++;
     document.getElementById('coinsVal').textContent=coins;
     showScorePop('+'+earned+' 🪙',true); launchConfetti(12); playSoundCorrect();
+    speak('Correct!');
     setTimeout(()=>{qIndex++;loadQuestion();},1200);
   } else {
     document.getElementById(btnMap[symbol]).classList.add('wrong');
@@ -537,6 +538,7 @@ function checkAnswer(symbol){
     document.getElementById('fbEN').textContent=`❌ Not quite! ${q.a} ${currentAnswer} ${q.b} means ${q.a} is ${symEN[currentAnswer]} ${q.b}`;
     document.getElementById('fbAR').textContent=`❌ الصحيح: ${q.a} ${currentAnswer} ${q.b} أي ${q.a} ${symAR[currentAnswer]} ${q.b}`;
     lives--; renderLives(); playSoundWrong();
+    speak(`Not quite. ${q.a} is ${symEN[currentAnswer]} ${q.b}.`);
     setTimeout(()=>{
       document.getElementById(btnMap[symbol]).classList.remove('wrong');
       document.querySelectorAll('.choice-btn').forEach(b=>b.disabled=false);
