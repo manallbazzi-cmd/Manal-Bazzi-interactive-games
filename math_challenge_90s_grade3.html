@@ -347,6 +347,24 @@
 
   function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
   function shuffleArray(arr){ for(var i=arr.length-1;i>0;i--){ var j=randInt(0,i); var t=arr[i];arr[i]=arr[j];arr[j]=t; } return arr; }
+
+  // ---------- Speech (read questions + feedback aloud) ----------
+  var speechAvailable = 'speechSynthesis' in window;
+  var ttsVoices = [];
+  function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+  if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+  function speak(text){
+    if(!speechAvailable) return;
+    window.speechSynthesis.cancel();
+    var utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'en-US'; utt.rate = 0.95; utt.pitch = 1.1;
+    var en = ttsVoices.find(function(v){ return v.lang.indexOf('en')===0 && v.name.toLowerCase().indexOf('samantha')>-1; })
+      || ttsVoices.find(function(v){ return v.lang.indexOf('en')===0 && v.name.toLowerCase().indexOf('google')<0; })
+      || ttsVoices.find(function(v){ return v.lang.indexOf('en')===0; }) || null;
+    if(en) utt.voice = en;
+    window.speechSynthesis.speak(utt);
+  }
+  function spokenOp(op){ return op==='×'?'times':op==='÷'?'divided by':op==='+'?'plus':'minus'; }
   function prefersReducedMotion(){ return window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches; }
 
   // ---------- Sound ----------
@@ -403,7 +421,7 @@
     else if(opDef.op==='+') qText=a+' + '+b+' = ?';
     else qText=a+' − '+b+' = ?';
 
-    return { op:opDef, qText:qText, correct:correct, choices:choices };
+    return { op:opDef, qText:qText, correct:correct, spokenQ:(a+' '+spokenOp(opDef.op)+' '+b+'?'), choices:choices };
   }
 
   // ---------- Render ----------
@@ -421,6 +439,7 @@
       choicesEl.appendChild(btn);
     });
     answering=true;
+    speak(currentQ.spokenQ);
   }
 
   function handleAnswer(choice,btn){
@@ -443,6 +462,7 @@
       spawnStars();
       spawnConfetti(12);
       showFlash('✓ +'+bonus, 'correct');
+      speak('Correct!');
     } else {
       btn.classList.add('incorrect');
       buttons.forEach(function(b){ if(Number(b.textContent)===currentQ.correct) b.classList.add('reveal-correct'); });
@@ -451,6 +471,7 @@
       updateStreak();
       playError();
       showFlash('✗', 'incorrect');
+      speak('Not quite, it was '+currentQ.correct+'.');
     }
 
     later(function(){ if(gameActive) loadQuestion(); }, 900);

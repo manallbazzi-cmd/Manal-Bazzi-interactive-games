@@ -363,6 +363,23 @@ const HABITATS = {
 
 const HAB_KEYS = Object.keys(HABITATS);
 function shuf(a){return[...a].sort(()=>Math.random()-.5);}
+
+// ── SPEECH (read facts, questions + feedback aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
 function pop(e,t){const p=document.getElementById('FP');document.getElementById('FPE').textContent=e;document.getElementById('FPT').textContent=t;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),2500);}
 function confetti(){
   const cv=document.getElementById('CC'),ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
@@ -425,6 +442,7 @@ function exploreHabitat(key,tile){
         <div class="ai-facts">🌟 ${a.fact}</div>
         <div class="ai-adapt">🔧 Adaptations: ${a.adapt}</div>
       </div>`;
+      speak(`${a.name}. ${a.fact}`);
       const total=HAB_KEYS.reduce((s,k)=>s+HABITATS[k].animals.length,0);
       const pct=Math.round(expVisited.size/total*100);
       document.getElementById('EXP_PF').style.width=pct+'%';
@@ -667,11 +685,12 @@ function showQ(){
   document.getElementById('QNXT').onclick=()=>{qIdx++;showQ();};
   const oc=document.getElementById('QOPTS');oc.innerHTML='';
   q.opts.forEach(opt=>{const b=document.createElement('button');b.className='qo';b.textContent=opt;b.onclick=()=>checkQ(opt,q,oc);oc.appendChild(b);});
+  setTimeout(()=>speak(q.q),300);
 }
 function checkQ(chosen,q,c){
   [...c.querySelectorAll('.qo')].forEach(b=>{b.classList.add('qdis');if(b.textContent===q.correct)b.classList.add('qcor');if(b.textContent===chosen&&chosen!==q.correct)b.classList.add('qwrg');});
-  if(chosen===q.correct){sndCorrect();qScore++;document.getElementById('QS').textContent='⭐ '+qScore;document.getElementById('QFB').innerHTML=`<span style="color:#2ED573">🎉 Correct! Great job! 👏</span>`;}
-  else{sndWrong();document.getElementById('QFB').innerHTML=`<span style="color:#FF4757">❌ Answer: ${q.correct}</span>`;}
+  if(chosen===q.correct){sndCorrect();qScore++;document.getElementById('QS').textContent='⭐ '+qScore;document.getElementById('QFB').innerHTML=`<span style="color:#2ED573">🎉 Correct! Great job! 👏</span>`;speak('Correct! Great job!');}
+  else{sndWrong();document.getElementById('QFB').innerHTML=`<span style="color:#FF4757">❌ Answer: ${q.correct}</span>`;speak(`Not quite. The answer is ${q.correct}.`);}
   document.getElementById('QNXT').classList.add('show');
 }
 function endQ(){
@@ -712,10 +731,12 @@ function pickM(el,role,animal,hab){
   if(realHab&&realHab.hab===chosenHab){
     sndMatch();aEl.classList.add('ok');hEl.classList.add('ok');
     document.getElementById('MATCH_FB').innerHTML=`<span style="color:#2ED573">✅ ${anName} lives in the ${chosenHab}!</span>`;
+    speak(`Correct! ${anName} lives in the ${chosenHab}!`);
     if([...document.querySelectorAll('.mitem')].every(x=>x.classList.contains('ok'))){setTimeout(()=>{pop('🌟','All matched!');confetti();sndCelebration();},200);}
   } else {
     sndWrong();aEl.classList.add('bad');hEl.classList.add('bad');
     document.getElementById('MATCH_FB').innerHTML=`<span style="color:#FF4757">❌ Try again!</span>`;
+    speak('Try again!');
     setTimeout(()=>{aEl.classList.remove('bad');hEl.classList.remove('bad');document.getElementById('MATCH_FB').textContent='';},800);
   }
 }
@@ -753,11 +774,13 @@ function doDrop(habKey){
     const chip=document.createElement('div');chip.className='bchip';chip.style.background=h.color;chip.textContent=dSel.textContent;
     document.getElementById('BI_'+habKey).appendChild(chip);
     document.getElementById('DRAG_FB').innerHTML=`<span style="color:#2ED573">✅ ${dSel.dataset.name} lives in the ${h.name}!</span>`;
+    speak(`Correct! ${dSel.dataset.name} lives in the ${h.name}!`);
     dSel=null;
     if([...document.querySelectorAll('.dtile')].every(t=>t.classList.contains('used'))){setTimeout(()=>{pop('🏆','All animals sorted!');confetti();sndCelebration();},300);}
   } else {
     sndWrong();dSel.style.animation='sh .3s';setTimeout(()=>{if(dSel)dSel.style.animation='';},400);
     document.getElementById('DRAG_FB').innerHTML=`<span style="color:#FF4757">❌ That's not the right habitat!</span>`;
+    speak("Not quite, that's not the right habitat!");
   }
 }
 
@@ -787,6 +810,7 @@ function flipM(el,card){
     const[a,b]=memFl;
     if(a.card.id===b.card.id&&a.card.type!==b.card.type){
       sndMatch();a.el.classList.add('matched');b.el.classList.add('matched');memMt++;document.getElementById('MM').textContent=memMt;memFl=[];memLk=false;
+      speak('Match!');
       if(memMt===+document.getElementById('MTOT').textContent)setTimeout(()=>{pop('🏆','All pairs found!');confetti();sndCelebration();},300);
     } else {
       sndWrong();a.el.classList.add('mwrong');b.el.classList.add('mwrong');
@@ -823,6 +847,7 @@ function nextPuzzle(){
   const parts=pz.q.split('___');
   document.getElementById('PZ_Q').innerHTML=parts[0]+'<span class="blank" id="PZ_BL">___</span>'+parts[1];
   const oc=document.getElementById('PZ_OPTS');oc.innerHTML='';
+  setTimeout(()=>speak(pz.q.replace('___','blank')),300);
   shuf(pz.opts).forEach(opt=>{
     const b=document.createElement('div');b.className='popt';b.style.background=pz.color;b.textContent=opt;
     b.onclick=()=>{
@@ -832,10 +857,12 @@ function nextPuzzle(){
         sndCorrect();pzSc++;pzTot++;bl.textContent=opt;bl.classList.add('filled-b');
         document.getElementById('PZ_FB').innerHTML=`<span style="color:#2ED573">🎉 Correct!</span>`;
         document.getElementById('PZ_SCORE').textContent=`Score: ${pzSc} / ${pzTot-1}`;
+        speak('Correct!');
         setTimeout(nextPuzzle,1400);
       } else {
         sndWrong();pzTot++;bl.textContent=opt;bl.classList.add('wrong-b');
         document.getElementById('PZ_FB').innerHTML=`<span style="color:#FF4757">❌ Answer: <strong>${pz.blank}</strong></span>`;
+        speak(`Not quite. The answer is ${pz.blank}.`);
         document.getElementById('PZ_SCORE').textContent=`Score: ${pzSc} / ${pzTot-1}`;
       }
     };oc.appendChild(b);
@@ -855,6 +882,7 @@ function setupFindHome(){
       <div class="fh-name" style="color:#fff">${a.name}</div>
       <div class="fh-clue" style="color:rgba(255,255,255,.9)">💡 Clue: ${a.adapt.split('·')[0].trim()}</div>
     </div>`;
+  setTimeout(()=>speak(`Where does the ${a.name} live?`),300);
   const oc=document.getElementById('FH_OPTS');oc.innerHTML='';
   HAB_KEYS.forEach(key=>{
     const hh=HABITATS[key];const b=document.createElement('div');b.className='fhopt';
@@ -865,10 +893,12 @@ function setupFindHome(){
       if(key===a.hab){
         sndCorrect();fhSc++;b.classList.add('fh-ok');
         document.getElementById('FH_FB').innerHTML=`<span style="color:#2ED573">🎉 Correct! The ${a.name} lives in the ${hh.name}! ${a.emoji}</span>`;
+        speak(`Correct! The ${a.name} lives in the ${hh.name}!`);
         setTimeout(()=>{if(fhIdx<fhList.length)setupFindHome();else{pop('🌍','You found all homes!');confetti();sndCelebration();}},1600);
       } else {
         sndWrong();b.classList.add('fh-bad');
         document.getElementById('FH_FB').innerHTML=`<span style="color:#FF4757">❌ The ${a.name} lives in the ${HABITATS[a.hab].name} ${HABITATS[a.hab].emoji}</span>`;
+        speak(`Not quite. The ${a.name} lives in the ${HABITATS[a.hab].name}.`);
         setTimeout(()=>{[...document.querySelectorAll('.fhopt')].forEach(x=>x.style.pointerEvents='');b.classList.remove('fh-bad');},800);
       }
     };oc.appendChild(b);

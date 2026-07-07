@@ -397,6 +397,23 @@ const SYSTEMS = {
 
 const SYS_KEYS = Object.keys(SYSTEMS);
 function shuf(a){return[...a].sort(()=>Math.random()-.5);}
+
+// ── SPEECH (read facts, questions + feedback aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
 function pop(e,t){const p=document.getElementById('FP');document.getElementById('FPE').textContent=e;document.getElementById('FPT').textContent=t;p.classList.add('show');setTimeout(()=>p.classList.remove('show'),2500);}
 function confetti(){
   const cv=document.getElementById('CC'),ctx=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;
@@ -453,6 +470,7 @@ function exploreSystem(key,tile){
       sndClick();visitedOrgans.add(key+o.name);chip.classList.add('visited-o');
       const od=document.getElementById('OD_'+key);od.style.display='block';
       od.innerHTML=`<div class="organ-detail"><div class="od-title">${o.emoji} ${o.name}</div><div class="od-fact">${o.fact}</div></div>`;
+      speak(`${o.name}. ${o.fact}`);
     };
     document.getElementById('OL_'+key).appendChild(chip);
   });
@@ -764,12 +782,14 @@ function setupDragLabel(){
           zone.style.background='rgba(46,213,115,.35)';zone.style.borderColor='#2ED573';zone.style.borderStyle='solid';
           zone.classList.add('filled');dlSel.classList.add('used-dl');
           document.getElementById('DL_FB').innerHTML=`<span style="color:#2ED573">✅ Correct! ${organ.name} placed!</span>`;
+          speak(`Correct! ${organ.name} placed!`);
           dlSel=null;document.querySelectorAll('.dlabel').forEach(l=>l.classList.remove('selected-dl'));
           const allFilled=[...document.querySelectorAll('[data-organ]')].filter(z=>z.dataset.organ).every(z=>z.classList.contains('filled'));
           if(allFilled)setTimeout(()=>{pop('🏆','All organs placed!');confetti();sndCelebration();},200);
         } else {
           sndWrong();zone.style.borderColor='#FF4757';
           document.getElementById('DL_FB').innerHTML=`<span style="color:#FF4757">❌ Wrong spot! Try again!</span>`;
+          speak('Wrong spot, try again!');
           setTimeout(()=>{zone.style.borderColor='rgba(255,255,255,.7)';},600);
         }
       };
@@ -833,11 +853,12 @@ function showQuestion(){
     const b=document.createElement('button');b.className='qo';b.textContent=opt;
     b.onclick=()=>checkQ(opt,q,oc);oc.appendChild(b);
   });
+  setTimeout(()=>speak(q.q.replace('\n\n',' ')),300);
 }
 function checkQ(chosen,q,c){
   [...c.querySelectorAll('.qo')].forEach(b=>{b.classList.add('qdis');if(b.textContent===q.correct)b.classList.add('qcor');if(b.textContent===chosen&&chosen!==q.correct)b.classList.add('qwrg');});
-  if(chosen===q.correct){sndCorrect();qScore++;document.getElementById('QS').textContent='⭐ '+qScore;document.getElementById('QFB').innerHTML=`<span style="color:#2ED573">🎉 Correct! Well done! 👏</span>`;}
-  else{sndWrong();document.getElementById('QFB').innerHTML=`<span style="color:#FF4757">❌ Answer: ${q.correct}</span>`;}
+  if(chosen===q.correct){sndCorrect();qScore++;document.getElementById('QS').textContent='⭐ '+qScore;document.getElementById('QFB').innerHTML=`<span style="color:#2ED573">🎉 Correct! Well done! 👏</span>`;speak('Correct! Well done!');}
+  else{sndWrong();document.getElementById('QFB').innerHTML=`<span style="color:#FF4757">❌ Answer: ${q.correct}</span>`;speak(`Not quite. The answer is ${q.correct}.`);}
   document.getElementById('QNXT').classList.add('show');
 }
 function endQuiz(){
@@ -879,10 +900,12 @@ function pickMatch(el,role,organ,sys){
   if(realSys&&realSys.sys===chosenSys){
     sndMatch();organEl.classList.add('ok');sysEl.classList.add('ok');
     document.getElementById('MATCH_FB').innerHTML=`<span style="color:#2ED573">✅ Correct! ${organName} → ${chosenSys}!</span>`;
+    speak(`Correct! ${organName} belongs to the ${chosenSys}!`);
     if([...document.querySelectorAll('.mitem')].every(x=>x.classList.contains('ok'))){setTimeout(()=>{pop('🌟','All matched! Amazing!');confetti();sndCelebration();},200);}
   } else {
     sndWrong();organEl.classList.add('bad');sysEl.classList.add('bad');
     document.getElementById('MATCH_FB').innerHTML=`<span style="color:#FF4757">❌ Try again!</span>`;
+    speak('Try again!');
     setTimeout(()=>{organEl.classList.remove('bad');sysEl.classList.remove('bad');document.getElementById('MATCH_FB').textContent='';},800);
   }
 }
@@ -910,6 +933,7 @@ function flipMem(el,card){
     const[a,b]=memFlip;
     if(a.card.id===b.card.id&&a.card.type!==b.card.type){
       sndMatch();a.el.classList.add('matched');b.el.classList.add('matched');memMat++;document.getElementById('MM').textContent=memMat;memFlip=[];memLock=false;
+      speak('Match!');
       if(memMat===+document.getElementById('MTOT').textContent){setTimeout(()=>{pop('🏆','All pairs found! Science genius!');confetti();sndCelebration();},300);}
     } else {
       sndWrong();a.el.classList.add('mwrong');b.el.classList.add('mwrong');
@@ -946,6 +970,7 @@ function nextPuzzle(){
   const qEl=document.getElementById('PZ_Q');
   const parts=pz.q.split('___');
   qEl.innerHTML=parts[0]+'<span class="blank" id="PZ_BLANK">___</span>'+parts[1];
+  setTimeout(()=>speak(pz.q.replace('___','blank')),300);
   const oc=document.getElementById('PZ_OPTS');oc.innerHTML='';
   shuf(pz.opts).forEach(opt=>{
     const b=document.createElement('div');b.className='popt';b.style.background=pz.color;b.textContent=opt;
@@ -959,10 +984,12 @@ function nextPuzzle(){
         sndCorrect();pzScore++;pzTotal++;blank.textContent=opt;blank.classList.add('filled-b');
         document.getElementById('PZ_FB').innerHTML=`<span style="color:#2ED573">🎉 Correct! Well done!</span>`;
         document.getElementById('PZ_SCORE').textContent=`Score: ${pzScore} / ${pzTotal-1}`;
+        speak('Correct! Well done!');
         setTimeout(nextPuzzle,1400);
       } else {
         sndWrong();blank.textContent=opt;blank.classList.add('wrong-b');pzTotal++;
         document.getElementById('PZ_FB').innerHTML=`<span style="color:#FF4757">❌ The answer was: <strong>${pz.blank}</strong></span>`;
+        speak(`Not quite. The answer was ${pz.blank}.`);
         document.getElementById('PZ_SCORE').textContent=`Score: ${pzScore} / ${pzTotal-1}`;
       }
     };oc.appendChild(b);

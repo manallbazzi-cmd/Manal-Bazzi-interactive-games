@@ -1297,6 +1297,23 @@ function doConvert() {
   steps.style.display = 'block';
 }
 
+// ── SPEECH (read questions + feedback aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 /* ════════════════════════════════════════
    QUIZ
 ════════════════════════════════════════ */
@@ -1337,6 +1354,7 @@ function renderQ() {
     </div>`;
   document.getElementById('hintBox').style.display = 'none';
   document.getElementById('feedbackBox').style.display = 'none';
+  setTimeout(()=>speak(q.q),300);
 }
 
 function pick(i) {
@@ -1359,9 +1377,11 @@ function pick(i) {
     fb.className = 'feedback-box ok';
     fb.textContent = ['🎉 Amazing!','✅ Correct!','🌟 Superstar!','🏆 Perfect!'][Math.floor(Math.random()*4)];
     confetti();
+    speak('Correct!');
   } else {
     fb.className = 'feedback-box bad';
     fb.textContent = `❌ Not this time! Answer: "${q.opts[q.ans]}"`;
+    speak(`Not quite. The answer is ${q.opts[q.ans]}.`);
   }
   fb.style.display = 'block';
 
