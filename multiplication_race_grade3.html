@@ -472,6 +472,23 @@
   function clearPendingTimers(){ pendingTimers.forEach(function(t){ clearTimeout(t); }); pendingTimers = []; }
   function later(fn, ms){ var id = setTimeout(fn, ms); pendingTimers.push(id); return id; }
 
+  // ---------- Speech (read questions + feedback aloud) ----------
+  var speechAvailable = 'speechSynthesis' in window;
+  var ttsVoices = [];
+  function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+  if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+  function speak(text){
+    if(!speechAvailable) return;
+    window.speechSynthesis.cancel();
+    var utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+    var en = ttsVoices.find(function(v){ return v.lang.indexOf('en')===0 && v.name.toLowerCase().indexOf('samantha')>-1; })
+      || ttsVoices.find(function(v){ return v.lang.indexOf('en')===0 && v.name.toLowerCase().indexOf('google')<0; })
+      || ttsVoices.find(function(v){ return v.lang.indexOf('en')===0; }) || null;
+    if(en) utt.voice = en;
+    window.speechSynthesis.speak(utt);
+  }
+
   // ---------- Utility ----------
   function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
   function shuffleArray(arr){ for(var i = arr.length - 1; i > 0; i--){ var j = randInt(0, i); var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; } return arr; }
@@ -615,6 +632,7 @@
     questionTextEl.textContent = currentQuestion.a + ' × ' + currentQuestion.b + ' = ?';
     renderChoices();
     answering = true;
+    later(function(){ speak(currentQuestion.a + ' times ' + currentQuestion.b + ' equals what?'); }, 300);
   }
 
   function renderChoices(){
@@ -642,12 +660,14 @@
     if(isCorrect){
       btn.classList.add('correct');
       handleCorrect();
+      speak('Correct!');
     } else {
       btn.classList.add('incorrect');
       buttons.forEach(function(b){
         if(Number(b.textContent) === currentQuestion.correct) b.classList.add('reveal-correct');
       });
       handleIncorrect();
+      speak('Not quite. The answer was ' + currentQuestion.correct + '.');
     }
 
     later(function(){ if(gameActive) computerMove(); }, 650);

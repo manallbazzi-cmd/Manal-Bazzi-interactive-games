@@ -575,6 +575,23 @@ const CONTEXTS = [
 function toAr(n){ return String(n).split('').map(d=>ARAB[+d]).join(''); }
 function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
 
+// ── SPEECH (read questions + feedback aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 // ═══════════ STATE ═══════════
 let playerName='Racer', coins=0, streak=0, bestStreak=0;
 let questions=[], qIdx=0, timerInt=null, timeLeft=TIME_PER_Q, maxTime=TIME_PER_Q;
@@ -658,6 +675,7 @@ function newSplitProblem(){
   document.getElementById('splitFinal').textContent=currentSplitA*currentSplitB;
   document.getElementById('splitUserAns').value='';
   document.getElementById('splitFb').innerHTML='';
+  setTimeout(()=>speak(`${currentSplitA} times ${currentSplitB}?`),300);
 }
 newSplitProblem();
 
@@ -671,10 +689,12 @@ function checkSplit(){
     coins+=5; document.getElementById('coinsVal').textContent=coins;
     launchConfetti(6);
     playSoundCorrect();
+    speak('Correct!');
     setTimeout(newSplitProblem,1800);
   } else {
     fb.innerHTML=`<span style="color:var(--red)">❌ Answer is ${correct}. Try again!</span><span class="ar-sfb" style="color:rgba(255,59,59,.7)">❌ الجواب ${toAr(correct)}. حاول مجدداً!</span>`;
     playSoundWrong();
+    speak(`Not quite. The answer is ${correct}.`);
   }
 }
 
@@ -765,6 +785,7 @@ function loadQ(){
   document.getElementById('progAR').textContent=`السؤال ${toAr(qIdx+1)} من ${toAr(questions.length)}`;
   renderStageBar();
   startTimer(TIME_PER_Q);
+  speak(`${q.a} times ${q.b}?`);
 }
 
 // ═══════════ TIMER ═══════════
@@ -796,6 +817,7 @@ function timeOut(){
   document.getElementById('eqAns').className='eq-ans wrong';
   streak=0; document.getElementById('streakVal').textContent=0;
   showGameTrick(q); playSoundWrong();
+  speak(`Time's up! ${q.a} times ${q.b} equals ${q.ans}.`);
   const ni=qIdx+1;
   setTimeout(()=>{ qIdx=ni; loadQ(); },2000);
 }
@@ -827,6 +849,7 @@ function checkAns(val,btnEl,q){
     showScorePop(`+${earned}🪙`,true);
     launchConfetti(streak>=3?14:8);
     playSoundCorrect();
+    speak('Correct!');
     setTimeout(()=>{ qIdx=ni; loadQ(); },1100);
   } else {
     btnEl.classList.add('wrong');
@@ -839,6 +862,7 @@ function checkAns(val,btnEl,q){
     showGameTrick(q);
     setTimeout(()=>{ document.querySelectorAll('.c-btn').forEach(b=>{ if(+b.textContent===q.ans) b.classList.add('correct'); }); },400);
     playSoundWrong();
+    speak(`Not quite. ${q.a} times ${q.b} equals ${q.ans}.`);
     setTimeout(()=>{ qIdx=ni; loadQ(); },2300);
   }
 }

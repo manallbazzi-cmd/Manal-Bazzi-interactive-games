@@ -386,6 +386,26 @@ function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
 function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
 function pick(a,n){return shuffle(a).slice(0,n);}
 
+// ── SPEECH (read questions + feedback aloud, French) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fr-FR'; utt.rate = 0.88; utt.pitch = 1.05;
+  const fr = ttsVoices.find(v=>v.lang.startsWith('fr'));
+  if(fr) utt.voice = fr;
+  window.speechSynthesis.speak(utt);
+}
+function speakQuestion(qi){
+  const q=questions[qi];
+  if(!q) return;
+  speak((q.big?q.big+'. ':'')+q.q);
+}
+
 document.querySelectorAll('.grade-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.grade-btn').forEach(b=>b.classList.remove('active'));
@@ -507,6 +527,7 @@ function startWorksheet(){
   const area=document.getElementById('worksheet-area');
   area.style.display='block';
   setTimeout(()=>area.scrollIntoView({behavior:'smooth',block:'start'}),100);
+  setTimeout(()=>speakQuestion(0),700);
 }
 
 function renderQuestions(){
@@ -517,7 +538,7 @@ function renderQuestions(){
     card.className='q-card';card.id=`card-${i}`;
     const bigHtml=q.big?`<div class="q-big">${q.big}</div>`:'';
     const choicesHtml=`<div class="choices">${q.choices.map(c=>`<button class="choice-btn" onclick="selectChoice(${i},${JSON.stringify(c)})">${c}</button>`).join('')}</div>`;
-    card.innerHTML=`<span class="q-number">${i+1}</span>${bigHtml}<div class="q-question">${q.q}</div>${choicesHtml}<div class="q-feedback" id="fb-${i}"></div><div class="hint-text">💡 ${q.hint}</div>`;
+    card.innerHTML=`<span class="q-number">${i+1}</span>${bigHtml}<div class="q-question">${q.q} <button type="button" onclick="speakQuestion(${i})" title="Écouter" style="border:none;background:#f4f0ff;color:#6c3fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;vertical-align:middle;">🔊</button></div>${choicesHtml}<div class="q-feedback" id="fb-${i}"></div><div class="hint-text">💡 ${q.hint}</div>`;
     grid.appendChild(card);
   });
 }
@@ -570,6 +591,7 @@ function showResult(score,total){
   document.getElementById('result-msg').textContent=msg;
   const name=document.getElementById('studentName').value.trim();
   document.getElementById('result-name').textContent=name?`🌟 Bravo, ${name} !`:'';
+  speak(`${msg} Tu as obtenu ${score} sur ${total}.`);
   const panel=document.getElementById('result-panel');
   panel.style.display='block';
   setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'center'}),100);
