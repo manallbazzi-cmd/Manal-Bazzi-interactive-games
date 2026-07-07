@@ -605,6 +605,23 @@ let achieveData = {
 };
 let practiceCount=0, quizCount=0, nlCount=0;
 
+// ── SPEECH (read questions aloud) ─────────────────────────
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.88; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 // ── XP + Stars ─────────────────────────────────────────────
 function addXP(amount) {
   xp += amount;
@@ -694,6 +711,7 @@ function newPractice() {
   }
   const fb=document.getElementById('practiceFeedback');
   fb.className='feedback';
+  setTimeout(()=>speak(`What is ${pStart} minus ${pTarget}?`),300);
 }
 
 function checkPractice() {
@@ -728,6 +746,7 @@ function nextQuiz() {
   const n2=Math.floor(Math.random()*(n1-1))+1;
   qAnswer=n1-n2; qTotal++;
   document.getElementById('quizQ').textContent=`What is ${n1} − ${n2}?`;
+  setTimeout(()=>speak(`What is ${n1} minus ${n2}?`),300);
 
   const vis=document.getElementById('quizVisual');
   vis.innerHTML='';
@@ -797,6 +816,7 @@ function newNL() {
   document.getElementById('nlEq').innerHTML=
     `<span class="n">${n1}</span><span class="op"> − </span><span class="n">${n2}</span><span class="op"> = </span><span class="n">?</span>`;
   document.getElementById('nlFeedback').className='feedback';
+  setTimeout(()=>speak(`What is ${n1} minus ${n2}? Find it on the number line!`),300);
 
   const max=Math.max(n1+1,12);
   const nl=document.getElementById('numLine');
@@ -893,6 +913,7 @@ function newSpeedQ(){
   document.getElementById('speedEq').textContent=`${n1} − ${n2} = ?`;
   document.getElementById('speedInput').value='';
   document.getElementById('speedInput').focus();
+  speak(`${n1} minus ${n2}`);
 }
 
 function checkSpeed(){

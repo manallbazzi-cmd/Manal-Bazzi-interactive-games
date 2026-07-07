@@ -408,6 +408,23 @@ function S(id,btn){
 // ── UTILS ─────────────────────────────────────────────────────────────────
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
 
+// ── SPEECH (read questions aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.85; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 // ── LEARN TAB ────────────────────────────────────────────────────────────
 let learnVisited=new Set();
 function buildLearn(){
@@ -435,6 +452,7 @@ function showWord(wrd){
     <div class="wpop-letters">${letters}</div>
     <div class="wpop-sent">${sentHL}</div>
   </div>`;
+  speak(`${wrd}. ${data.sent}`);
 
   if(learnVisited.size===16){ sndCelebration(); launchConfetti(); showPop('🎉','All words explored!'); }
   else if(learnVisited.size%4===0){ sndCorrect(); showPop('⭐','Great progress!'); }
@@ -472,6 +490,7 @@ function spellRender(){
   const pool=shuffle([...w.split(''), distract[0], distract[1]]);
   const lArea=document.getElementById('SP_LETTERS');
   lArea.innerHTML=pool.map((l,i)=>`<button class="sletter" id="sl-${i}" onclick="spellTap('${l}',${i})">${l.toUpperCase()}</button>`).join('');
+  setTimeout(()=>speak(`Spell the word: ${w}`),300);
 }
 function spellTap(letter, btnIdx){
   const w=spellCurrent.word;
@@ -528,6 +547,7 @@ function quizRender(){
   });
   document.getElementById('Q_FB').textContent='';
   document.getElementById('Q_NEXT').classList.remove('show');
+  setTimeout(()=>speak(`Which is the correct spelling of: ${q.word}?`),300);
 }
 function quizAnswer(chosen,ans,btn){
   document.querySelectorAll('.qo').forEach(b=>b.classList.add('qdis'));

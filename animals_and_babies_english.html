@@ -422,6 +422,23 @@ function S(id,btn){
   if(id==='summary')renderSummary();
 }
 
+// ── SPEECH (read questions aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.88; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 /* ===== 1. ANIMALS ===== */
 let visitedA=new Set();
 function renderAnimals(){
@@ -446,6 +463,7 @@ function exploreAnimal(a,tile){
     <div class="ad-baby" style="color:${a.hex}">🐣 Baby: <strong>${a.baby}</strong> ${a.babyEmoji}</div>
     <div class="ad-sound" style="color:${a.hex}">${a.sound}</div>
     <div style="font-size:.78rem;color:${a.hex};opacity:.8">Lives in: ${a.habitat}</div>`;
+  speak(`${a.name}. Its baby is called a ${a.baby}. It lives in the ${a.habitat}.`);
   const pct=Math.round(visitedA.size/8*100);
   document.getElementById('APF').style.width=pct+'%';
   document.getElementById('APL').textContent=visitedA.size+' / 8 animals discovered';
@@ -474,6 +492,7 @@ function exploreBaby(a,tile){
     <div class="bd-big">${a.babyEmoji}</div>
     <div class="bd-name" style="color:${a.hex}">${a.baby}</div>
     <div class="bd-parent">baby ${a.emoji} <strong>${a.name}</strong></div>`;
+  speak(`The ${a.baby} is the baby of the ${a.name}.`);
   const pct=Math.round(visitedB.size/8*100);
   document.getElementById('BPF').style.width=pct+'%';
   document.getElementById('BPL').textContent=visitedB.size+' / 8 babies discovered';
@@ -609,6 +628,7 @@ function renderQ(){
   if(qtype==='baby'){
     document.getElementById('QQ2').textContent=`What is the baby of: ${a.emoji} ${a.name}?`;
     document.getElementById('QV2').innerHTML=`<div style="font-size:4rem;animation:pop .3s cubic-bezier(.34,1.56,.64,1)">${a.emoji}</div>`;
+    setTimeout(()=>speak(`What is the baby of a ${a.name}?`),400);
     const wrongs=shuf(ANIMALS.filter(x=>x.id!==a.id)).slice(0,3);
     const opts=shuf([{label:a.baby+' '+a.babyEmoji,correct:true},...wrongs.map(w=>({label:w.baby+' '+w.babyEmoji,correct:false}))]);
     const oc=document.getElementById('QOPTS2');oc.innerHTML='';
@@ -619,6 +639,7 @@ function renderQ(){
   } else {
     document.getElementById('QQ2').textContent=`This baby belongs to which animal? ${a.babyEmoji} ${a.baby}`;
     document.getElementById('QV2').innerHTML=`<div style="font-size:4rem;animation:pop .3s cubic-bezier(.34,1.56,.64,1)">${a.babyEmoji}</div>`;
+    setTimeout(()=>speak(`This baby ${a.baby} belongs to which animal?`),400);
     const wrongs=shuf(ANIMALS.filter(x=>x.id!==a.id)).slice(0,3);
     const opts=shuf([{label:a.name+' '+a.emoji,correct:true},...wrongs.map(w=>({label:w.name+' '+w.emoji,correct:false}))]);
     const oc=document.getElementById('QOPTS2');oc.innerHTML='';
@@ -748,6 +769,7 @@ function setupFindMiss(){
   fmBlank=Math.floor(Math.random()*5);
   const correct=fmSeq[fmBlank];
   document.getElementById('FMINSTR2').textContent=fmType==='animal'?'Which animal is missing? 🕵️':'Which baby is missing? 🔍';
+  setTimeout(()=>speak(fmType==='animal'?'Which animal is missing?':'Which baby is missing?'),400);
   const row=document.getElementById('FMR2');row.innerHTML='';
   fmSeq.forEach((item,i)=>{
     const t=document.createElement('div');

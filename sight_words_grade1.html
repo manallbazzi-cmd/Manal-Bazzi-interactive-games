@@ -393,6 +393,23 @@ function S(id,btn){
   if(id==='summary') buildSummary();
 }
 
+// ── SPEECH (read questions aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.88; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 // ── ALL WORDS FLAT ────────────────────────────────────────────────────────
 const ALL_WORDS = Object.entries(GROUPS).flatMap(([gk,gv])=>gv.words.map(w=>({word:w,group:gk})));
 let learnVisited=new Set();
@@ -433,6 +450,7 @@ function showWord(w,gk){
     <div class="wpop-sent" style="color:#333;">${sentHighlight}</div>
     <div class="wpop-hint" style="color:${gv.color};">💡 ${info.hint}</div>
   </div>`;
+  speak(`${w}. ${info.sent.replace('__', w)}`);
 
   if(learnVisited.size===20){ sndCelebration(); launchConfetti(); showPop('🎉','All words explored!'); }
   else if(learnVisited.size%5===0){ sndCorrect(); showPop('⭐','Great progress!'); }
@@ -454,6 +472,7 @@ function quizRender(){
   document.getElementById('Q_SCORE').textContent=`⭐ ${qScore}`;
   const dispSent=q.sent.replace('__',`<span class="q-blank">____</span>`);
   document.getElementById('Q_Q').innerHTML=`<div style="font-size:.78rem;color:#888;margin-bottom:6px;font-weight:700;">Choose the correct word:</div>${dispSent}`;
+  setTimeout(()=>speak(q.sent.replace('__','blank')),300);
   const opts=document.getElementById('Q_OPTS');
   opts.innerHTML='';
   shuffle([...q.opts]).forEach(o=>{
@@ -637,6 +656,7 @@ function fillRender(){
   const dispSent=q.sent.replace('__',`<span class="fb-blank" id="FB_BLANK">____</span>`);
   document.getElementById('FB_Q').innerHTML=dispSent;
   document.getElementById('FB_FB').textContent='';
+  setTimeout(()=>speak(q.sent.replace('__','blank')),300);
   const opts=document.getElementById('FB_OPTS');
   opts.innerHTML='';
   shuffle([...q.opts]).forEach(o=>{
