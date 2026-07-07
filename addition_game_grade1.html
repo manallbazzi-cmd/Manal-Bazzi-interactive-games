@@ -838,6 +838,21 @@ function noCarry(){
   return{a,b,ans:a+b}
 }
 
+// ── Local star/profile helpers (the shared stars-system.js was removed from the site) ──
+function getStudentName(){
+  try{ return localStorage.getItem('mbg_studentName') || ''; }catch(e){ return ''; }
+}
+function setStudentName(n){
+  try{ localStorage.setItem('mbg_studentName', n); }catch(e){}
+}
+function addGlobalStars(n){
+  try{
+    const cur = parseInt(localStorage.getItem('mbg_totalStars') || '0', 10);
+    localStorage.setItem('mbg_totalStars', String(cur + n));
+  }catch(e){}
+}
+function injectStarsWidget(){ /* no-op: shared stars widget removed from the site */ }
+
 // ─────────────────────────────────────────────────────────
 // NAVIGATION
 // ─────────────────────────────────────────────────────────
