@@ -626,6 +626,23 @@ function shuffle(arr) {
   return a;
 }
 
+// ── SPEECH (read questions + feedback aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.9; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 function startAdventure() {
   const input = document.getElementById('studentName').value.trim();
   if (!input) { document.getElementById('studentName').classList.add('shake'); setTimeout(() => document.getElementById('studentName').classList.remove('shake'), 400); return; }
@@ -759,6 +776,7 @@ function renderQuiz() {
   document.getElementById('quizProg').style.width = (quizIdx / 10 * 100) + '%';
   document.getElementById('quizFeedback').innerText = '';
   document.getElementById('quizFeedback').className = 'feedback';
+  setTimeout(()=>speak(`${f[0]} divided by ${f[2]} equals what?`),300);
 
   // Generate 4 options
   const opts = new Set([correct]);
@@ -792,12 +810,14 @@ function answerQuiz(chosen, correct, btn) {
     fb.className = 'feedback success';
     if (quizStreak === 5) fireConfetti();
     addStars(quizStreak >= 3 ? 2 : 1);
+    speak('Correct!');
   } else {
     btn.classList.add('wrong');
     btn.classList.add('shake');
     quizStreak = 0;
     fb.innerText = `❌ Oops! ${quizQ[quizIdx][0]} ÷ ${quizQ[quizIdx][2]} = ${correct}`;
     fb.className = 'feedback error';
+    speak(`Not quite. The answer is ${correct}.`);
   }
   renderStreakBar();
   setTimeout(() => { quizIdx++; renderQuiz(); }, 1500);
@@ -842,6 +862,7 @@ function renderMissing() {
     eqHTML = `${q.dividend} ÷ ${q.divisor} = <span class="missing-box">?</span>`;
   }
   eqEl.innerHTML = eqHTML;
+  setTimeout(()=>speak('Find the missing number!'),300);
 
   // Number pad: include correct answer + 4 distractors
   const opts = new Set([answer]);
@@ -874,12 +895,14 @@ function answerMissing(chosen, correct, btn) {
     fb.innerText = '✅ Correct! Well done!';
     fb.className = 'feedback success';
     addStars(1);
+    speak('Correct! Well done!');
   } else {
     btn.style.background = 'rgba(239,68,68,0.2)';
     btn.style.borderColor = '#ef4444';
     btn.style.color = '#ef4444';
     fb.innerText = `❌ The answer was ${correct}. Keep going!`;
     fb.className = 'feedback error';
+    speak(`Not quite. The answer was ${correct}.`);
   }
   setTimeout(() => { missingIdx++; renderMissing(); }, 1400);
 }
@@ -952,6 +975,7 @@ function flipCard(idx) {
         const fb = document.getElementById('matchFeedback');
         fb.innerText = '✅ Great match! +2 Stars!';
         fb.className = 'feedback success';
+        speak('Great match!');
         renderMatch();
         if (matchMatched.length === 16) { fireConfetti(); setTimeout(() => endGame('match'), 1500); }
       }, 600);
@@ -959,6 +983,7 @@ function flipCard(idx) {
       // No match
       document.getElementById('matchFeedback').innerText = '❌ Not a match, try again!';
       document.getElementById('matchFeedback').className = 'feedback error';
+      speak('Not a match, try again!');
       setTimeout(() => {
         matchFlipped = [];
         document.getElementById('matchFeedback').innerText = '';

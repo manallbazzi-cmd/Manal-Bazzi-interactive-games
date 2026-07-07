@@ -764,6 +764,7 @@ function loadQ(){
       addBtn(e,e,'');
     });
     setFb('neutral','Choose the expanded form!','اختر الصورة التمدّدية!');
+    setTimeout(speakQuestion,300);
   }
 
   document.getElementById('progFill').style.width=(qIdx/questions.length*100)+'%';
@@ -803,7 +804,7 @@ function handleAnswer(btn){
     showScorePop('+'+earned+'🪙',true);
     launchConfetti(8);
     playSoundCorrect();
-    speak(numToWords(n));
+    speak('Correct! '+numToWords(n));
   } else {
     btn.classList.add('wrong');
     streak=0; document.getElementById('streakVal').textContent=0;
@@ -817,7 +818,7 @@ function handleAnswer(btn){
       if(isC) b.classList.add('correct');
     });
     playSoundWrong();
-    speak(numToWords(n));
+    speak('The answer is '+numToWords(n));
   }
   document.querySelectorAll('#choicesGrid .ch-btn').forEach(function(b){b.disabled=true;});
   var ni=qIdx+1;
