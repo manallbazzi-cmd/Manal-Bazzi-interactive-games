@@ -464,6 +464,33 @@ header h1{
 // ========== LANGUAGE ==========
 let lang = 'ar';
 
+// ── SPEECH (read questions aloud, EN/AR) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  if(lang==='ar'){
+    utt.lang='ar-SA'; utt.rate=0.85; utt.pitch=1.05;
+    const ar = ttsVoices.find(v=>v.lang.startsWith('ar'));
+    if(ar) utt.voice = ar;
+  } else {
+    utt.lang='en-US'; utt.rate=0.88; utt.pitch=1.1;
+    const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+      || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+      || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+    if(en) utt.voice = en;
+  }
+  window.speechSynthesis.speak(utt);
+}
+function speakQuestionText(){
+  const el=document.querySelector('.question-text');
+  if(el) setTimeout(()=>speak(el.textContent),300);
+}
+
 const T = {
   ar: {
     hTitle: '🔷 عالم الأشكال الهندسية 🔶',
@@ -775,6 +802,7 @@ function renderIdentifyQ() {
     </div>
     <div class="feedback" id="fb"></div>
     <button class="next-btn" id="nxt" onclick="qIndex++;renderIdentifyQ()">${t('next')}</button>`;
+  speakQuestionText();
 }
 
 // ========== GAME 2: COUNT SIDES ==========
@@ -800,6 +828,7 @@ function renderCountQ() {
     </div>
     <div class="feedback" id="fb"></div>
     <button class="next-btn" id="nxt" onclick="qIndex++;renderCountQ()">${t('next')}</button>`;
+  speakQuestionText();
 }
 
 // ========== GAME 3: MATCH ==========
@@ -823,6 +852,7 @@ function startMatch() {
     <div class="feedback" id="fb"></div>
     <button class="next-btn show" onclick="checkAllMatch()">${t('check_match')}</button>`;
   window._matchSel=null; window._matchPairs={};
+  speakQuestionText();
 }
 
 function selectConn(el) {
@@ -890,6 +920,7 @@ function renderSidesQ() {
     </div>
     <div class="feedback" id="fb"></div>
     <button class="next-btn" id="nxt" onclick="qIndex++;renderSidesQ()">${t('next')}</button>`;
+  speakQuestionText();
 }
 
 // ========== GAME 5: SORT ==========
@@ -918,6 +949,7 @@ function startSort() {
       </div>
     </div>
     <div class="feedback" id="fb"></div>`;
+  speakQuestionText();
 }
 function aD(e){e.preventDefault();}
 function dStart(e,key,sides){e.dataTransfer.setData('key',key);e.dataTransfer.setData('sides',sides);}
@@ -973,6 +1005,7 @@ function renderPerimQ() {
     </div>
     <div class="feedback" id="fb"></div>
     <button class="next-btn" id="nxt" onclick="qIndex++;renderPerimQ()">${t('next')}</button>`;
+  speakQuestionText();
 }
 
 // ========== GAME 7: 3D ==========
@@ -996,6 +1029,7 @@ function render3DQ() {
     </div>
     <div class="feedback" id="fb"></div>
     <button class="next-btn" id="nxt" onclick="qIndex++;render3DQ()">${t('next')}</button>`;
+  speakQuestionText();
 }
 
 // ========== GAME 8: AREA ==========
@@ -1027,6 +1061,7 @@ function renderAreaQ() {
     </div>
     <div class="feedback" id="fb"></div>
     <button class="next-btn" id="nxt" onclick="qIndex++;renderAreaQ()">${t('next')}</button>`;
+  speakQuestionText();
 }
 
 // ========== GAME 9: ANGLES ==========
@@ -1059,6 +1094,7 @@ function renderAngleQ() {
     </div>
     <div class="feedback" id="fb"></div>
     <button class="next-btn" id="nxt" onclick="qIndex++;renderAngleQ()">${t('next')}</button>`;
+  speakQuestionText();
 }
 
 // ========== GAME 10: SYMMETRY ==========
@@ -1088,6 +1124,7 @@ function renderSymQ() {
     </div>
     <div class="feedback" id="fb"></div>
     <button class="next-btn" id="nxt" onclick="qIndex++;renderSymQ()">${t('next')}</button>`;
+  speakQuestionText();
 }
 function checkSym(btn,chosen,correct) {
   if(document.querySelector('.option-btn.correct')) return;

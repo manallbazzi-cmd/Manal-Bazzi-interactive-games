@@ -812,6 +812,23 @@ const BCOLORS = ['#FF5722','#7C4DFF','#00ACC1','#E91E63','#FB8C00','#43A047','#1
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 
+// ── SPEECH (read questions aloud) ──
+const speechAvailable='speechSynthesis' in window;
+let ttsVoices=[];
+function loadTtsVoices(){if(!speechAvailable)return;ttsVoices=window.speechSynthesis.getVoices();if(!ttsVoices.length)setTimeout(loadTtsVoices,300);}
+if(speechAvailable){loadTtsVoices();window.speechSynthesis.onvoiceschanged=loadTtsVoices;}
+function speak(text){
+  if(!speechAvailable)return;
+  window.speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-US';utt.rate=0.88;utt.pitch=1.1;
+  const en=ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    ||ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    ||ttsVoices.find(v=>v.lang.startsWith('en'))||null;
+  if(en)utt.voice=en;
+  window.speechSynthesis.speak(utt);
+}
+
 function noCarry(){
   let a,b;
   do{
@@ -964,6 +981,7 @@ function renderQuizQ(){
   document.getElementById('quiz-prog').style.width=`${qIdx/10*100}%`;
   document.getElementById('quiz-hint').textContent=a>9?`Hint: tens ${Math.floor(a/10)}+${Math.floor(b/10)}, ones ${a%10}+${b%10}`:'';
   document.getElementById('quiz-fb').textContent='';document.getElementById('quiz-fb').className='fb-msg';
+  setTimeout(()=>speak(`${a} plus ${b} equals what?`),300);
   const opts=new Set([ans]);
   while(opts.size<4){let w=ans+(Math.floor(Math.random()*10)-5);if(w>0&&w!==ans)opts.add(w)}
   const arr=shuffle([...opts]);
@@ -1033,6 +1051,7 @@ function renderBalloonQ(){
   const{a,b,ans}=noCarry();bAns=ans;
   document.getElementById('balloon-q').textContent=`${a} + ${b} = ?`;
   document.getElementById('b-feedback').textContent='';document.getElementById('b-feedback').className='feedback';
+  setTimeout(()=>speak(`${a} plus ${b} equals what?`),300);
 
   const area=document.getElementById('balloon-area');
   // Remove old balloons
@@ -1107,16 +1126,17 @@ function renderFillQ(){
   fCanAns=true;
   const{a,b,ans}=noCarry();
   const type=Math.floor(Math.random()*3);
-  let eqHTML,answer;
-  if(type===0){answer=a;fAns=a;eqHTML=`<span class="blank-box">?</span><span class="eq-op">+</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${b}</span><span class="eq-op">=</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px);color:var(--grass)">${ans}</span>`;}
-  else if(type===1){answer=b;fAns=b;eqHTML=`<span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${a}</span><span class="eq-op">+</span><span class="blank-box">?</span><span class="eq-op">=</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px);color:var(--grass)">${ans}</span>`;}
-  else{answer=ans;fAns=ans;eqHTML=`<span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${a}</span><span class="eq-op">+</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${b}</span><span class="eq-op">=</span><span class="blank-box">?</span>`;}
+  let eqHTML,answer,spokenQ;
+  if(type===0){answer=a;fAns=a;eqHTML=`<span class="blank-box">?</span><span class="eq-op">+</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${b}</span><span class="eq-op">=</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px);color:var(--grass)">${ans}</span>`;spokenQ=`What number plus ${b} equals ${ans}?`;}
+  else if(type===1){answer=b;fAns=b;eqHTML=`<span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${a}</span><span class="eq-op">+</span><span class="blank-box">?</span><span class="eq-op">=</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px);color:var(--grass)">${ans}</span>`;spokenQ=`${a} plus what number equals ${ans}?`;}
+  else{answer=ans;fAns=ans;eqHTML=`<span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${a}</span><span class="eq-op">+</span><span style="font-family:'Fredoka One',cursive;font-size:clamp(34px,10vw,48px)">${b}</span><span class="eq-op">=</span><span class="blank-box">?</span>`;spokenQ=`${a} plus ${b} equals what?`;}
 
   document.getElementById('fill-eq').innerHTML=eqHTML;
   document.getElementById('fill-counter').textContent=`Q ${fIdx+1}/10`;
   document.getElementById('fill-prog-lbl').textContent=`${fIdx}/10`;
   document.getElementById('fill-prog').style.width=`${fIdx/10*100}%`;
   document.getElementById('fill-fb').textContent='';document.getElementById('fill-fb').className='feedback';
+  setTimeout(()=>speak(spokenQ),300);
 
   const opts=new Set([answer]);
   while(opts.size<8){let w=answer+(Math.floor(Math.random()*8)-4);if(w>0&&w!==answer)opts.add(w);}

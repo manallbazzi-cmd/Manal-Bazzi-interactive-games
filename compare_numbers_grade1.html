@@ -410,6 +410,23 @@ function generateQuestions(){
   for(let i=qs.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[qs[i],qs[j]]=[qs[j],qs[i]]; }
   return qs;
 }
+// ── SPEECH (read questions aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.88; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
 function getCorrectSymbol(a,b){ return a>b?'>':a<b?'<':'='; }
 function makeObjects(n,emoji){ return n>15?`(${n})`:emoji.repeat(n); }
@@ -486,6 +503,7 @@ function loadQuestion(){
   document.getElementById('progressFill').style.width=(qIndex/TOTAL_Q*100)+'%';
   document.getElementById('progressLabel').textContent=qIndex+' / '+TOTAL_Q;
   renderStageBar();
+  setTimeout(()=>speak(`${q.ctx.en} Is ${q.a} greater than, less than, or equal to ${q.b}?`),300);
 }
 
 // ====== CHECK ANSWER ======

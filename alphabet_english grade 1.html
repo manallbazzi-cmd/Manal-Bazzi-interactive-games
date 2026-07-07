@@ -504,6 +504,23 @@ const BGS=['bg0','bg1','bg2','bg3','bg4','bg5'];
 const COLORS=['#FF7B5B','#9B8FD4','#5EC4A0','#E6A000','#FF8CB3','#56CCF2'];
 function shuf(a){return[...a].sort(()=>Math.random()-.5);}
 
+// ── SPEECH (read questions aloud) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'en-US'; utt.rate = 0.88; utt.pitch = 1.1;
+  const en = ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    || ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    || ttsVoices.find(v=>v.lang.startsWith('en')) || null;
+  if(en) utt.voice = en;
+  window.speechSynthesis.speak(utt);
+}
+
 /* NAV */
 function S(id,btn){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
@@ -535,6 +552,7 @@ function exploreL(d,tile,i){
   sndLetterReveal();
   document.querySelectorAll('.lt').forEach(t=>t.classList.remove('atile'));
   tile.classList.add('atile','vis'); visited.add(d.L); curL=d;
+  speak(d.L+' is for '+d.w);
   const isV=VW.has(d.L);
   const p=document.getElementById('LP');
   p.className='lp '+BGS[i%6];
@@ -572,6 +590,7 @@ function setupMatch(){
   mSel=null;
   document.getElementById('MINSTR').textContent='Tap a letter, then tap the matching picture! 🎯';
   document.getElementById('MSR').textContent='';
+  setTimeout(()=>speak('Tap a letter, then tap the matching picture!'),400);
   const ch=shuf(ABC).slice(0,4), pics=shuf(ch);
   const lc=document.getElementById('ML');lc.innerHTML='';
   const pc=document.getElementById('MP');pc.innerHTML='';
@@ -783,6 +802,7 @@ function setupFindMiss(){
   const opts=shuf([correct,...wrongs]);
   const oc=document.getElementById('FMOPTS');oc.innerHTML='';
   document.getElementById('FMINSTR').textContent='Which letter is missing? 🕵️';
+  setTimeout(()=>speak('Which letter is missing?'),400);
   opts.forEach((d,i)=>{
     const b=document.createElement('div');b.className='fmopt '+CL[i%6];b.textContent=d.L;
     b.onclick=()=>{
@@ -819,6 +839,7 @@ function showQ(){
   document.getElementById('QC').textContent=`Question ${qI+1} / ${qL.length}`;
   document.getElementById('QQ').textContent='Which picture starts with this letter?';
   const ql=document.getElementById('QL');ql.textContent=q.correct.L;ql.className='ql '+TC[ci];
+  setTimeout(()=>speak('Which picture starts with the letter '+q.correct.L+'?'),400);
   document.getElementById('QFB').textContent='';document.getElementById('QNXT').classList.remove('show');
   document.getElementById('QNXT').onclick=()=>{qI++;showQ();};
   const oc=document.getElementById('QOPTS');oc.innerHTML='';

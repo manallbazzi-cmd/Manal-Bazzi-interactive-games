@@ -462,6 +462,21 @@ const COLORS=['#FF7B5B','#9B8FD4','#5EC4A0','#E6A000','#FF8CB3','#56CCF2'];
 const toArabicNum = n => n.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
 function shuf(a){return[...a].sort(()=>Math.random()-.5);}
 
+// ── SPEECH (read questions aloud, Arabic) ──
+const speechAvailable = 'speechSynthesis' in window;
+let ttsVoices = [];
+function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
+if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function speak(text){
+  if(!speechAvailable) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'ar-SA'; utt.rate = 0.85; utt.pitch = 1.05;
+  const ar = ttsVoices.find(v=>v.lang.startsWith('ar'));
+  if(ar) utt.voice = ar;
+  window.speechSynthesis.speak(utt);
+}
+
 // NAV
 function S(id,btn){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
@@ -491,7 +506,7 @@ function renderExplore(){
 }
 function exploreL(d,tile,i){
   document.querySelectorAll('.lt').forEach(t=>t.classList.remove('atile'));
-  tile.classList.add('atile','vis');visited.add(d.L);sfxLetter(d.L);
+  tile.classList.add('atile','vis');visited.add(d.L);sfxLetter(d.L);speak(d.L+' كما في كلمة '+d.w);
   const isS=SHAMS.has(d.L);
   const p=document.getElementById('LP');
   p.className='lp '+BGS[i%6];
@@ -537,6 +552,7 @@ function setupMatch(){
   mSel=null;
   document.getElementById('MINSTR').textContent='اضغط على حرف ثم اضغط على الصورة المناسبة! 🎯';
   document.getElementById('MSR').textContent='';
+  setTimeout(()=>speak('اضغط على حرف ثم اضغط على الصورة المناسبة!'),400);
   const ch=shuf(ABC).slice(0,4),pics=shuf(ch);
   const lc=document.getElementById('ML');lc.innerHTML='';
   const pc=document.getElementById('MP');pc.innerHTML='';
@@ -729,6 +745,7 @@ function setupFindMiss(){
   fmBI=-1;
   document.getElementById('FMFB').textContent='';
   document.getElementById('FMINSTR').textContent='حرف مفقود من السلسلة! اضغط على الحرف الصحيح. 🕵️';
+  setTimeout(()=>speak('حرف مفقود من السلسلة! اضغط على الحرف الصحيح.'),400);
   const start=Math.floor(Math.random()*(28-4));
   fmSeq=ABC.slice(start,start+5);
   fmBI=Math.floor(Math.random()*5);
@@ -780,6 +797,7 @@ function showQ(){
   document.getElementById('QC').textContent='سؤال '+toArabicNum(qI+1)+' / '+toArabicNum(qL.length);
   document.getElementById('QQ').textContent='أيّ صورة تبدأ بهذا الحرف؟';
   const ql=document.getElementById('QL');ql.textContent=q.correct.L;ql.className='ql '+TC[ci];
+  setTimeout(()=>speak('أيّ صورة تبدأ بحرف '+q.correct.L+'؟'),400);
   document.getElementById('QFB').textContent='';document.getElementById('QNXT').classList.remove('show');
   document.getElementById('QNXT').onclick=()=>{sfxClick();qI++;showQ();};
   const oc=document.getElementById('QOPTS');oc.innerHTML='';
