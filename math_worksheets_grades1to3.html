@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Math Worksheets - Manal Bazzi</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0c29;
+    --card: #1a1740;
+    --card2: #221f55;
+    --gold: #f9c74f;
+    --mint: #43e97b;
+    --sky: #4fc3f7;
+    --rose: #f95d6a;
+    --purple: #a855f7;
+    --orange: #fb923c;
+    --text: #f0eeff;
+    --sub: #a89ee0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 90%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(2px 2px at 60% 30%, rgba(249,199,79,0.5) 0%, transparent 100%),
+      radial-gradient(2px 2px at 15% 55%, rgba(67,233,123,0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 40px 20px 30px;
+    background: linear-gradient(180deg, rgba(168,85,247,0.2) 0%, transparent 100%);
+  }
+
+  .school-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(249,199,79,0.15);
+    border: 1px solid rgba(249,199,79,0.4);
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: var(--gold);
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #f9c74f, #fb923c, #f95d6a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    color: var(--sub);
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .selectors {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 20px 30px;
+  }
+
+  .selector-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .selector-label {
+    font-size: 0.8rem;
+    color: var(--sub);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .sel-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: all 0.25s ease;
+    background: var(--card2);
+    color: var(--sub);
+  }
+
+  .sel-btn:hover { transform: translateY(-2px); color: var(--text); }
+
+  .grade-btn.active { background: var(--purple); border-color: var(--purple); color: #fff; box-shadow: 0 4px 20px rgba(168,85,247,0.5); }
+  .grade-btn:hover { border-color: var(--purple); }
+
+  .topic-btn[data-topic="add"].active { background: var(--mint); border-color: var(--mint); color: #0a2e1a; box-shadow: 0 4px 20px rgba(67,233,123,0.4); }
+  .topic-btn[data-topic="sub"].active { background: var(--rose); border-color: var(--rose); color: #fff; box-shadow: 0 4px 20px rgba(249,93,106,0.4); }
+  .topic-btn[data-topic="mul"].active { background: var(--sky); border-color: var(--sky); color: #012d42; box-shadow: 0 4px 20px rgba(79,195,247,0.4); }
+  .topic-btn[data-topic="div"].active { background: var(--orange); border-color: var(--orange); color: #fff; box-shadow: 0 4px 20px rgba(251,146,60,0.4); }
+  .topic-btn[data-topic="num"].active { background: var(--gold); border-color: var(--gold); color: #2d1a00; box-shadow: 0 4px 20px rgba(249,199,79,0.4); }
+
+  .topic-btn:hover { border-color: rgba(255,255,255,0.3); color: var(--text); }
+
+  .start-btn {
+    display: block;
+    margin: 0 auto 30px;
+    position: relative;
+    z-index: 10;
+    padding: 16px 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--purple), #7c3aed);
+    color: #fff;
+    box-shadow: 0 8px 30px rgba(168,85,247,0.5);
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+  }
+
+  .start-btn:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 40px rgba(168,85,247,0.7); }
+  .start-btn:active { transform: scale(0.97); }
+
+  #worksheet-area {
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+    display: none;
+  }
+
+  .ws-header {
+    background: linear-gradient(135deg, var(--card), var(--card2));
+    border-radius: 20px;
+    padding: 24px 30px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(168,85,247,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .ws-title { font-size: 1.4rem; font-weight: 900; }
+  .ws-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .badge { padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; }
+  .badge-grade { background: rgba(168,85,247,0.3); color: var(--purple); border: 1px solid rgba(168,85,247,0.5); }
+  .badge-topic { background: rgba(249,199,79,0.2); color: var(--gold); border: 1px solid rgba(249,199,79,0.4); }
+
+  .score-bar {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .score-display { font-size: 1.5rem; font-weight: 900; color: var(--gold); }
+
+  .progress-wrap {
+    flex: 1;
+    min-width: 120px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    height: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--purple), var(--mint));
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .q-counter { color: var(--sub); font-size: 0.9rem; }
+
+  .questions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .q-card {
+    background: var(--card);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--sky));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .q-card:hover::before { opacity: 1; }
+
+  .q-card.correct {
+    border-color: var(--mint);
+    background: rgba(67,233,123,0.08);
+    animation: popIn 0.4s ease;
+  }
+  .q-card.correct::before { opacity: 1; background: linear-gradient(90deg, var(--mint), #00c851); }
+
+  .q-card.wrong {
+    border-color: var(--rose);
+    background: rgba(249,93,106,0.08);
+    animation: shake 0.4s ease;
+  }
+  .q-card.wrong::before { opacity: 1; background: linear-gradient(90deg, var(--rose), #ff1744); }
+
+  @keyframes popIn {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .q-number {
+    position: absolute;
+    top: 10px;
+    left: 14px;
+    font-size: 0.72rem;
+    color: var(--sub);
+    font-weight: 800;
+  }
+
+  .q-equation {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  .q-input {
+    width: 90px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 900;
+    font-family: 'Nunito', sans-serif;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .q-input:focus { border-color: var(--purple); background: rgba(168,85,247,0.1); }
+  .q-input:disabled { opacity: 0.8; }
+
+  .q-feedback {
+    font-size: 1rem;
+    font-weight: 700;
+    min-height: 24px;
+    text-align: center;
+  }
+
+  .q-card.correct .q-feedback { color: var(--mint); }
+  .q-card.wrong .q-feedback { color: var(--rose); }
+
+  .hint-text { font-size: 0.8rem; color: var(--sub); text-align: center; }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .action-btn {
+    padding: 13px 30px;
+    border-radius: 14px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .btn-check { background: linear-gradient(135deg, var(--mint), #00c851); color: #012d14; box-shadow: 0 4px 20px rgba(67,233,123,0.3); }
+  .btn-check:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(67,233,123,0.5); }
+
+  .btn-new { background: linear-gradient(135deg, var(--sky), #0288d1); color: #012030; box-shadow: 0 4px 20px rgba(79,195,247,0.3); }
+  .btn-new:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79,195,247,0.5); }
+
+  .btn-reset { background: rgba(255,255,255,0.08); color: var(--sub); border: 1px solid rgba(255,255,255,0.12); }
+  .btn-reset:hover { background: rgba(255,255,255,0.12); color: var(--text); }
+
+  .result-panel {
+    background: linear-gradient(135deg, var(--card), var(--card2));
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid rgba(249,199,79,0.3);
+    display: none;
+    animation: fadeUp 0.5s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+
+  .result-score {
+    font-size: 2.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+
+  .result-msg { color: var(--sub); font-size: 1rem; margin-bottom: 20px; }
+  .stars { font-size: 2rem; margin-bottom: 16px; letter-spacing: 4px; }
+
+  @media (max-width: 480px) {
+    .questions-grid { grid-template-columns: 1fr 1fr; }
+    .ws-header { flex-direction: column; align-items: flex-start; }
+    .q-equation { font-size: 1.3rem; }
+  }
+
+  .float-star {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.5rem;
+    animation: floatUp 1.2s ease forwards;
+    z-index: 100;
+  }
+
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-120px) scale(0.3); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="school-badge">🏫 Burj El Barajneh First Official School for Boys</div>
+  <h1>📚 Interactive Math Worksheets</h1>
+  <p class="subtitle">Teacher Manal Bazzi — Choose your grade & topic, then start!</p>
+</header>
+
+<div class="selectors">
+  <div class="selector-group">
+    <span class="selector-label">📚 Grade</span>
+    <div class="btn-row">
+      <button class="sel-btn grade-btn active" data-grade="1">Grade 1</button>
+      <button class="sel-btn grade-btn" data-grade="2">Grade 2</button>
+      <button class="sel-btn grade-btn" data-grade="3">Grade 3</button>
+    </div>
+  </div>
+
+  <div class="selector-group">
+    <span class="selector-label">🔢 Topic</span>
+    <div class="btn-row">
+      <button class="sel-btn topic-btn active" data-topic="add">➕ Addition</button>
+      <button class="sel-btn topic-btn" data-topic="sub">➖ Subtraction</button>
+      <button class="sel-btn topic-btn" data-topic="mul">✖️ Multiplication</button>
+      <button class="sel-btn topic-btn" data-topic="div">➗ Division</button>
+      <button class="sel-btn topic-btn" data-topic="num">🔢 Numbers</button>
+    </div>
+  </div>
+</div>
+
+<button class="start-btn" onclick="startWorksheet()">🚀 Start Worksheet</button>
+
+<div id="worksheet-area">
+  <div class="ws-header">
+    <div>
+      <div class="ws-title" id="ws-title">Addition Worksheet</div>
+      <div style="color:var(--sub);font-size:0.85rem;margin-top:4px;">Answer all questions, then press Check!</div>
+    </div>
+    <div class="ws-meta">
+      <span class="badge badge-grade" id="ws-grade-badge">Grade 1</span>
+      <span class="badge badge-topic" id="ws-topic-badge">Addition</span>
+    </div>
+  </div>
+
+  <div class="score-bar">
+    <div class="score-display">⭐ <span id="score-val">0</span> / <span id="score-total">10</span></div>
+    <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="q-counter">Answered: <span id="answered-count">0</span></div>
+  </div>
+
+  <div class="questions-grid" id="questions-grid"></div>
+
+  <div class="actions">
+    <button class="action-btn btn-check" onclick="checkAll()">✅ Check All</button>
+    <button class="action-btn btn-new" onclick="startWorksheet()">🔄 New Questions</button>
+    <button class="action-btn btn-reset" onclick="resetAll()">🗑️ Clear Answers</button>
+  </div>
+
+  <div class="result-panel" id="result-panel">
+    <div class="result-emoji" id="result-emoji">🎉</div>
+    <div class="stars" id="result-stars">⭐⭐⭐</div>
+    <div class="result-score" id="result-score">10 / 10</div>
+    <div class="result-msg" id="result-msg">Excellent! You are a star! 🌟</div>
+    <div class="actions" style="margin-top:0">
+      <button class="action-btn btn-new" onclick="startWorksheet()">🚀 Play Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= SOUND EFFECTS (WebAudio, no external files) ================= */
+let audioCtx = null;
+function initAudio(){
+  if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+document.addEventListener('pointerdown', initAudio, {once:false});
+function tone(f, t0, dur, type='sine', vol=.18){
+  if(!audioCtx) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, audioCtx.currentTime + t0);
+  g.gain.setValueAtTime(vol, audioCtx.currentTime + t0);
+  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + t0 + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(audioCtx.currentTime + t0); o.stop(audioCtx.currentTime + t0 + dur + .05);
+}
+function sfx(kind){
+  initAudio(); if(!audioCtx) return;
+  if(kind==='click'){ tone(600,0,.08,'triangle',.12); }
+  if(kind==='good'){ tone(523,0,.12); tone(659,.1,.12); tone(784,.2,.2); }
+  if(kind==='bad'){ tone(300,0,.18,'sawtooth',.12); tone(220,.15,.25,'sawtooth',.12); }
+  if(kind==='win'){ [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,i*.13,.18)); }
+}
+
+let currentGrade = 1;
+let currentTopic = 'add';
+let questions = [];
+let totalScore = 0;
+
+document.querySelectorAll('.grade-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    sfx('click');
+    document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentGrade = parseInt(btn.dataset.grade);
+  });
+});
+
+document.querySelectorAll('.topic-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    sfx('click');
+    document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTopic = btn.dataset.topic;
+  });
+});
+
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function generateQuestions() {
+  const qs = [];
+  for (let i = 0; i < 10; i++) {
+    let q = {};
+
+    if (currentTopic === 'add') {
+      if (currentGrade === 1) { const a = rand(1,9), b = rand(1,9); q = { eq:`${a} + ${b} = ?`, ans: a+b, hint:`Addition up to 18` }; }
+      else if (currentGrade === 2) { const a = rand(10,50), b = rand(10,50); q = { eq:`${a} + ${b} = ?`, ans: a+b, hint:`Addition up to 100` }; }
+      else { const a = rand(100,499), b = rand(100,499); q = { eq:`${a} + ${b} = ?`, ans: a+b, hint:`Addition up to 999` }; }
+    }
+    else if (currentTopic === 'sub') {
+      if (currentGrade === 1) { const b = rand(1,9), a = rand(b,10); q = { eq:`${a} - ${b} = ?`, ans: a-b, hint:`Subtraction up to 10` }; }
+      else if (currentGrade === 2) { const b = rand(1,40), a = rand(b+10,90); q = { eq:`${a} - ${b} = ?`, ans: a-b, hint:`Subtraction up to 90` }; }
+      else { const b = rand(50,300), a = rand(b+50,700); q = { eq:`${a} - ${b} = ?`, ans: a-b, hint:`Subtraction up to 700` }; }
+    }
+    else if (currentTopic === 'mul') {
+      if (currentGrade === 1) { const a = rand(1,5), b = rand(1,5); q = { eq:`${a} × ${b} = ?`, ans: a*b, hint:`Times tables 1–5` }; }
+      else if (currentGrade === 2) { const a = rand(2,9), b = rand(2,5); q = { eq:`${a} × ${b} = ?`, ans: a*b, hint:`Times tables 2–9` }; }
+      else { const a = rand(2,9), b = rand(2,9); q = { eq:`${a} × ${b} = ?`, ans: a*b, hint:`Full times tables` }; }
+    }
+    else if (currentTopic === 'div') {
+      if (currentGrade === 1) { const b = rand(2,4), ans = rand(1,4), a = b*ans; q = { eq:`${a} ÷ ${b} = ?`, ans, hint:`Simple division` }; }
+      else if (currentGrade === 2) { const b = rand(2,6), ans = rand(2,8), a = b*ans; q = { eq:`${a} ÷ ${b} = ?`, ans, hint:`Divide by 2–6` }; }
+      else { const b = rand(3,9), ans = rand(3,9), a = b*ans; q = { eq:`${a} ÷ ${b} = ?`, ans, hint:`Divide by 3–9` }; }
+    }
+    else if (currentTopic === 'num') {
+      const numTypes = currentGrade === 1
+        ? ['write','before','after']
+        : currentGrade === 2
+        ? ['write','before','after','compare','order']
+        : ['write','before','after','compare','order','place'];
+
+      const type = numTypes[rand(0, numTypes.length-1)];
+      const maxNum = currentGrade === 1 ? 20 : currentGrade === 2 ? 99 : 999;
+      const n = rand(2, maxNum);
+      const n2 = rand(2, maxNum);
+
+      if (type === 'write') {
+        q = { eq: `Write the number:\n${n}`, ans: n, hint: `Type the number` };
+      } else if (type === 'before') {
+        q = { eq: `What number comes\nbefore ${n}?`, ans: n-1, hint: `The number just before` };
+      } else if (type === 'after') {
+        q = { eq: `What number comes\nafter ${n}?`, ans: n+1, hint: `The number just after` };
+      } else if (type === 'compare') {
+        const bigger = Math.max(n, n2);
+        q = { eq: `Which is greater?\n${n}  or  ${n2}`, ans: bigger, hint: `Type the greater number` };
+      } else if (type === 'order') {
+        const arr = [n, n2, rand(1,maxNum)].sort(() => Math.random()-0.5);
+        const sorted = [...arr].sort((a,b)=>a-b);
+        q = { eq: `Order from least to greatest:\n${arr.join(' , ')}`, ans: sorted.join(','), hint: `Type: num,num,num`, multiInput: true, placeholder: `e.g. ${sorted[0]},${sorted[1]},${sorted[2]}` };
+      } else {
+        const hundreds = Math.floor(n/100);
+        q = { eq: `${n}\nHow many hundreds?`, ans: hundreds, hint: `Hundreds | Tens | Ones` };
+      }
+    }
+
+    q.id = i;
+    qs.push(q);
+  }
+  return qs;
+}
+
+const topicNames = { add:'Addition', sub:'Subtraction', mul:'Multiplication', div:'Division', num:'Numbers' };
+const topicEmojis = { add:'➕', sub:'➖', mul:'✖️', div:'➗', num:'🔢' };
+const gradeNames = { 1:'Grade 1', 2:'Grade 2', 3:'Grade 3' };
+
+function startWorksheet() {
+  sfx('click');
+  questions = generateQuestions();
+  totalScore = 0;
+
+  document.getElementById('ws-title').textContent = `${topicEmojis[currentTopic]} ${topicNames[currentTopic]} Worksheet`;
+  document.getElementById('ws-grade-badge').textContent = gradeNames[currentGrade];
+  document.getElementById('ws-topic-badge').textContent = `${topicEmojis[currentTopic]} ${topicNames[currentTopic]}`;
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('score-total').textContent = questions.length;
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('result-panel').style.display = 'none';
+
+  renderQuestions();
+  document.getElementById('worksheet-area').style.display = 'block';
+  document.getElementById('worksheet-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderQuestions() {
+  const grid = document.getElementById('questions-grid');
+  grid.innerHTML = '';
+  questions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = `card-${i}`;
+    const eqHtml = q.eq.split('\n').map(l => `<div>${l}</div>`).join('');
+    card.innerHTML = `
+      <span class="q-number">#${i+1}</span>
+      <div class="q-equation">${eqHtml}</div>
+      <input class="q-input"
+             type="${q.multiInput ? 'text' : 'number'}"
+             id="inp-${i}"
+             placeholder="${q.multiInput ? (q.placeholder || '...') : '?'}"
+             ${q.multiInput ? '' : 'min="0"'}
+             autocomplete="off"
+             oninput="trackAnswer()">
+      <div class="q-feedback" id="fb-${i}"></div>
+      <div class="hint-text">${q.hint}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function trackAnswer() {
+  let answered = 0;
+  questions.forEach((_, i) => {
+    const v = document.getElementById(`inp-${i}`)?.value?.trim();
+    if (v) answered++;
+  });
+  document.getElementById('answered-count').textContent = answered;
+}
+
+function checkAll() {
+  let correct = 0;
+  questions.forEach((q, i) => {
+    const card = document.getElementById(`card-${i}`);
+    const input = document.getElementById(`inp-${i}`);
+    const fb = document.getElementById(`fb-${i}`);
+    const val = input?.value?.trim();
+    card.classList.remove('correct', 'wrong');
+
+    if (!val) {
+      fb.textContent = '✏️ Not answered yet';
+      fb.style.color = 'var(--sub)';
+      return;
+    }
+
+    const isCorrect = q.multiInput
+      ? val.replace(/\s/g,'') === String(q.ans).replace(/\s/g,'')
+      : parseInt(val) === q.ans;
+
+    if (isCorrect) {
+      card.classList.add('correct');
+      fb.textContent = '✅ Correct!';
+      correct++;
+      spawnStar(card);
+      sfx('good');
+    } else {
+      card.classList.add('wrong');
+      fb.textContent = `❌ Answer: ${q.ans}`;
+      input.disabled = false;
+      sfx('bad');
+    }
+  });
+
+  totalScore = correct;
+  document.getElementById('score-val').textContent = correct;
+  document.getElementById('progress-fill').style.width = (correct / questions.length * 100) + '%';
+  if (correct === questions.length) sfx('win');
+  showResult(correct, questions.length);
+}
+
+function showResult(score, total) {
+  const panel = document.getElementById('result-panel');
+  const pct = score / total;
+  let emoji, msg, stars;
+  if (pct === 1)      { emoji='🏆'; msg='Perfect score! You are a superstar! 🌟'; stars='⭐⭐⭐'; }
+  else if (pct >= 0.8){ emoji='🎉'; msg='Great job! Keep it up!'; stars='⭐⭐⭐'; }
+  else if (pct >= 0.6){ emoji='👍'; msg='Good effort! Try again!'; stars='⭐⭐'; }
+  else if (pct >= 0.4){ emoji='💪'; msg='Keep trying, you can do it!'; stars='⭐'; }
+  else                { emoji='📖'; msg='Review the lesson and try again!'; stars=''; }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-stars').textContent = stars;
+  document.getElementById('result-score').textContent = `${score} / ${total}`;
+  document.getElementById('result-msg').textContent = msg;
+  panel.style.display = 'block';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function resetAll() {
+  sfx('click');
+  questions.forEach((_, i) => {
+    const card = document.getElementById(`card-${i}`);
+    const input = document.getElementById(`inp-${i}`);
+    const fb = document.getElementById(`fb-${i}`);
+    card.classList.remove('correct', 'wrong');
+    input.value = '';
+    input.disabled = false;
+    fb.textContent = '';
+  });
+  document.getElementById('score-val').textContent = '0';
+  document.getElementById('progress-fill').style.width = '0%';
+  document.getElementById('answered-count').textContent = '0';
+  document.getElementById('result-panel').style.display = 'none';
+}
+
+function spawnStar(el) {
+  const rect = el.getBoundingClientRect();
+  const star = document.createElement('div');
+  star.className = 'float-star';
+  star.textContent = ['⭐','✨','🌟'][Math.floor(Math.random()*3)];
+  star.style.left = (rect.left + rect.width/2 - 12) + 'px';
+  star.style.top = (rect.top + window.scrollY) + 'px';
+  document.body.appendChild(star);
+  setTimeout(() => star.remove(), 1300);
+}
+</script>
+</body>
+</html>

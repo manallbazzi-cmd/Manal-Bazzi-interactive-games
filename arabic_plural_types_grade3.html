@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>لعبة أنواع الجموع الناطقة 🦊 - المعلمة منال بزي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+:root{
+  --mint:#e8f8f2; --cream:#fffaf0; --teal:#14b8a6; --teal-dark:#0f766e;
+  --orange:#f97316; --purple:#8b5cf6; --gold:#f59e0b;
+  --mzk:#3b82f6; --mzk-bg:#dbeafe; --mnth:#ec4899; --mnth-bg:#fce7f3; --tks:#d97706; --tks-bg:#fef3c7;
+  --ok:#10b981; --bad:#ef4444; --ink:#334155;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+body{
+  font-family:'Cairo',sans-serif; margin:0; color:var(--ink);
+  background:radial-gradient(circle at 30% 20%, #f0fdf9 0%, #e8f8f2 45%, #fdf4e7 100%);
+  min-height:100vh; user-select:none; -webkit-user-select:none;
+}
+.screen{display:none; max-width:860px; margin:0 auto; padding:14px;}
+.screen.active{display:block; animation:fadeUp .45s ease;}
+@keyframes fadeUp{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+
+/* ======= Header / logo ======= */
+.brand{display:flex; align-items:center; gap:12px; justify-content:center; margin:6px 0 2px;}
+.logo-badge{
+  width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#fdf2ff,#ede9fe);
+  border:3px solid var(--purple); display:flex; align-items:center; justify-content:center;
+  font-size:30px; box-shadow:0 4px 10px rgba(139,92,246,.25); flex-shrink:0;
+}
+.brand h2{margin:0; font-size:1.05rem; color:#6d28d9; font-weight:900; line-height:1.3;}
+.brand small{color:var(--gold); font-weight:800; letter-spacing:.5px; font-size:.68rem; display:block;}
+
+h1.title{
+  text-align:center; font-weight:900; font-size:clamp(1.4rem,5vw,2.2rem);
+  background:linear-gradient(90deg,var(--teal-dark),var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin:8px 0 4px;
+}
+.subtitle{text-align:center; color:#64748b; font-weight:700; margin:0 0 12px; font-size:.95rem;}
+
+/* ======= Foxy & speech ======= */
+.foxy-row{display:flex; align-items:flex-end; justify-content:center; gap:10px; margin:8px 0;}
+.foxy{width:110px; height:110px; flex-shrink:0; animation:bob 3s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+.bubble{
+  background:#fff; border:3px solid var(--teal); border-radius:20px; border-bottom-right-radius:4px;
+  padding:10px 16px; font-weight:800; font-size:1rem; max-width:420px; min-height:52px;
+  box-shadow:0 6px 16px rgba(20,184,166,.18); display:flex; align-items:center; gap:8px; position:relative;
+}
+.bubble.speaking{animation:pulseB 1.4s infinite;}
+@keyframes pulseB{0%{box-shadow:0 0 0 0 rgba(20,184,166,.5);}70%{box-shadow:0 0 0 14px rgba(20,184,166,0);}100%{box-shadow:0 0 0 0 rgba(20,184,166,0);}}
+.waves{display:none; align-items:center;}
+.bubble.speaking .waves{display:inline-flex;}
+.wave-bar{display:inline-block; width:4px; height:14px; background:var(--teal); margin:0 2px; border-radius:4px; animation:wv .7s ease-in-out infinite alternate;}
+.wave-bar:nth-child(2){animation-delay:.12s; height:24px;} .wave-bar:nth-child(3){animation-delay:.24s; height:11px;} .wave-bar:nth-child(4){animation-delay:.36s; height:19px;}
+@keyframes wv{from{transform:scaleY(.3);}to{transform:scaleY(1.1);}}
+
+/* ======= Welcome ======= */
+.name-box{
+  background:#fff; border-radius:18px; padding:14px; box-shadow:0 6px 18px rgba(0,0,0,.06);
+  display:flex; gap:10px; align-items:center; margin:10px auto 14px; max-width:520px;
+}
+.name-box input{
+  flex:1; border:2.5px solid var(--teal); border-radius:12px; padding:10px 12px;
+  font-family:'Cairo'; font-size:1.05rem; font-weight:700; outline:none; text-align:center; color:var(--ink); min-width:0;
+}
+.name-box input:focus{border-color:var(--orange);}
+.rewards-bar{display:flex; justify-content:center; gap:14px; margin-bottom:12px; font-weight:900; font-size:1rem;}
+.rewards-bar span{background:#fff; border-radius:999px; padding:6px 16px; box-shadow:0 3px 8px rgba(0,0,0,.08);}
+
+.hub{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:12px;}
+.act-card{
+  background:#fff; border-radius:18px; padding:16px 12px; text-align:center; cursor:pointer;
+  border:3px solid transparent; box-shadow:0 5px 14px rgba(0,0,0,.07);
+  transition:transform .18s, border-color .18s; position:relative;
+}
+.act-card:hover{transform:translateY(-4px); border-color:var(--teal);}
+.act-card .em{font-size:2.1rem; display:block; margin-bottom:4px;}
+.act-card h3{margin:2px 0; font-size:1.02rem; font-weight:900; color:var(--teal-dark);}
+.act-card p{margin:0; font-size:.78rem; color:#64748b; font-weight:700;}
+.act-card .best{position:absolute; top:8px; left:10px; font-size:.8rem; font-weight:900; color:var(--gold);}
+.act-card.final{background:linear-gradient(135deg,#fff7ed,#fef3c7); border-color:var(--gold);}
+
+/* ======= Game screen ======= */
+.game-top{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; flex-wrap:wrap;}
+.chip{background:#fff; border-radius:999px; padding:6px 14px; font-weight:900; box-shadow:0 3px 8px rgba(0,0,0,.08); font-size:.92rem;}
+.btn{
+  font-family:'Cairo'; font-weight:900; border:none; border-radius:14px; cursor:pointer;
+  padding:11px 20px; font-size:1rem; transition:transform .15s, filter .15s; color:#fff;
+}
+.btn:active{transform:scale(.95);}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+.btn-teal{background:linear-gradient(135deg,var(--teal),var(--teal-dark));}
+.btn-orange{background:linear-gradient(135deg,#fb923c,var(--orange));}
+.btn-gray{background:#94a3b8;}
+.btn-gold{background:linear-gradient(135deg,#fbbf24,var(--gold));}
+
+.dots{display:flex; justify-content:center; gap:7px; margin:8px 0;}
+.dot{width:13px; height:13px; border-radius:50%; background:#e2e8f0; transition:all .25s;}
+.dot.cur{background:var(--orange); transform:scale(1.35);}
+.dot.done{background:var(--ok);}
+
+.q-card{
+  background:#fff; border-radius:22px; padding:18px 14px; box-shadow:0 8px 22px rgba(0,0,0,.08);
+  text-align:center; min-height:290px;
+}
+.big-word{
+  font-size:clamp(2rem,9vw,3.2rem); font-weight:900; color:var(--teal-dark); margin:8px 0;
+  display:inline-flex; align-items:center; gap:12px;
+}
+.speak-btn{
+  background:var(--mint); border:2.5px solid var(--teal); border-radius:50%; width:52px; height:52px;
+  font-size:1.4rem; cursor:pointer; transition:transform .15s; flex-shrink:0;
+}
+.speak-btn:active{transform:scale(.9);}
+.opts{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:14px;}
+.opt{
+  font-family:'Cairo'; font-weight:900; font-size:1.05rem; padding:14px 8px; border-radius:16px;
+  border:3px solid #e2e8f0; background:#f8fafc; cursor:pointer; transition:all .18s; color:var(--ink);
+}
+.opt:hover{transform:translateY(-3px);}
+.opt.t-mzk{border-color:var(--mzk); background:var(--mzk-bg); color:#1d4ed8;}
+.opt.t-mnth{border-color:var(--mnth); background:var(--mnth-bg); color:#be185d;}
+.opt.t-tks{border-color:var(--tks); background:var(--tks-bg); color:#92400e;}
+.opt.good{border-color:var(--ok)!important; background:#d1fae5!important; color:#065f46!important; animation:pop .4s;}
+.opt.wrong{border-color:var(--bad)!important; background:#fee2e2!important; color:#991b1b!important; animation:shake .4s;}
+@keyframes pop{50%{transform:scale(1.08);}}
+@keyframes shake{20%,60%{transform:translateX(-7px);}40%,80%{transform:translateX(7px);}}
+
+.feedback{
+  margin-top:12px; border-radius:14px; padding:10px 14px; font-weight:800; font-size:.95rem;
+  display:none; text-align:right;
+}
+.feedback.ok{display:block; background:#d1fae5; color:#065f46; border-right:6px solid var(--ok);}
+.feedback.bad{display:block; background:#fee2e2; color:#991b1b; border-right:6px solid var(--bad);}
+
+/* matching */
+.match-wrap{display:flex; justify-content:space-between; gap:12px; margin-top:10px;}
+.match-col{flex:1; display:flex; flex-direction:column; gap:10px;}
+.m-card{
+  padding:13px 8px; border-radius:14px; border:3px solid #e2e8f0; background:#f8fafc;
+  font-weight:900; font-size:1rem; cursor:pointer; transition:all .18s;
+}
+.m-card.sel{border-color:var(--purple); background:#ede9fe; transform:scale(1.04);}
+.m-card.paired{border-color:var(--ok); background:#d1fae5; color:#065f46; cursor:default; opacity:.85;}
+.m-card.flash-bad{animation:shake .4s; border-color:var(--bad); background:#fee2e2;}
+
+/* drag & drop */
+.pool{display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin:10px 0; min-height:56px; background:#f8fafc; border-radius:14px; padding:10px; border:2px dashed #cbd5e1;}
+.word-chip{
+  padding:9px 16px; border-radius:999px; background:#fff; border:3px solid var(--teal);
+  font-weight:900; font-size:1rem; cursor:grab; transition:all .15s; touch-action:none;
+}
+.word-chip.sel{border-color:var(--orange); background:#fff7ed; transform:scale(1.08); box-shadow:0 4px 12px rgba(249,115,22,.3);}
+.bins{display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-top:8px;}
+.bin{border-radius:16px; padding:9px 6px; min-height:120px; border:3px dashed; cursor:pointer;}
+.bin h4{margin:0 0 6px; font-size:.85rem; font-weight:900;}
+.bin.b-mzk{border-color:var(--mzk); background:var(--mzk-bg);} .bin.b-mzk h4{color:#1d4ed8;}
+.bin.b-mnth{border-color:var(--mnth); background:var(--mnth-bg);} .bin.b-mnth h4{color:#be185d;}
+.bin.b-tks{border-color:var(--tks); background:var(--tks-bg);} .bin.b-tks h4{color:#92400e;}
+.bin .word-chip{display:block; margin:5px auto; cursor:pointer; padding:6px 10px; font-size:.9rem;}
+.bin.over{filter:brightness(1.06); transform:scale(1.02);}
+
+/* timer */
+.timer-bar{height:14px; background:#e2e8f0; border-radius:999px; overflow:hidden; margin:8px 0;}
+.timer-fill{height:100%; width:100%; background:linear-gradient(90deg,var(--ok),var(--gold),var(--bad)); transition:width 1s linear; border-radius:999px;}
+
+/* certificate */
+#cert-overlay{position:fixed; inset:0; background:rgba(15,23,42,.55); display:none; align-items:center; justify-content:center; z-index:50; padding:12px;}
+#cert-overlay.show{display:flex;}
+.cert{
+  background:linear-gradient(160deg,#fffbeb,#fdf2f8 60%,#ecfeff); border:6px double var(--gold);
+  border-radius:22px; padding:26px 20px; max-width:520px; width:100%; text-align:center; position:relative;
+}
+.cert h2{margin:4px 0; color:#92400e; font-weight:900; font-size:1.5rem;}
+.cert .st-name{font-size:1.7rem; font-weight:900; color:var(--teal-dark); margin:6px 0;}
+.cert .stars{font-size:2rem; letter-spacing:4px; margin:6px 0;}
+.cert .sig{margin-top:14px; font-weight:800; color:#6d28d9; font-size:.9rem; line-height:1.5;}
+.cert-actions{display:flex; gap:10px; justify-content:center; margin-top:14px;}
+@media print{
+  body *{visibility:hidden;}
+  #cert-overlay{display:flex!important; position:absolute; background:#fff; inset:0;}
+  .cert, .cert *{visibility:visible;}
+  .cert-actions{display:none!important;}
+}
+@media(max-width:520px){
+  .foxy{width:84px; height:84px;}
+  .bins{grid-template-columns:1fr;}
+  .bin{min-height:70px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= WELCOME / HUB ================= -->
+<div id="welcome" class="screen active">
+  <div class="brand">
+    <div class="logo-badge" id="logoSlot">📖✨</div>
+    <h2>المعلمة منال بزي<small>INSPIRE • EDUCATE • EMPOWER</small></h2>
+  </div>
+  <h1 class="title">🦊 لعبة أنواع الجموع الناطقة 🎙️</h1>
+  <p class="subtitle">جمع المذكر السالم • جمع المؤنث السالم • جمع التكسير — الصفّان الثاني والثالث</p>
+
+  <div class="foxy-row">
+    <svg class="foxy" viewBox="0 0 120 120" id="foxySvg1"></svg>
+    <div class="bubble" id="bubbleHome">
+      <span id="bubbleHomeTxt">أهلًا يا بطل! اكتب اسمك ثم اختر نشاطًا 🎯</span>
+      <span class="waves"><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span></span>
+    </div>
+  </div>
+
+  <div class="name-box">
+    <span style="font-size:1.5rem;">✏️</span>
+    <input id="playerName" type="text" placeholder="اكتب اسمك هنا" maxlength="24">
+    <button class="btn btn-teal" onclick="saveName()" style="padding:9px 16px;">حفظ</button>
+  </div>
+
+  <div class="rewards-bar">
+    <span>⭐ النجوم: <b id="totStars">0</b></span>
+    <span>🪙 العملات: <b id="totCoins">0</b></span>
+  </div>
+
+  <div class="hub" id="hub"></div>
+</div>
+
+<!-- ================= GAME ================= -->
+<div id="game" class="screen">
+  <div class="game-top">
+    <button class="btn btn-gray" onclick="backHome()" style="padding:8px 14px;">🏠 الرئيسة</button>
+    <span class="chip" id="actTitle"></span>
+    <span class="chip">⭐ <b id="scoreNow">0</b></span>
+  </div>
+  <div class="foxy-row">
+    <svg class="foxy" viewBox="0 0 120 120" id="foxySvg2" style="width:84px;height:84px;"></svg>
+    <div class="bubble" id="bubbleGame">
+      <span id="bubbleGameTxt">هيا بنا!</span>
+      <span class="waves"><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span></span>
+    </div>
+  </div>
+  <div class="dots" id="dots"></div>
+  <div class="timer-bar" id="timerBar" style="display:none;"><div class="timer-fill" id="timerFill"></div></div>
+  <div class="q-card" id="qCard"></div>
+</div>
+
+<!-- ================= CERTIFICATE ================= -->
+<div id="cert-overlay">
+  <div class="cert" id="print-area">
+    <div style="font-size:2rem;">🏆</div>
+    <h2>📜 شهادة تميُّز لغوية 📜</h2>
+    <p style="margin:4px 0; font-weight:800;">تُمنح هذه الشهادة إلى البطل/البطلة</p>
+    <div class="st-name" id="certName">—</div>
+    <p id="certBody" style="font-weight:800; margin:6px 0;"></p>
+    <div class="stars" id="certStars"></div>
+    <div id="certScore" style="font-weight:900; color:var(--teal-dark);"></div>
+    <div class="sig">المعلمة: منال بزي 🌸<br><span style="color:var(--gold); font-size:.75rem; letter-spacing:1px;">INSPIRE • EDUCATE • EMPOWER</span></div>
+    <div class="cert-actions">
+      <button class="btn btn-gold" onclick="window.print()">🖨️ طباعة</button>
+      <button class="btn btn-teal" onclick="closeCert()">✔️ متابعة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   لعبة أنواع الجموع الناطقة — المعلمة منال بزي
+   ================================================================ */
+
+// ---------- Foxy SVG (orange fox, teal backpack) ----------
+const FOXY = `
+<g>
+ <rect x="38" y="58" width="44" height="40" rx="12" fill="#14b8a6"/>
+ <rect x="44" y="52" width="32" height="12" rx="6" fill="#0f766e"/>
+ <path d="M60 100 Q30 96 28 70 Q26 48 44 38 L40 20 Q40 14 46 18 L56 30 Q60 28 64 30 L74 18 Q80 14 80 20 L76 38 Q94 48 92 70 Q90 96 60 100 Z" fill="#f97316"/>
+ <path d="M43 23 L48 32 Q45 34 43 37 Z" fill="#7c2d12"/>
+ <path d="M77 23 L72 32 Q75 34 77 37 Z" fill="#7c2d12"/>
+ <ellipse cx="60" cy="78" rx="20" ry="16" fill="#fff7ed"/>
+ <circle cx="50" cy="58" r="5.5" fill="#1e293b"/>
+ <circle cx="70" cy="58" r="5.5" fill="#1e293b"/>
+ <circle cx="52" cy="56" r="1.8" fill="#fff"/>
+ <circle cx="72" cy="56" r="1.8" fill="#fff"/>
+ <ellipse cx="60" cy="70" rx="5" ry="4" fill="#1e293b"/>
+ <path d="M60 74 Q60 80 52 81 M60 74 Q60 80 68 81" stroke="#1e293b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+ <circle cx="42" cy="68" r="4" fill="#fdba74" opacity=".8"/>
+ <circle cx="78" cy="68" r="4" fill="#fdba74" opacity=".8"/>
+</g>`;
+document.getElementById('foxySvg1').innerHTML = FOXY;
+document.getElementById('foxySvg2').innerHTML = FOXY;
+
+// ---------- Types ----------
+const TYPES = {
+  mzk : {label:'جمع مذكر سالم', cls:'t-mzk', bin:'b-mzk', emoji:'👨‍🏫'},
+  mnth: {label:'جمع مؤنث سالم', cls:'t-mnth', bin:'b-mnth', emoji:'👩‍⚕️'},
+  tks : {label:'جمع تكسير',    cls:'t-tks',  bin:'b-tks',  emoji:'📚'}
+};
+
+// ---------- Data ----------
+const CLASSIFY = [
+ {w:'مُعَلِّمُونَ', t:'mzk',  ex:'مفردها مُعَلِّم، زدنا واوًا ونونًا فهي جمع مذكر سالم.'},
+ {w:'طَبِيبَات',   t:'mnth', ex:'مفردها طَبِيبَة، انتهت بألف وتاء زائدتين فهي جمع مؤنث سالم.'},
+ {w:'مَسَاجِد',    t:'tks',  ex:'تغيَّرت صورة المفرد مَسْجِد، فهي جمع تكسير.'},
+ {w:'لَاعِبُونَ',  t:'mzk',  ex:'مفردها لَاعِب، زدنا واوًا ونونًا.'},
+ {w:'سَيَّارَات',  t:'mnth', ex:'مفردها سَيَّارَة، انتهت بألف وتاء زائدتين.'},
+ {w:'كُتُب',       t:'tks',  ex:'مفردها كِتَاب، تغيَّرت صورة المفرد.'},
+ {w:'مُهَنْدِسِينَ',t:'mzk', ex:'مفردها مُهَنْدِس، زدنا ياءً ونونًا.'},
+ {w:'مُمَرِّضَات', t:'mnth', ex:'مفردها مُمَرِّضَة، انتهت بألف وتاء زائدتين.'},
+ {w:'أَقْلَام',    t:'tks',  ex:'مفردها قَلَم، تغيَّرت صورة المفرد.'},
+ {w:'فَلَّاحُونَ', t:'mzk',  ex:'مفردها فَلَّاح، زدنا واوًا ونونًا.'}
+];
+
+const TRUEFALSE = [
+ {s:'كلمة مُجْتَهِدَات جمع مؤنث سالم.', ok:true,  ex:'صحيح! مفردها مُجْتَهِدَة، وانتهت بألف وتاء زائدتين.'},
+ {s:'كلمة أَوْقَات جمع مؤنث سالم.',    ok:false, ex:'التاء أصلية في كلمة وَقْت، لذلك أَوْقَات جمع تكسير.'},
+ {s:'كلمة مَسَاكِين جمع مذكر سالم.',   ok:false, ex:'مفردها مِسْكِين، والياء والنون أصليتان، فهي جمع تكسير.'},
+ {s:'كلمة مُسْلِمُونَ جمع مذكر سالم.', ok:true,  ex:'أحسنت! مفردها مُسْلِم وزدنا واوًا ونونًا.'},
+ {s:'كلمة بُيُوت جمع تكسير.',          ok:true,  ex:'ممتاز! مفردها بَيْت وتغيَّرت صورته.'},
+ {s:'كلمة أَبْيَات جمع مؤنث سالم.',    ok:false, ex:'التاء أصلية من كلمة بَيْت، فهي جمع تكسير.'},
+ {s:'كلمة صَادِقِينَ جمع مذكر سالم.',  ok:true,  ex:'رائع! مفردها صَادِق وزدنا ياءً ونونًا.'},
+ {s:'كلمة عُلَمَاء جمع مذكر سالم.',    ok:false, ex:'مفردها عَالِم وتغيَّرت صورته كثيرًا، فهي جمع تكسير.'}
+];
+
+const MATCH_ROUNDS = [
+ [ {w:'مُخْتَرِعُونَ', t:'mzk'}, {w:'حَافِلَات', t:'mnth'}, {w:'أَطِبَّاء', t:'tks'} ],
+ [ {w:'مُزَارِعُونَ',  t:'mzk'}, {w:'شَجَرَات',  t:'mnth'}, {w:'جِبَال',   t:'tks'} ],
+ [ {w:'مُتَفَوِّقِينَ',t:'mzk'}, {w:'طَالِبَات', t:'mnth'}, {w:'أَبْوَاب', t:'tks'} ]
+];
+
+const CONVERT = [
+ {sing:'مُعَلِّمَة', opts:['مُعَلِّمَات','مُعَلِّمُونَ','مَعَالِم'], ok:0, ex:'مُعَلِّمَة تُجمع جمع مؤنث سالم: مُعَلِّمَات.'},
+ {sing:'مَدْرَسَة',  opts:['مَدْرَسَات','مَدَارِس','مَدْرَسُونَ'],  ok:1, ex:'مَدْرَسَة تُجمع جمع تكسير: مَدَارِس.'},
+ {sing:'مُهَنْدِس',  opts:['مَهَانِد','مُهَنْدِسَات','مُهَنْدِسُونَ'], ok:2, ex:'مُهَنْدِس يُجمع جمع مذكر سالم: مُهَنْدِسُونَ.'},
+ {sing:'طِفْل',      opts:['أَطْفَال','طِفْلُونَ','طِفْلَات'],       ok:0, ex:'طِفْل يُجمع جمع تكسير: أَطْفَال.'},
+ {sing:'نَاجِحَة',   opts:['نَوَاجِح','نَاجِحُونَ','نَاجِحَات'],     ok:2, ex:'نَاجِحَة تُجمع جمع مؤنث سالم: نَاجِحَات.'},
+ {sing:'بَاب',       opts:['أَبْوَاب','بَابَات','بَابُونَ'],         ok:0, ex:'بَاب يُجمع جمع تكسير: أَبْوَاب.'},
+ {sing:'مُسَافِر',   opts:['مَسَافِر','مُسَافِرُونَ','مُسَافِرَات'], ok:1, ex:'مُسَافِر يُجمع جمع مذكر سالم: مُسَافِرُونَ.'},
+ {sing:'قَلَم',      opts:['قَلَمَات','قَلَمُونَ','أَقْلَام'],       ok:2, ex:'قَلَم يُجمع جمع تكسير: أَقْلَام.'}
+];
+
+const DRAG_WORDS = [
+ {w:'فَلَّاحُونَ', t:'mzk'}, {w:'مُعَلِّمَات', t:'mnth'}, {w:'كُتُب', t:'tks'},
+ {w:'مُهَنْدِسُونَ', t:'mzk'}, {w:'سَيَّارَات', t:'mnth'}, {w:'أَبْوَاب', t:'tks'},
+ {w:'لَاعِبِينَ', t:'mzk'}, {w:'مُمَرِّضَات', t:'mnth'}, {w:'جِبَال', t:'tks'}
+];
+
+const TIMED_POOL = [...CLASSIFY, 
+ {w:'مُبْدِعُونَ', t:'mzk', ex:''}, {w:'زَهَرَات', t:'mnth', ex:''}, {w:'نُجُوم', t:'tks', ex:''},
+ {w:'صَائِمِينَ', t:'mzk', ex:''}, {w:'غَابَات', t:'mnth', ex:''}, {w:'أَشْجَار', t:'tks', ex:''}
+];
+
+const ACTIVITIES = [
+ {id:'classify', em:'🎧', name:'١. استمع وصنِّف',     desc:'استمع للكلمة واختر نوع الجمع', n:10},
+ {id:'tf',       em:'⚖️', name:'٢. صواب أم خطأ',     desc:'اكتشف الأخطاء النحوية الخادعة', n:8},
+ {id:'match',    em:'🔗', name:'٣. وصِّل الكلمات',    desc:'صِل كل كلمة بنوع جمعها', n:3},
+ {id:'convert',  em:'🪄', name:'٤. حوِّل إلى الجمع',  desc:'اختر الجمع الصحيح للمفرد', n:8},
+ {id:'drag',     em:'🧺', name:'٥. سلال الجموع',      desc:'اسحب الكلمات إلى سلالها', n:1},
+ {id:'timed',    em:'⏱️', name:'٦. تحدي الوقت',       desc:'صنِّف أكبر عدد في ٤٥ ثانية', n:0},
+ {id:'final',    em:'🏆', name:'٧. التحدي الشامل',    desc:'امتحان يجمع كل المهارات + شهادة', n:12, final:true}
+];
+
+// ---------- State & rewards ----------
+const LS_KEY = 'jumoo3_manal_v1';
+let store = JSON.parse(localStorage.getItem(LS_KEY) || '{"name":"","stars":0,"coins":0,"best":{}}');
+let cur = {act:null, list:[], idx:0, score:0, timer:null, timeLeft:0, lock:false};
+
+function persist(){ localStorage.setItem(LS_KEY, JSON.stringify(store)); refreshHub(); }
+function addStar(n=1){ store.stars += n; document.getElementById('scoreNow').textContent = cur.score; persist(); }
+function addCoins(n){ store.coins += n; persist(); }
+
+// ---------- Audio: SFX ----------
+let audioCtx = null;
+function initAudio(){
+  if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+document.addEventListener('pointerdown', initAudio, {once:false});
+
+function tone(f, t0, dur, type='sine', vol=.18){
+  if(!audioCtx) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, audioCtx.currentTime + t0);
+  g.gain.setValueAtTime(vol, audioCtx.currentTime + t0);
+  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + t0 + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(audioCtx.currentTime + t0); o.stop(audioCtx.currentTime + t0 + dur + .05);
+}
+function sfx(kind){
+  initAudio(); if(!audioCtx) return;
+  if(kind==='click'){ tone(600,0,.08,'triangle',.12); }
+  if(kind==='good'){ tone(523,0,.12); tone(659,.1,.12); tone(784,.2,.2); }
+  if(kind==='bad'){ tone(300,0,.18,'sawtooth',.12); tone(220,.15,.25,'sawtooth',.12); }
+  if(kind==='win'){ [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,i*.13,.18)); }
+  if(kind==='tick'){ tone(880,0,.05,'square',.06); }
+}
+
+// ---------- TTS: Arabic multi-voice fallback ----------
+const synth = window.speechSynthesis;
+let arVoice = null;
+function pickVoice(){
+  const vs = synth ? synth.getVoices() : [];
+  arVoice = vs.find(v=>v.lang==='ar-SA') || vs.find(v=>v.lang && v.lang.startsWith('ar')) ||
+            vs.find(v=>/arabic/i.test(v.name)) || null;
+}
+if(synth){ pickVoice(); synth.onvoiceschanged = pickVoice; }
+
+function talk(text, bubbleId){
+  const bubble = document.getElementById(bubbleId || (document.getElementById('game').classList.contains('active') ? 'bubbleGame' : 'bubbleHome'));
+  const txtEl = bubble.querySelector('span');
+  txtEl.textContent = text.replace(/[.،!؟]+$/,'');
+  if(!synth) return;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ar-SA'; if(arVoice) u.voice = arVoice;
+  u.rate = .92; u.pitch = 1.05;
+  u.onstart = ()=> bubble.classList.add('speaking');
+  u.onend = u.onerror = ()=> bubble.classList.remove('speaking');
+  setTimeout(()=>synth.speak(u), 60);
+}
+
+// ---------- Helpers ----------
+const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+function esc(s){ return s.replace(/</g,'&lt;'); }
+function pName(){ return store.name || 'يا بطل'; }
+function confettiBurst(big=false){
+  if(typeof confetti!=='function') return;
+  confetti({particleCount: big?220:70, spread: big?110:65, origin:{y:.6}});
+}
+
+// ================= HUB =================
+function refreshHub(){
+  document.getElementById('totStars').textContent = store.stars;
+  document.getElementById('totCoins').textContent = store.coins;
+  document.getElementById('playerName').value = store.name;
+  const hub = document.getElementById('hub');
+  hub.innerHTML = '';
+  ACTIVITIES.forEach(a=>{
+    const d = document.createElement('div');
+    d.className = 'act-card' + (a.final ? ' final':'');
+    const best = store.best[a.id];
+    d.innerHTML = `<span class="em">${a.em}</span><h3>${a.name}</h3><p>${a.desc}</p>` +
+                  (best!==undefined ? `<span class="best">🏅 ${best}</span>` : '');
+    d.onclick = ()=>{ sfx('click'); startActivity(a.id); };
+    hub.appendChild(d);
+  });
+}
+function saveName(){
+  const v = document.getElementById('playerName').value.trim();
+  store.name = v; persist(); sfx('good');
+  talk(v ? ('أهلًا وسهلًا يا ' + v + '! اختر نشاطًا لنبدأ المغامرة.') : 'اكتب اسمك أولًا يا صديقي.', 'bubbleHome');
+}
+function backHome(){
+  clearInterval(cur.timer); if(synth) synth.cancel();
+  document.getElementById('game').classList.remove('active');
+  document.getElementById('welcome').classList.add('active');
+  document.getElementById('timerBar').style.display = 'none';
+  refreshHub();
+}
+
+// ================= ENGINE =================
+function startActivity(id){
+  const act = ACTIVITIES.find(a=>a.id===id);
+  cur = {act, list:[], idx:0, score:0, timer:null, timeLeft:0, lock:false, hits:0, tries:0};
+  document.getElementById('welcome').classList.remove('active');
+  document.getElementById('game').classList.add('active');
+  document.getElementById('actTitle').textContent = act.em + ' ' + act.name;
+  document.getElementById('scoreNow').textContent = '0';
+  document.getElementById('timerBar').style.display = 'none';
+
+  if(id==='classify') cur.list = shuffle(CLASSIFY);
+  if(id==='tf')       cur.list = shuffle(TRUEFALSE);
+  if(id==='match')    cur.list = MATCH_ROUNDS.map(r=>r);
+  if(id==='convert')  cur.list = shuffle(CONVERT);
+  if(id==='drag')     cur.list = [shuffle(DRAG_WORDS)];
+  if(id==='timed')    cur.list = shuffle(TIMED_POOL);
+  if(id==='final'){
+    cur.list = shuffle([
+      ...shuffle(CLASSIFY).slice(0,5).map(q=>({kind:'classify',q})),
+      ...shuffle(TRUEFALSE).slice(0,4).map(q=>({kind:'tf',q})),
+      ...shuffle(CONVERT).slice(0,3).map(q=>({kind:'convert',q}))
+    ]);
+  }
+  renderDots();
+  talk(introFor(id), 'bubbleGame');
+  if(id==='timed') startTimed(); else nextQuestion();
+}
+function introFor(id){
+  const n = pName();
+  return {
+    classify:`استمع جيدًا يا ${n} ثم اختر نوع الجمع الصحيح.`,
+    tf:`انتبه يا ${n}! بعض الجمل خادعة، فكِّر قبل أن تجيب.`,
+    match:`صِل كل كلمة بنوع جمعها الصحيح.`,
+    convert:`حوِّل المفرد إلى الجمع الصحيح يا ${n}.`,
+    drag:`اسحب كل كلمة إلى سلَّتها الصحيحة، أو المسها ثم المس السلة.`,
+    timed:`تحدي السرعة! صنِّف أكبر عدد من الكلمات قبل انتهاء الوقت.`,
+    final:`التحدي الشامل يا ${n}! أجب بتركيز لتحصل على شهادة التميز.`
+  }[id];
+}
+function renderDots(){
+  const total = cur.act.id==='drag' ? 0 : (cur.act.id==='timed' ? 0 : cur.list.length);
+  const box = document.getElementById('dots');
+  box.innerHTML = '';
+  for(let i=0;i<total;i++){ const d=document.createElement('div'); d.className='dot'; box.appendChild(d); }
+  updateDots();
+}
+function updateDots(){
+  [...document.querySelectorAll('#dots .dot')].forEach((d,i)=>{
+    d.className = 'dot' + (i<cur.idx ? ' done' : i===cur.idx ? ' cur' : '');
+  });
+}
+function nextQuestion(){
+  updateDots();
+  if(cur.idx >= cur.list.length) return finishActivity();
+  cur.lock = false;
+  const id = cur.act.id;
+  if(id==='classify') renderClassify(cur.list[cur.idx]);
+  else if(id==='tf') renderTF(cur.list[cur.idx]);
+  else if(id==='match') renderMatch(cur.list[cur.idx]);
+  else if(id==='convert') renderConvert(cur.list[cur.idx]);
+  else if(id==='drag') renderDrag(cur.list[0]);
+  else if(id==='final'){
+    const item = cur.list[cur.idx];
+    if(item.kind==='classify') renderClassify(item.q);
+    if(item.kind==='tf') renderTF(item.q);
+    if(item.kind==='convert') renderConvert(item.q);
+  }
+}
+function answer(correct, ex, btn, allBtns){
+  if(cur.lock) return; cur.lock = true;
+  cur.tries++;
+  allBtns && allBtns.forEach(b=>b.disabled = true);
+  const fb = document.getElementById('fb');
+  if(correct){
+    cur.score++; cur.hits++;
+    btn && btn.classList.add('good');
+    sfx('good'); confettiBurst();
+    addStar(1); addCoins(2);
+    fb.className = 'feedback ok'; fb.innerHTML = '✅ ' + esc(ex);
+    talk('أحسنت! ' + ex, 'bubbleGame');
+  }else{
+    btn && btn.classList.add('wrong');
+    sfx('bad');
+    fb.className = 'feedback bad'; fb.innerHTML = '❌ ' + esc(ex);
+    talk('لا بأس، حاول التركيز. ' + ex, 'bubbleGame');
+  }
+  document.getElementById('scoreNow').textContent = cur.score;
+  setTimeout(()=>{ cur.idx++; nextQuestion(); }, 2600);
+}
+
+// ================= ACTIVITY 1: CLASSIFY =================
+function typeButtonsHTML(){
+  return Object.entries(TYPES).map(([k,t])=>
+    `<button class="opt ${t.cls}" data-t="${k}">${t.emoji} ${t.label}</button>`).join('');
+}
+function renderClassify(q){
+  const c = document.getElementById('qCard');
+  c.innerHTML = `
+    <p style="font-weight:800; color:#64748b; margin:0;">ما نوع هذا الجمع؟</p>
+    <div class="big-word">${esc(q.w)}<button class="speak-btn" onclick="talk('${q.w}','bubbleGame'); sfx('click');">🔊</button></div>
+    <div class="opts">${typeButtonsHTML()}</div>
+    <div class="feedback" id="fb"></div>`;
+  const btns = [...c.querySelectorAll('.opt')];
+  btns.forEach(b=> b.onclick = ()=> answer(b.dataset.t===q.t, q.ex, b, btns));
+  talk(q.w, 'bubbleGame');
+}
+
+// ================= ACTIVITY 2: TRUE/FALSE =================
+function renderTF(q){
+  const c = document.getElementById('qCard');
+  c.innerHTML = `
+    <p style="font-weight:800; color:#64748b; margin:0;">هل هذه العبارة صحيحة؟</p>
+    <div class="big-word" style="font-size:clamp(1.2rem,5vw,1.7rem);">«${esc(q.s)}»
+      <button class="speak-btn" onclick="talk('${q.s}','bubbleGame'); sfx('click');">🔊</button></div>
+    <div class="opts" style="grid-template-columns:1fr 1fr; max-width:420px; margin:14px auto 0;">
+      <button class="opt t-mzk" data-v="1">✔️ صواب</button>
+      <button class="opt t-tks" data-v="0">✖️ خطأ</button>
+    </div>
+    <div class="feedback" id="fb"></div>`;
+  const btns = [...c.querySelectorAll('.opt')];
+  btns.forEach(b=> b.onclick = ()=> answer((b.dataset.v==='1')===q.ok, q.ex, b, btns));
+  talk(q.s, 'bubbleGame');
+}
+
+// ================= ACTIVITY 3: MATCHING =================
+let mSel = null;
+function renderMatch(pairs){
+  mSel = null;
+  const c = document.getElementById('qCard');
+  const words = shuffle(pairs);
+  const types = shuffle(Object.keys(TYPES));
+  c.innerHTML = `
+    <p style="font-weight:800; color:#64748b; margin:0 0 8px;">المس الكلمة ثم المس نوعها الصحيح 🔗</p>
+    <div class="match-wrap">
+      <div class="match-col" id="mWords">${words.map((p,i)=>`<div class="m-card" data-t="${p.t}" data-w="${esc(p.w)}">${esc(p.w)}</div>`).join('')}</div>
+      <div class="match-col" id="mTypes">${types.map(k=>`<div class="m-card ${TYPES[k].cls}" data-t="${k}" style="border-width:3px;">${TYPES[k].emoji} ${TYPES[k].label}</div>`).join('')}</div>
+    </div>
+    <div class="feedback" id="fb"></div>`;
+  document.querySelectorAll('#mWords .m-card').forEach(el=>{
+    el.onclick = ()=>{
+      if(el.classList.contains('paired')) return;
+      sfx('click');
+      document.querySelectorAll('#mWords .m-card').forEach(x=>x.classList.remove('sel'));
+      el.classList.add('sel'); mSel = el;
+      talk(el.dataset.w, 'bubbleGame');
+    };
+  });
+  document.querySelectorAll('#mTypes .m-card').forEach(el=>{
+    el.onclick = ()=>{
+      if(!mSel) { talk('اختر كلمة أولًا.', 'bubbleGame'); return; }
+      if(mSel.dataset.t === el.dataset.t){
+        mSel.classList.remove('sel'); mSel.classList.add('paired');
+        sfx('good'); cur.score++; addStar(1); addCoins(2);
+        document.getElementById('scoreNow').textContent = cur.score;
+        talk('أحسنت! ' + mSel.dataset.w + ' ' + TYPES[el.dataset.t].label + '.', 'bubbleGame');
+        mSel = null;
+        if(document.querySelectorAll('#mWords .paired').length === 3){
+          confettiBurst();
+          setTimeout(()=>{ cur.idx++; nextQuestion(); }, 1600);
+        }
+      }else{
+        sfx('bad'); el.classList.add('flash-bad');
+        talk('ليست هذه، فكِّر مرة أخرى.', 'bubbleGame');
+        setTimeout(()=>el.classList.remove('flash-bad'), 500);
+      }
+    };
+  });
+}
+
+// ================= ACTIVITY 4: CONVERT =================
+function renderConvert(q){
+  const c = document.getElementById('qCard');
+  const order = shuffle(q.opts.map((o,i)=>({o,i})));
+  c.innerHTML = `
+    <p style="font-weight:800; color:#64748b; margin:0;">ما جمع كلمة:</p>
+    <div class="big-word">${esc(q.sing)}<button class="speak-btn" onclick="talk('ما جمع كلمة ${q.sing}؟','bubbleGame'); sfx('click');">🔊</button></div>
+    <div class="opts">${order.map(x=>`<button class="opt" data-i="${x.i}">${esc(x.o)}</button>`).join('')}</div>
+    <div class="feedback" id="fb"></div>`;
+  const btns = [...c.querySelectorAll('.opt')];
+  btns.forEach(b=> b.onclick = ()=> answer(+b.dataset.i===q.ok, q.ex, b, btns));
+  talk('ما جمع كلمة ' + q.sing + '؟', 'bubbleGame');
+}
+
+// ================= ACTIVITY 5: DRAG =================
+let dragSel = null;
+function renderDrag(words){
+  dragSel = null;
+  const c = document.getElementById('qCard');
+  c.innerHTML = `
+    <p style="font-weight:800; color:#64748b; margin:0 0 6px;">اسحب كل كلمة إلى سلَّتها — أو المسها ثم المس السلة 🧺</p>
+    <div class="pool" id="pool">${words.map((p,i)=>
+      `<span class="word-chip" draggable="true" data-t="${p.t}" data-w="${esc(p.w)}" id="chip${i}">${esc(p.w)}</span>`).join('')}</div>
+    <div class="bins">${Object.entries(TYPES).map(([k,t])=>
+      `<div class="bin ${t.bin}" data-t="${k}"><h4>${t.emoji} ${t.label}</h4></div>`).join('')}</div>
+    <div style="margin-top:12px; display:flex; gap:10px; justify-content:center;">
+      <button class="btn btn-orange" onclick="checkDrag()">✅ تحقَّق من إجاباتي</button>
+      <button class="btn btn-gray" onclick="renderDrag(shuffle(DRAG_WORDS))">🔄 إعادة</button>
+    </div>
+    <div class="feedback" id="fb"></div>`;
+  document.querySelectorAll('.word-chip').forEach(ch=>{
+    ch.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text', ch.id); });
+    ch.onclick = ()=>{
+      sfx('click');
+      if(ch.parentElement.classList.contains('bin')){ document.getElementById('pool').appendChild(ch); ch.classList.remove('sel'); dragSel=null; return; }
+      document.querySelectorAll('.word-chip').forEach(x=>x.classList.remove('sel'));
+      ch.classList.add('sel'); dragSel = ch;
+      talk(ch.dataset.w, 'bubbleGame');
+    };
+  });
+  document.querySelectorAll('.bin').forEach(bin=>{
+    bin.addEventListener('dragover', e=>{ e.preventDefault(); bin.classList.add('over'); });
+    bin.addEventListener('dragleave', ()=>bin.classList.remove('over'));
+    bin.addEventListener('drop', e=>{
+      e.preventDefault(); bin.classList.remove('over');
+      const ch = document.getElementById(e.dataTransfer.getData('text'));
+      if(ch){ bin.appendChild(ch); ch.classList.remove('sel'); sfx('click'); }
+    });
+    bin.addEventListener('click', e=>{
+      if(e.target.classList.contains('word-chip')) return;
+      if(dragSel){ bin.appendChild(dragSel); dragSel.classList.remove('sel'); dragSel=null; sfx('click'); }
+    });
+  });
+}
+function checkDrag(){
+  const chips = [...document.querySelectorAll('.word-chip')];
+  const left = chips.filter(c=>!c.parentElement.classList.contains('bin'));
+  const fb = document.getElementById('fb');
+  if(left.length){ fb.className='feedback bad'; fb.textContent = '⚠️ ضع كل الكلمات في السلال أولًا!'; talk('ضع كل الكلمات في السلال أولًا يا صديقي.', 'bubbleGame'); return; }
+  let good = 0, wrongs = [];
+  chips.forEach(c=>{
+    if(c.parentElement.dataset.t === c.dataset.t){ good++; c.style.borderColor='var(--ok)'; }
+    else { c.style.borderColor='var(--bad)'; wrongs.push(c.dataset.w + ' هي ' + TYPES[c.dataset.t].label); }
+  });
+  cur.score = good; cur.hits = good; cur.tries = chips.length;
+  document.getElementById('scoreNow').textContent = good;
+  if(good === chips.length){
+    sfx('win'); confettiBurst(true); addStar(3); addCoins(10);
+    fb.className='feedback ok'; fb.textContent = '🎉 مذهل! كل الكلمات في مكانها الصحيح!';
+    talk('مذهل يا ' + pName() + '! صنَّفت كل الكلمات بشكل صحيح!', 'bubbleGame');
+    setTimeout(finishActivity, 2200);
+  }else{
+    sfx('bad');
+    fb.className='feedback bad';
+    fb.innerHTML = `أصبت ${good} من ${chips.length}.<br>تذكَّر: ${esc(wrongs.join('، '))}. صحِّح الكلمات الحمراء ثم تحقَّق مجددًا.`;
+    talk('أصبت ' + good + ' كلمات. صحِّح الكلمات الحمراء ثم حاول مرة أخرى.', 'bubbleGame');
+  }
+}
+
+// ================= ACTIVITY 6: TIMED =================
+function startTimed(){
+  cur.timeLeft = 45; cur.idx = 0; cur.hits = 0; cur.tries = 0;
+  const bar = document.getElementById('timerBar'); bar.style.display = 'block';
+  document.getElementById('timerFill').style.width = '100%';
+  cur.timer = setInterval(()=>{
+    cur.timeLeft--;
+    document.getElementById('timerFill').style.width = (cur.timeLeft/45*100) + '%';
+    if(cur.timeLeft<=5 && cur.timeLeft>0) sfx('tick');
+    if(cur.timeLeft<=0){ clearInterval(cur.timer); finishActivity(); }
+  }, 1000);
+  timedQuestion();
+}
+function timedQuestion(){
+  const q = cur.list[cur.idx % cur.list.length];
+  const c = document.getElementById('qCard');
+  c.innerHTML = `
+    <p style="font-weight:800; color:#64748b; margin:0;">⚡ بسرعة! ما نوع الجمع؟</p>
+    <div class="big-word">${esc(q.w)}</div>
+    <div class="opts">${typeButtonsHTML()}</div>`;
+  [...c.querySelectorAll('.opt')].forEach(b=>{
+    b.onclick = ()=>{
+      cur.tries++;
+      if(b.dataset.t===q.t){ cur.score++; cur.hits++; sfx('good'); addCoins(1); }
+      else sfx('bad');
+      document.getElementById('scoreNow').textContent = cur.score;
+      cur.idx++; timedQuestion();
+    };
+  });
+}
+
+// ================= FINISH & CERTIFICATE =================
+function finishActivity(){
+  clearInterval(cur.timer);
+  document.getElementById('timerBar').style.display = 'none';
+  const id = cur.act.id;
+  const prevBest = store.best[id];
+  if(prevBest===undefined || cur.score>prevBest) store.best[id] = cur.score;
+  persist();
+  sfx('win'); confettiBurst(true);
+
+  const pct = cur.tries ? Math.round(cur.hits/cur.tries*100) : 100;
+  const stars = pct>=90 ? 3 : pct>=65 ? 2 : 1;
+  if(id==='final'){ showCert(pct, stars); return; }
+
+  const c = document.getElementById('qCard');
+  c.innerHTML = `
+    <div style="font-size:3rem;">${stars===3?'🌟🌟🌟':stars===2?'🌟🌟':'🌟'}</div>
+    <h2 style="color:var(--teal-dark); margin:6px 0;">أحسنت يا ${esc(pName())}!</h2>
+    <p style="font-weight:800;">نتيجتك: <b style="color:var(--orange);">${cur.score}</b> ${id==='timed'?'إجابة صحيحة في ٤٥ ثانية':'نقطة'} (${pct}٪)</p>
+    <div style="display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap;">
+      <button class="btn btn-teal" onclick="startActivity('${id}')">🔄 العب مجددًا</button>
+      <button class="btn btn-orange" onclick="backHome()">🏠 الأنشطة</button>
+      ${id!=='final' ? `<button class="btn btn-gold" onclick="startActivity('final')">🏆 التحدي الشامل</button>` : ''}
+    </div>`;
+  document.getElementById('dots').innerHTML = '';
+  talk(pct>=90 ? ('رائع جدًا يا ' + pName() + '! أنت نجم اللغة العربية!') :
+       pct>=65 ? ('أحسنت يا ' + pName() + '! تدرَّب أكثر لتصبح بطلًا.') :
+                 ('لا بأس يا ' + pName() + '، التدريب سرُّ التفوق. حاول مرة أخرى!'), 'bubbleGame');
+}
+function showCert(pct, stars){
+  document.getElementById('certName').textContent = store.name || '________';
+  document.getElementById('certBody').textContent = 'لإتقانه أنواع الجموع: المذكر السالم والمؤنث السالم والتكسير';
+  document.getElementById('certStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
+  document.getElementById('certScore').textContent = 'النتيجة: ' + cur.score + ' / ' + cur.tries + '  (' + pct + '٪)';
+  document.getElementById('cert-overlay').classList.add('show');
+  addStar(stars*2); addCoins(20);
+  talk('مبارك يا ' + pName() + '! حصلت على شهادة التميز اللغوية. أنا فخور بك جدًا!', 'bubbleGame');
+}
+function closeCert(){ document.getElementById('cert-overlay').classList.remove('show'); backHome(); }
+
+// ---------- init ----------
+refreshHub();
+</script>
+</body>
+</html>

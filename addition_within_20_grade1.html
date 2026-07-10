@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Addition Within 20 | Ms. Manal Bazzi</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:#e53935;--blue:#1e88e5;--green:#43a047;--purple:#8e24aa;
+  --orange:#fb8c00;--yellow:#fdd835;--pink:#e91e63;
+  --bg:#fff8f0;--card:#fff;--radius:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,#fde8d055 39px,#fde8d055 40px),
+  repeating-linear-gradient(90deg,transparent,transparent 39px,#fde8d055 39px,#fde8d055 40px);}
+
+header{background:linear-gradient(135deg,#e53935,#fb8c00,#fdd835);padding:28px 20px 22px;text-align:center;}
+header h1{font-family:'Baloo 2',cursive;font-size:clamp(2rem,6vw,3.2rem);color:#fff;text-shadow:3px 3px 0 rgba(0,0,0,.2);line-height:1.1;}
+header p{color:#fff9;font-size:1rem;margin-top:6px;font-weight:700;}
+
+nav{display:flex;gap:8px;justify-content:center;padding:16px 12px 0;flex-wrap:wrap;}
+.tab-btn{font-family:'Baloo 2',cursive;font-size:1rem;padding:10px 20px;
+  border:3px solid var(--red);border-radius:50px;background:#fff;color:var(--red);cursor:pointer;transition:all .25s;}
+.tab-btn.active,.tab-btn:hover{background:var(--red);color:#fff;transform:translateY(-2px);box-shadow:0 4px 12px rgba(229,57,53,.35);}
+
+.section{display:none;padding:20px 16px 40px;max-width:860px;margin:0 auto;animation:fadeIn .4s;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.sec-title{font-family:'Baloo 2',cursive;font-size:1.7rem;text-align:center;margin-bottom:20px;color:var(--red);}
+.card{background:#fff;border-radius:var(--radius);padding:22px;box-shadow:0 4px 16px rgba(0,0,0,.08);margin-bottom:18px;}
+
+/* WAYS */
+.ways-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
+.way-card{background:#fff;border-radius:var(--radius);padding:18px 10px;text-align:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);border-top:5px solid;transition:transform .3s;}
+.way-card:hover{transform:translateY(-5px);}
+.way-card:nth-child(1){border-color:var(--red);}
+.way-card:nth-child(2){border-color:var(--blue);}
+.way-card:nth-child(3){border-color:var(--green);}
+.way-card:nth-child(4){border-color:var(--purple);}
+.way-card:nth-child(5){border-color:var(--orange);}
+.way-card .wi{font-size:2.5rem;display:block;margin-bottom:8px;}
+.way-card h3{font-family:'Baloo 2',cursive;font-size:1rem;color:#333;}
+.way-card p{font-size:.78rem;color:#666;margin-top:4px;}
+
+/* NUMBER LINE */
+.nl-box{background:linear-gradient(135deg,#e3f2fd,#f3e5f5);border-radius:var(--radius);padding:24px;margin-bottom:18px;}
+.nl-box h3{font-family:'Baloo 2',cursive;font-size:1.3rem;color:var(--blue);margin-bottom:16px;text-align:center;}
+.nl-equation{font-family:'Baloo 2',cursive;font-size:2rem;color:var(--red);text-align:center;margin-bottom:12px;}
+.nl-track{display:flex;gap:0;overflow-x:auto;padding:10px 0;}
+.nl-num{min-width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  border-right:2px solid #bbb;font-size:.85rem;font-weight:800;color:#444;position:relative;flex-shrink:0;}
+.nl-num.active{background:var(--red);color:#fff;border-radius:50%;border-color:var(--red);}
+.nl-num.jump{background:var(--orange);color:#fff;border-radius:50%;border-color:var(--orange);}
+.nl-controls{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.nl-inp{width:60px;padding:8px;border:3px solid var(--blue);border-radius:10px;
+  font-family:'Baloo 2',cursive;font-size:1.1rem;text-align:center;}
+.nl-btn{padding:10px 22px;background:var(--blue);color:#fff;border:none;border-radius:50px;
+  font-family:'Baloo 2',cursive;font-size:1rem;cursor:pointer;transition:all .2s;}
+.nl-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(30,136,229,.4);}
+.nl-result{text-align:center;font-family:'Baloo 2',cursive;font-size:1.5rem;margin-top:12px;color:var(--green);min-height:32px;}
+
+/* TEN FRAMES */
+.tf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;}
+.tf-card{background:#fff;border-radius:var(--radius);padding:18px;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.tf-eq{font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--purple);margin-bottom:12px;}
+.tf-frame{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:0 auto;max-width:150px;}
+.tf-dot{width:24px;height:24px;border-radius:50%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;}
+.tf-dot.r{background:var(--red);}
+.tf-dot.g{background:var(--green);}
+
+/* QUIZ */
+.quiz-wrap{background:#fff;border-radius:var(--radius);padding:24px;box-shadow:0 4px 16px rgba(0,0,0,.08);}
+.quiz-eq{font-family:'Baloo 2',cursive;font-size:3.5rem;color:var(--red);text-align:center;margin:16px 0;}
+.obj-display{text-align:center;font-size:2rem;letter-spacing:4px;margin-bottom:16px;min-height:50px;}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.opt{padding:14px;border:3px solid #ddd;border-radius:14px;background:#fff;
+  font-family:'Baloo 2',cursive;font-size:1.5rem;cursor:pointer;transition:all .2s;text-align:center;}
+.opt:hover{border-color:var(--blue);background:#e3f2fd;}
+.opt.correct{border-color:var(--green);background:#e8f5e9;color:var(--green);}
+.opt.wrong{border-color:var(--red);background:#ffebee;color:var(--red);}
+.feedback{text-align:center;font-size:1.2rem;font-weight:800;margin-top:12px;min-height:30px;}
+.score-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.score-bar{flex:1;height:14px;background:#fce4ec;border-radius:50px;overflow:hidden;}
+.score-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--orange));border-radius:50px;transition:width .5s;}
+.score-lbl{font-family:'Baloo 2',cursive;font-size:1.1rem;color:var(--red);}
+.nxt-btn{display:block;margin:14px auto 0;padding:12px 32px;background:var(--orange);
+  color:#fff;border:none;border-radius:50px;font-family:'Baloo 2',cursive;
+  font-size:1.1rem;cursor:pointer;box-shadow:0 4px 12px rgba(251,140,0,.35);transition:all .2s;}
+.nxt-btn:hover{transform:translateY(-2px);}
+
+footer{text-align:center;padding:20px;color:#888;font-size:.85rem;}
+footer strong{color:var(--red);}
+@media(max-width:480px){.opts{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>➕ Addition Within 20</h1>
+  <p>👩‍🏫 Grade 1 Mathematics · Ms. Manal Bazzi</p>
+</header>
+
+<nav>
+  <button class="tab-btn active" onclick="showTab('ways')">📖 Ways to Add</button>
+  <button class="tab-btn" onclick="showTab('numline')">📏 Number Line</button>
+  <button class="tab-btn" onclick="showTab('tenframes')">🟥 Ten Frames</button>
+  <button class="tab-btn" onclick="showTab('quiz')">🎯 Practice!</button>
+</nav>
+
+<!-- WAYS TO ADD -->
+<div id="ways" class="section active">
+  <h2 class="sec-title">➕ What is Addition?</h2>
+  <div class="card" style="text-align:center;background:linear-gradient(135deg,#fff3e0,#fff8e1);border:3px solid var(--orange);">
+    <p style="font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--orange);">
+      Addition means putting groups together to find the <strong>total</strong>!
+    </p>
+    <div style="font-size:2rem;margin-top:14px;">🍎🍎🍎 + 🍎🍎 = <strong style="color:var(--red)">5</strong></div>
+    <div style="font-size:2rem;margin-top:8px;">⭐⭐⭐⭐ + ⭐⭐⭐ = <strong style="color:var(--red)">7</strong></div>
+  </div>
+
+  <h2 class="sec-title">5 Ways to Add!</h2>
+  <div class="ways-grid">
+    <div class="way-card"><span class="wi">🧊</span><h3>1. Count Objects</h3><p>Use real things to count and add</p></div>
+    <div class="way-card"><span class="wi">🖐️</span><h3>2. Use Fingers</h3><p>Count on your fingers!</p></div>
+    <div class="way-card"><span class="wi">📏</span><h3>3. Number Line</h3><p>Jump forward on the number line</p></div>
+    <div class="way-card"><span class="wi">🟥</span><h3>4. Ten Frames</h3><p>Fill the frame with dots</p></div>
+    <div class="way-card"><span class="wi">💡</span><h3>5. Count On</h3><p>Start with the bigger number and count on!</p></div>
+  </div>
+
+  <div class="card" style="margin-top:8px;">
+    <h3 style="font-family:'Baloo 2',cursive;color:var(--purple);font-size:1.3rem;margin-bottom:14px;">📝 Addition Sentences</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;text-align:center;">
+      <div style="background:#ffebee;border-radius:14px;padding:12px;font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--red);">3 + 2 = 5</div>
+      <div style="background:#e3f2fd;border-radius:14px;padding:12px;font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--blue);">6 + 4 = 10</div>
+      <div style="background:#e8f5e9;border-radius:14px;padding:12px;font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--green);">8 + 7 = 15</div>
+      <div style="background:#f3e5f5;border-radius:14px;padding:12px;font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--purple);">9 + 8 = 17</div>
+      <div style="background:#fff3e0;border-radius:14px;padding:12px;font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--orange);">10 + 10 = 20</div>
+    </div>
+  </div>
+</div>
+
+<!-- NUMBER LINE -->
+<div id="numline" class="section">
+  <h2 class="sec-title">📏 Number Line</h2>
+  <div class="nl-box">
+    <h3>Try it! Enter two numbers to add:</h3>
+    <div class="nl-controls">
+      <input class="nl-inp" type="number" id="nl-a" value="5" min="0" max="15">
+      <span style="font-family:'Baloo 2',cursive;font-size:1.5rem;align-self:center;">+</span>
+      <input class="nl-inp" type="number" id="nl-b" value="3" min="0" max="15">
+      <button class="nl-btn" onclick="sfx('click');showNL()">Show it! 🚀</button>
+    </div>
+    <div id="nl-track" class="nl-track" style="margin-top:16px;"></div>
+    <div id="nl-res" class="nl-result"></div>
+  </div>
+  <div class="card" style="background:linear-gradient(135deg,#e8f5e9,#f1f8e9);text-align:center;">
+    <h3 style="font-family:'Baloo 2',cursive;color:var(--green);font-size:1.3rem;">💡 How to use the Number Line</h3>
+    <p style="margin-top:10px;color:#444;line-height:1.7;">
+      1️⃣ Start at the first number <br>
+      2️⃣ Jump forward by the second number <br>
+      3️⃣ Where you land is the answer! 🎯
+    </p>
+  </div>
+</div>
+
+<!-- TEN FRAMES -->
+<div id="tenframes" class="section">
+  <h2 class="sec-title">🟥 Ten Frames</h2>
+  <p style="text-align:center;margin-bottom:16px;color:#555;">A ten frame helps us see numbers and addition clearly!</p>
+  <div class="tf-grid" id="tf-cards"></div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="section">
+  <h2 class="sec-title">🎯 Addition Practice!</h2>
+  <div class="quiz-wrap" id="qwrap">
+    <div class="score-row">
+      <div class="score-bar"><div class="score-fill" id="sfill" style="width:0%"></div></div>
+      <div class="score-lbl">⭐ <span id="sc2">0</span>/10</div>
+    </div>
+    <div class="obj-display" id="obj-disp"></div>
+    <div class="quiz-eq" id="qeq"></div>
+    <div class="opts" id="qopts"></div>
+    <div class="feedback" id="qfb"></div>
+    <button class="nxt-btn" id="nxtbtn" style="display:none" onclick="nextQ2()">Next ➡️</button>
+  </div>
+  <div id="qdone" style="display:none;text-align:center;padding:30px;">
+    <div style="font-size:5rem">🌟</div>
+    <h2 style="font-family:'Baloo 2',cursive;color:var(--red);font-size:2rem">Amazing Job!</h2>
+    <p style="font-size:1.2rem;margin:12px 0;">Score: <strong id="fscore2"></strong>/10</p>
+    <button class="nxt-btn" onclick="restartQ2()">Play Again 🔄</button>
+  </div>
+</div>
+
+<footer><strong>👩‍🏫 Ms. Manal Bazzi</strong> · Addition Within 20 · Grade 1 Mathematics ➕</footer>
+
+<script>
+/* ================= SOUND EFFECTS (WebAudio, no external files) ================= */
+let audioCtx = null;
+function initAudio(){
+  if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+document.addEventListener('pointerdown', initAudio, {once:false});
+function tone(f, t0, dur, type='sine', vol=.18){
+  if(!audioCtx) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, audioCtx.currentTime + t0);
+  g.gain.setValueAtTime(vol, audioCtx.currentTime + t0);
+  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime + t0 + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(audioCtx.currentTime + t0); o.stop(audioCtx.currentTime + t0 + dur + .05);
+}
+function sfx(kind){
+  initAudio(); if(!audioCtx) return;
+  if(kind==='click'){ tone(600,0,.08,'triangle',.12); }
+  if(kind==='good'){ tone(523,0,.12); tone(659,.1,.12); tone(784,.2,.2); }
+  if(kind==='bad'){ tone(300,0,.18,'sawtooth',.12); tone(220,.15,.25,'sawtooth',.12); }
+  if(kind==='win'){ [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,i*.13,.18)); }
+}
+
+function showTab(id){
+  sfx('click');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// NUMBER LINE
+function showNL(){
+  const a=parseInt(document.getElementById('nl-a').value)||0;
+  const b=parseInt(document.getElementById('nl-b').value)||0;
+  const sum=a+b;
+  if(sum>20){alert('Sum must be 20 or less!');return;}
+  const track=document.getElementById('nl-track');
+  track.innerHTML='';
+  for(let i=0;i<=20;i++){
+    const d=document.createElement('div');
+    d.className='nl-num';
+    d.textContent=i;
+    if(i===a) d.className+=' active';
+    if(i>a && i<=sum) d.className+=' jump';
+    track.appendChild(d);
+  }
+  document.getElementById('nl-res').textContent=`${a} + ${b} = ${sum} 🎉`;
+}
+showNL();
+
+// TEN FRAMES
+const tfData=[[5,5],[8,2],[10,5],[3,7],[6,4]];
+const tfCont=document.getElementById('tf-cards');
+tfData.forEach(([a,b])=>{
+  const sum=a+b;
+  let dots='';
+  const total=Math.min(sum,10);
+  for(let i=0;i<10;i++){
+    const cl=i<a?'r':i<total?'g':'';
+    dots+=`<div class="tf-dot ${cl}"></div>`;
+  }
+  tfCont.innerHTML+=`<div class="tf-card">
+    <div class="tf-eq">${a} + ${b} = ${sum}</div>
+    <div class="tf-frame">${dots}</div>
+    <p style="margin-top:10px;font-weight:700;color:#555">🔴=${a}  🟢=${b}</p>
+  </div>`;
+});
+
+// QUIZ
+const emojis=['🍎','🌟','🎈','🚗','🌸','⚽','🦋','🍕','🐶','🎀'];
+const qs2=[];
+for(let i=0;i<10;i++){
+  const a=Math.ceil(Math.random()*10);
+  const b=Math.ceil(Math.random()*(10-a));
+  const ans=a+b;
+  const opts=new Set([ans]);
+  while(opts.size<4){const r=ans+Math.floor(Math.random()*5)-2;if(r>0&&r<=20)opts.add(r);}
+  qs2.push({a,b,ans,opts:[...opts].sort(()=>Math.random()-.5)});
+}
+let qi2=0,sc2=0;
+
+function loadQ2(){
+  if(qi2>=qs2.length){endQ2();return;}
+  const q=qs2[qi2];
+  const emoji=emojis[Math.floor(Math.random()*emojis.length)];
+  document.getElementById('obj-disp').textContent=emoji.repeat(q.a)+' + '+emoji.repeat(q.b);
+  document.getElementById('qeq').textContent=q.a+' + '+q.b+' = ?';
+  document.getElementById('qfb').textContent='';
+  document.getElementById('nxtbtn').style.display='none';
+  const opts=document.getElementById('qopts');
+  opts.innerHTML='';
+  q.opts.forEach(o=>{
+    const btn=document.createElement('button');
+    btn.className='opt'; btn.textContent=o;
+    btn.onclick=()=>checkQ2(btn,o,q.ans);
+    opts.appendChild(btn);
+  });
+}
+
+function checkQ2(btn,chosen,ans){
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=null);
+  const fb=document.getElementById('qfb');
+  if(chosen===ans){
+    btn.classList.add('correct');fb.textContent='🎉 Correct! Well done!';fb.style.color='#43a047';
+    sc2++;document.getElementById('sc2').textContent=sc2;
+    document.getElementById('sfill').style.width=(sc2*10)+'%';
+    sfx('good');
+  } else {
+    btn.classList.add('wrong');fb.textContent='❌ The answer is '+ans+'!';fb.style.color='#e53935';
+    document.querySelectorAll('.opt').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('correct');});
+    sfx('bad');
+  }
+  document.getElementById('nxtbtn').style.display='block';
+  qi2++;
+}
+function nextQ2(){sfx('click');loadQ2();}
+function endQ2(){
+  document.getElementById('qwrap').style.display='none';
+  document.getElementById('qdone').style.display='block';
+  document.getElementById('fscore2').textContent=sc2;
+  sfx(sc2>=8?'win':'good');
+}
+function restartQ2(){
+  sfx('click');
+  qi2=0;sc2=0;
+  document.getElementById('sc2').textContent=0;
+  document.getElementById('sfill').style.width='0%';
+  document.getElementById('qwrap').style.display='block';
+  document.getElementById('qdone').style.display='none';
+  loadQ2();
+}
+loadQ2();
+</script>
+</body>
+</html>
