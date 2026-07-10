@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>سباق القواعد — اسم، فعل، حرف | الأستاذة منال بزي</title>
+<style>
+  /* ============================================================
+     Fully offline — no external fonts/libraries/CDN calls.
+     Warm desert palette (distinct from the green Snake Math world).
+     ============================================================ */
+  :root{
+    --sky-top:#ffb75e;
+    --sky-bot:#ff7e5f;
+    --sand:#f3c886;
+    --sand-dark:#e0a95e;
+    --dune:#c98a4b;
+    --cream:#fff8ec;
+    --card:#ffffff;
+    --ink:#4a2f1a;
+    --sub:#8a6a4a;
+    --gold:#f5a623;
+    --green:#3aa16a;
+    --red:#e2483b;
+    --lane-line:#fff3d6;
+    --radius:22px;
+    --font:'Trebuchet MS','Segoe UI Rounded','Tahoma',Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--font);color:var(--ink);min-height:100vh;overflow-x:hidden;
+    background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bot) 45%,var(--sand) 45%,var(--sand-dark) 100%);
+    display:flex;flex-direction:column;align-items:center;padding:10px 10px 20px;
+  }
+  .deco{position:fixed;font-size:26px;opacity:.35;pointer-events:none;z-index:0;animation:float 8s ease-in-out infinite;}
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+
+  .brand-bar{width:100%;max-width:720px;display:flex;justify-content:center;margin:6px 0 4px;position:relative;z-index:2;}
+  .brand-badge{background:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.5);border-radius:30px;padding:6px 16px;font-size:.75rem;color:#7a3e00;font-weight:800;}
+  h1.title{width:100%;max-width:720px;text-align:center;font-weight:900;font-size:clamp(1.5rem,6vw,2.4rem);color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.2);margin:6px 0 2px;position:relative;z-index:2;}
+  .subtitle{width:100%;max-width:720px;text-align:center;color:#fff0dc;font-weight:700;font-size:.95rem;margin-bottom:10px;position:relative;z-index:2;}
+
+  .screen{width:100%;max-width:720px;position:relative;z-index:2;display:none;}
+  .screen.active{display:block;animation:fadeUp .4s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  .card{background:var(--card);border-radius:var(--radius);padding:22px 18px;box-shadow:0 12px 30px rgba(0,0,0,.25);}
+
+  .diff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0;}
+  .diff-card{border-radius:18px;padding:16px 10px;text-align:center;cursor:pointer;border:3px solid transparent;background:#fff6e9;transition:transform .18s,border-color .18s;}
+  .diff-card:hover{transform:translateY(-4px);}
+  .diff-card.sel{border-color:var(--gold);background:#fff0d2;box-shadow:0 6px 18px rgba(245,166,35,.3);}
+  .diff-card .di{font-size:2.1rem;display:block;margin-bottom:4px;}
+  .diff-card h3{font-size:1.05rem;font-weight:900;color:#b5710f;}
+  .diff-card p{font-size:.78rem;color:var(--sub);font-weight:700;margin-top:4px;line-height:1.35;}
+  .diff-card .grade-tag{display:inline-block;margin-top:6px;font-size:.68rem;font-weight:800;background:#e8f6ec;color:#237a4c;border-radius:999px;padding:2px 10px;}
+
+  .start-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .hs-row{display:flex;justify-content:center;gap:12px;margin-top:14px;font-weight:800;font-size:.9rem;color:#b5710f;flex-wrap:wrap;}
+  .hs-row span{background:#fff6e9;border-radius:999px;padding:6px 16px;}
+
+  .btn{font-family:var(--font);font-weight:900;border:none;border-radius:16px;cursor:pointer;padding:13px 26px;font-size:1.05rem;color:#fff;transition:transform .15s;box-shadow:0 5px 0 rgba(0,0,0,.18);}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn-gold{background:linear-gradient(160deg,#ffcf6e,var(--gold));color:#5a3d00;}
+  .btn-green{background:linear-gradient(160deg,#5ecb8f,var(--green));}
+  .btn-red{background:linear-gradient(160deg,#f37065,var(--red));}
+  .btn-gray{background:linear-gradient(160deg,#c7b6a1,#a08a6e);}
+  .btn-sm{padding:9px 16px;font-size:.85rem;border-radius:12px;box-shadow:0 4px 0 rgba(0,0,0,.18);}
+
+  .hud{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.96);border-radius:18px;padding:10px 14px;margin-bottom:10px;box-shadow:0 6px 16px rgba(0,0,0,.18);}
+  .hud-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .chip{background:#fff6e9;border-radius:999px;padding:6px 13px;font-weight:900;font-size:.9rem;color:var(--ink);display:flex;align-items:center;gap:5px;}
+  .lives{display:flex;gap:3px;font-size:1.1rem;}
+  .icon-btn{width:38px;height:38px;border-radius:12px;border:none;background:#fff2de;cursor:pointer;font-size:1.15rem;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;}
+  .icon-btn:hover{background:#ffe6bd;}
+  .icon-btn:active{transform:scale(.9);}
+  .icon-btn.muted{background:#ffe3e0;}
+
+  .board-wrap{position:relative;background:linear-gradient(180deg,#ffcf8a,#e8a557);border-radius:var(--radius);padding:10px;box-shadow:0 10px 26px rgba(0,0,0,.28);border:4px solid #a8611f;}
+  #board{display:block;width:100%;height:auto;border-radius:14px;background:#dba85f;touch-action:none;}
+
+  /* lane category headers, always visible above the board */
+  .lane-headers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px;}
+  .lane-headers span{text-align:center;font-weight:900;font-size:.95rem;background:#fff6e9;border-radius:12px;padding:6px 4px;color:#7a4a1a;}
+
+  .q-overlay,.modal-overlay{position:absolute;inset:10px;border-radius:14px;background:rgba(60,30,5,.82);display:none;align-items:center;justify-content:center;padding:14px;z-index:6;}
+  .q-overlay.show,.modal-overlay.show{display:flex;}
+  .q-card,.modal-card{background:var(--cream);border-radius:20px;padding:20px 16px;text-align:center;max-width:380px;width:100%;box-shadow:0 10px 24px rgba(0,0,0,.35);animation:pop .35s ease;}
+  @keyframes pop{0%{transform:scale(.85);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .q-badge{font-size:.72rem;font-weight:900;color:var(--sub);letter-spacing:1px;}
+  .q-text{font-size:clamp(1.8rem,7vw,2.6rem);font-weight:900;color:var(--ink);margin:8px 0 14px;}
+  .q-opts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .q-opt{font-family:var(--font);font-weight:900;font-size:1.05rem;padding:13px 4px;border-radius:14px;border:3px solid #ecdfc9;background:#fff;cursor:pointer;color:var(--ink);transition:all .15s;}
+  .q-opt:hover{border-color:var(--gold);transform:translateY(-2px);}
+  .q-opt.correct{border-color:var(--green);background:#e3f9e6;color:var(--green);animation:pop .3s;}
+  .q-opt.wrong{border-color:var(--red);background:#fde3e1;color:var(--red);animation:shake .35s;}
+  @keyframes shake{20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}
+  .q-feedback{margin-top:10px;font-weight:800;font-size:.95rem;min-height:20px;}
+  .q-feedback.good{color:var(--green);}
+  .q-feedback.bad{color:var(--red);}
+
+  .modal-card h2{font-size:1.5rem;color:#b5710f;margin-bottom:6px;}
+  .modal-card .go-emoji{font-size:2.6rem;margin-bottom:6px;}
+  .modal-card .go-score{font-size:1.15rem;font-weight:800;margin:8px 0;}
+  .modal-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .new-hs{color:var(--gold);font-weight:900;background:#fff6de;border-radius:12px;padding:6px 12px;display:inline-block;margin-top:6px;}
+
+  .touch-pad{display:flex;gap:14px;justify-content:center;margin:16px auto 4px;}
+  .tp-btn{width:70px;height:70px;border:none;border-radius:18px;background:linear-gradient(160deg,#ffcf6e,var(--gold));box-shadow:0 5px 0 #c47a0f;font-size:1.8rem;color:#5a3d00;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s;}
+  .tp-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #c47a0f;}
+
+  .hint{text-align:center;color:#7a4a1a;font-size:.8rem;font-weight:700;margin-top:6px;}
+  footer{margin-top:22px;text-align:center;font-size:.8rem;color:#fff0dc;font-weight:700;position:relative;z-index:2;}
+  footer strong{color:#fff;}
+
+  @media (max-width:480px){
+    .q-opt{font-size:.92rem;padding:11px 3px;}
+    .tp-btn{width:62px;height:62px;font-size:1.6rem;}
+    .lane-headers span{font-size:.8rem;}
+  }
+  @media (min-width:640px){ .touch-pad{display:none;} }
+  .show-touch .touch-pad{display:flex !important;}
+</style>
+</head>
+<body>
+
+<div class="deco" style="top:8%;left:5%;">🌵</div>
+<div class="deco" style="top:16%;right:6%;animation-delay:1.4s;">☀️</div>
+<div class="deco" style="bottom:14%;left:7%;animation-delay:2.4s;">🌴</div>
+<div class="deco" style="bottom:22%;right:5%;animation-delay:1s;">🐫</div>
+
+<div class="brand-bar"><div class="brand-badge">👩‍🏫 الأستاذة منال بزي — INSPIRE • EDUCATE • EMPOWER</div></div>
+<h1 class="title">🐆 سباق القواعد</h1>
+<p class="subtitle">اسم، فعل، أم حرف؟ اركض في المسار الصحيح بسرعة!</p>
+
+<!-- ================= START / DIFFICULTY SCREEN ================= -->
+<div class="screen active" id="scr-start">
+  <div class="card">
+    <h2 style="text-align:center;color:#b5710f;font-size:1.3rem;">اختر مستوى التحدي</h2>
+    <div class="diff-grid" id="diffGrid">
+      <div class="diff-card" data-d="easy">
+        <span class="di">🌱</span>
+        <h3>سهل</h3>
+        <p>كلمات شائعة وبسيطة</p>
+        <span class="grade-tag">الصف الأول</span>
+      </div>
+      <div class="diff-card" data-d="medium">
+        <span class="di">🌿</span>
+        <h3>متوسط</h3>
+        <p>أفعال ماضية وضمائر</p>
+        <span class="grade-tag">الصف الثاني</span>
+      </div>
+      <div class="diff-card" data-d="hard">
+        <span class="di">🌳</span>
+        <h3>صعب</h3>
+        <p>فعل الأمر وحروف دقيقة</p>
+        <span class="grade-tag">الصف الثالث</span>
+      </div>
+    </div>
+    <div class="hs-row" id="hsRow"></div>
+    <div class="start-actions">
+      <button class="btn btn-gold" id="btnStart" disabled onclick="beginGame()">🚀 ابدأ السباق</button>
+      <button class="icon-btn" id="btnMuteStart" onclick="toggleMute()" title="كتم الصوت">🔊</button>
+    </div>
+    <p class="hint">اختاري مستوى، ثم اضغطي "ابدأ السباق". حرّكي الغزال بالأسهم أو الأزرار — اسم يمينًا، فعل وسطًا، حرف يسارًا!</p>
+  </div>
+</div>
+
+<!-- ================= GAME SCREEN ================= -->
+<div class="screen" id="scr-game">
+  <div class="hud">
+    <div class="hud-group">
+      <span class="chip">🏆 <span id="hudScore">0</span></span>
+      <span class="chip">⭐ الأفضل <span id="hudBest">0</span></span>
+      <span class="chip lives" id="hudLives">❤️❤️❤️</span>
+    </div>
+    <div class="hud-group">
+      <button class="icon-btn" id="btnMuteGame" onclick="toggleMute()" title="كتم الصوت">🔊</button>
+      <button class="icon-btn" onclick="pauseGame()" title="إيقاف مؤقت">⏸️</button>
+      <button class="icon-btn" onclick="confirmRestart()" title="إعادة">🔄</button>
+    </div>
+  </div>
+
+  <div class="lane-headers"><span>حرف</span><span>فعل</span><span>اسم</span></div>
+
+  <div class="board-wrap">
+    <canvas id="board" width="480" height="620"></canvas>
+
+    <div class="q-overlay" id="qOverlay">
+      <div class="q-card">
+        <div class="q-badge" id="qBadge">صنّف الكلمة لتنطلقي!</div>
+        <div class="q-text" id="qText">كلمة</div>
+        <div class="q-opts" id="qOpts"></div>
+        <div class="q-feedback" id="qFeedback"></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="pauseOverlay">
+      <div class="modal-card">
+        <div class="go-emoji">⏸️</div>
+        <h2>إيقاف مؤقت</h2>
+        <div class="modal-actions">
+          <button class="btn btn-green btn-sm" onclick="resumeGame()">▶️ متابعة</button>
+          <button class="btn btn-gray btn-sm" onclick="confirmRestart()">🔄 إعادة</button>
+          <button class="btn btn-red btn-sm" onclick="quitToMenu()">🏠 القائمة</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="gameOverOverlay">
+      <div class="modal-card">
+        <div class="go-emoji" id="goEmoji">💥</div>
+        <h2 id="goTitle">انتهى السباق</h2>
+        <div class="go-score">النتيجة: <span id="goScore">0</span></div>
+        <div id="goNewHS"></div>
+        <div class="modal-actions">
+          <button class="btn btn-gold btn-sm" onclick="beginGame()">🔄 العب مجددًا</button>
+          <button class="btn btn-red btn-sm" onclick="quitToMenu()">🏠 القائمة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="touch-pad" id="touchPad">
+    <button class="tp-btn" data-dir="right">➡️</button>
+    <button class="tp-btn" data-dir="left">⬅️</button>
+  </div>
+  <p class="hint">أسهم اليمين/اليسار (حاسوب) أو الأزرار (لمس) لتغيير المسار وتفادي الصخور.</p>
+</div>
+
+<footer>
+  <div><strong>👩‍🏫 الأستاذة منال بزي</strong> — سباق القواعد — قواعد اللغة العربية للصفوف ١-٣ 🐆</div>
+</footer>
+
+<script>
+/* ============================================================
+   سباق القواعد — Arabic Grammar Runner (اسم / فعل / حرف)
+   Single-file, offline, no external libraries.
+   Architecture mirrors the sibling "Snake Math Challenge" game:
+   a fixed-timestep game loop with interpolated 60fps rendering,
+   a pause-for-question flow, WebAudio SFX, and localStorage
+   high scores — reskinned as a 3-lane desert runner instead of
+   a grid snake, and testing Arabic word-type classification
+   (اسم / فعل / حرف) instead of arithmetic.
+   ============================================================ */
+
+/* ---------------------------------------------------------
+   0. SOUND ENGINE (WebAudio tones + Arabic speech — no files)
+--------------------------------------------------------- */
+let audioCtx = null;
+let muted = (localStorage.getItem('arabicRunnerMuted') === '1');
+let musicTimer = null;
+
+function initAudio(){
+  if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+document.addEventListener('pointerdown', initAudio, {once:false});
+document.addEventListener('keydown', initAudio, {once:false});
+
+function tone(f, t0, dur, type, vol){
+  if(!audioCtx || muted) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type || 'sine';
+  o.frequency.setValueAtTime(f, audioCtx.currentTime + t0);
+  g.gain.setValueAtTime(vol || 0.15, audioCtx.currentTime + t0);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + t0 + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(audioCtx.currentTime + t0); o.stop(audioCtx.currentTime + t0 + dur + 0.05);
+}
+function sfxGem(){ tone(750,0,.07,'triangle',.15); tone(1000,.05,.09,'triangle',.13); }
+function sfxCorrect(){ tone(523,0,.12,'triangle'); tone(659,.1,.12,'triangle'); tone(784,.2,.2,'triangle'); }
+function sfxWrong(){ tone(300,0,.18,'sawtooth',.12); tone(220,.15,.25,'sawtooth',.12); }
+function sfxGameOver(){ [400,340,280,220,160].forEach((f,i)=>tone(f,i*.14,.2,'sawtooth',.14)); }
+function sfxClick(){ tone(600,0,.06,'square',.08); }
+function sfxSwitch(){ tone(520,0,.03,'square',.05); }
+
+/* Cheerful looped background melody — pure WebAudio, no mp3 files. */
+const MELODY = [587,659,698,880, 784,880,988,784, 659,587,523,587, 659,0,659,0];
+let melodyStep = 0;
+function playMelodyStep(){
+  if(!audioCtx || muted){ musicTimer = setTimeout(playMelodyStep, 240); return; }
+  const note = MELODY[melodyStep % MELODY.length];
+  if(note>0) tone(note, 0, .2, 'sine', .045);
+  melodyStep++;
+  musicTimer = setTimeout(playMelodyStep, 240);
+}
+function startMusic(){ if(musicTimer) return; melodyStep = 0; playMelodyStep(); }
+function stopMusic(){ if(musicTimer){ clearTimeout(musicTimer); musicTimer=null; } }
+
+/* Arabic speech narration — same pattern used across the site's
+   other Arabic games (multi-voice fallback, cancel-then-speak). */
+const synth = window.speechSynthesis || null;
+let arVoice = null;
+function pickVoice(){
+  if(!synth) return;
+  const vs = synth.getVoices();
+  arVoice = vs.find(v=>v.lang==='ar-SA') || vs.find(v=>v.lang && v.lang.startsWith('ar')) || null;
+}
+if(synth){ pickVoice(); synth.onvoiceschanged = pickVoice; }
+function speak(text){
+  if(!synth || muted) return;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ar-SA'; if(arVoice) u.voice = arVoice;
+  u.rate = .95; u.pitch = 1.05;
+  setTimeout(()=>{ try{ synth.speak(u); }catch(e){} }, 50);
+}
+
+function updateMuteIcons(){
+  const icon = muted ? '🔇' : '🔊';
+  document.getElementById('btnMuteStart').textContent = icon;
+  document.getElementById('btnMuteGame').textContent = icon;
+  document.getElementById('btnMuteStart').classList.toggle('muted', muted);
+  document.getElementById('btnMuteGame').classList.toggle('muted', muted);
+}
+function toggleMute(){
+  initAudio();
+  muted = !muted;
+  localStorage.setItem('arabicRunnerMuted', muted ? '1' : '0');
+  updateMuteIcons();
+  if(!muted) sfxClick();
+}
+updateMuteIcons();
+
+/* ---------------------------------------------------------
+   1. WORD BANK (per difficulty / grade) — اسم / فعل / حرف
+   Internal type codes: 'n' = اسم, 'v' = فعل, 'h' = حرف
+--------------------------------------------------------- */
+const LABEL = { n:'اسم', v:'فعل', h:'حرف' };
+
+const WORDS_EASY = [
+  {w:'وَلَد', t:'n'}, {w:'بِنْت', t:'n'}, {w:'بَيْت', t:'n'}, {w:'قَلَم', t:'n'},
+  {w:'كِتَاب', t:'n'}, {w:'شَمْس', t:'n'}, {w:'قَمَر', t:'n'}, {w:'كُرَة', t:'n'},
+  {w:'يَلْعَبُ', t:'v'}, {w:'يَأْكُلُ', t:'v'}, {w:'يَشْرَبُ', t:'v'}, {w:'يَكْتُبُ', t:'v'},
+  {w:'يَقْرَأُ', t:'v'}, {w:'يَنَامُ', t:'v'}, {w:'يَجْرِي', t:'v'}, {w:'يَذْهَبُ', t:'v'},
+  {w:'فِي', t:'h'}, {w:'عَلَى', t:'h'}, {w:'مِنْ', t:'h'}, {w:'إِلَى', t:'h'}, {w:'وَ', t:'h'}
+];
+const WORDS_MEDIUM = [
+  {w:'مُعَلِّم', t:'n'}, {w:'سَيَّارَة', t:'n'}, {w:'حَدِيقَة', t:'n'}, {w:'طَائِرَة', t:'n'},
+  {w:'نَهْر', t:'n'}, {w:'جَبَل', t:'n'}, {w:'أَنَا', t:'n'}, {w:'نَحْنُ', t:'n'}, {w:'هُوَ', t:'n'},
+  {w:'كَتَبَ', t:'v'}, {w:'لَعِبَ', t:'v'}, {w:'ذَهَبَ', t:'v'}, {w:'أَكَلَ', t:'v'}, {w:'شَرِبَ', t:'v'},
+  {w:'قَرَأَ', t:'v'}, {w:'رَسَمَ', t:'v'},
+  {w:'عَنْ', t:'h'}, {w:'حَتَّى', t:'h'}, {w:'مَعَ', t:'h'}, {w:'لَكِنْ', t:'h'}, {w:'لَا', t:'h'}, {w:'لَنْ', t:'h'}
+];
+const WORDS_HARD = [
+  {w:'هَذَا', t:'n'}, {w:'هَذِهِ', t:'n'}, {w:'الْكِتَابَة', t:'n'}, {w:'مُهَنْدِسُونَ', t:'n'},
+  {w:'حَدَائِق', t:'n'}, {w:'أَقْلَام', t:'n'}, {w:'أَنْتُمْ', t:'n'}, {w:'هُمْ', t:'n'},
+  {w:'اُكْتُبْ', t:'v'}, {w:'اِلْعَبْ', t:'v'}, {w:'اِذْهَبْ', t:'v'}, {w:'اِقْرَأْ', t:'v'},
+  {w:'سَيَكْتُبُ', t:'v'}, {w:'كَانَ', t:'v'},
+  {w:'لَوْ', t:'h'}, {w:'إِنَّ', t:'h'}, {w:'لَكِنَّ', t:'h'}, {w:'بَلْ', t:'h'}, {w:'قَدْ', t:'h'}, {w:'إِذَا', t:'h'}
+];
+const WORDS_BY_DIFF = { easy: WORDS_EASY, medium: WORDS_MEDIUM, hard: WORDS_HARD };
+
+function rand(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+/* three fixed lanes (index 0..2) mapped to the three word types,
+   matching the always-visible lane headers: حرف | فعل | اسم (RTL) */
+const LANE_TYPE = ['h','v','n'];
+function typeToLane(t){ return LANE_TYPE.indexOf(t); }
+
+function nextQuestion(){
+  const bank = WORDS_BY_DIFF[difficulty];
+  const item = bank[rand(0, bank.length-1)];
+  const order = ['n','v','h'].sort(() => Math.random()-0.5); // shuffle button order each time
+  return { word: item.w, type: item.t, choices: order };
+}
+
+/* ---------------------------------------------------------
+   2. STATE
+--------------------------------------------------------- */
+const DIFF_SETTINGS = {
+  easy:   { tickMs: 26, obstacleSpeed: 2.6, spawnMs: 1500, dodgesPerRound: 3, label:'سهل'   },
+  medium: { tickMs: 22, obstacleSpeed: 3.4, spawnMs: 1250, dodgesPerRound: 4, label:'متوسط' },
+  hard:   { tickMs: 18, obstacleSpeed: 4.3, spawnMs: 1000, dodgesPerRound: 5, label:'صعب'   }
+};
+
+let difficulty = null;
+let state = null;
+
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+const LOGICAL_W = 480, LOGICAL_H = 620; // fixed internal coordinate space; canvas CSS-scales to fit
+
+function getHighScores(){
+  try{ return JSON.parse(localStorage.getItem('arabicRunnerHighScores') || '{}'); }catch(e){ return {}; }
+}
+function setHighScore(diff, score){
+  const hs = getHighScores();
+  if(!hs[diff] || score > hs[diff]) hs[diff] = score;
+  localStorage.setItem('arabicRunnerHighScores', JSON.stringify(hs));
+  return hs[diff];
+}
+
+function resetGameState(){
+  state = {
+    lane: 1,               // 0=حرف, 1=فعل, 2=اسم — start in the middle lane
+    prevLane: 1,
+    laneAnim: 0,            // 0..1 progress of the current lane-switch glide
+    obstacles: [],          // {lane, y, kind:'rock'|'gem'}
+    floatingTexts: [],      // {x,y,text,life} — brief "+5" popups on gem pickup
+    score: 0,
+    lives: 3,
+    dodgesThisRound: 0,
+    running: false,
+    paused: false,
+    gameOver: false,
+    spawnAcc: 0,
+    tickAcc: 0,
+    lastTime: null,
+    distance: 0,
+    settings: Object.assign({}, DIFF_SETTINGS[difficulty])
+  };
+}
+
+/* ---------------------------------------------------------
+   3. DIFFICULTY SELECTION / START SCREEN
+--------------------------------------------------------- */
+document.querySelectorAll('.diff-card').forEach(card => {
+  card.addEventListener('click', () => {
+    sfxClick();
+    document.querySelectorAll('.diff-card').forEach(c => c.classList.remove('sel'));
+    card.classList.add('sel');
+    difficulty = card.dataset.d;
+    document.getElementById('btnStart').disabled = false;
+  });
+});
+
+function renderHighScores(){
+  const hs = getHighScores();
+  const row = document.getElementById('hsRow');
+  row.innerHTML = Object.keys(DIFF_SETTINGS).map(d =>
+    `<span>${DIFF_SETTINGS[d].label}: ⭐ ${hs[d]||0}</span>`
+  ).join('');
+}
+renderHighScores();
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ---------------------------------------------------------
+   4. GAME LIFECYCLE
+--------------------------------------------------------- */
+function beginGame(){
+  if(!difficulty) return;
+  sfxClick();
+  hideAllOverlays();
+  resetGameState();
+  updateHUD();
+  showScreen('scr-game');
+  resizeCanvas();
+  startMusic();
+  askQuestion(true);
+  if(!rafHandle) rafHandle = requestAnimationFrame(gameLoop);
+}
+
+function updateHUD(){
+  document.getElementById('hudScore').textContent = state.score;
+  const hs = getHighScores();
+  document.getElementById('hudBest').textContent = hs[difficulty] || 0;
+  document.getElementById('hudLives').textContent = '❤️'.repeat(Math.max(0,state.lives)) + '🖤'.repeat(3-Math.max(0,state.lives));
+}
+
+function hideAllOverlays(){
+  document.getElementById('qOverlay').classList.remove('show');
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('gameOverOverlay').classList.remove('show');
+}
+
+function pauseGame(){
+  if(!state || state.gameOver || !state.running) return;
+  state.paused = true;
+  document.getElementById('pauseOverlay').classList.add('show');
+  sfxClick();
+}
+function resumeGame(){
+  state.paused = false;
+  state.lastTime = null;
+  document.getElementById('pauseOverlay').classList.remove('show');
+  sfxClick();
+}
+function confirmRestart(){
+  sfxClick();
+  beginGame();
+}
+function quitToMenu(){
+  sfxClick();
+  stopMusic();
+  hideAllOverlays();
+  state = null;
+  showScreen('scr-start');
+  renderHighScores();
+}
+
+/* ---------------------------------------------------------
+   5. QUESTION FLOW (اسم / فعل / حرف classification)
+--------------------------------------------------------- */
+function askQuestion(isFirst){
+  state.paused = true;
+  const q = nextQuestion();
+  state.currentQuestion = q;
+  document.getElementById('qBadge').textContent = isFirst ? 'صنّفي الكلمة لتنطلقي!' : 'صنّفي الكلمة لتتابعي السباق!';
+  document.getElementById('qText').textContent = q.word;
+  document.getElementById('qFeedback').textContent = '';
+  document.getElementById('qFeedback').className = 'q-feedback';
+  const optsEl = document.getElementById('qOpts');
+  optsEl.innerHTML = '';
+  q.choices.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.textContent = LABEL[t];
+    btn.onclick = () => answerQuestion(t, btn);
+    optsEl.appendChild(btn);
+  });
+  document.getElementById('qOverlay').classList.add('show');
+  speak(q.word.replace(/[ً-ْ]/g, '')); // strip tashkeel marks for clearer TTS
+}
+
+function answerQuestion(choice, btn){
+  document.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+  const fb = document.getElementById('qFeedback');
+  const correct = choice === state.currentQuestion.type;
+  if(correct){
+    btn.classList.add('correct');
+    fb.textContent = '🎉 صحيح!';
+    fb.className = 'q-feedback good';
+    sfxCorrect();
+    speak('صحيح! ' + state.currentQuestion.word + ' ' + LABEL[choice]);
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.q-opt').forEach(b => { if(b.textContent === LABEL[state.currentQuestion.type]) b.classList.add('correct'); });
+    fb.textContent = `❌ الصحيح: ${LABEL[state.currentQuestion.type]}`;
+    fb.className = 'q-feedback bad';
+    sfxWrong();
+    speak('ليست صحيحة. الكلمة ' + state.currentQuestion.word + ' هي ' + LABEL[state.currentQuestion.type]);
+    state.lives--;
+    state.score = Math.max(0, state.score - 5);
+    updateHUD();
+  }
+
+  setTimeout(() => {
+    document.querySelectorAll('.q-opt').forEach(b => b.disabled = false);
+    if(!correct && state.lives <= 0){
+      document.getElementById('qOverlay').classList.remove('show');
+      endGame('lives');
+      return;
+    }
+    if(!correct){
+      askQuestion(!state.running); // retry with a new word instead of a dead end
+      return;
+    }
+    document.getElementById('qOverlay').classList.remove('show');
+    state.running = true;
+    state.paused = false;
+    state.lastTime = null;
+    state.dodgesThisRound = 0;
+    state.obstacles = [];
+    state.spawnAcc = 0;
+  }, correct ? 700 : 1100);
+}
+
+/* ---------------------------------------------------------
+   6. INPUT — keyboard + touch lane-switch buttons
+--------------------------------------------------------- */
+function switchLane(delta){
+  if(!state || !state.running || state.paused || state.gameOver) return;
+  const newLane = state.lane + delta;
+  if(newLane < 0 || newLane > 2) return;
+  state.prevLane = state.lane;
+  state.lane = newLane;
+  state.laneAnim = 0;
+  sfxSwitch();
+}
+// RTL layout: "right" arrow visually moves toward اسم (lane 2), "left" toward حرف (lane 0)
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'ArrowRight' || e.key === 'd'){ e.preventDefault(); switchLane(1); }
+  else if(e.key === 'ArrowLeft' || e.key === 'a'){ e.preventDefault(); switchLane(-1); }
+  else if(e.key === ' ' || e.key === 'Escape'){
+    e.preventDefault();
+    if(state && state.running && !state.gameOver){ state.paused ? resumeGame() : pauseGame(); }
+  }
+});
+document.querySelectorAll('.tp-btn').forEach(btn => {
+  btn.addEventListener('pointerdown', (e) => { e.preventDefault(); switchLane(btn.dataset.dir === 'right' ? 1 : -1); });
+});
+if(window.matchMedia && window.matchMedia('(pointer:coarse)').matches){
+  document.body.classList.add('show-touch');
+}
+
+/* ---------------------------------------------------------
+   7. RESPONSIVE CANVAS
+--------------------------------------------------------- */
+function resizeCanvas(){
+  const wrap = canvas.parentElement;
+  const availW = Math.min(wrap.clientWidth - 20, 480);
+  const w = Math.max(220, availW);
+  const h = w * (LOGICAL_H / LOGICAL_W);
+  const dpr = window.devicePixelRatio || 1;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  canvas.width = Math.round(LOGICAL_W * dpr);
+  canvas.height = Math.round(LOGICAL_H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', () => { if(document.getElementById('scr-game').classList.contains('active')) resizeCanvas(); });
+
+/* ---------------------------------------------------------
+   8. GAME LOOP — fixed-timestep obstacle movement,
+      smooth interpolated 60fps render (same pattern as Snake).
+--------------------------------------------------------- */
+let rafHandle = null;
+const PLAYER_Y = LOGICAL_H - 90;   // row where obstacles resolve against the runner
+const LANE_W = LOGICAL_W / 3;
+function laneCenterX(lane){ return (lane + 0.5) * LANE_W; }
+
+function stepObstacles(dtMs){
+  const s = state.settings;
+  // spawn
+  state.spawnAcc += dtMs;
+  if(state.spawnAcc >= s.spawnMs){
+    state.spawnAcc = 0;
+    const lane = rand(0,2);
+    const kind = Math.random() < 0.78 ? 'rock' : 'gem';
+    state.obstacles.push({ lane, y: -40, kind, resolved:false });
+  }
+  // move + resolve
+  const speed = s.obstacleSpeed * (1 + Math.min(0.6, state.score/300)); // gentle ramp-up
+  state.obstacles.forEach(o => {
+    o.y += speed * (dtMs/16.67);
+    if(!o.resolved && o.y >= PLAYER_Y - 6 && o.y <= PLAYER_Y + 26){
+      if(o.lane === state.lane){
+        o.resolved = true;
+        if(o.kind === 'rock'){
+          endGame('crash');
+        } else {
+          state.score += 5;
+          sfxGem();
+          updateHUD();
+          state.floatingTexts.push({ x: laneCenterX(o.lane), y: o.y, text: '+5 💎', life: 1 });
+        }
+      }
+    }
+    if(!o.resolved && o.y > PLAYER_Y + 30){
+      o.resolved = true;
+      if(o.kind === 'rock' && o.lane !== state.lane){
+        state.dodgesThisRound++;
+        state.score += 2;
+        updateHUD();
+        if(state.dodgesThisRound >= s.dodgesPerRound){
+          state.running = false;
+          askQuestion(false);
+        }
+      }
+    }
+  });
+  // collected gems vanish immediately instead of continuing to fall past the player
+  state.obstacles = state.obstacles.filter(o => o.y < LOGICAL_H + 60 && !(o.resolved && o.kind === 'gem'));
+
+  // rise-and-fade animation for score popups
+  state.floatingTexts.forEach(f => { f.y -= 0.7 * (dtMs/16.67); f.life -= dtMs/650; });
+  state.floatingTexts = state.floatingTexts.filter(f => f.life > 0);
+}
+
+function gameLoop(timestamp){
+  rafHandle = requestAnimationFrame(gameLoop);
+  if(!state || state.gameOver) return;
+
+  if(state.running && !state.paused){
+    if(state.lastTime === null) state.lastTime = timestamp;
+    const delta = timestamp - state.lastTime;
+    state.lastTime = timestamp;
+    stepObstacles(Math.min(50, delta)); // clamp to avoid huge jumps after tab-switch
+    state.distance += delta;
+  } else {
+    state.lastTime = null;
+  }
+
+  if(state.laneAnim < 1) state.laneAnim = Math.min(1, state.laneAnim + 0.18);
+  render();
+}
+
+function render(){
+  ctx.clearRect(0, 0, LOGICAL_W, LOGICAL_H);
+
+  // sandy track with 3 lanes + dashed dividers
+  ctx.fillStyle = '#e8b56e';
+  ctx.fillRect(0,0,LOGICAL_W,LOGICAL_H);
+  ctx.strokeStyle = 'rgba(255,255,255,.55)';
+  ctx.lineWidth = 3;
+  ctx.setLineDash([16,14]);
+  const scrollOff = (state.distance / 8) % 30;
+  for(let i=1;i<3;i++){
+    ctx.beginPath();
+    ctx.moveTo(i*LANE_W, -30 + scrollOff);
+    ctx.lineTo(i*LANE_W, LOGICAL_H);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // obstacles
+  state.obstacles.forEach(o => {
+    const x = laneCenterX(o.lane);
+    ctx.font = '38px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(o.kind === 'rock' ? '🪨' : '💎', x, o.y);
+  });
+
+  // finish/player row marker
+  ctx.strokeStyle = 'rgba(255,255,255,.4)';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(0, PLAYER_Y+20); ctx.lineTo(LOGICAL_W, PLAYER_Y+20); ctx.stroke();
+
+  // runner (interpolated glide between lanes)
+  const fromX = laneCenterX(state.prevLane);
+  const toX = laneCenterX(state.lane);
+  const px = fromX + (toX - fromX) * state.laneAnim;
+  const bob = Math.sin(state.distance / 90) * 5;
+  ctx.font = '54px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🐆', px, PLAYER_Y + bob);
+
+  // "+5 💎" popups rising and fading where a gem was just collected
+  state.floatingTexts.forEach(f => {
+    ctx.globalAlpha = Math.max(0, f.life);
+    ctx.font = 'bold 22px sans-serif';
+    ctx.fillStyle = '#2a7a44';
+    ctx.textAlign = 'center';
+    ctx.fillText(f.text, f.x, f.y);
+    ctx.globalAlpha = 1;
+  });
+}
+
+/* ---------------------------------------------------------
+   9. GAME OVER
+--------------------------------------------------------- */
+function endGame(reason){
+  if(!state || state.gameOver) return;
+  state.gameOver = true;
+  state.running = false;
+  state.paused = true;
+  stopMusic();
+  sfxGameOver();
+
+  const best = setHighScore(difficulty, state.score);
+  document.getElementById('goEmoji').textContent = reason === 'crash' ? '💥' : '💔';
+  document.getElementById('goTitle').textContent = reason === 'crash' ? 'اصطدمتِ بصخرة!' : 'نفدت المحاولات!';
+  document.getElementById('goScore').textContent = state.score;
+  const newHsEl = document.getElementById('goNewHS');
+  newHsEl.innerHTML = (state.score >= best && state.score > 0) ? '<span class="new-hs">🌟 رقم قياسي جديد!</span>' : '';
+  document.getElementById('gameOverOverlay').classList.add('show');
+  updateHUD();
+  speak(reason === 'crash' ? 'اصطدمت بصخرة! حاولي مرة أخرى.' : 'انتهت المحاولات! حاولي مرة أخرى.');
+}
+
+/* ---------------------------------------------------------
+   10. INIT
+--------------------------------------------------------- */
+window.addEventListener('load', () => { resizeCanvas(); });
+</script>
+</body>
+</html>
