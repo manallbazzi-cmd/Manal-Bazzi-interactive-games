@@ -152,7 +152,7 @@ footer strong{color:var(--red);}
       <input class="nl-inp" type="number" id="nl-a" value="5" min="0" max="15">
       <span style="font-family:'Baloo 2',cursive;font-size:1.5rem;align-self:center;">+</span>
       <input class="nl-inp" type="number" id="nl-b" value="3" min="0" max="15">
-      <button class="nl-btn" onclick="sfx('click');showNL()">Show it! 🚀</button>
+      <button class="nl-btn" onclick="sfx('click');showNL(true)">Show it! 🚀</button>
     </div>
     <div id="nl-track" class="nl-track" style="margin-top:16px;"></div>
     <div id="nl-res" class="nl-result"></div>
@@ -223,6 +223,23 @@ function sfx(kind){
   if(kind==='win'){ [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,i*.13,.18)); }
 }
 
+// ── SPEECH (read questions + feedback aloud) ──
+const speechAvailable='speechSynthesis' in window;
+let ttsVoices=[];
+function loadTtsVoices(){if(!speechAvailable)return;ttsVoices=window.speechSynthesis.getVoices();if(!ttsVoices.length)setTimeout(loadTtsVoices,300);}
+if(speechAvailable){loadTtsVoices();window.speechSynthesis.onvoiceschanged=loadTtsVoices;}
+function speak(text){
+  if(!speechAvailable)return;
+  window.speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='en-US';utt.rate=0.88;utt.pitch=1.1;
+  const en=ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('samantha')>-1)
+    ||ttsVoices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().indexOf('google')<0)
+    ||ttsVoices.find(v=>v.lang.startsWith('en'))||null;
+  if(en)utt.voice=en;
+  window.speechSynthesis.speak(utt);
+}
+
 function showTab(id){
   sfx('click');
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -232,7 +249,7 @@ function showTab(id){
 }
 
 // NUMBER LINE
-function showNL(){
+function showNL(announce){
   const a=parseInt(document.getElementById('nl-a').value)||0;
   const b=parseInt(document.getElementById('nl-b').value)||0;
   const sum=a+b;
@@ -248,8 +265,9 @@ function showNL(){
     track.appendChild(d);
   }
   document.getElementById('nl-res').textContent=`${a} + ${b} = ${sum} 🎉`;
+  if(announce) speak(`${a} plus ${b} equals ${sum}`);
 }
-showNL();
+showNL(false);
 
 // TEN FRAMES
 const tfData=[[5,5],[8,2],[10,5],[3,7],[6,4]];
@@ -290,6 +308,7 @@ function loadQ2(){
   document.getElementById('qeq').textContent=q.a+' + '+q.b+' = ?';
   document.getElementById('qfb').textContent='';
   document.getElementById('nxtbtn').style.display='none';
+  setTimeout(()=>speak(`${q.a} plus ${q.b} equals what?`),300);
   const opts=document.getElementById('qopts');
   opts.innerHTML='';
   q.opts.forEach(o=>{
@@ -308,10 +327,12 @@ function checkQ2(btn,chosen,ans){
     sc2++;document.getElementById('sc2').textContent=sc2;
     document.getElementById('sfill').style.width=(sc2*10)+'%';
     sfx('good');
+    speak('Correct! Well done!');
   } else {
     btn.classList.add('wrong');fb.textContent='❌ The answer is '+ans+'!';fb.style.color='#e53935';
     document.querySelectorAll('.opt').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('correct');});
     sfx('bad');
+    speak(`Not quite. The answer is ${ans}.`);
   }
   document.getElementById('nxtbtn').style.display='block';
   qi2++;
