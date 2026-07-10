@@ -399,6 +399,7 @@ function resetGameState(){
     prevLane: 1,
     laneAnim: 0,            // 0..1 progress of the current lane-switch glide
     obstacles: [],          // {lane, y, kind:'rock'|'gem'}
+    floatingTexts: [],      // {x,y,text,life} — brief "+5" popups on gem pickup
     score: 0,
     lives: 3,
     dodgesThisRound: 0,
@@ -638,6 +639,7 @@ function stepObstacles(dtMs){
           state.score += 5;
           sfxGem();
           updateHUD();
+          state.floatingTexts.push({ x: laneCenterX(o.lane), y: o.y, text: '+5 💎', life: 1 });
         }
       }
     }
@@ -654,7 +656,12 @@ function stepObstacles(dtMs){
       }
     }
   });
-  state.obstacles = state.obstacles.filter(o => o.y < LOGICAL_H + 60);
+  // collected gems vanish immediately instead of continuing to fall past the player
+  state.obstacles = state.obstacles.filter(o => o.y < LOGICAL_H + 60 && !(o.resolved && o.kind === 'gem'));
+
+  // rise-and-fade animation for score popups
+  state.floatingTexts.forEach(f => { f.y -= 0.7 * (dtMs/16.67); f.life -= dtMs/650; });
+  state.floatingTexts = state.floatingTexts.filter(f => f.life > 0);
 }
 
 function gameLoop(timestamp){
@@ -716,6 +723,16 @@ function render(){
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('🐆', px, PLAYER_Y + bob);
+
+  // "+5 💎" popups rising and fading where a gem was just collected
+  state.floatingTexts.forEach(f => {
+    ctx.globalAlpha = Math.max(0, f.life);
+    ctx.font = 'bold 22px sans-serif';
+    ctx.fillStyle = '#2a7a44';
+    ctx.textAlign = 'center';
+    ctx.fillText(f.text, f.x, f.y);
+    ctx.globalAlpha = 1;
+  });
 }
 
 /* ---------------------------------------------------------
