@@ -392,12 +392,19 @@ const speechAvailable = 'speechSynthesis' in window;
 let ttsVoices = [];
 function loadTtsVoices(){ if(!speechAvailable) return; ttsVoices = window.speechSynthesis.getVoices(); if(!ttsVoices.length) setTimeout(loadTtsVoices, 300); }
 if(speechAvailable){ loadTtsVoices(); window.speechSynthesis.onvoiceschanged = loadTtsVoices; }
+function getFrenchVoice(){
+  const fresh = window.speechSynthesis.getVoices();
+  if(fresh.length) ttsVoices = fresh;
+  const byExactLang = code => ttsVoices.find(v=>v.lang.toLowerCase()===code);
+  return byExactLang('fr-fr') || byExactLang('fr-ca') || byExactLang('fr-be') || byExactLang('fr-ch')
+    || ttsVoices.find(v=>v.lang.toLowerCase().startsWith('fr'));
+}
 function speak(text){
   if(!speechAvailable) return;
   window.speechSynthesis.cancel();
   const utt = new SpeechSynthesisUtterance(text);
   utt.lang = 'fr-FR'; utt.rate = 0.88; utt.pitch = 1.05;
-  const fr = ttsVoices.find(v=>v.lang.startsWith('fr'));
+  const fr = getFrenchVoice();
   if(fr) utt.voice = fr;
   window.speechSynthesis.speak(utt);
 }
