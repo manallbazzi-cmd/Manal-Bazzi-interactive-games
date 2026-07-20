@@ -454,9 +454,9 @@ const QUESTION_BY_DIFF = { easy: questionEasy, medium: questionMedium, hard: que
    2. STATE
 --------------------------------------------------------- */
 const DIFF_SETTINGS = {
-  easy:   { tickMs: 260, mult: 1,   applesPerRound: 3, label:'Easy'   },
-  medium: { tickMs: 210, mult: 1.5, applesPerRound: 4, label:'Medium' },
-  hard:   { tickMs: 160, mult: 2,   applesPerRound: 5, label:'Hard'   }
+  easy:   { tickMs: 380, mult: 1,   applesPerRound: 3, label:'Easy'   },
+  medium: { tickMs: 310, mult: 1.5, applesPerRound: 4, label:'Medium' },
+  hard:   { tickMs: 240, mult: 2,   applesPerRound: 5, label:'Hard'   }
 };
 
 let difficulty = null;
@@ -744,9 +744,9 @@ function stepSnake(){
     sfxEat();
     spawnApple();
     updateHUD();
-    // speed up slightly every 5 apples, floor at 120ms so it stays playable
+    // speed up slightly every 5 apples, floor at 180ms so it stays playable
     if(state.applesEatenTotal % 5 === 0){
-      state.tickMs = Math.max(120, state.tickMs - 6);
+      state.tickMs = Math.max(180, state.tickMs - 5);
     }
     if(state.applesThisRound >= DIFF_SETTINGS[difficulty].applesPerRound){
       state.running = false;
