@@ -1150,21 +1150,79 @@ function drawEnemy(en, camX){
   ctx.restore();
 }
 
+/* Original chibi "hero plumber" — cap, mustache, overalls & gloves,
+   drawn entirely from vector shapes (no external art/likeness). */
 function drawPlayer(camX){
   const p = state.player;
   const x = p.x - camX;
+  const boosted = p.speedBoostT > 0;
+  const bounce = p.onGround && (state.keys.left || state.keys.right) ? Math.sin(state.levelTime*16)*1.6 : 0;
+
   ctx.save();
   if(p.invuln > 0 && Math.floor(state.levelTime*12)%2===0){ ctx.globalAlpha = 0.4; }
-  ctx.translate(x + p.w/2, p.y + p.h/2);
+  ctx.translate(x + p.w/2, p.y + p.h/2 + bounce);
   ctx.scale(p.facing,1);
-  ctx.fillStyle = p.speedBoostT > 0 ? '#ffd93d' : '#e8483b';
-  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-p.w/2,-p.h/2,p.w,p.h,8) : ctx.rect(-p.w/2,-p.h/2,p.w,p.h);
+  if(boosted){ ctx.shadowColor = '#ffd93d'; ctx.shadowBlur = 14; }
+
+  // shoes
+  ctx.fillStyle = '#6b3f1d';
+  ctx.beginPath(); ctx.ellipse(-7,21,6,5,0,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(7,21,6,5,0,0,Math.PI*2); ctx.fill();
+
+  // overalls (legs + lower body) — brand green, not Mario's blue
+  ctx.fillStyle = '#1f9e6d';
+  roundRectPath(-11,-2,22,24,[4,4,7,7]);
   ctx.fill();
-  ctx.fillStyle = '#534AB7';
-  ctx.fillRect(-p.w/2,-4,p.w,10);
+
+  // shirt torso (behind straps) — brand gold, not Mario's red
+  ctx.fillStyle = boosted ? '#ffe07a' : '#ffc93c';
+  roundRectPath(-12,-16,24,16,[7,7,3,3]);
+  ctx.fill();
+
+  // overalls straps + buttons
+  ctx.fillStyle = '#1f9e6d';
+  ctx.fillRect(-9,-16,5,14);
+  ctx.fillRect(4,-16,5,14);
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(-6.5,-8,2.2,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(6.5,-8,2.2,0,Math.PI*2); ctx.fill();
+
+  // gloved hands
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(-14,-4,5,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(14,-4,5,0,Math.PI*2); ctx.fill();
+
+  // head
   ctx.fillStyle = '#ffe0c2';
-  ctx.beginPath(); ctx.arc(p.w/4,-p.h/2+10,7,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(2,-20,8.5,0,Math.PI*2); ctx.fill();
+
+  // mustache
+  ctx.fillStyle = '#5a3a22';
+  ctx.beginPath(); ctx.ellipse(3,-17,5,2.2,0,0,Math.PI*2); ctx.fill();
+
+  // nose
+  ctx.fillStyle = '#f6c79a';
+  ctx.beginPath(); ctx.arc(7,-19,2.6,0,Math.PI*2); ctx.fill();
+
+  // eye
+  ctx.fillStyle = '#2a2350';
+  ctx.beginPath(); ctx.arc(4,-22,1.4,0,Math.PI*2); ctx.fill();
+
+  // cap: dome + band + brim + badge — brand purple, not Mario's red
+  ctx.fillStyle = '#534AB7';
+  ctx.beginPath(); ctx.arc(1,-24,9,Math.PI,0); ctx.fill();
+  ctx.fillStyle = '#ffc93c';
+  ctx.fillRect(-8,-24,18,4);
+  ctx.fillStyle = '#534AB7';
+  ctx.beginPath(); ctx.ellipse(9,-21,6,2.6,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#ffc93c';
+  ctx.beginPath(); ctx.arc(0,-27,3,0,Math.PI*2); ctx.fill();
+
   ctx.restore();
+}
+function roundRectPath(x,y,w,h,r){
+  if(ctx.roundRect){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); return; }
+  ctx.beginPath(); ctx.rect(x,y,w,h);
 }
 
 function drawGoal(camX){
