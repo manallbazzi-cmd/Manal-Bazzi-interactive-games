@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Teacher Manal's Math Adventure</title>
+<style>
+  /* ============================================================
+     No external fonts/libraries — fully offline, kid-friendly
+     rounded system-font stack. Purple & gold brand palette.
+     ============================================================ */
+  :root{
+    --purple:#534AB7;
+    --purple-dark:#38316f;
+    --purple-light:#8b7ff0;
+    --sky-top:#7c6fe0;
+    --sky-bottom:#c9c2ff;
+    --gold:#FFC93C;
+    --gold-dark:#c99a1c;
+    --cream:#fffaf0;
+    --card:#ffffff;
+    --green:#39b76b;
+    --red:#e8483b;
+    --ink:#2a2350;
+    --sub:#6a63a0;
+    --sub2:#7a739c;
+    --radius:22px;
+    --font: 'Trebuchet MS','Segoe UI Rounded','SF Pro Rounded','Comic Sans MS',Verdana,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--font);
+    color:var(--ink);
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 15% 8%, rgba(255,255,255,.10) 0, transparent 40%),
+      radial-gradient(circle at 88% 85%, rgba(255,255,255,.08) 0, transparent 45%),
+      linear-gradient(160deg, var(--purple-dark), var(--purple) 55%, #4842a0);
+    overflow-x:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:10px 10px 20px;
+  }
+
+  .deco{position:fixed;font-size:26px;opacity:.16;pointer-events:none;animation:sway 6s ease-in-out infinite;z-index:0;}
+  @keyframes sway{0%,100%{transform:translateY(0) rotate(-6deg);}50%{transform:translateY(-16px) rotate(8deg);}}
+
+  .brand-bar{width:100%;max-width:820px;display:flex;align-items:center;justify-content:center;gap:10px;margin:6px 0 4px;position:relative;z-index:2;}
+  .brand-badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);border-radius:30px;padding:6px 16px;font-size:.75rem;color:var(--gold);font-weight:800;letter-spacing:.5px;}
+  h1.title{width:100%;max-width:820px;text-align:center;font-weight:900;font-size:clamp(1.5rem,5.6vw,2.5rem);color:var(--cream);text-shadow:0 3px 0 rgba(0,0,0,.25);margin:6px 0 2px;position:relative;z-index:2;letter-spacing:.5px;}
+  .subtitle{width:100%;max-width:820px;text-align:center;color:#ece8ff;font-weight:700;font-size:.95rem;margin-bottom:10px;position:relative;z-index:2;}
+
+  .screen{width:100%;max-width:820px;position:relative;z-index:2;display:none;}
+  .screen.active{display:block;animation:fadeUp .4s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  .card{background:var(--card);border-radius:var(--radius);padding:22px 18px;box-shadow:0 12px 30px rgba(0,0,0,.28);}
+
+  /* ---------- level select ---------- */
+  .lvl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:16px 0;}
+  .lvl-card{border-radius:18px;padding:16px 10px;text-align:center;cursor:pointer;border:3px solid transparent;background:#f1efff;transition:transform .18s,border-color .18s,opacity .18s;position:relative;}
+  .lvl-card:hover:not(.locked){transform:translateY(-4px);}
+  .lvl-card.sel{border-color:var(--purple);background:#e7e3ff;box-shadow:0 6px 18px rgba(83,74,183,.28);}
+  .lvl-card.locked{opacity:.5;cursor:not-allowed;}
+  .lvl-card .li{font-size:2.1rem;display:block;margin-bottom:4px;}
+  .lvl-card h3{font-size:1.05rem;font-weight:900;color:var(--purple);}
+  .lvl-card p{font-size:.78rem;color:var(--sub2);font-weight:700;margin-top:4px;line-height:1.35;}
+  .lvl-card .grade-tag{display:inline-block;margin-top:6px;font-size:.68rem;font-weight:800;background:#fff3d6;color:#b5810a;border-radius:999px;padding:2px 10px;}
+  .lock-icon{position:absolute;top:8px;right:10px;font-size:1rem;}
+
+  .start-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .hs-row{display:flex;justify-content:center;gap:12px;margin-top:14px;font-weight:800;font-size:.85rem;color:var(--purple);flex-wrap:wrap;}
+  .hs-row span{background:#f1efff;border-radius:999px;padding:6px 16px;}
+
+  /* ---------- buttons ---------- */
+  .btn{font-family:var(--font);font-weight:900;border:none;border-radius:16px;cursor:pointer;padding:13px 26px;font-size:1.05rem;color:#fff;transition:transform .15s,filter .15s;box-shadow:0 5px 0 rgba(0,0,0,.18);}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.18);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn-purple{background:linear-gradient(160deg,var(--purple-light),var(--purple));}
+  .btn-gold{background:linear-gradient(160deg,#ffe07a,var(--gold));color:#5a3d00;box-shadow:0 5px 0 var(--gold-dark);}
+  .btn-red{background:linear-gradient(160deg,#f37065,var(--red));}
+  .btn-gray{background:linear-gradient(160deg,#a9a3c9,#736a9e);}
+  .btn-sm{padding:9px 16px;font-size:.85rem;border-radius:12px;box-shadow:0 4px 0 rgba(0,0,0,.18);}
+
+  /* ---------- HUD ---------- */
+  .hud{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:rgba(255,255,255,.96);border-radius:18px;padding:10px 14px;margin-bottom:10px;box-shadow:0 6px 16px rgba(0,0,0,.2);}
+  .hud-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .chip{background:#f1efff;border-radius:999px;padding:6px 13px;font-weight:900;font-size:.85rem;color:var(--ink);display:flex;align-items:center;gap:5px;white-space:nowrap;}
+  .lives{display:flex;gap:3px;font-size:1.05rem;}
+  .icon-btn{width:38px;height:38px;border-radius:12px;border:none;background:#f1efff;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;}
+  .icon-btn:hover{background:#e1ddfb;}
+  .icon-btn:active{transform:scale(.9);}
+  .icon-btn.muted{background:#ffe3e0;}
+
+  /* ---------- game board ---------- */
+  .board-wrap{position:relative;background:linear-gradient(180deg,var(--sky-top),var(--sky-bottom));border-radius:var(--radius);padding:8px;box-shadow:0 10px 26px rgba(0,0,0,.3);border:4px solid var(--purple-dark);overflow:hidden;}
+  #board{display:block;width:100%;height:auto;border-radius:14px;touch-action:none;}
+
+  .q-overlay{position:absolute;inset:8px;border-radius:14px;background:rgba(30,20,60,.85);display:none;align-items:center;justify-content:center;padding:14px;z-index:5;}
+  .q-overlay.show{display:flex;}
+  .q-card{background:var(--cream);border-radius:20px;padding:18px 16px;text-align:center;max-width:420px;width:100%;box-shadow:0 10px 24px rgba(0,0,0,.35);animation:pop .35s ease;}
+  @keyframes pop{0%{transform:scale(.85);opacity:0;}100%{transform:scale(1);opacity:1;}}
+  .q-badge{font-size:.72rem;font-weight:900;color:var(--sub2);letter-spacing:1px;text-transform:uppercase;}
+  .q-timerbar{height:6px;background:#e7e3ff;border-radius:6px;margin-top:8px;overflow:hidden;}
+  .q-timerbar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--red));width:100%;transition:width .1s linear;}
+  .q-text{font-size:clamp(1.4rem,5.4vw,2rem);font-weight:900;color:var(--ink);margin:10px 0 14px;}
+  .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .q-opt{font-family:var(--font);font-weight:900;font-size:1.15rem;padding:14px 6px;border-radius:14px;border:3px solid #e2ddf5;background:#fff;cursor:pointer;color:var(--ink);transition:all .15s;}
+  .q-opt:hover{border-color:var(--purple);transform:translateY(-2px);}
+  .q-opt.correct{border-color:var(--green);background:#e3f9e6;color:var(--green);animation:pop .3s;}
+  .q-opt.wrong{border-color:var(--red);background:#fde3e1;color:var(--red);animation:shake .35s;}
+  @keyframes shake{20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}
+  .q-feedback{margin-top:10px;font-weight:800;font-size:.95rem;min-height:20px;}
+  .q-feedback.good{color:var(--green);}
+  .q-feedback.bad{color:var(--red);}
+  .q-skip{margin-top:10px;}
+  .q-skip button{font-family:var(--font);font-weight:800;font-size:.8rem;background:#fff3d6;color:#b5810a;border:none;border-radius:999px;padding:6px 16px;cursor:pointer;}
+
+  .modal-overlay{position:absolute;inset:8px;border-radius:14px;background:rgba(30,20,60,.87);display:none;align-items:center;justify-content:center;padding:14px;z-index:6;}
+  .modal-overlay.show{display:flex;}
+  .modal-card{background:var(--cream);border-radius:20px;padding:24px 18px;text-align:center;max-width:380px;width:100%;box-shadow:0 10px 24px rgba(0,0,0,.35);animation:pop .35s ease;}
+  .modal-card h2{font-size:1.5rem;color:var(--purple);margin-bottom:6px;}
+  .modal-card .go-emoji{font-size:2.6rem;margin-bottom:6px;}
+  .modal-card .go-score{font-size:1.05rem;font-weight:800;margin:6px 0;}
+  .modal-stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:10px 0;font-size:.85rem;font-weight:800;color:var(--sub2);}
+  .modal-stats span b{color:var(--ink);}
+  .modal-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .new-hs{color:var(--gold-dark);font-weight:900;background:#fff6de;border-radius:12px;padding:6px 12px;display:inline-block;margin-top:6px;}
+
+  /* ---------- touch controls ---------- */
+  .touch-controls{display:flex;justify-content:space-between;align-items:center;margin:14px auto 4px;max-width:420px;}
+  .tp-move{display:flex;gap:10px;}
+  .tp-btn{border:none;border-radius:16px;background:linear-gradient(160deg,#ffe07a,var(--gold));box-shadow:0 5px 0 var(--gold-dark);font-size:1.5rem;color:#5a3d00;cursor:pointer;width:60px;height:60px;display:flex;align-items:center;justify-content:center;transition:transform .1s;}
+  .tp-btn:active{transform:translateY(3px);box-shadow:0 2px 0 var(--gold-dark);}
+  .tp-jump{background:linear-gradient(160deg,var(--purple-light),var(--purple));box-shadow:0 5px 0 var(--purple-dark);color:#fff;width:74px;height:74px;font-size:1.7rem;}
+  .tp-jump:active{box-shadow:0 2px 0 var(--purple-dark);}
+
+  .hint{text-align:center;color:#e5e1ff;font-size:.8rem;font-weight:700;margin-top:6px;}
+  footer{margin-top:22px;text-align:center;font-size:.8rem;color:#c9c2ee;font-weight:700;position:relative;z-index:2;}
+  footer strong{color:var(--gold);}
+
+  @media (max-width:480px){
+    .q-opt{font-size:1rem;padding:12px 4px;}
+    .tp-btn{width:52px;height:52px;font-size:1.3rem;}
+    .tp-jump{width:64px;height:64px;font-size:1.5rem;}
+  }
+  @media (min-width:820px){
+    .touch-controls{display:none;}
+  }
+  .show-touch .touch-controls{display:flex !important;}
+</style>
+</head>
+<body>
+
+<div class="deco" style="top:6%;left:4%;">⭐</div>
+<div class="deco" style="top:14%;right:6%;animation-delay:1.2s;">🍄</div>
+<div class="deco" style="bottom:12%;left:7%;animation-delay:2.4s;">🪙</div>
+<div class="deco" style="bottom:20%;right:5%;animation-delay:.8s;">🏁</div>
+
+<div class="brand-bar"><div class="brand-badge">👩‍🏫 Ms. Manal Bazzi — INSPIRE • EDUCATE • EMPOWER</div></div>
+<h1 class="title">🍄 Teacher Manal's Math Adventure</h1>
+<p class="subtitle">Jump, dodge, and solve math problems to save the kingdom of numbers!</p>
+
+<!-- ================= LEVEL SELECT SCREEN ================= -->
+<div class="screen active" id="scr-start">
+  <div class="card">
+    <h2 style="text-align:center;color:var(--purple);font-size:1.3rem;">Choose Your Level</h2>
+    <div class="lvl-grid" id="lvlGrid"></div>
+    <div class="hs-row" id="hsRow"></div>
+    <div class="start-actions">
+      <button class="btn btn-purple" id="btnStart" disabled onclick="beginGame()">🚀 Start Level</button>
+      <button class="icon-btn" id="btnMuteStart" onclick="toggleMute()" title="Mute">🔊</button>
+    </div>
+    <p class="hint" style="color:var(--sub2);">Pick an unlocked level, then press Start. Arrow keys move & jump, or use the on-screen buttons!</p>
+  </div>
+</div>
+
+<!-- ================= GAME SCREEN ================= -->
+<div class="screen" id="scr-game">
+  <div class="hud">
+    <div class="hud-group">
+      <span class="chip">🏆 <span id="hudScore">0</span></span>
+      <span class="chip lives" id="hudLives">❤️❤️❤️</span>
+      <span class="chip">⏱️ <span id="hudTime">0s</span></span>
+      <span class="chip">🎯 <span id="hudAcc">100%</span></span>
+    </div>
+    <div class="hud-group">
+      <button class="icon-btn" id="btnMuteGame" onclick="toggleMute()" title="Mute">🔊</button>
+      <button class="icon-btn" onclick="pauseGame()" title="Pause">⏸️</button>
+      <button class="icon-btn" onclick="confirmRestart()" title="Restart">🔄</button>
+    </div>
+  </div>
+
+  <div class="board-wrap">
+    <canvas id="board" width="800" height="450"></canvas>
+
+    <div class="q-overlay" id="qOverlay">
+      <div class="q-card">
+        <div class="q-badge" id="qBadge">Solve to clear the way!</div>
+        <div class="q-timerbar" id="qTimerBar" style="display:none;"><div class="q-timerbar-fill" id="qTimerFill"></div></div>
+        <div class="q-text" id="qText">? + ? = ?</div>
+        <div class="q-opts" id="qOpts"></div>
+        <div class="q-feedback" id="qFeedback"></div>
+        <div class="q-skip" id="qSkipWrap" style="display:none;"><button onclick="useSkip()">⏭️ Use Skip Token (<span id="skipCount">0</span>)</button></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="pauseOverlay">
+      <div class="modal-card">
+        <div class="go-emoji">⏸️</div>
+        <h2>Paused</h2>
+        <div class="modal-actions">
+          <button class="btn btn-purple btn-sm" onclick="resumeGame()">▶️ Resume</button>
+          <button class="btn btn-gray btn-sm" onclick="confirmRestart()">🔄 Restart</button>
+          <button class="btn btn-red btn-sm" onclick="quitToMenu()">🏠 Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="levelCompleteOverlay">
+      <div class="modal-card">
+        <div class="go-emoji">🏁</div>
+        <h2>Level Complete!</h2>
+        <div class="go-score">Score: <span id="lcScore">0</span></div>
+        <div class="modal-stats">
+          <span>⏱️ <b id="lcTime">0s</b></span>
+          <span>🎯 <b id="lcAcc">100%</b></span>
+        </div>
+        <div id="lcNewHS"></div>
+        <div class="modal-actions" id="lcActions"></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="gameOverOverlay">
+      <div class="modal-card">
+        <div class="go-emoji" id="goEmoji">💥</div>
+        <h2 id="goTitle">Game Over</h2>
+        <div class="go-score">Score: <span id="goScore">0</span></div>
+        <div class="modal-actions">
+          <button class="btn btn-purple btn-sm" onclick="beginGame()">🔄 Try Again</button>
+          <button class="btn btn-red btn-sm" onclick="quitToMenu()">🏠 Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="touch-controls" id="touchControls">
+    <div class="tp-move">
+      <button class="tp-btn" id="tpLeft">⬅️</button>
+      <button class="tp-btn" id="tpRight">➡️</button>
+    </div>
+    <button class="tp-btn tp-jump" id="tpJump">⬆️</button>
+  </div>
+  <p class="hint">Arrow keys + Spacebar (desktop) or the buttons above (touch). Touch an enemy to answer a math question!</p>
+</div>
+
+<footer><div><strong>👩‍🏫 Ms. Manal Bazzi</strong> — Teacher Manal's Math Adventure — Grades 1-3 Math 🍄🔢</div></footer>
+
+<script>
+/* ============================================================
+   TEACHER MANAL'S MATH ADVENTURE
+   Single-file, offline, no external libraries. Canvas platformer.
+   ============================================================ */
+
+/* ---------------------------------------------------------
+   0. SOUND ENGINE (WebAudio tones only — no audio files)
+--------------------------------------------------------- */
+let audioCtx = null;
+let muted = (localStorage.getItem('mathMarioMuted') === '1');
+let musicTimer = null;
+
+function initAudio(){
+  if(!audioCtx){ try{ audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+document.addEventListener('pointerdown', initAudio, {once:false});
+document.addEventListener('keydown', initAudio, {once:false});
+
+function tone(f, t0, dur, type, vol){
+  if(!audioCtx || muted) return;
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type || 'sine';
+  o.frequency.setValueAtTime(f, audioCtx.currentTime + t0);
+  g.gain.setValueAtTime(vol || 0.15, audioCtx.currentTime + t0);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + t0 + dur);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(audioCtx.currentTime + t0); o.stop(audioCtx.currentTime + t0 + dur + 0.05);
+}
+function sfxJump(){ tone(440,0,.09,'square',.12); tone(660,.05,.08,'square',.1); }
+function sfxCoin(){ tone(988,0,.07,'triangle',.15); tone(1319,.05,.09,'triangle',.13); }
+function sfxStar(){ tone(784,0,.08,'triangle',.16); tone(1047,.06,.08,'triangle',.15); tone(1319,.12,.14,'triangle',.15); }
+function sfxCorrect(){ tone(523,0,.12,'triangle'); tone(659,.1,.12,'triangle'); tone(784,.2,.2,'triangle'); }
+function sfxWrong(){ tone(300,0,.18,'sawtooth',.12); tone(220,.15,.25,'sawtooth',.12); }
+function sfxGameOver(){ [400,340,280,220,160].forEach((f,i)=>tone(f,i*.14,.2,'sawtooth',.14)); }
+function sfxClick(){ tone(600,0,.06,'square',.08); }
+function sfxHurt(){ tone(200,0,.15,'sawtooth',.14); }
+function sfxWin(){ [523,659,784,1047].forEach((f,i)=>tone(f,i*.13,.22,'triangle',.16)); }
+function sfxPowerup(){ tone(660,0,.08,'triangle',.14); tone(880,.08,.08,'triangle',.14); tone(1100,.16,.12,'triangle',.15); }
+
+const MELODY = [523,587,659,523, 587,659,698,523, 659,698,784,659, 523,0,392,0];
+let melodyStep = 0;
+function playMelodyStep(){
+  if(!audioCtx || muted){ musicTimer = setTimeout(playMelodyStep, 240); return; }
+  const note = MELODY[melodyStep % MELODY.length];
+  if(note>0) tone(note, 0, .2, 'sine', .045);
+  melodyStep++;
+  musicTimer = setTimeout(playMelodyStep, 240);
+}
+function startMusic(){ if(musicTimer) return; melodyStep = 0; playMelodyStep(); }
+function stopMusic(){ if(musicTimer){ clearTimeout(musicTimer); musicTimer=null; } }
+
+function updateMuteIcons(){
+  const icon = muted ? '🔇' : '🔊';
+  document.getElementById('btnMuteStart').textContent = icon;
+  document.getElementById('btnMuteGame').textContent = icon;
+  document.getElementById('btnMuteStart').classList.toggle('muted', muted);
+  document.getElementById('btnMuteGame').classList.toggle('muted', muted);
+}
+function toggleMute(){
+  initAudio();
+  muted = !muted;
+  localStorage.setItem('mathMarioMuted', muted ? '1' : '0');
+  updateMuteIcons();
+  if(!muted) sfxClick();
+}
+updateMuteIcons();
+
+/* ---------------------------------------------------------
+   1. MATH QUESTION GENERATION
+--------------------------------------------------------- */
+function rand(min, max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+function buildChoices(answer, spread){
+  const set = new Set([answer]);
+  let guard = 0;
+  while(set.size < 4 && guard < 60){
+    guard++;
+    const delta = rand(1, spread) * (Math.random()<0.5?-1:1);
+    const c = answer + delta;
+    if(c >= 0 && c !== answer) set.add(c);
+  }
+  let filler = answer + spread + 1;
+  while(set.size < 4){ if(filler !== answer){ set.add(filler); } filler++; }
+  return [...set].sort(() => Math.random() - 0.5);
+}
+
+// Level 1 — simple addition within 10
+function questionLevel1(){
+  const a = rand(1, 8);
+  const b = rand(1, Math.max(1, 10 - a));
+  const answer = a + b;
+  return { text: `${a} + ${b} = ?`, answer, choices: buildChoices(answer, 3) };
+}
+// Level 2 — subtraction with numbers 10-20
+function questionLevel2(){
+  const a = rand(11, 20);
+  const b = rand(1, Math.min(10, a - 1));
+  const answer = a - b;
+  return { text: `${a} − ${b} = ?`, answer, choices: buildChoices(answer, 5) };
+}
+// Level 3 — mix of addition, subtraction & times tables (2, 3, 5)
+function questionLevel3(){
+  const op = Math.random();
+  if(op < 0.4){
+    const a = rand(5, 20), b = rand(1, 15);
+    const answer = a + b;
+    return { text: `${a} + ${b} = ?`, answer, choices: buildChoices(answer, 6) };
+  } else if(op < 0.75){
+    const a = rand(10, 20), b = rand(1, a - 1);
+    const answer = a - b;
+    return { text: `${a} − ${b} = ?`, answer, choices: buildChoices(answer, 6) };
+  } else {
+    const tables = [2,3,5];
+    const a = tables[rand(0,2)], b = rand(2, 9);
+    const answer = a * b;
+    return { text: `${a} × ${b} = ?`, answer, choices: buildChoices(answer, 5) };
+  }
+}
+const QUESTION_BY_LEVEL = [null, questionLevel1, questionLevel2, questionLevel3];
+
+/* ---------------------------------------------------------
+   2. LEVEL DATA
+   World coordinates: platforms/enemies/coins/stars/goal.
+   groundY is the top of the endless ground strip.
+--------------------------------------------------------- */
+const GROUND_Y = 400;
+const VIEW_W = 800, VIEW_H = 450;
+
+function buildLevels(){
+  return [
+    null, // 1-indexed
+    { // Level 1 — Garden Path
+      name:'Level 1 — Garden Path',
+      diffLabel:'Addition within 10',
+      icon:'🌻',
+      worldWidth: 2200,
+      questionTimeLimit: null,
+      platforms:[
+        {x:260,y:320,w:140,h:26,type:'static'},
+        {x:560,y:270,w:120,h:26,type:'static'},
+        {x:860,y:330,w:160,h:26,type:'static'},
+        {x:1180,y:260,w:130,h:26,type:'static'},
+        {x:1500,y:320,w:150,h:26,type:'static'},
+        {x:1820,y:270,w:140,h:26,type:'static'}
+      ],
+      enemies:[ {x:620,y:GROUND_Y-40}, {x:1240,y:GROUND_Y-40} ],
+      coins:[ {x:300,y:280},{x:340,y:280},{x:600,y:230},{x:900,y:290},{x:1220,y:220},{x:1540,y:280},{x:1860,y:230} ],
+      stars:[ {x:1000,y:260} ],
+      powerups:[ {x:700,y:230,kind:'life'} ],
+      goal:{x:2120,y:GROUND_Y-70}
+    },
+    { // Level 2 — Moving Meadows
+      name:'Level 2 — Moving Meadows',
+      diffLabel:'Subtraction 10–20',
+      icon:'🌤️',
+      worldWidth: 2800,
+      questionTimeLimit: 8,
+      platforms:[
+        {x:240,y:320,w:130,h:26,type:'static'},
+        {x:520,y:260,w:110,h:26,type:'moving',minX:520,maxX:760,speed:60},
+        {x:900,y:320,w:120,h:26,type:'static'},
+        {x:1150,y:230,w:110,h:26,type:'moving',minX:1150,maxX:1350,speed:80},
+        {x:1550,y:300,w:150,h:26,type:'static'},
+        {x:1850,y:250,w:110,h:26,type:'moving',minX:1850,maxX:2050,speed:70},
+        {x:2200,y:320,w:150,h:26,type:'static'},
+        {x:2500,y:260,w:130,h:26,type:'static'}
+      ],
+      enemies:[ {x:460,y:GROUND_Y-40}, {x:990,y:GROUND_Y-40}, {x:1620,y:250-40}, {x:2260,y:GROUND_Y-40} ],
+      coins:[ {x:260,y:280},{x:900,y:280},{x:1160,y:190},{x:1580,y:260},{x:1860,y:210},{x:2220,y:280},{x:2520,y:220},{x:2560,y:220} ],
+      stars:[ {x:1250,y:190},{x:2000,y:210} ],
+      powerups:[ {x:1600,y:260,kind:'speed'}, {x:2400,y:230,kind:'skip'} ],
+      goal:{x:2720,y:GROUND_Y-70}
+    },
+    { // Level 3 — Boss Castle
+      name:'Level 3 — Boss Castle',
+      diffLabel:'Mixed & Times Tables (Boss)',
+      icon:'🏰',
+      worldWidth: 3000,
+      questionTimeLimit: 5,
+      platforms:[
+        {x:240,y:320,w:120,h:26,type:'static'},
+        {x:520,y:270,w:100,h:26,type:'timed',period:4,visible:2.4,blink:.8},
+        {x:800,y:320,w:120,h:26,type:'static'},
+        {x:1080,y:230,w:100,h:26,type:'moving',minX:1080,maxX:1280,speed:90},
+        {x:1420,y:300,w:110,h:26,type:'timed',period:4.5,visible:2.6,blink:.8},
+        {x:1700,y:250,w:120,h:26,type:'static'},
+        {x:1980,y:310,w:100,h:26,type:'moving',minX:1980,maxX:2160,speed:100},
+        {x:2350,y:260,w:110,h:26,type:'timed',period:4,visible:2.4,blink:.8},
+        {x:2620,y:320,w:150,h:26,type:'static'}
+      ],
+      enemies:[ {x:460,y:GROUND_Y-40}, {x:860,y:GROUND_Y-40}, {x:1740,y:250-40}, {x:2680,y:GROUND_Y-40,boss:true} ],
+      coins:[ {x:260,y:280},{x:800,y:280},{x:1720,y:210},{x:2000,y:270},{x:2640,y:280},{x:2680,y:280} ],
+      stars:[ {x:1100,y:190},{x:2380,y:220} ],
+      powerups:[ {x:1440,y:260,kind:'life'}, {x:2020,y:270,kind:'skip'} ],
+      goal:{x:2920,y:GROUND_Y-70}
+    }
+  ];
+}
+let LEVELS = buildLevels();
+
+/* ---------------------------------------------------------
+   3. STATE
+--------------------------------------------------------- */
+let currentLevel = null;
+let state = null;
+const canvas = document.getElementById('board');
+const ctx = canvas.getContext('2d');
+
+const GRAVITY = 1700;
+const MOVE_SPEED = 230;
+const JUMP_VELOCITY = -640;
+const MAX_FALL = 900;
+
+function getUnlocked(){
+  const v = parseInt(localStorage.getItem('mathMarioUnlocked') || '1', 10);
+  return isNaN(v) ? 1 : v;
+}
+function setUnlocked(n){
+  const cur = getUnlocked();
+  if(n > cur) localStorage.setItem('mathMarioUnlocked', String(n));
+}
+function getHighScores(){
+  try{ return JSON.parse(localStorage.getItem('mathMarioHighScores') || '{}'); }catch(e){ return {}; }
+}
+function setHighScore(lvl, score){
+  const hs = getHighScores();
+  if(!hs[lvl] || score > hs[lvl]) hs[lvl] = score;
+  localStorage.setItem('mathMarioHighScores', JSON.stringify(hs));
+  return hs[lvl];
+}
+
+function resetGameState(){
+  const lvl = LEVELS[currentLevel];
+  state = {
+    player: { x:60, y:GROUND_Y-48, w:32, h:48, vx:0, vy:0, onGround:false, facing:1, invuln:0, speedBoostT:0 },
+    camX: 0,
+    score: 0,
+    lives: 3,
+    correctCount: 0,
+    wrongCount: 0,
+    skipTokens: 0,
+    elapsed: 0,
+    levelTime: 0,
+    running: true,
+    paused: false,
+    gameOver: false,
+    levelComplete: false,
+    coins: lvl.coins.map(c => ({...c, taken:false})),
+    stars: lvl.stars.map(s => ({...s, taken:false})),
+    powerups: lvl.powerups.map(p => ({...p, taken:false})),
+    enemies: lvl.enemies.map(e => ({...e, w:38, h:38, alive:true, hitsNeeded: e.boss?2:1, hitsTaken:0, cooldown:0})),
+    currentQuestion:null,
+    questionEnemy:null,
+    qTimerHandle:null,
+    keys:{left:false,right:false}
+  };
+}
+
+/* ---------------------------------------------------------
+   4. LEVEL SELECT SCREEN
+--------------------------------------------------------- */
+function renderLevelGrid(){
+  const unlocked = getUnlocked();
+  const grid = document.getElementById('lvlGrid');
+  grid.innerHTML = '';
+  for(let i=1;i<=3;i++){
+    const lvl = LEVELS[i];
+    const isLocked = i > unlocked;
+    const div = document.createElement('div');
+    div.className = 'lvl-card' + (isLocked ? ' locked' : '');
+    div.dataset.l = i;
+    div.innerHTML = `
+      ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}
+      <span class="li">${lvl.icon}</span>
+      <h3>${lvl.name}</h3>
+      <p>${lvl.diffLabel}</p>
+      <span class="grade-tag">Grade ${i}</span>`;
+    if(!isLocked){
+      div.addEventListener('click', () => {
+        sfxClick();
+        document.querySelectorAll('.lvl-card').forEach(c => c.classList.remove('sel'));
+        div.classList.add('sel');
+        currentLevel = i;
+        document.getElementById('btnStart').disabled = false;
+      });
+    }
+    grid.appendChild(div);
+  }
+}
+function renderHighScores(){
+  const hs = getHighScores();
+  const row = document.getElementById('hsRow');
+  row.innerHTML = [1,2,3].map(i => `<span>${LEVELS[i].icon} L${i}: ⭐ ${hs[i]||0}</span>`).join('');
+}
+renderLevelGrid();
+renderHighScores();
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ---------------------------------------------------------
+   5. GAME LIFECYCLE
+--------------------------------------------------------- */
+function beginGame(){
+  if(!currentLevel) return;
+  sfxClick();
+  hideAllOverlays();
+  resetGameState();
+  updateHUD();
+  showScreen('scr-game');
+  resizeCanvas();
+  startMusic();
+  if(!rafHandle){ lastTs = null; rafHandle = requestAnimationFrame(gameLoop); }
+}
+
+function updateHUD(){
+  document.getElementById('hudScore').textContent = state.score;
+  document.getElementById('hudLives').textContent = '❤️'.repeat(Math.max(0,state.lives)) + '🖤'.repeat(Math.max(0,3-state.lives));
+  document.getElementById('hudTime').textContent = Math.floor(state.levelTime) + 's';
+  const total = state.correctCount + state.wrongCount;
+  const acc = total === 0 ? 100 : Math.round((state.correctCount/total)*100);
+  document.getElementById('hudAcc').textContent = acc + '%';
+}
+
+function hideAllOverlays(){
+  document.getElementById('qOverlay').classList.remove('show');
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('gameOverOverlay').classList.remove('show');
+  document.getElementById('levelCompleteOverlay').classList.remove('show');
+}
+
+function pauseGame(){
+  if(!state || state.gameOver || state.levelComplete || state.currentQuestion) return;
+  state.paused = true;
+  document.getElementById('pauseOverlay').classList.add('show');
+  sfxClick();
+}
+function resumeGame(){
+  state.paused = false;
+  document.getElementById('pauseOverlay').classList.remove('show');
+  sfxClick();
+}
+function confirmRestart(){ sfxClick(); beginGame(); }
+function quitToMenu(){
+  sfxClick();
+  stopMusic();
+  hideAllOverlays();
+  clearQuestionTimer();
+  state = null;
+  showScreen('scr-start');
+  renderLevelGrid();
+  renderHighScores();
+  document.getElementById('btnStart').disabled = true;
+  currentLevel = null;
+}
+
+/* ---------------------------------------------------------
+   6. MATH QUESTION FLOW
+--------------------------------------------------------- */
+function clearQuestionTimer(){
+  if(state && state.qTimerHandle){ clearInterval(state.qTimerHandle); state.qTimerHandle = null; }
+}
+
+function askQuestion(enemy){
+  state.paused = true;
+  state.questionEnemy = enemy;
+  const q = QUESTION_BY_LEVEL[currentLevel]();
+  state.currentQuestion = q;
+  document.getElementById('qBadge').textContent = enemy.boss ? 'Boss challenge! Solve it!' : 'Solve to clear the way!';
+  document.getElementById('qText').textContent = q.text;
+  document.getElementById('qFeedback').textContent = '';
+  document.getElementById('qFeedback').className = 'q-feedback';
+  const optsEl = document.getElementById('qOpts');
+  optsEl.innerHTML = '';
+  q.choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.textContent = choice;
+    btn.onclick = () => answerQuestion(choice, btn);
+    optsEl.appendChild(btn);
+  });
+
+  const skipWrap = document.getElementById('qSkipWrap');
+  document.getElementById('skipCount').textContent = state.skipTokens;
+  skipWrap.style.display = state.skipTokens > 0 ? 'block' : 'none';
+
+  const lvl = LEVELS[currentLevel];
+  const timerBar = document.getElementById('qTimerBar');
+  clearQuestionTimer();
+  if(lvl.questionTimeLimit){
+    timerBar.style.display = 'block';
+    const fill = document.getElementById('qTimerFill');
+    let remaining = lvl.questionTimeLimit;
+    fill.style.width = '100%';
+    state.qTimerHandle = setInterval(() => {
+      remaining -= 0.1;
+      fill.style.width = Math.max(0,(remaining/lvl.questionTimeLimit)*100) + '%';
+      if(remaining <= 0){
+        clearQuestionTimer();
+        document.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+        handleWrongAnswer();
+      }
+    }, 100);
+  } else {
+    timerBar.style.display = 'none';
+  }
+
+  document.getElementById('qOverlay').classList.add('show');
+}
+
+function useSkip(){
+  if(!state || state.skipTokens <= 0 || !state.currentQuestion) return;
+  state.skipTokens--;
+  clearQuestionTimer();
+  sfxPowerup();
+  document.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+  const fb = document.getElementById('qFeedback');
+  fb.textContent = '⏭️ Skipped!';
+  fb.className = 'q-feedback good';
+  finishQuestion(true);
+}
+
+function answerQuestion(choice, btn){
+  clearQuestionTimer();
+  document.querySelectorAll('.q-opt').forEach(b => b.disabled = true);
+  const correct = choice === state.currentQuestion.answer;
+  if(correct){
+    btn.classList.add('correct');
+    handleCorrectAnswer();
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.q-opt').forEach(b => { if(parseInt(b.textContent) === state.currentQuestion.answer) b.classList.add('correct'); });
+    handleWrongAnswer();
+  }
+}
+
+function handleCorrectAnswer(){
+  const fb = document.getElementById('qFeedback');
+  fb.textContent = '🎉 Correct! +10 points';
+  fb.className = 'q-feedback good';
+  sfxCorrect();
+  state.correctCount++;
+  state.score += 10;
+  updateHUD();
+  finishQuestion(true);
+}
+
+function handleWrongAnswer(){
+  const fb = document.getElementById('qFeedback');
+  fb.textContent = `❌ Try again! The answer was ${state.currentQuestion.answer}`;
+  fb.className = 'q-feedback bad';
+  sfxWrong();
+  state.wrongCount++;
+  state.lives--;
+  updateHUD();
+  finishQuestion(false);
+}
+
+function finishQuestion(defeated){
+  setTimeout(() => {
+    document.querySelectorAll('.q-opt').forEach(b => b.disabled = false);
+    document.getElementById('qOverlay').classList.remove('show');
+    const enemy = state.questionEnemy;
+    state.currentQuestion = null;
+    state.questionEnemy = null;
+
+    if(!defeated && state.lives <= 0){
+      endGame();
+      return;
+    }
+    if(defeated && enemy){
+      enemy.hitsTaken++;
+      if(enemy.hitsTaken >= enemy.hitsNeeded){
+        enemy.alive = false;
+        if(enemy.boss) sfxWin();
+      } else {
+        enemy.cooldown = 1.2; // boss needs another hit, brief grace period
+      }
+    } else if(enemy){
+      // wrong answer: enemy stays alive, player gets a short grace period so
+      // they aren't instantly re-triggered while overlapping
+      enemy.cooldown = 1.2;
+      knockBack(enemy);
+    }
+    state.paused = false;
+  }, defeated ? 700 : 1100);
+}
+
+function knockBack(enemy){
+  const p = state.player;
+  p.vx = (p.x < enemy.x ? -1 : 1) * 260;
+  p.vy = -300;
+  p.invuln = 1.2;
+}
+
+/* ---------------------------------------------------------
+   7. INPUT — keyboard + touch
+--------------------------------------------------------- */
+function tryJump(){
+  if(!state || state.paused || state.gameOver || state.levelComplete) return;
+  if(state.player.onGround){
+    state.player.vy = JUMP_VELOCITY;
+    state.player.onGround = false;
+    sfxJump();
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if(!state) return;
+  if(e.key === 'ArrowLeft' || e.key === 'a'){ state.keys.left = true; e.preventDefault(); }
+  else if(e.key === 'ArrowRight' || e.key === 'd'){ state.keys.right = true; e.preventDefault(); }
+  else if(e.key === 'ArrowUp' || e.key === 'w' || e.key === ' '){ e.preventDefault(); tryJump(); }
+  else if(e.key === 'Escape'){
+    e.preventDefault();
+    if(state.running && !state.gameOver && !state.currentQuestion){
+      state.paused ? resumeGame() : pauseGame();
+    }
+  }
+});
+document.addEventListener('keyup', (e) => {
+  if(!state) return;
+  if(e.key === 'ArrowLeft' || e.key === 'a') state.keys.left = false;
+  else if(e.key === 'ArrowRight' || e.key === 'd') state.keys.right = false;
+});
+
+function bindHold(el, onDown, onUp){
+  el.addEventListener('pointerdown', (e) => { e.preventDefault(); onDown(); });
+  el.addEventListener('pointerup', (e) => { e.preventDefault(); onUp && onUp(); });
+  el.addEventListener('pointerleave', (e) => { onUp && onUp(); });
+  el.addEventListener('pointercancel', (e) => { onUp && onUp(); });
+}
+bindHold(document.getElementById('tpLeft'), () => { if(state) state.keys.left = true; }, () => { if(state) state.keys.left = false; });
+bindHold(document.getElementById('tpRight'), () => { if(state) state.keys.right = true; }, () => { if(state) state.keys.right = false; });
+document.getElementById('tpJump').addEventListener('pointerdown', (e) => { e.preventDefault(); tryJump(); });
+
+if(window.matchMedia && window.matchMedia('(pointer:coarse)').matches){
+  document.body.classList.add('show-touch');
+}
+
+/* ---------------------------------------------------------
+   8. RESPONSIVE CANVAS
+--------------------------------------------------------- */
+function resizeCanvas(){
+  const wrap = canvas.parentElement;
+  const available = Math.min(wrap.clientWidth - 16, 900);
+  const w = Math.max(300, available);
+  const h = w * (VIEW_H/VIEW_W);
+  const dpr = window.devicePixelRatio || 1;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  canvas.width = Math.round(VIEW_W * dpr);
+  canvas.height = Math.round(VIEW_H * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', () => { if(document.getElementById('scr-game').classList.contains('active')) resizeCanvas(); });
+
+/* ---------------------------------------------------------
+   9. PHYSICS / COLLISION
+--------------------------------------------------------- */
+function platformPhase(pf, t){
+  if(pf.type !== 'timed') return 'solid';
+  const cyc = t % pf.period;
+  if(cyc < pf.visible) return 'solid';
+  if(cyc < pf.visible + pf.blink) return 'blink';
+  return 'hidden';
+}
+function platformRect(pf){
+  return { x: pf.curX !== undefined ? pf.curX : pf.x, y: pf.y, w: pf.w, h: pf.h };
+}
+
+function updatePlatforms(dt, t){
+  const lvl = LEVELS[currentLevel];
+  lvl.platforms.forEach(pf => {
+    if(pf.type === 'moving'){
+      if(pf.curX === undefined){ pf.curX = pf.x; pf.dir = 1; }
+      pf.curX += pf.dir * pf.speed * dt;
+      if(pf.curX > pf.maxX){ pf.curX = pf.maxX; pf.dir = -1; }
+      if(pf.curX < pf.minX){ pf.curX = pf.minX; pf.dir = 1; }
+      pf.vx = pf.dir * pf.speed;
+    }
+  });
+}
+
+function aabb(ax,ay,aw,ah,bx,by,bw,bh){
+  return ax < bx+bw && ax+aw > bx && ay < by+bh && ay+ah > by;
+}
+
+function updatePlayer(dt){
+  const p = state.player;
+  const lvl = LEVELS[currentLevel];
+  const speedMult = p.speedBoostT > 0 ? 1.5 : 1;
+
+  if(state.keys.left){ p.vx = -MOVE_SPEED*speedMult; p.facing = -1; }
+  else if(state.keys.right){ p.vx = MOVE_SPEED*speedMult; p.facing = 1; }
+  else { p.vx = 0; }
+
+  // horizontal move (floating platforms are one-way: jump-through from
+  // below, land on top — only the ground strip and world edges are solid)
+  p.x += p.vx*dt;
+  p.x = Math.max(0, Math.min(lvl.worldWidth - p.w, p.x));
+
+  // vertical move + one-way platform landing
+  p.vy += GRAVITY*dt;
+  if(p.vy > MAX_FALL) p.vy = MAX_FALL;
+  const prevBottom = p.y + p.h;
+  p.y += p.vy*dt;
+  p.onGround = false;
+  p.standingOn = null;
+
+  lvl.platforms.forEach(pf => {
+    const phase = platformPhase(pf, state.levelTime);
+    if(phase === 'hidden') return;
+    const r = platformRect(pf);
+    const newBottom = p.y + p.h;
+    const horizOverlap = p.x + p.w > r.x && p.x < r.x + r.w;
+    if(p.vy >= 0 && horizOverlap && prevBottom <= r.y + 2 && newBottom >= r.y){
+      p.y = r.y - p.h;
+      p.vy = 0;
+      p.onGround = true;
+      p.standingOn = pf;
+    }
+  });
+
+  // ground strip
+  if(p.y + p.h >= GROUND_Y){
+    p.y = GROUND_Y - p.h;
+    p.vy = 0;
+    p.onGround = true;
+    p.standingOn = null;
+  }
+
+  // carry player along a moving platform
+  if(p.onGround && p.standingOn && p.standingOn.type === 'moving'){
+    p.x += (p.standingOn.vx||0) * dt;
+  }
+
+  // fell into a pit (below canvas) -> lose a life
+  if(p.y > VIEW_H + 100){
+    loseLife();
+  }
+
+  if(p.invuln > 0) p.invuln -= dt;
+  if(p.speedBoostT > 0) p.speedBoostT -= dt;
+
+  // camera follows player, clamped to world bounds
+  state.camX = Math.max(0, Math.min(lvl.worldWidth - VIEW_W, p.x + p.w/2 - VIEW_W/2));
+}
+
+function loseLife(){
+  state.lives--;
+  updateHUD();
+  sfxHurt();
+  if(state.lives <= 0){
+    endGame();
+    return;
+  }
+  const p = state.player;
+  p.x = Math.max(0, state.camX + 40);
+  p.y = GROUND_Y - p.h;
+  p.vx = 0; p.vy = 0;
+  p.invuln = 1.5;
+}
+
+function updateCollectibles(){
+  const p = state.player;
+  state.coins.forEach(c => {
+    if(c.taken) return;
+    if(aabb(p.x,p.y,p.w,p.h, c.x-12,c.y-12,24,24)){
+      c.taken = true;
+      state.score += 1;
+      sfxCoin();
+      updateHUD();
+    }
+  });
+  state.stars.forEach(s => {
+    if(s.taken) return;
+    if(aabb(p.x,p.y,p.w,p.h, s.x-14,s.y-14,28,28)){
+      s.taken = true;
+      state.score += 5;
+      sfxStar();
+      updateHUD();
+    }
+  });
+  state.powerups.forEach(pu => {
+    if(pu.taken) return;
+    if(aabb(p.x,p.y,p.w,p.h, pu.x-14,pu.y-14,28,28)){
+      pu.taken = true;
+      sfxPowerup();
+      if(pu.kind === 'life'){ state.lives = Math.min(5, state.lives+1); }
+      else if(pu.kind === 'speed'){ p.speedBoostT = 6; }
+      else if(pu.kind === 'skip'){ state.skipTokens++; }
+      updateHUD();
+    }
+  });
+}
+
+function updateEnemies(dt){
+  const p = state.player;
+  state.enemies.forEach(en => {
+    if(!en.alive) return;
+    if(en.cooldown > 0){ en.cooldown -= dt; return; }
+    if(p.invuln > 0) return;
+    if(aabb(p.x,p.y,p.w,p.h, en.x,en.y,en.w,en.h) && !state.currentQuestion){
+      askQuestion(en);
+    }
+  });
+}
+
+function checkGoal(){
+  const lvl = LEVELS[currentLevel];
+  const p = state.player;
+  if(aabb(p.x,p.y,p.w,p.h, lvl.goal.x, lvl.goal.y, 24, 70)){
+    completeLevel();
+  }
+}
+
+/* ---------------------------------------------------------
+   10. GAME LOOP
+--------------------------------------------------------- */
+let rafHandle = null;
+let lastTs = null;
+
+function gameLoop(ts){
+  rafHandle = requestAnimationFrame(gameLoop);
+  if(!state || state.gameOver || state.levelComplete){ lastTs = null; return; }
+  if(lastTs === null) lastTs = ts;
+  let dt = (ts - lastTs) / 1000;
+  lastTs = ts;
+  dt = Math.min(dt, 0.05); // clamp huge tab-switch jumps
+
+  if(!state.paused){
+    state.elapsed += dt;
+    state.levelTime += dt;
+    updatePlatforms(dt, state.levelTime);
+    updatePlayer(dt);
+    updateCollectibles();
+    updateEnemies(dt);
+    checkGoal();
+    updateHUD();
+  }
+  render();
+}
+
+function completeLevel(){
+  if(state.levelComplete) return;
+  state.levelComplete = true;
+  state.paused = true;
+  stopMusic();
+  sfxWin();
+  setUnlocked(currentLevel + 1);
+  const best = setHighScore(currentLevel, state.score);
+  document.getElementById('lcScore').textContent = state.score;
+  document.getElementById('lcTime').textContent = Math.floor(state.levelTime) + 's';
+  const total = state.correctCount + state.wrongCount;
+  const acc = total === 0 ? 100 : Math.round((state.correctCount/total)*100);
+  document.getElementById('lcAcc').textContent = acc + '%';
+  document.getElementById('lcNewHS').innerHTML = (state.score >= best && state.score > 0) ? '<span class="new-hs">🌟 New High Score!</span>' : '';
+
+  const actions = document.getElementById('lcActions');
+  actions.innerHTML = '';
+  if(currentLevel < 3){
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn btn-purple btn-sm';
+    nextBtn.textContent = '➡️ Next Level';
+    nextBtn.onclick = () => { currentLevel = currentLevel + 1; beginGame(); };
+    actions.appendChild(nextBtn);
+  } else {
+    const doneBtn = document.createElement('button');
+    doneBtn.className = 'btn btn-gold btn-sm';
+    doneBtn.textContent = '👑 Kingdom Saved!';
+    doneBtn.onclick = quitToMenu;
+    actions.appendChild(doneBtn);
+  }
+  const menuBtn = document.createElement('button');
+  menuBtn.className = 'btn btn-gray btn-sm';
+  menuBtn.textContent = '🏠 Menu';
+  menuBtn.onclick = quitToMenu;
+  actions.appendChild(menuBtn);
+
+  document.getElementById('levelCompleteOverlay').classList.add('show');
+}
+
+function endGame(){
+  if(!state || state.gameOver) return;
+  state.gameOver = true;
+  state.paused = true;
+  stopMusic();
+  sfxGameOver();
+  document.getElementById('goScore').textContent = state.score;
+  document.getElementById('gameOverOverlay').classList.add('show');
+}
+
+/* ---------------------------------------------------------
+   11. RENDER
+--------------------------------------------------------- */
+function drawCloud(x,y,scale){
+  ctx.fillStyle = 'rgba(255,255,255,.85)';
+  ctx.beginPath();
+  ctx.arc(x,y,18*scale,0,Math.PI*2);
+  ctx.arc(x+20*scale,y-8*scale,16*scale,0,Math.PI*2);
+  ctx.arc(x+38*scale,y,18*scale,0,Math.PI*2);
+  ctx.fill();
+}
+
+function drawPlatform(pf, camX){
+  const phase = platformPhase(pf, state.levelTime);
+  if(phase === 'hidden') return;
+  const r = platformRect(pf);
+  const x = r.x - camX;
+  if(x + r.w < -20 || x > VIEW_W + 20) return;
+  ctx.globalAlpha = phase === 'blink' ? (Math.sin(state.levelTime*20)*.3+.5) : 1;
+  ctx.fillStyle = pf.type === 'moving' ? '#c99a4a' : (pf.type === 'timed' ? '#a8729c' : '#8a5a2e');
+  ctx.fillRect(x, r.y, r.w, r.h);
+  ctx.fillStyle = pf.type === 'moving' ? '#8fd97a' : (pf.type === 'timed' ? '#e2b8d6' : '#5fbf5f');
+  ctx.fillRect(x, r.y, r.w, 8);
+  ctx.globalAlpha = 1;
+}
+
+function drawCoin(c, camX){
+  if(c.taken) return;
+  const x = c.x - camX;
+  if(x < -20 || x > VIEW_W+20) return;
+  const wobble = Math.abs(Math.sin(state.levelTime*4 + c.x));
+  ctx.save();
+  ctx.translate(x, c.y);
+  ctx.scale(0.5+wobble*0.5, 1);
+  ctx.fillStyle = '#FFC93C';
+  ctx.beginPath(); ctx.arc(0,0,11,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#c99a1c'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.restore();
+}
+
+function drawStar(s, camX){
+  if(s.taken) return;
+  const x = s.x - camX;
+  if(x < -20 || x > VIEW_W+20) return;
+  const bob = Math.sin(state.levelTime*3 + s.x) * 4;
+  ctx.save();
+  ctx.translate(x, s.y+bob);
+  ctx.fillStyle = '#FFD700';
+  ctx.beginPath();
+  for(let i=0;i<5;i++){
+    const a1 = -Math.PI/2 + i*(2*Math.PI/5);
+    const a2 = a1 + Math.PI/5;
+    ctx.lineTo(Math.cos(a1)*13, Math.sin(a1)*13);
+    ctx.lineTo(Math.cos(a2)*5.5, Math.sin(a2)*5.5);
+  }
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = '#c9950a'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.restore();
+}
+
+function drawPowerup(pu, camX){
+  if(pu.taken) return;
+  const x = pu.x - camX;
+  if(x < -20 || x > VIEW_W+20) return;
+  const bob = Math.sin(state.levelTime*3 + pu.x) * 3;
+  const icon = pu.kind === 'life' ? '❤️' : (pu.kind === 'speed' ? '⚡' : '⏭️');
+  ctx.save();
+  ctx.font = '22px serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(icon, x, pu.y+bob);
+  ctx.restore();
+}
+
+function drawEnemy(en, camX){
+  if(!en.alive) return;
+  const x = en.x - camX;
+  if(x + en.w < -20 || x > VIEW_W+20) return;
+  const bob = Math.sin(state.levelTime*4 + en.x) * 3;
+  ctx.save();
+  ctx.translate(x + en.w/2, en.y + en.h/2 + bob);
+  ctx.fillStyle = en.boss ? '#7a2e8a' : '#c0392b';
+  ctx.beginPath();
+  ctx.ellipse(0,4, en.w/2, en.h/2-2, 0, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(-8,-2,6,0,Math.PI*2); ctx.arc(8,-2,6,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#1d1d1d';
+  ctx.beginPath(); ctx.arc(-8,-2,3,0,Math.PI*2); ctx.arc(8,-2,3,0,Math.PI*2); ctx.fill();
+  if(en.boss){
+    ctx.fillStyle = '#FFC93C';
+    ctx.font = 'bold 11px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('BOSS', 0, -en.h/2-6);
+  }
+  ctx.restore();
+}
+
+function drawPlayer(camX){
+  const p = state.player;
+  const x = p.x - camX;
+  ctx.save();
+  if(p.invuln > 0 && Math.floor(state.levelTime*12)%2===0){ ctx.globalAlpha = 0.4; }
+  ctx.translate(x + p.w/2, p.y + p.h/2);
+  ctx.scale(p.facing,1);
+  ctx.fillStyle = p.speedBoostT > 0 ? '#ffd93d' : '#e8483b';
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-p.w/2,-p.h/2,p.w,p.h,8) : ctx.rect(-p.w/2,-p.h/2,p.w,p.h);
+  ctx.fill();
+  ctx.fillStyle = '#534AB7';
+  ctx.fillRect(-p.w/2,-4,p.w,10);
+  ctx.fillStyle = '#ffe0c2';
+  ctx.beginPath(); ctx.arc(p.w/4,-p.h/2+10,7,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+
+function drawGoal(camX){
+  const lvl = LEVELS[currentLevel];
+  const x = lvl.goal.x - camX;
+  if(x < -40 || x > VIEW_W+40) return;
+  ctx.strokeStyle = '#7a5a2e'; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.moveTo(x, lvl.goal.y+70); ctx.lineTo(x, lvl.goal.y-10); ctx.stroke();
+  ctx.fillStyle = '#FFC93C';
+  ctx.beginPath();
+  ctx.moveTo(x, lvl.goal.y-10);
+  ctx.lineTo(x+34, lvl.goal.y+4);
+  ctx.lineTo(x, lvl.goal.y+18);
+  ctx.closePath(); ctx.fill();
+}
+
+function render(){
+  const camX = state.camX;
+  ctx.clearRect(0,0,VIEW_W,VIEW_H);
+
+  // sky gradient background handled by CSS behind canvas; draw decorative clouds/hills
+  drawCloud(120 - camX*0.2, 70, 1);
+  drawCloud(420 - camX*0.2, 50, 1.3);
+  drawCloud(760 - camX*0.2, 90, 0.9);
+  drawCloud((VIEW_W+300) - camX*0.2, 60, 1.1);
+
+  // distant hills (parallax)
+  ctx.fillStyle = 'rgba(70,60,150,.25)';
+  for(let i=0;i<6;i++){
+    const hx = i*300 - (camX*0.4)%300 - 150;
+    ctx.beginPath();
+    ctx.ellipse(hx, GROUND_Y+40, 160, 90, 0, Math.PI, 0);
+    ctx.fill();
+  }
+
+  const lvl = LEVELS[currentLevel];
+
+  // ground strip
+  ctx.fillStyle = '#6b4a2e';
+  ctx.fillRect(0, GROUND_Y, VIEW_W, VIEW_H-GROUND_Y);
+  ctx.fillStyle = '#4a9e4a';
+  ctx.fillRect(0, GROUND_Y, VIEW_W, 10);
+
+  lvl.platforms.forEach(pf => drawPlatform(pf, camX));
+  state.coins.forEach(c => drawCoin(c, camX));
+  state.stars.forEach(s => drawStar(s, camX));
+  state.powerups.forEach(pu => drawPowerup(pu, camX));
+  state.enemies.forEach(en => drawEnemy(en, camX));
+  drawGoal(camX);
+  drawPlayer(camX);
+}
+
+/* ---------------------------------------------------------
+   12. INIT
+--------------------------------------------------------- */
+window.addEventListener('load', () => {
+  resizeCanvas();
+});
+</script>
+</body>
+</html>
